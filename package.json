@@ -1,0 +1,7 @@
+{
+  "name": "component-library",
+  "version": "0.0.0",
+  "description": "Component library",
+  "main": "index.js",
+  "license": "MIT"
+}
