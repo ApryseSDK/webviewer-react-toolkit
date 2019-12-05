@@ -1,0 +1,24 @@
+# Improves the horizontal space of the file, subjective preference.
+bracketSpacing: false
+
+# Wrap markdown files at 80 chars for raw file readability.
+proseWrap: always
+
+# Use single quotes where possible, subjective preference.
+singleQuote: true
+
+# Trailing commas for improved diffs when using source control.
+trailingComma: all
+
+overrides:
+  # TypeScript files benefit from more horizontal space, subjective preference.
+  - files:
+      - "*.ts"
+      - "*.tsx"
+    options:
+      printWidth: 120
+
+  # Some files don't need to be wrapped at 80 chars. List those here.
+  - files: CHANGELOG.md
+    options:
+      proseWrap: never
