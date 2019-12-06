@@ -3,7 +3,7 @@ name: 'Bug: Documentation'
 about: Report an issue with the documentation of a component
 title: ''
 labels: "\U0001F4D6 documentation bug"
-assignees: liamross
+assignees: ''
 
 ---
 
