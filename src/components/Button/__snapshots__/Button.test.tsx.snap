@@ -2,8 +2,7 @@
 
 exports[`Button component snapshot renders default button 1`] = `
 <button
-  className="ui__button"
->
-  Default value
-</button>
+  className="ui__button ui__button--default"
+  type="button"
+/>
 `;
