@@ -1,0 +1,19 @@
+// Normalize.
+@import '~normalize.css';
+
+// Style variables (import first, used in mixins and base).
+@import './styles/variables';
+
+// Mixins.
+@import './styles/mixins';
+
+// Base style.
+@import './styles/base';
+
+/**
+ * Component style imports: DO NOT MODIFY.
+ */
+
+// <import-start>
+@import './components/Button/Button';
+// <import-end>

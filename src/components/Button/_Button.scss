@@ -1,0 +1,7 @@
+.ui__button {
+  color: blue;
+
+  &--disabled {
+    color: red;
+  }
+}

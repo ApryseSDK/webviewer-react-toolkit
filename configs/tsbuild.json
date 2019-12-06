@@ -1,0 +1,5 @@
+{
+  "extends": "./base",
+  "include": ["../src"],
+  "exclude": ["**/*.test.*", "**/*.stories.*", "./src/storybook-helpers/"]
+}

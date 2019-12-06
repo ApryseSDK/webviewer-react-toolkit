@@ -1,0 +1,7 @@
+# Ignore build folders
+dist
+lib
+storybook-build
+
+# Ignore node modules folder
+node_modules

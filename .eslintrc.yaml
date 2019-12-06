@@ -8,13 +8,16 @@ settings:
   react:
     version: 'detect'
 parser: '@typescript-eslint/parser'
+parserOptions:
+  project: './configs/tslint.json'
 plugins:
-  - 'react-hooks'
+  - 'jsx-a11y'
   - 'jest'
+  - 'react-hooks'
   - 'react'
   - '@typescript-eslint'
-  - 'emotion'
 extends:
+  - 'plugin:jsx-a11y/recommended'
   - 'plugin:jest/recommended'
   - 'eslint:recommended'
   - 'plugin:react/recommended'
@@ -24,20 +27,17 @@ extends:
   - 'prettier/react'
   - 'prettier/@typescript-eslint'
 rules:
-  no-var: error
   prefer-const: error
-  no-unused-vars: error
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: error
-  emotion/jsx-import: error
-  emotion/no-vanilla: error
-  emotion/import-from-emotion: error
-  emotion/styled-import: error
 overrides:
   - files:
       - '*.ts'
       - '*.tsx'
     rules:
+      '@typescript-eslint/no-explicit-any': error
+      '@typescript-eslint/no-unused-vars': error
+
       react/prop-types: off
       react/display-name: off
       '@typescript-eslint/explicit-function-return-type': off
@@ -46,3 +46,4 @@ overrides:
       '@typescript-eslint/camelcase': off
       '@typescript-eslint/no-triple-slash-reference': off
       '@typescript-eslint/no-non-null-assertion': off
+      '@typescript-eslint/ban-ts-ignore': off

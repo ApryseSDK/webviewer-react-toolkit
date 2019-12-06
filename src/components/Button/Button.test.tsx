@@ -1,0 +1,29 @@
+import {mount, shallow} from 'enzyme';
+import React from 'react';
+import {spy} from 'sinon';
+import Button from '../Button';
+
+describe('Button component', () => {
+  it('renders its contents', () => {
+    const button = shallow(<Button />);
+    expect(button.find('.ui__button').length).toEqual(1);
+  });
+
+  it('snapshot renders default button', () => {
+    const button = shallow(<Button />);
+    expect(button).toMatchSnapshot();
+  });
+
+  it('clicking button triggers onClick prop', () => {
+    const onClick = spy();
+    shallow(<Button onClick={onClick} />).simulate('click');
+    expect(onClick.callCount).toBe(1);
+  });
+
+  it('clicking disabled button does not trigger onClick prop', () => {
+    const onClick = spy();
+    // full DOM mount so `button` element will use disabled prop
+    mount(<Button onClick={onClick} disabled />).simulate('click');
+    expect(onClick.callCount).toBe(0);
+  });
+});
