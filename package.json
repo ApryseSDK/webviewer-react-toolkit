@@ -2,7 +2,7 @@
   "name": "component-library",
   "version": "0.0.0",
   "description": "Component Library",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "scripts": {
     "start": "start-storybook -p 6006",
     "make": "ts-node scripts/make",
