@@ -1,0 +1,48 @@
+env:
+  browser: true
+  es6: true
+  commonjs: true
+  node: true
+  jest: true
+settings:
+  react:
+    version: 'detect'
+parser: '@typescript-eslint/parser'
+plugins:
+  - 'react-hooks'
+  - 'jest'
+  - 'react'
+  - '@typescript-eslint'
+  - 'emotion'
+extends:
+  - 'plugin:jest/recommended'
+  - 'eslint:recommended'
+  - 'plugin:react/recommended'
+  - 'plugin:@typescript-eslint/recommended'
+  # Prettier overrides
+  - 'prettier'
+  - 'prettier/react'
+  - 'prettier/@typescript-eslint'
+rules:
+  no-var: error
+  prefer-const: error
+  no-unused-vars: error
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: error
+  emotion/jsx-import: error
+  emotion/no-vanilla: error
+  emotion/import-from-emotion: error
+  emotion/styled-import: error
+overrides:
+  - files:
+      - '*.ts'
+      - '*.tsx'
+    rules:
+      react/prop-types: off
+      react/display-name: off
+      '@typescript-eslint/explicit-function-return-type': off
+      '@typescript-eslint/no-var-requires': off
+      '@typescript-eslint/no-empty-interface': off
+      '@typescript-eslint/camelcase': off
+      '@typescript-eslint/no-triple-slash-reference': off
+      '@typescript-eslint/no-non-null-assertion': off
