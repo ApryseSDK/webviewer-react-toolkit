@@ -1,0 +1,14 @@
+# Ignore formatted variables file.
+_variables.scss
+
+# Ignore GitHub folder
+.github
+
+# Ignore build folders
+dist
+lib
+docs
+storybook-build
+
+# Ignore node modules folder
+node_modules

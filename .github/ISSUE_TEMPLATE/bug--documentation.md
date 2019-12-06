@@ -4,7 +4,10 @@ about: Report an issue with the documentation of a component
 title: ''
 labels: "\U0001F4D6 documentation bug"
 assignees: liamross
----### Describe the bug
+
+---
+
+### Describe the bug
 
 <!-- A clear and concise description of what the bug is -->
 

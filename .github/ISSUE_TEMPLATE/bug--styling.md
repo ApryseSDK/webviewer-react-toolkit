@@ -4,7 +4,10 @@ about: Report an issue with the style of a component
 title: ''
 labels: "\U0001F3A8 style bug"
 assignees: ''
----### Describe the bug
+
+---
+
+### Describe the bug
 
 <!-- A clear and concise description of what the bug is -->
 
