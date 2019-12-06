@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button component snapshot renders default button 1`] = `
+<button
+  className="ui__button"
+>
+  Default value
+</button>
+`;
