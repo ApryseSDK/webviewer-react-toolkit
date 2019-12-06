@@ -1,11 +1,11 @@
 import marked from 'marked';
-import React, {FC, HTMLAttributes, ReactNode, useEffect, useRef} from 'react';
+import React, { FC, HTMLAttributes, ReactNode, useEffect, useRef } from 'react';
 
 interface PropDefinition {
   /** Prop name */
   property: string;
   /** Prop type */
-  propType: {name: string};
+  propType: { name: string };
   /** Is prop required */
   required: boolean;
   /** Description of prop */
@@ -31,18 +31,18 @@ const PROP_COLOR = '#0d92ff';
 const TYPE_COLOR = '#2E8B57';
 const DEFAULT_COLOR = '#b84f28';
 
-const PropName: FC<ModifierProps> = ({children, ...props}) => (
-  <span {...props} style={{color: PROP_COLOR}}>
+const PropName: FC<ModifierProps> = ({ children, ...props }) => (
+  <span {...props} style={{ color: PROP_COLOR }}>
     {children}
   </span>
 );
-const TypeName: FC<ModifierProps> = ({children, ...props}) => (
-  <span {...props} style={{color: TYPE_COLOR}}>
+const TypeName: FC<ModifierProps> = ({ children, ...props }) => (
+  <span {...props} style={{ color: TYPE_COLOR }}>
     {children}
   </span>
 );
-const DefaultName: FC<ModifierProps> = ({children, ...props}) => (
-  <span {...props} style={{color: DEFAULT_COLOR}}>
+const DefaultName: FC<ModifierProps> = ({ children, ...props }) => (
+  <span {...props} style={{ color: DEFAULT_COLOR }}>
     {children}
   </span>
 );
@@ -53,7 +53,7 @@ const sortFunction = (a: PropDefinition, b: PropDefinition) => {
   return 0;
 };
 
-const ellipses = (longString: string): {newString: string; shortened: boolean} => {
+const ellipses = (longString: string): { newString: string; shortened: boolean } => {
   const MAX_LENGTH = 60;
   if (longString.length > MAX_LENGTH) {
     return {
@@ -61,7 +61,7 @@ const ellipses = (longString: string): {newString: string; shortened: boolean} =
       shortened: true,
     };
   }
-  return {newString: longString, shortened: false};
+  return { newString: longString, shortened: false };
 };
 
 const propsToExclude = [
@@ -70,16 +70,16 @@ const propsToExclude = [
   /^aria-/, // Remove all aria props.
 ];
 
-const matchOurProps = ({property, description}: PropDefinition): boolean =>
+const matchOurProps = ({ property, description }: PropDefinition): boolean =>
   !propsToExclude.some(rx => rx.test(property)) && (property === 'ref' || !!description);
 
 const TableComponent: FC<TableComponentProps> = tableProps => {
   const emptyRef = useRef<HTMLDivElement>(null);
 
-  const {propDefinitions} = tableProps;
+  const { propDefinitions } = tableProps;
 
   // Filter out any undocumented or key props.
-  const validProps = propDefinitions.filter(matchOurProps).filter(({property}) => property !== 'key');
+  const validProps = propDefinitions.filter(matchOurProps).filter(({ property }) => property !== 'key');
 
   // Hide props table if no props.
   const propsLength = validProps.length;
@@ -104,18 +104,18 @@ const TableComponent: FC<TableComponentProps> = tableProps => {
 
   // Sort all required props.
   const sortedRequired = validProps
-    .filter(({description, required}) => required && !(description && description.includes(DEPRECATED)))
+    .filter(({ description, required }) => required && !(description && description.includes(DEPRECATED)))
     .sort(sortFunction);
 
   // Sort all optional props.
   const sortedOptional = validProps
-    .filter(({description, required}) => !required && !(description && description.includes(DEPRECATED)))
+    .filter(({ description, required }) => !required && !(description && description.includes(DEPRECATED)))
     .sort(sortFunction);
 
   // Sort all deprecated props.
   const sortedDeprecated = validProps
-    .filter(({description}) => description && description.includes(DEPRECATED))
-    .map(prop => ({...prop, deprecated: true}))
+    .filter(({ description }) => description && description.includes(DEPRECATED))
+    .map(prop => ({ ...prop, deprecated: true }))
     .sort(sortFunction);
 
   const innerHtml = (property: string, propType: string, description?: string, deprecated?: boolean) => {
@@ -133,16 +133,16 @@ const TableComponent: FC<TableComponentProps> = tableProps => {
       descriptionBody = description;
     }
 
-    return {__html: marked(descriptionBody)};
+    return { __html: marked(descriptionBody) };
   };
 
   const props = sortedRequired
     .concat(sortedOptional)
     .concat(sortedDeprecated)
-    .map(({property, propType, required, description, defaultValue, deprecated}) => {
+    .map(({ property, propType, required, description, defaultValue, deprecated }) => {
       const defaultLabel = required ? undefined : defaultValue ?? '-';
 
-      const {newString: typeName, shortened} = ellipses(propType.name);
+      const { newString: typeName, shortened } = ellipses(propType.name);
       return (
         <tr key={property} className={deprecated ? 'story__deprecatedRow' : undefined}>
           <td>

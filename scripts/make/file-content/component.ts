@@ -1,9 +1,9 @@
-import {pascalToCamel} from '../utils/stringUtils';
-import {STYLE_PREFIX} from '../constants';
+import { pascalToCamel } from '../utils/stringUtils';
+import { STYLE_PREFIX } from '../constants';
 
 export const component = (componentName: string) =>
   `import classnames from 'classnames';
-import React, {FC, ButtonHTMLAttributes} from 'react';
+import React, { FC, ButtonHTMLAttributes } from 'react';
 
 export interface ${componentName}Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -13,7 +13,7 @@ export interface ${componentName}Props extends ButtonHTMLAttributes<HTMLButtonEl
   someProp?: string;
 }
 
-export const ${componentName}: FC<${componentName}Props> = ({someProp = 'Default value', className, ...buttonProps}) => {
+export const ${componentName}: FC<${componentName}Props> = ({ someProp = 'Default value', className, ...buttonProps }) => {
   const ${pascalToCamel(componentName)}Class = classnames('${STYLE_PREFIX}__${pascalToCamel(
     componentName,
   )}', className, {

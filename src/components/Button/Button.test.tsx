@@ -1,6 +1,6 @@
-import {mount, shallow} from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
-import {spy} from 'sinon';
+import { spy } from 'sinon';
 import Button from '../Button';
 
 describe('Button component', () => {

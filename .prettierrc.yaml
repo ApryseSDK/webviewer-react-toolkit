@@ -1,6 +1,3 @@
-# Improves the horizontal space of the file, subjective preference.
-bracketSpacing: false
-
 # Wrap markdown files at 80 chars for raw file readability.
 proseWrap: always
 
@@ -13,8 +10,8 @@ trailingComma: all
 overrides:
   # TypeScript files benefit from more horizontal space, subjective preference.
   - files:
-      - "*.ts"
-      - "*.tsx"
+      - '*.ts'
+      - '*.tsx'
     options:
       printWidth: 120
 

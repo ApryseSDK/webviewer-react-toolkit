@@ -1,10 +1,10 @@
-import {pascalToCamel} from '../utils/stringUtils';
-import {STYLE_PREFIX} from '../constants';
+import { pascalToCamel } from '../utils/stringUtils';
+import { STYLE_PREFIX } from '../constants';
 
 export const componentTest = (componentName: string) =>
-  `import {mount, shallow} from 'enzyme';
+  `import { mount, shallow } from 'enzyme';
 import React from 'react';
-import {spy} from 'sinon';
+import { spy } from 'sinon';
 import ${componentName} from '../${componentName}';
 
 describe('${componentName} component', () => {

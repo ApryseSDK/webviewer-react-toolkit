@@ -1,6 +1,6 @@
 import c from 'ansi-colors';
-import {MakeOptions} from './types';
-import {log, SUCCESS_SYMBOL, ERROR_SYMBOL} from '../utils/logUtils';
+import { MakeOptions } from './types';
+import { log, SUCCESS_SYMBOL, ERROR_SYMBOL } from '../utils/logUtils';
 
 const checkOrCross = (bool: boolean, ifTrue: string, ifFalse: string) => {
   const symbol = bool ? c.green(SUCCESS_SYMBOL) : c.red(ERROR_SYMBOL);
@@ -11,7 +11,7 @@ const checkOrCross = (bool: boolean, ifTrue: string, ifFalse: string) => {
 /**
  * Log a summary of your options.
  */
-export const summaryLog = ({isRef, componentName}: MakeOptions) => {
+export const summaryLog = ({ isRef, componentName }: MakeOptions) => {
   const componentInfo = `
 Component information:
 ${c.dim('Component name:')} ${c.yellow(`${componentName}`)}`;

@@ -1,8 +1,8 @@
-import {prompt} from 'enquirer';
-import {generateFiles} from './generateFiles';
-import {optionPicker} from './optionPicker';
-import {summaryLog} from './summaryLog';
-import {clearTerminal, log, redErr} from '../utils/logUtils';
+import { prompt } from 'enquirer';
+import { generateFiles } from './generateFiles';
+import { optionPicker } from './optionPicker';
+import { summaryLog } from './summaryLog';
+import { clearTerminal, log, redErr } from '../utils/logUtils';
 
 (async () => {
   clearTerminal();
@@ -15,7 +15,7 @@ import {clearTerminal, log, redErr} from '../utils/logUtils';
       const options = await optionPicker();
       summaryLog(options);
 
-      const {componentName, isRef} = options;
+      const { componentName, isRef } = options;
 
       /* --- Check for final approval before generating files --- */
 
@@ -25,9 +25,9 @@ import {clearTerminal, log, redErr} from '../utils/logUtils';
           name: 'approvedOptions',
           message: `Do these options look ok?`,
           choices: [
-            {name: 'yes', hint: ' All of your choices are correct'},
-            {name: 'no', hint: '  Reselect your component options'},
-            {name: 'quit', hint: 'You give up'},
+            { name: 'yes', hint: ' All of your choices are correct' },
+            { name: 'no', hint: '  Reselect your component options' },
+            { name: 'quit', hint: 'You give up' },
           ],
         })
       )['approvedOptions'];
@@ -44,7 +44,7 @@ import {clearTerminal, log, redErr} from '../utils/logUtils';
       // Generate files and directories
       if (approvedOptions === 'yes') {
         log('\nAttempting to generate files...\n');
-        generateFiles({isRef, componentName});
+        generateFiles({ isRef, componentName });
         return;
       }
     } catch (error) {

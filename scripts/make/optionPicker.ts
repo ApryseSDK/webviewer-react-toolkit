@@ -1,5 +1,5 @@
-import {prompt} from 'enquirer';
-import {MakeOptions} from './types';
+import { prompt } from 'enquirer';
+import { MakeOptions } from './types';
 
 /**
  * Option picker function for make script.
@@ -37,8 +37,8 @@ export const optionPicker = async (): Promise<MakeOptions> => {
         message: 'Will your component forward a ref?',
         hint: 'https://reactjs.org/docs/forwarding-refs.html',
         choices: [
-          {name: 'no', hint: ' Component does not require a ref (ex: Tooltip)'},
-          {name: 'yes', hint: 'Component should forward a ref (ex: Button, Input)'},
+          { name: 'no', hint: ' Component does not require a ref (ex: Tooltip)' },
+          { name: 'yes', hint: 'Component should forward a ref (ex: Button, Input)' },
         ],
       })
     )['isRef'];
@@ -46,5 +46,5 @@ export const optionPicker = async (): Promise<MakeOptions> => {
     return result === 'yes';
   })();
 
-  return {componentName, isRef};
+  return { componentName, isRef };
 };

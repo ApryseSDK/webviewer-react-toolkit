@@ -3,5 +3,5 @@
  */
 
 // <import-start>
-export {default as Button} from './Button';
+export { default as Button } from './Button';
 // <import-end>

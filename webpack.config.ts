@@ -28,7 +28,7 @@ const config: webpack.Configuration = {
   // 'react-dom',
   // ],
   plugins: [
-    new MiniCssExtractPlugin({filename: `${LIBRARY_PATH}/style.css`}),
+    new MiniCssExtractPlugin({ filename: `${LIBRARY_PATH}/style.css` }),
     new CopyPlugin([
       {
         from: `${BASE_URL}/styles/_variables.scss`,
@@ -45,9 +45,9 @@ const config: webpack.Configuration = {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          compress: {comparisons: false, inline: 2},
-          mangle: {safari10: true},
-          output: {ascii_only: true},
+          compress: { comparisons: false, inline: 2 },
+          mangle: { safari10: true },
+          output: { ascii_only: true },
           toplevel: true,
         },
         parallel: true,
@@ -79,9 +79,9 @@ const config: webpack.Configuration = {
         use: [
           {
             loader: 'babel-loader',
-            options: {presets: ['@babel/preset-env', '@babel/preset-react']},
+            options: { presets: ['@babel/preset-env', '@babel/preset-react'] },
           },
-          {loader: 'ts-loader', options: {transpileOnly: true}},
+          { loader: 'ts-loader', options: { transpileOnly: true } },
         ],
       },
       {

@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = ({config: defaultConfig}) => {
+module.exports = ({ config: defaultConfig }) => {
   // Sass loader:
   defaultConfig.module.rules.push({
     test: /\.scss$/,
@@ -13,8 +13,8 @@ module.exports = ({config: defaultConfig}) => {
   defaultConfig.module.rules.push({
     test: /\.(ts|tsx)$/,
     use: [
-      {loader: require.resolve('ts-loader')},
-      {loader: require.resolve('react-docgen-typescript-loader')},
+      { loader: require.resolve('ts-loader') },
+      { loader: require.resolve('react-docgen-typescript-loader') },
     ],
   });
   defaultConfig.resolve.extensions.push('.ts', '.tsx');

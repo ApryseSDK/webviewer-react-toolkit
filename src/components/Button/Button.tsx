@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, {forwardRef, ButtonHTMLAttributes} from 'react';
+import React, { forwardRef, ButtonHTMLAttributes } from 'react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -10,7 +10,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({someProp = 'Default value', className, ...buttonProps}, ref) => {
+  ({ someProp = 'Default value', className, ...buttonProps }, ref) => {
     const buttonClass = classnames('ui__button', className, {
       ['ui__button--disabled']: buttonProps.disabled,
     });

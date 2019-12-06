@@ -1,7 +1,7 @@
-import {Options as InfoOptions, withInfo} from '@storybook/addon-info';
-import {withKnobs} from '@storybook/addon-knobs';
-import {addDecorator, addParameters, configure} from '@storybook/react';
-import {InfoStyle} from './InfoStyle';
+import { Options as InfoOptions, withInfo } from '@storybook/addon-info';
+import { withKnobs } from '@storybook/addon-knobs';
+import { addDecorator, addParameters, configure } from '@storybook/react';
+import { InfoStyle } from './InfoStyle';
 import TableComponent from './TableComponent';
 import Theme from './Theme';
 
@@ -31,8 +31,8 @@ addDecorator(withKnobs);
 
 // @ts-ignore (types are broken)
 addParameters({
-  options: {theme: Theme, panelPosition: 'right'},
-  backgrounds: [{name: 'white', value: '#fff'}],
+  options: { theme: Theme, panelPosition: 'right' },
+  backgrounds: [{ name: 'white', value: '#fff' }],
 });
 
 /**

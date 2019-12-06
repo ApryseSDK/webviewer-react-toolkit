@@ -1,21 +1,21 @@
 import c from 'ansi-colors';
 import fs from 'fs';
-import {component} from './file-content/component';
-import {componentIndex} from './file-content/componentIndex';
-import {componentReadme} from './file-content/componentReadme';
-import {componentRef} from './file-content/componentRef';
-import {componentStory} from './file-content/componentStory';
-import {componentStyle} from './file-content/componentStyle';
-import {componentTest} from './file-content/componentTest';
-import {MakeOptions} from './types';
-import {updateImportFile} from './utils/fileUtils';
-import {err, timeErr, timeLog} from '../utils/logUtils';
-import {getPaths, pathify} from './utils/pathUtils';
+import { component } from './file-content/component';
+import { componentIndex } from './file-content/componentIndex';
+import { componentReadme } from './file-content/componentReadme';
+import { componentRef } from './file-content/componentRef';
+import { componentStory } from './file-content/componentStory';
+import { componentStyle } from './file-content/componentStyle';
+import { componentTest } from './file-content/componentTest';
+import { MakeOptions } from './types';
+import { updateImportFile } from './utils/fileUtils';
+import { err, timeErr, timeLog } from '../utils/logUtils';
+import { getPaths, pathify } from './utils/pathUtils';
 
 /**
  * Generate the files.
  */
-export const generateFiles = ({isRef, componentName}: MakeOptions) => {
+export const generateFiles = ({ isRef, componentName }: MakeOptions) => {
   // Directories and files.
   const {
     rootDir,
@@ -59,7 +59,7 @@ export const generateFiles = ({isRef, componentName}: MakeOptions) => {
 
   // Make component index file.
   const componentIndexPath = pathify(componentDir, indexFile);
-  fs.writeFile(componentIndexPath, componentIndex(componentName), {flag: 'wx'}, error => {
+  fs.writeFile(componentIndexPath, componentIndex(componentName), { flag: 'wx' }, error => {
     if (error) timeErr('index', `Could not create \`${componentIndexPath}\``);
     else timeLog('index', `Created \`${componentIndexPath}\``);
   });
@@ -67,28 +67,28 @@ export const generateFiles = ({isRef, componentName}: MakeOptions) => {
   // Make component.
   const componentContent = isRef ? componentRef(componentName) : component(componentName);
   const componentPath = pathify(componentDir, componentFile);
-  fs.writeFile(componentPath, componentContent, {flag: 'wx'}, error => {
+  fs.writeFile(componentPath, componentContent, { flag: 'wx' }, error => {
     if (error) timeErr('component', `Could not create \`${componentPath}\``);
     else timeLog('component', `Created \`${componentPath}\``);
   });
 
   // Make component stylesheet.
   const stylesheetPath = pathify(componentDir, styleFile);
-  fs.writeFile(stylesheetPath, componentStyle(componentName), {flag: 'wx'}, error => {
+  fs.writeFile(stylesheetPath, componentStyle(componentName), { flag: 'wx' }, error => {
     if (error) timeErr('style', `Could not create \`${stylesheetPath}\``);
     else timeLog('style', `Created \`${stylesheetPath}\``);
   });
 
   // Make component test file.
   const testPath = pathify(componentDir, testFile);
-  fs.writeFile(testPath, componentTest(componentName), {flag: 'wx'}, error => {
+  fs.writeFile(testPath, componentTest(componentName), { flag: 'wx' }, error => {
     if (error) timeErr('test', `Could not create \`${testPath}\``);
     else timeLog('test', `Created \`${testPath}\``);
   });
 
   // Make component story file.
   const storyPath = pathify(componentDir, storyFile);
-  fs.writeFile(storyPath, componentStory(componentName), {flag: 'wx'}, error => {
+  fs.writeFile(storyPath, componentStory(componentName), { flag: 'wx' }, error => {
     if (error) timeErr('story', `Could not create \`${storyPath}\``);
     else timeLog('story', `Created \`${storyPath}\``);
   });
@@ -96,7 +96,7 @@ export const generateFiles = ({isRef, componentName}: MakeOptions) => {
   // Make component README.
   const storyContent = componentReadme(componentName);
   const readmePath = pathify(componentDir, readmeFile);
-  fs.writeFile(readmePath, storyContent, {flag: 'wx'}, error => {
+  fs.writeFile(readmePath, storyContent, { flag: 'wx' }, error => {
     if (error) timeErr('docs', `Could not create \`${readmePath}\``);
     else timeLog('docs', `Created \`${readmePath}\``);
   });
