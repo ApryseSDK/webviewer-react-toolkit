@@ -1,7 +1,23 @@
 .ui__button {
-  color: blue;
+  cursor: pointer;
 
   &--disabled {
-    color: red;
+    //
+  }
+
+  /* --- Button styles. --- */
+
+  &--default {
+    background: blue;
+    color: white;
+  }
+
+  &--borderless {
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  &--outline {
+    border-color: blue;
   }
 }
