@@ -5,7 +5,7 @@ import { enumSelect } from '../../storybook-helpers/knobs/enumSelect';
 import Button, { ButtonStyle } from '../Button';
 import docs from './README.md';
 
-export default { title: 'Button', info: docs };
+export default { title: 'Button', parameters: { info: docs } };
 
 export const basic = () => (
   <Button

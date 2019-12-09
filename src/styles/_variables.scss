@@ -1,0 +1,42 @@
+/* --- Theme colors --- */
+
+// Light theme.
+:root {
+  --theme-primary:     #302AE6;
+  --theme-secondary:   #536390;
+  --font-primary:      #292922;
+  --font-secondary:    #424242;
+  --background-canvas: #fff;
+  --mono-background:   #eee;
+}
+
+// Dark theme.
+[data-theme="dark"] {
+  --theme-primary:     #9A97F3;
+  --theme-secondary:   #818cab;
+  --font-primary:      #e1e1ff;
+  --font-secondary:    #818cab;
+  --background-canvas: #161625;
+}
+
+// Use these rather than var in line.
+$theme-primary:     var(--theme-primary);
+$theme-secondary:   var(--theme-secondary);
+$font-primary:      var(--font-primary);
+$font-secondary:    var(--font-secondary);
+$background-canvas: var(--background-canvas);
+$mono-background:   var(--mono-background);
+
+
+/* --- Font sizing. --- */
+$font-size-small:   12px;
+$font-size-default: 14px;
+$font-size-medium:  16px;
+$font-size-large:   24px;
+
+
+/* --- Padding --- */
+
+$padding-small: 12px;
+$padding:       16px;
+$padding-large: 24px;

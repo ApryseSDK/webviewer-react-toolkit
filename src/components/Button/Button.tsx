@@ -22,7 +22,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ buttonStyle = ButtonStyle.Default, type = 'button', className, ...buttonProps }, ref) => {
-    const buttonClass = classnames('ui__button', className, `ui__button--${buttonStyle}`, {
+    const buttonClass = classnames('ui__base ui__button', className, `ui__button--${buttonStyle}`, {
       ['ui__button--disabled']: buttonProps.disabled,
     });
 

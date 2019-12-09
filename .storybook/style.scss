@@ -4,10 +4,27 @@ body,
   height: 100%;
 }
 
-/* --- Modify padding of container --- */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* --- Modify story container --- */
 
 .sb-show-main {
   padding: 32px 16px 16px;
+  margin: 0;
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
 
   // Only target documentation
   .info__overlay {

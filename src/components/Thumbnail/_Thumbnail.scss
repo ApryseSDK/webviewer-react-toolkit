@@ -1,7 +1,36 @@
-.ui__thumbnail {
-  color: blue;
+$thumbnail-dimensions: 250px;
 
-  &--disabled {
-    color: red;
+.ui__thumbnail {
+  padding: $padding;
+  position: relative;
+
+  &--selected {
+    background-color: $mono-background;
+  }
+
+  &:hover {
+    background-color: $mono-background;
+
+    .ui__thumbnail__controls {
+      visibility: visible;
+    }
+  }
+
+  &__controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
+    position: absolute;
+  }
+
+  &__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__label {
+    //
   }
 }

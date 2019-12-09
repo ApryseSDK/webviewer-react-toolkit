@@ -5,6 +5,11 @@ declare module '*.md' {
   export default content;
 }
 
+declare module '*.svg' {
+  const content: string;
+  export default content;
+}
+
 declare interface DocumentObj {}
 
 /* --- Everything below here should be included as a dependency. --- */

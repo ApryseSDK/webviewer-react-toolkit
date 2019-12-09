@@ -1,14 +1,32 @@
 import { action } from '@storybook/addon-actions';
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean } from '@storybook/addon-knobs';
 import React from 'react';
+import { File } from '../../hooks/useFile';
 import Thumbnail from '../Thumbnail';
+import docs from './README.md';
 
-export default { title: 'Thumbnail' };
+export default { title: 'Thumbnail', parameters: { info: docs } };
+
+const fetchingThumbnail: File = {
+  id: 'test',
+  name: 'Test name',
+  extension: 'pdf',
+  originalName: 'Test original name',
+};
+
+const fetchedThumbnail: File = {
+  id: 'test',
+  name: 'Test name',
+  extension: 'pdf',
+  originalName: 'Test original name',
+  thumbnail: 'someThumbnail string',
+};
 
 export const basic = () => (
   <Thumbnail
-    someProp={text('someProp', 'Hello, World!')}
+    file={boolean('is fetching thumbnail?', false) ? fetchingThumbnail : fetchedThumbnail}
     disabled={boolean('disabled', false)}
+    selected={boolean('selected', false)}
     onClick={action('onClick')}
   />
 );

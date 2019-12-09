@@ -42,7 +42,7 @@ type FutureDispatch = <T>(
   key: FileAsyncValueKeys,
 ) => Promise<void>;
 
-function useFile(fileInitializer: FileDetails | FileInitializer, onFailed: FileFailed): File {
+function useFile(fileInitializer: FileDetails | FileInitializer, onFailed?: FileFailed): File {
   // We only care about initial values of initializer, and we only call onFailed
   // when there's an actual failure, so we put them in a ref to prevent updates
   // if it changes. This also allows arrow functions in useFile.
@@ -72,7 +72,7 @@ function useFile(fileInitializer: FileDetails | FileInitializer, onFailed: FileF
       const value = await future;
       dispatch(value);
     } catch (error) {
-      dispatch(onFailedRef.current(key, error));
+      if (onFailedRef.current) dispatch(onFailedRef.current(key, error));
     }
   }, []);
 

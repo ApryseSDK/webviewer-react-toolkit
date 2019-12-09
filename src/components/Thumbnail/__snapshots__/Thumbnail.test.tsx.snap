@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
-<button
+<ForwardRef
   className="ui__thumbnail"
->
-  Default value
-</button>
+/>
 `;

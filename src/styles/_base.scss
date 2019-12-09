@@ -1,9 +1,15 @@
-html {
+// Scoped to base class at the root of each component.
+.ui__base {
+  // Scope normalize css into the base.
+  @import '~normalize.css';
   box-sizing: border-box;
-}
+  font-size: $font-size-default;
+  font-family: inherit;
+  color: $font-primary;
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
 }

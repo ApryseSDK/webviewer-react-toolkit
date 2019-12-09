@@ -1,0 +1,23 @@
+.ui__spinner {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+
+  &__animated {
+    width: 24px;
+    height: 24px;
+    animation: spin 1.2s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite;
+    border: 2px solid;
+    border-color: $theme-primary $mono-background $mono-background;
+    border-radius: 50%;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,6 +1,3 @@
-// Normalize.
-@import '~normalize.css';
-
 // Style variables (import first, used in mixins and base).
 @import './styles/variables';
 
@@ -16,5 +13,7 @@
 
 // <import-start>
 @import './components/Button/Button';
+@import './components/ClickableDiv/ClickableDiv';
+@import './components/Spinner/Spinner';
 @import './components/Thumbnail/Thumbnail';
 // <import-end>
