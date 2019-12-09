@@ -32,7 +32,7 @@ addDecorator(withKnobs);
 // @ts-ignore (types are broken)
 addParameters({
   options: { theme: Theme, panelPosition: 'right' },
-  backgrounds: [{ name: 'white', value: '#fff' }],
+  backgrounds: [{ name: 'white', value: '#fff', default: true }],
 });
 
 /**
