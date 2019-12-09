@@ -10,6 +10,11 @@ declare module '*.svg' {
   export default content;
 }
 
+declare module '*.png' {
+  const content: string;
+  export default content;
+}
+
 declare interface DocumentObj {}
 
 /* --- Everything below here should be included as a dependency. --- */

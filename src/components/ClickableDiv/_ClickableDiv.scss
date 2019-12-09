@@ -1,6 +1,10 @@
 .ui__clickableDiv {
   display: inline-block;
 
+  &:focus:not(.ui__clickableDiv--noFocusStyle) {
+    @include focus;
+  }
+
   &--disabled {
     opacity: 0.8;
   }

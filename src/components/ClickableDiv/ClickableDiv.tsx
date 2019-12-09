@@ -7,15 +7,20 @@ export interface ClickableDivProps extends Omit<HTMLAttributes<HTMLDivElement>, 
    * Is the clickable div disabled.
    */
   disabled?: boolean;
+  /**
+   * No style when focused.
+   */
+  noFocusStyle?: boolean;
 }
 
 export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
-  ({ onClick, onKeyUp, disabled, className, children, ...buttonProps }, ref) => {
+  ({ onClick, onKeyUp, disabled, noFocusStyle, className, children, ...buttonProps }, ref) => {
     const divRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => divRef.current!);
 
     const clickableDivClass = classnames('ui__base ui__clickableDiv', className, {
       ['ui__clickableDiv--disabled']: disabled,
+      ['ui__clickableDiv--noFocusStyle']: noFocusStyle,
     });
 
     const handleOnClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -23,8 +28,8 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
     };
 
     const handleKeyUp = (event: KeyboardEvent<HTMLDivElement>) => {
-      // Fire click on space press.
-      if (event.key === ' ') divRef.current?.click();
+      // Fire click on space or enter press.
+      if (event.key === ' ' || event.key === 'Enter') divRef.current?.click();
       onKeyUp?.(event);
     };
 
