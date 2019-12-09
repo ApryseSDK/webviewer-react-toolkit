@@ -2,7 +2,7 @@
 
 exports[`ClickableDiv component snapshot renders default clickableDiv 1`] = `
 <div
-  className="ui__clickableDiv"
+  className="ui__base ui__clickableDiv"
   onClick={[Function]}
   onKeyUp={[Function]}
   role="button"
