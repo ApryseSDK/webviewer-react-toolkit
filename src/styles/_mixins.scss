@@ -1,3 +1,24 @@
 @mixin focus {
   box-shadow: 0 0 0 1px rgba(#137cbd, 0.4), 0 0 1px 3px rgba(19, 124, 189, 0.3);
 }
+
+/* --- Media query mixins. --- */
+
+// Try not to use this, as it breaks "mobile first" principles.
+@mixin for-phone-only {
+  @media (max-width: $tablet-lower-boundary - 1) {
+    @content;
+  }
+}
+
+@mixin for-tablet-up {
+  @media (min-width: $tablet-lower-boundary) {
+    @content;
+  }
+}
+
+@mixin for-desktop-up {
+  @media (min-width: $desktop-lower-boundary) {
+    @content;
+  }
+}

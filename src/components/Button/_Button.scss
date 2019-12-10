@@ -7,17 +7,33 @@
 
   /* --- Button styles. --- */
 
-  &--default {
-    background: blue;
-    color: white;
+  &--style {
+    &-default {
+      background: blue;
+      color: white;
+    }
+
+    &-borderless {
+      border-color: transparent;
+      background-color: transparent;
+    }
+
+    &-outline {
+      border-color: blue;
+    }
   }
 
-  &--borderless {
-    border-color: transparent;
-    background-color: transparent;
-  }
+  &--size {
+    &-small {
+      //
+    }
 
-  &--outline {
-    border-color: blue;
+    &-default {
+      //
+    }
+
+    &-large {
+      //
+    }
   }
 }

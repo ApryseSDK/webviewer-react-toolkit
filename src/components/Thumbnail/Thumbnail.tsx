@@ -1,8 +1,9 @@
 import classnames from 'classnames';
 import React, { forwardRef } from 'react';
 import { File } from '../../hooks/useFile';
-import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import test from '../../icons/pdf-preview.png';
+import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
+import Spinner from '../Spinner';
 
 export interface ThumbnailProps extends ClickableDivProps {
   /**
@@ -21,14 +22,18 @@ export interface ThumbnailProps extends ClickableDivProps {
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   ({ file, label, selected, className, ...divProps }, ref) => {
-    const thumbnailClass = classnames('ui__base ui__thumbnail', className, {
-      ['ui__thumbnail--selected']: selected,
-    });
+    const thumbnailClass = classnames(
+      'ui__base ui__thumbnail',
+      {
+        ['ui__thumbnail--selected']: selected,
+      },
+      className,
+    );
 
     return (
       <ClickableDiv {...divProps} className={thumbnailClass} ref={ref} noFocusStyle>
         <div className="ui__thumbnail__controls">Controls</div>
-        <div className="ui__thumbnail__image">{file.thumbnail ? <img src={test} alt={file.name} /> : 'loading'}</div>
+        <div className="ui__thumbnail__image">{file.thumbnail ? <img src={test} alt={file.name} /> : <Spinner />}</div>
         <div className="ui__thumbnail__label">{label || file.name}</div>
       </ClickableDiv>
     );

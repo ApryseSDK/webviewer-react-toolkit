@@ -18,10 +18,14 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
     const divRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => divRef.current!);
 
-    const clickableDivClass = classnames('ui__base ui__clickableDiv', className, {
-      ['ui__clickableDiv--disabled']: disabled,
-      ['ui__clickableDiv--noFocusStyle']: noFocusStyle,
-    });
+    const clickableDivClass = classnames(
+      'ui__base ui__clickableDiv',
+      {
+        ['ui__clickableDiv--disabled']: disabled,
+        ['ui__clickableDiv--noFocusStyle']: noFocusStyle,
+      },
+      className,
+    );
 
     const handleOnClick = (event: MouseEvent<HTMLDivElement>) => {
       if (!disabled) onClick?.(event);
@@ -37,7 +41,7 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
       <div
         {...buttonProps}
         role="button"
-        tabIndex={0}
+        tabIndex={disabled ? -1 : 0}
         className={clickableDivClass}
         onClick={handleOnClick}
         onKeyUp={handleKeyUp}

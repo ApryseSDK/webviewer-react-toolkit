@@ -5,6 +5,8 @@ $thumbnail-dimensions: 250px;
   position: relative;
   border: 0;
   outline: 0;
+  width: 250px;
+  height: 250px;
 
   &--selected {
     background-color: $mono-background;

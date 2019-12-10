@@ -1,25 +1,44 @@
-/* --- Theme colors --- */
+/* --- Theme colors. --- */
+
+/*
+white 1     - For cards, header and primary toolbar on mobile
+white 2     - For general UI and panel backgrounds
+blue gray 1 - For toolbar and tabs background
+blue gray 2 - For unselected icons
+blue gray 3 - For hint text
+blue gray 4 - For selected icons, text 
+blue gray 5 - For buttons and sliders to indicate that they are interactive.
+*/
 
 // Light theme.
 :root {
-  --theme-primary:     #302AE6;
-  --theme-secondary:   #536390;
+  --theme-primary:     #6077bf;
+  --theme-secondary:   #131416;
   --font-primary:      #292922;
   --font-secondary:    #424242;
   --background-canvas: #fff;
   --mono-background:   #eee;
+
+  --blue-gray-1:       #dfe2ed;
+  --blue-gray-2:       #abb0c4;
+  --blue-gray-3:       #8b92ab;
+  --blue-gray-4:       #767f9b;
+  --blue-gray-5:       #6077bf;
+  --white-1:           #fafafa;
+  --white-2:           #f0f0f0;
 }
 
-// Dark theme.
+// Dark theme (TBD).
 [data-theme="dark"] {
   --theme-primary:     #9A97F3;
   --theme-secondary:   #818cab;
   --font-primary:      #e1e1ff;
   --font-secondary:    #818cab;
   --background-canvas: #161625;
+  --mono-background:   #333;
 }
 
-// Use these rather than var in line.
+// Use these in your sass rather than using var in line.
 $theme-primary:     var(--theme-primary);
 $theme-secondary:   var(--theme-secondary);
 $font-primary:      var(--font-primary);
@@ -27,16 +46,29 @@ $font-secondary:    var(--font-secondary);
 $background-canvas: var(--background-canvas);
 $mono-background:   var(--mono-background);
 
+$blue-gray-1:       var(--blue-gray-1);
+$blue-gray-2:       var(--blue-gray-2);
+$blue-gray-3:       var(--blue-gray-3);
+$blue-gray-4:       var(--blue-gray-4);
+$blue-gray-5:       var(--blue-gray-5);
+$white-1:           var(--white-1);
+$white-2:           var(--white-2);
+
 
 /* --- Font sizing. --- */
-$font-size-small:   12px;
-$font-size-default: 14px;
-$font-size-medium:  16px;
+
+$font-size-small:   11px;
+$font-size-default: 13px;
+$font-size-medium:  18px;
 $font-size-large:   24px;
 
-
-/* --- Padding --- */
+/* --- Padding. --- */
 
 $padding-small: 12px;
 $padding:       16px;
 $padding-large: 24px;
+
+/* --- Breakpoints (use mixins for setting media queries). --- */
+
+$tablet-lower-boundary:  768px;
+$desktop-lower-boundary: 1024px;

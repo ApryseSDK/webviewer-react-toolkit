@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { enumSelect } from '../../storybook-helpers/knobs/enumSelect';
-import Button, { ButtonStyle } from '../Button';
+import Button, { ButtonSize, ButtonStyle } from '../Button';
 import docs from './README.md';
 
 export default { title: 'Button', parameters: { info: docs } };
@@ -10,6 +10,7 @@ export default { title: 'Button', parameters: { info: docs } };
 export const basic = () => (
   <Button
     buttonStyle={enumSelect('buttonStyle', { ButtonStyle }, ButtonStyle.Default)}
+    buttonSize={enumSelect('buttonSize', { ButtonSize }, ButtonSize.Default)}
     disabled={boolean('disabled', false)}
     onClick={action('onClick')}
   >

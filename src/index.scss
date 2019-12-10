@@ -1,8 +1,11 @@
-// Style variables (import first, used in mixins and base).
+// Style variables (import first, used by other files).
 @import './styles/variables';
 
 // Mixins.
 @import './styles/mixins';
+
+// Animations.
+@import './styles/animations';
 
 // Base style.
 @import './styles/base';

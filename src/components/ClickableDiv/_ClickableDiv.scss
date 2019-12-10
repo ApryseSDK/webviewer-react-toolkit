@@ -1,7 +1,10 @@
 .ui__clickableDiv {
   display: inline-block;
+  outline: none;
+  border: none;
 
-  &:focus:not(.ui__clickableDiv--noFocusStyle) {
+  // Don't show focus shadow if no focus style or disabled.
+  &:focus:not(.ui__clickableDiv--noFocusStyle):not(.ui__clickableDiv--disabled) {
     @include focus;
   }
 
