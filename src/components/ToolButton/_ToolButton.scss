@@ -1,0 +1,32 @@
+.ui__toolButton {
+  background-color: $blue-gray-1;
+  border: none;
+  outline: none;
+  height: 36px;
+  min-width: 36px;
+  padding: $padding-tiny;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: $blue-gray-2;
+  }
+
+  &:focus {
+    @include focus-inset;
+  }
+
+  &--disabled {
+    .ui__toolButton__internals {
+      opacity: 0.5;
+    }
+  }
+
+  &__internals {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -32,6 +32,8 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
     };
 
     const handleKeyUp = (event: KeyboardEvent<HTMLDivElement>) => {
+      // Stop listener when child is target of key event.
+      if (event.target !== divRef.current) return;
       // Fire click on space or enter press.
       if (event.key === ' ' || event.key === 'Enter') divRef.current?.click();
       onKeyUp?.(event);

@@ -57,13 +57,15 @@ $white-2:           var(--white-2);
 
 /* --- Font sizing. --- */
 
-$font-size-small:   11px;
-$font-size-default: 13px;
+$font-size-tiny:    11px;
+$font-size-small:   13px;
+$font-size-default: 16px;
 $font-size-medium:  18px;
 $font-size-large:   24px;
 
 /* --- Padding. --- */
 
+$padding-tiny:  4px;
 $padding-small: 12px;
 $padding:       16px;
 $padding-large: 24px;

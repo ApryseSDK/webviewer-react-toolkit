@@ -25,7 +25,6 @@ const fetchedThumbnail: File = {
 export const basic = () => (
   <Thumbnail
     file={boolean('is fetching thumbnail?', false) ? fetchingThumbnail : fetchedThumbnail}
-    disabled={boolean('disabled', false)}
     selected={boolean('selected', false)}
     onClick={action('onClick')}
   />

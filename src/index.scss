@@ -1,4 +1,4 @@
-// Style variables (import first, used by other files).
+// Style variables (import next, used by other files).
 @import './styles/variables';
 
 // Mixins.
@@ -19,4 +19,5 @@
 @import './components/ClickableDiv/ClickableDiv';
 @import './components/Spinner/Spinner';
 @import './components/Thumbnail/Thumbnail';
+@import './components/ToolButton/ToolButton';
 // <import-end>

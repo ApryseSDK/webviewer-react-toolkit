@@ -7,6 +7,7 @@ $thumbnail-dimensions: 250px;
   outline: 0;
   width: 250px;
   height: 250px;
+  transition: 0.1s background-color;
 
   &--selected {
     background-color: $mono-background;
@@ -14,7 +15,10 @@ $thumbnail-dimensions: 250px;
 
   &:hover {
     background-color: $mono-background;
+  }
 
+  &:hover,
+  &.ui__thumbnail--focused {
     .ui__thumbnail__controls {
       opacity: 1;
     }
@@ -33,6 +37,7 @@ $thumbnail-dimensions: 250px;
     right: 0;
     opacity: 0;
     position: absolute;
+    display: flex;
   }
 
   &__image {
