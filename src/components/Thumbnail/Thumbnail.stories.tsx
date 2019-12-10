@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 import React from 'react';
 import { File } from '../../hooks/useFile';
+import testPdfThumbnail from '../../icons/pdf-preview.png';
 import Thumbnail from '../Thumbnail';
 import docs from './README.md';
 
@@ -19,7 +20,7 @@ const fetchedThumbnail: File = {
   name: 'Test name',
   extension: 'pdf',
   originalName: 'Test original name',
-  thumbnail: 'someThumbnail string',
+  thumbnail: testPdfThumbnail,
 };
 
 export const basic = () => (

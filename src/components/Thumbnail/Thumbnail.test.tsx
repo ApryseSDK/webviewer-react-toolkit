@@ -1,8 +1,8 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import Thumbnail from '../Thumbnail';
 import { File } from '../../hooks/useFile';
+import Thumbnail from '../Thumbnail';
 
 const testFile: File = {
   id: 'test',
@@ -17,10 +17,10 @@ describe('Thumbnail component', () => {
     expect(thumbnail.find('.ui__thumbnail').length).toEqual(1);
   });
 
-  // it('snapshot renders default thumbnail', () => {
-  //   const thumbnail = shallow(<Thumbnail file={testFile} />);
-  //   expect(thumbnail).toMatchSnapshot();
-  // });
+  it('snapshot renders default thumbnail', () => {
+    const thumbnail = shallow(<Thumbnail file={testFile} />);
+    expect(thumbnail).toMatchSnapshot();
+  });
 
   it('clicking thumbnail triggers onClick prop', () => {
     const onClick = spy();

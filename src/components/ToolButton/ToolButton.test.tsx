@@ -16,7 +16,7 @@ describe('ToolButton component', () => {
 
   it('clicking toolButton triggers onClick prop', () => {
     const onClick = spy();
-    shallow(<ToolButton onClick={onClick} />).simulate('click');
+    mount(<ToolButton onClick={onClick} />).simulate('click');
     expect(onClick.callCount).toBe(1);
   });
 

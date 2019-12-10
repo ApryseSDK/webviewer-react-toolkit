@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
+<ForwardRef
+  className="ui__base ui__thumbnail"
+  noFocusStyle={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+>
+  <div
+    className="ui__thumbnail__controls"
+  >
+    <ForwardRef>
+      X
+    </ForwardRef>
+    <ForwardRef>
+      R
+    </ForwardRef>
+  </div>
+  <div
+    className="ui__thumbnail__image"
+  >
+    <Component />
+  </div>
+  <div
+    className="ui__thumbnail__label"
+  >
+    Test name
+  </div>
+</ForwardRef>
+`;

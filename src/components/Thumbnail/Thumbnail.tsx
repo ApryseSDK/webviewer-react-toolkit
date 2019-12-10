@@ -3,7 +3,6 @@ import React, { forwardRef, useState } from 'react';
 import { ToolButton } from '..';
 import { File } from '../../hooks/useFile';
 import useOnClick from '../../hooks/useOnClick';
-import test from '../../icons/pdf-preview.png';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import Spinner from '../Spinner';
 
@@ -51,7 +50,9 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           <ToolButton>X</ToolButton>
           <ToolButton>R</ToolButton>
         </div>
-        <div className="ui__thumbnail__image">{file.thumbnail ? <img src={test} alt={file.name} /> : <Spinner />}</div>
+        <div className="ui__thumbnail__image">
+          {file.thumbnail ? <img src={file.thumbnail} alt={file.name} /> : <Spinner />}
+        </div>
         <div className="ui__thumbnail__label">{label || file.name}</div>
       </ClickableDiv>
     );

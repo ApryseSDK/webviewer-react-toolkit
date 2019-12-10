@@ -2,7 +2,7 @@
 
 exports[`Button component snapshot renders default button 1`] = `
 <button
-  className="ui__base ui__button ui__button--default"
+  className="ui__base ui__button ui__button--style-default ui__button--size-default"
   type="button"
 />
 `;
