@@ -1,14 +1,18 @@
-# PDFTron Component Library
+# 🚧 PDFTron Component Library 🚧
 
-This component library will contain a number of React components that integrate
-nicely with the WebViewer API.
+> This library is under heavy construction. We will update the information on
+> here once it is ready to be used. In the meantime, we advise against using it
+> in your project. Documentation will be out of date or absent -- changes are
+> happening quickly and documentation will be updated once we are closer to
+> releasing.
 
-This README is currently used for planning purposes.
+This component library will contain various React components that integrate with
+the PDFTron WebViewer API.
 
 ## Goal
 
-To create a set of highly customizable components that takes WebViewer documents
-(and other objects), and wraps them in specific functionality.
+To create a set of highly customizable components that take WebViewer documents
+(and other objects), and wrap them in specific functionality.
 
 One example might be a `<Thumbnail />` component, which takes a WebViewer
 document as a prop and displays a thumbnail.
@@ -22,7 +26,6 @@ document as a prop and displays a thumbnail.
 
 - Typescript
 - React
-- Lerna
 
 ## Tech requirements
 
@@ -43,7 +46,7 @@ document as a prop and displays a thumbnail.
 Example of rendering a thumbnail
 
 ```js
-import Thumbnail from '@pdftron/thumbnail';
+import Thumbnail from '@pdftron/component-library/Thumbnail';
 
 export default () => {
   return <Thumbnail document={document} width={250} />;
@@ -53,8 +56,10 @@ export default () => {
 Example of rendering a page organizer
 
 ```js
-import PageOrganizer, { usePageOrganizer } from '@pdftron/page-organizer';
-import Thumbnail from '@pdftron/thumbnail';
+import PageOrganizer, {
+  usePageOrganizer,
+} from '@pdftron/component-library/PageOrganizer';
+import Thumbnail from '@pdftron/component-library/Thumbnail';
 
 export default () => {
   const { submit, organizer } = usePageOrganizer({

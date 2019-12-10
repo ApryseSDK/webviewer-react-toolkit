@@ -8,6 +8,7 @@ $thumbnail-dimensions: 250px;
   width: 250px;
   height: 250px;
   transition: 0.1s background-color;
+  user-select: none;
 
   &--selected {
     background-color: $mono-background;
