@@ -1,39 +1,50 @@
 .ui__button {
   cursor: pointer;
+  outline: none;
+  user-select: none;
 
   &--disabled {
     //
+  }
+
+  &:focus {
+    @include focus;
   }
 
   /* --- Button styles. --- */
 
   &--style {
     &-default {
-      background: blue;
+      border-color: $blue-gray-5;
+      background-color: $blue-gray-5;
       color: white;
     }
 
     &-borderless {
       border-color: transparent;
       background-color: transparent;
+      color: $blue-gray-5;
     }
 
     &-outline {
-      border-color: blue;
+      border-color: $blue-gray-5;
+      background-color: transparent;
+      color: $blue-gray-5;
     }
   }
 
   &--size {
     &-small {
-      //
+      border-radius: $border-radius-small;
     }
 
     &-default {
-      //
+      border-radius: $border-radius;
+      padding: $padding-tiny $padding-small;
     }
 
     &-large {
-      //
+      border-radius: $border-radius;
     }
   }
 }

@@ -5,6 +5,8 @@ import { File } from '../../hooks/useFile';
 import useOnClick from '../../hooks/useOnClick';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import Spinner from '../Spinner';
+import close from '../../icons/close-24px.svg';
+import rotate from '../../icons/rotate_right-24px.svg';
 
 export interface ThumbnailProps extends ClickableDivProps {
   /**
@@ -47,8 +49,12 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         onBlur={() => setFocused(false)}
       >
         <div className="ui__thumbnail__controls">
-          <ToolButton>X</ToolButton>
-          <ToolButton>R</ToolButton>
+          <ToolButton>
+            <img src={rotate} alt={'rotate'} />
+          </ToolButton>
+          <ToolButton>
+            <img src={close} alt={'close'} />
+          </ToolButton>
         </div>
         <div className="ui__thumbnail__image">
           {file.thumbnail ? <img src={file.thumbnail} alt={file.name} /> : <Spinner />}

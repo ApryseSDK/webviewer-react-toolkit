@@ -1,19 +1,23 @@
 .ui__toolButton {
-  background-color: $blue-gray-1;
+  background-color: rgba(100, 100, 100, 0.7);
   border: none;
   outline: none;
-  height: 36px;
-  min-width: 36px;
+  height: 32px;
+  min-width: 32px;
   padding: $padding-tiny;
   cursor: pointer;
   user-select: none;
 
   &:hover {
-    background-color: $blue-gray-2;
+    background-color: rgba(75, 75, 75, 0.7);
   }
 
   &:focus {
-    @include focus-inset;
+    box-shadow: inset 0 0 0 2px rgba(75, 75, 75, 0.7);
+  }
+
+  &:active {
+    background-color: rgba(50, 50, 50, 0.7);
   }
 
   &--disabled {

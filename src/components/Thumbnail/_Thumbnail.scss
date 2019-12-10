@@ -11,15 +11,19 @@ $thumbnail-dimensions: 250px;
   user-select: none;
 
   &--selected {
-    background-color: $mono-background;
-  }
+    background-color: $blue-gray-1;
 
-  &:hover {
-    background-color: $mono-background;
+    .ui__thumbnail__label {
+      text-decoration: underline;
+    }
   }
 
   &:hover,
   &.ui__thumbnail--focused {
+    &:not(.ui__thumbnail--selected) {
+      background-color: $mono-background;
+    }
+
     .ui__thumbnail__controls {
       opacity: 1;
     }
@@ -28,17 +32,20 @@ $thumbnail-dimensions: 250px;
   &:focus {
     .ui__thumbnail__image img {
       @include focus;
+      border-color: $focus-shadow;
     }
   }
 
   &__controls {
     transition: 0.1s opacity;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: $padding-tiny;
+    right: $padding-tiny;
     opacity: 0;
     position: absolute;
     display: flex;
+    overflow: hidden;
+    border-radius: $border-radius-small;
   }
 
   &__image {
@@ -50,6 +57,7 @@ $thumbnail-dimensions: 250px;
     img {
       max-width: 100%;
       max-height: 100%;
+      border: 1px solid $blue-gray-1;
     }
   }
 

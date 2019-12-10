@@ -16,8 +16,9 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --theme-secondary:   #131416;
   --font-primary:      #292922;
   --font-secondary:    #424242;
-  --background-canvas: #fff;
+  --background-canvas: #eff5f5;
   --mono-background:   #eee;
+  --focus-shadow:      rgba(19, 124, 189, 0.3);
 
   --blue-gray-1:       #dfe2ed;
   --blue-gray-2:       #abb0c4;
@@ -36,6 +37,7 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --font-secondary:    #818cab;
   --background-canvas: #161625;
   --mono-background:   #333;
+  --focus-shadow:      rgba(31, 154, 241, 0.7);
 }
 
 // Use these in your sass rather than using var in line.
@@ -45,6 +47,7 @@ $font-primary:      var(--font-primary);
 $font-secondary:    var(--font-secondary);
 $background-canvas: var(--background-canvas);
 $mono-background:   var(--mono-background);
+$focus-shadow:      var(--focus-shadow);
 
 $blue-gray-1:       var(--blue-gray-1);
 $blue-gray-2:       var(--blue-gray-2);
@@ -54,7 +57,6 @@ $blue-gray-5:       var(--blue-gray-5);
 $white-1:           var(--white-1);
 $white-2:           var(--white-2);
 
-
 /* --- Font sizing. --- */
 
 $font-size-tiny:    11px;
@@ -62,6 +64,11 @@ $font-size-small:   13px;
 $font-size-default: 16px;
 $font-size-medium:  18px;
 $font-size-large:   24px;
+
+/* --- Layout --- */
+
+$border-radius-small: 2px;
+$border-radius:       5px;
 
 /* --- Padding. --- */
 
