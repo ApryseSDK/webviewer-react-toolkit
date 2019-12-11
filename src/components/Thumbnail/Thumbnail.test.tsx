@@ -24,7 +24,7 @@ describe('Thumbnail component', () => {
 
   it('clicking thumbnail triggers onClick prop', () => {
     const onClick = spy();
-    shallow(<Thumbnail file={testFile} onClick={onClick} />).simulate('click');
+    mount(<Thumbnail file={testFile} onClick={onClick} />).simulate('click');
     expect(onClick.callCount).toBe(1);
   });
 

@@ -1,12 +1,13 @@
 import classnames from 'classnames';
 import React, { forwardRef, useState } from 'react';
-import { ToolButton } from '..';
 import { File } from '../../hooks/useFile';
 import useOnClick from '../../hooks/useOnClick';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
+import EditableText from '../EditableText';
 import Spinner from '../Spinner';
-import close from '../../icons/close-24px.svg';
+import ToolButton from '../ToolButton';
 import rotate from '../../icons/rotate_right-24px.svg';
+import close from '../../icons/close-24px.svg';
 
 export interface ThumbnailProps extends ClickableDivProps {
   /**
@@ -29,10 +30,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
 
     const thumbnailClass = classnames(
       'ui__base ui__thumbnail',
-      {
-        ['ui__thumbnail--selected']: selected,
-        ['ui__thumbnail--focused']: focused,
-      },
+      { ['ui__thumbnail--selected']: selected, ['ui__thumbnail--focused']: focused },
       className,
     );
 
@@ -59,7 +57,12 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         <div className="ui__thumbnail__image">
           {file.thumbnail ? <img src={file.thumbnail} alt={file.name} /> : <Spinner />}
         </div>
-        <div className="ui__thumbnail__label">{label || file.name}</div>
+        <EditableText
+          className="ui__thumbnail__label"
+          value={label || file.name}
+          onRenderText={value => (value ? `${value}.pdf` : '')}
+          centerText
+        />
       </ClickableDiv>
     );
   },

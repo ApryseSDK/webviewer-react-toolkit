@@ -9,6 +9,11 @@
   }
 
   &--disabled {
-    opacity: 0.8;
+    // TODO: Disabled specific style for clickable div?
+    // opacity: 0.8?
+  }
+
+  &--usePointer {
+    cursor: pointer;
   }
 }

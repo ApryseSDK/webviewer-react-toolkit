@@ -18,9 +18,7 @@ export const ${componentName} = forwardRef<HTMLButtonElement, ${componentName}Pr
   ({ someProp = 'Default value', className, ...buttonProps }, ref) => {
     const ${pascalToCamel(componentName)}Class = classnames(
       '${STYLE_PREFIX}__base ${STYLE_PREFIX}__${pascalToCamel(componentName)}',
-      {
-        ['${STYLE_PREFIX}__${pascalToCamel(componentName)}--disabled']: buttonProps.disabled,
-      },
+      { ['${STYLE_PREFIX}__${pascalToCamel(componentName)}--disabled']: buttonProps.disabled },
       className,
     );
 

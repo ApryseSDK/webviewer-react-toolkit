@@ -1,3 +1,4 @@
 # Component Information
 
-Readme for ClickableDiv, edit to supply more information for the component.
+A div that acts like a focusable button, but without appearing as a traditional
+button.

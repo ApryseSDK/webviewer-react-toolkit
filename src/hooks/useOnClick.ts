@@ -13,8 +13,7 @@ function useOnClick<T>(onClick?: MouseEventHandler<T>, options: OnClickOptions =
     (event: MouseEvent<T>) => {
       if (stopPropagation) event.stopPropagation();
       if (blurOnClick) {
-        const focused = document.activeElement as HTMLElement | null;
-        focused?.blur();
+        (event.target as HTMLElement).blur();
       }
       onClick?.(event);
     },

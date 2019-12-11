@@ -12,10 +12,16 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
     className="ui__thumbnail__controls"
   >
     <ForwardRef>
-      X
+      <img
+        alt="rotate"
+        src={[Function]}
+      />
     </ForwardRef>
     <ForwardRef>
-      R
+      <img
+        alt="close"
+        src={[Function]}
+      />
     </ForwardRef>
   </div>
   <div
@@ -23,10 +29,11 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
   >
     <Component />
   </div>
-  <div
+  <ForwardRef
+    centerText={true}
     className="ui__thumbnail__label"
-  >
-    Test name
-  </div>
+    onRenderText={[Function]}
+    value="Test name"
+  />
 </ForwardRef>
 `;

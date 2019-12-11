@@ -10,6 +10,7 @@ module.exports = {
 
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.svg$': 'jest-svg-transformer',
   },
 
   // Setup Enzyme

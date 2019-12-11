@@ -1,0 +1,52 @@
+.ui__editableText {
+  &--disabled {
+    .ui__editableText__button {
+      color: $blue-gray-2;
+    }
+  }
+
+  &--centerText {
+    .ui__editableText__button {
+      justify-content: center;
+    }
+
+    .ui__editableText__field {
+      text-align: center;
+    }
+  }
+
+  &__button,
+  &__field {
+    min-height: 28px;
+    min-width: 100%;
+    font-weight: 400;
+    color: $font-primary;
+    padding: $padding-tiny;
+    border-radius: $border-radius;
+    border: 1px solid $blue-gray-1;
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+  }
+
+  &:not(.ui__editableText--disabled) .ui__editableText__button {
+    &:hover {
+      background: $blue-gray-1;
+    }
+
+    &--placeholder {
+      color: $blue-gray-3;
+    }
+  }
+
+  &__field {
+    background: $blue-gray-1;
+    outline: none;
+
+    &:focus {
+      @include focus;
+    }
+  }
+}

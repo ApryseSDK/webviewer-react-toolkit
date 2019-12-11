@@ -1,3 +1,3 @@
 # Component Information
 
-Readme for Button, edit to supply more information for the component.
+A versatile button component that can adapt to various styles and sizes.

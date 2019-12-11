@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditableText component snapshot renders default editableText 1`] = `
+<div
+  className="ui__base ui__editableText"
+>
+  <ForwardRef
+    className="ui__editableText__button"
+    onClick={[Function]}
+    usePointer={true}
+  />
+</div>
+`;

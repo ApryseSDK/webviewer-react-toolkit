@@ -40,9 +40,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'ui__base ui__button',
       `ui__button--style-${buttonStyle}`,
       `ui__button--size-${buttonSize}`,
-      {
-        ['ui__button--disabled']: buttonProps.disabled,
-      },
+      { ['ui__button--disabled']: buttonProps.disabled },
       className,
     );
 

@@ -10,6 +10,7 @@ export const basic = () => (
   <ClickableDiv
     disabled={boolean('disabled', false)}
     noFocusStyle={boolean('noFocusStyle', false)}
+    usePointer={boolean('usePointer', false)}
     onClick={action('onClick')}
   >
     {text('children', 'This is a clickable div!')}
