@@ -1,11 +1,12 @@
-name: Lint and test components
-description: Lint and test on every push to a branch other than master.
+name: Deploy docs
+description:
+  Will deploy Storybook docs to GitHub pages on every push to master if it
+  passes tests and linting.
 
 on:
   push:
     branches:
-      - '*'
-      - '!master'
+      - 'master'
 
 jobs:
   build:
@@ -47,3 +48,6 @@ jobs:
         run: yarn test
         env:
           CI: true
+
+      - name: Deploy docs
+        run: yarn deploy-storybook
