@@ -7,6 +7,7 @@
   padding: $padding-tiny;
   cursor: pointer;
   user-select: none;
+  transition: $focus-transition;
 
   &:hover {
     background-color: rgba(75, 75, 75, 0.7);

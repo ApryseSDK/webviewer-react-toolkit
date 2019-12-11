@@ -26,8 +26,10 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --blue-gray-3:       #8b92ab;
   --blue-gray-4:       #767f9b;
   --blue-gray-5:       #6077bf;
+  --blue-gray-6:       #415797;
   --white-1:           #fafafa;
-  --white-2:           #f0f0f0;
+  --white-2:           #fafafa;
+  --white-3:           #f0f0f0;
 }
 
 // Dark theme (TBD).
@@ -57,8 +59,13 @@ $blue-gray-2:       var(--blue-gray-2);
 $blue-gray-3:       var(--blue-gray-3);
 $blue-gray-4:       var(--blue-gray-4);
 $blue-gray-5:       var(--blue-gray-5);
+$blue-gray-6:       var(--blue-gray-6);
 $white-1:           var(--white-1);
 $white-2:           var(--white-2);
+$white-3:           var(--white-3);
+
+// Focus transition
+$focus-transition: box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
 
 /* --- Font sizing. --- */
 

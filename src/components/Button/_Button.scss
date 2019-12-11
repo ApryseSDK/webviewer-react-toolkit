@@ -16,23 +16,46 @@
 
   &--style {
     &-default {
-      border-color: $blue-gray-5;
+      border: 1px solid $blue-gray-5;
       background-color: $blue-gray-5;
-      color: white;
+      color: $white-1;
+
+      &:active {
+        border-color: $blue-gray-6;
+        background-color: $blue-gray-6;
+      }
     }
 
     &-borderless {
-      border-color: transparent;
+      border: 1px solid transparent;
       background-color: transparent;
       color: $blue-gray-5;
+
+      &:active {
+        color: $blue-gray-6;
+      }
     }
 
     &-outline {
-      border-color: $blue-gray-5;
+      border: 1px solid $blue-gray-5;
       background-color: transparent;
       color: $blue-gray-5;
+      transition: background-color 75ms ease-in-out, color 75ms ease-in-out;
+
+      &:focus,
+      &:hover {
+        background-color: $blue-gray-5;
+        color: $white-1;
+      }
+
+      &:active {
+        border-color: $blue-gray-6;
+        background-color: $blue-gray-6;
+      }
     }
   }
+
+  /* --- Button sizes. --- */
 
   &--size {
     &-small {

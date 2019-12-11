@@ -9,19 +9,23 @@
     border: solid;
   }
 
+  /* --- Spinner styles. --- */
+
   &--style {
     &-default {
       .ui__spinner__animated {
-        border-color: $theme-primary $blue-gray-1 $blue-gray-1;
+        border-color: $blue-gray-5 $blue-gray-1 $blue-gray-1;
       }
     }
 
     &-on-gray {
       .ui__spinner__animated {
-        border-color: $theme-primary $background-canvas $background-canvas;
+        border-color: $blue-gray-5 $background-canvas $background-canvas;
       }
     }
   }
+
+  /* --- Spinner sizes. --- */
 
   &--size {
     &-tiny {
