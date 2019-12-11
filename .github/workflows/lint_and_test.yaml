@@ -1,5 +1,4 @@
 name: Lint and test components
-description: Lint and test on every push to a branch other than master.
 
 on:
   push:

@@ -1,7 +1,4 @@
-name: Deploy docs
-description:
-  Will deploy Storybook docs to GitHub pages on every push to master if it
-  passes tests and linting.
+name: Lint, test and deploy
 
 on:
   push:
