@@ -4,7 +4,8 @@
   user-select: none;
 
   &--disabled {
-    //
+    cursor: default;
+    opacity: 0.7;
   }
 
   &:focus {
@@ -46,7 +47,7 @@
 
     &-large {
       border-radius: $border-radius;
-      padding: $padding-small $padding;
+      padding: $padding-small $padding-large;
     }
   }
 }

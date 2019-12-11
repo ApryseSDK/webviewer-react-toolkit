@@ -62,16 +62,26 @@ $white-2:           var(--white-2);
 
 /* --- Font sizing. --- */
 
-$font-size-tiny:    11px;
-$font-size-small:   13px;
-$font-size-default: 16px;
-$font-size-medium:  18px;
-$font-size-large:   24px;
+$font-size-tiny:    9px;
+$font-size-small:   11px;
+$font-size-default: 13px;
+$font-size-medium:  16px;
+$font-size-large:   18px;
+$font-size-huge:    24px;
+
+
+/* --- Font weights. --- */
+
+$font-weight-thin:   100;
+$font-weight-light:  300;
+$font-weight-normal: 400;
+$font-weight-medium: 600;
+$font-weight-bold:   700;
 
 /* --- Layout --- */
 
 $border-radius-small: 2px;
-$border-radius:       5px;
+$border-radius:       4px;
 
 /* --- Padding. --- */
 

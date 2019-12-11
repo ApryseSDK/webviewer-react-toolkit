@@ -17,26 +17,26 @@ export default create({
   // appBg: 'white',
   // appContentBg: 'white',
   // appBorderColor: 'white',
-  // appBorderRadius: 25,
+  appBorderRadius: 4,
 
   // Typography
   // fontBase: 'monospace',
   // fontCode: 'monospace',
 
   // // Text colors
-  // textColor: textColor,
-  // textInverseColor: 'rgba(255,255,255,0.9)',
+  textColor: 'rgba(240, 240, 255, 0.9)',
+  textInverseColor: 'rgba(0, 0, 20, 0.9)',
 
   // Toolbar default and active colors
-  // barTextColor: 'white',
+  barTextColor: 'rgba(240, 240, 255, 0.6)',
   barSelectedColor: '#00a3e3',
   // barBg: 'white',
 
   // // Form colors
   // inputBg: 'white',
   // inputBorder: 'white',
-  // inputTextColor: 'white',
-  // inputBorderRadius: 0,
+  inputTextColor: 'rgba(240, 240, 255, 0.9)',
+  inputBorderRadius: 4,
 
   // Branding
   brandTitle: `${require('../package.json').version}`,
