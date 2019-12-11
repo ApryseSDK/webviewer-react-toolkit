@@ -15,12 +15,12 @@ export enum ButtonSize {
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
-   * Set the visual appearance of the button.
+   * Sets the visual appearance of the button.
    * @default ButtonStyle.Default
    */
   buttonStyle?: ButtonStyle;
   /**
-   * Set the visual appearance of the button.
+   * Sets the size of the button.
    * @default ButtonSize.Default
    */
   buttonSize?: ButtonSize;

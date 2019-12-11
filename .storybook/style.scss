@@ -17,17 +17,26 @@ html {
 /* --- Modify story container --- */
 
 .sb-show-main {
-  padding: 32px 16px 16px;
   margin: 0;
 
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
+  #root {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+
+    div:nth-child(1) {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    div:nth-child(2) {
+      flex: 1 1 auto;
+    }
   }
 
   // Only target documentation
-  .info__overlay {
+  // .info__overlay {
+  #root > div:nth-child(2) {
     /* --- Fix list styles --- */
 
     ol,
@@ -38,6 +47,12 @@ html {
       > li {
         margin: 8px 0 !important;
       }
+    }
+
+    /* --- Element style fixes --- */
+
+    p:first-child {
+      margin-top: 0;
     }
 
     /* --- Style titles --- */
@@ -51,7 +66,7 @@ html {
       font-weight: 600 !important;
     }
     h1 {
-      margin: 20px 0px 4px !important;
+      margin: 20px 0px 16px !important;
       padding: 0px 0px 4px !important;
       font-size: 26px !important;
       border-bottom: 1px solid rgb(238, 238, 238) !important;
@@ -105,23 +120,16 @@ html {
       font-weight: 400;
     }
 
-    .story__sourcelink {
-      margin-top: 36px;
-      display: block;
-      color: #828b9d;
-      background-color: white;
-      border-radius: 5px;
-      border: 1px solid #eef2f5;
-      padding: 8px;
-      width: auto;
-    }
-
     /* --- Prop table style --- */
 
     .story__required,
     .story__information {
       padding: 8px;
       color: gray;
+    }
+
+    .story__proptable__wrapper {
+      overflow: auto;
     }
 
     .story__proptable {

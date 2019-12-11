@@ -15,13 +15,18 @@ export enum SpinnerSize {
 
 export interface SpinnerProps {
   /**
+   * Set the visual appearance of the spinner.
    * @default SpinnerStyle.Default
    */
   spinnerStyle?: SpinnerStyle;
   /**
+   * Set the size of the spinner.
    * @default SpinnerSize.Default
    */
   spinnerSize?: SpinnerSize;
+  /**
+   * Classname for the container div.
+   */
   className?: string;
 }
 

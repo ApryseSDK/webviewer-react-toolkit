@@ -19,7 +19,7 @@ addDecorator(
     TableComponent,
     maxPropsIntoLine: 1, // Wrap props if more than one
     styles: InfoStyle,
-    // inline: true,
+    inline: true,
   } as InfoOptions) as any,
 );
 addDecorator(withKnobs);

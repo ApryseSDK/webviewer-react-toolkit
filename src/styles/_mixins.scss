@@ -6,6 +6,10 @@
   box-shadow: inset 0 0 0 2px $focus-shadow;
 }
 
+@mixin focus-inset-blur {
+  box-shadow: inset 0 0 10px 0 $focus-shadow;
+}
+
 /* --- Media query mixins. --- */
 
 // Try not to use this, as it breaks "mobile first" principles.

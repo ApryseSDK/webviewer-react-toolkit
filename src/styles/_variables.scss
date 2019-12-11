@@ -12,12 +12,13 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
 
 // Light theme.
 :root {
-  --theme-primary:     #6077bf;
+  --theme-primary:     #00a3e3;
   --theme-secondary:   #131416;
   --font-primary:      #292922;
   --font-secondary:    #424242;
   --background-canvas: #eff5f5;
-  --mono-background:   #eee;
+  --gray-1:            #eee;
+  --gray-2:            #ddd;
   --focus-shadow:      rgba(19, 124, 189, 0.3);
 
   --blue-gray-1:       #dfe2ed;
@@ -36,7 +37,8 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --font-primary:      #e1e1ff;
   --font-secondary:    #818cab;
   --background-canvas: #161625;
-  --mono-background:   #333;
+  --gray-1:            #333;
+  --gray-2:            #444;
   --focus-shadow:      rgba(31, 154, 241, 0.7);
 }
 
@@ -46,7 +48,8 @@ $theme-secondary:   var(--theme-secondary);
 $font-primary:      var(--font-primary);
 $font-secondary:    var(--font-secondary);
 $background-canvas: var(--background-canvas);
-$mono-background:   var(--mono-background);
+$gray-1:            var(--gray-1);
+$gray-2:            var(--gray-2);
 $focus-shadow:      var(--focus-shadow);
 
 $blue-gray-1:       var(--blue-gray-1);

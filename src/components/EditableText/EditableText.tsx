@@ -123,11 +123,9 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       className,
     );
 
-    const buttonClass = classnames(
-      'ui__editableText__button',
-      { ['ui__editableText__button--placeholder']: isPlaceholder },
-      className,
-    );
+    const buttonClass = classnames('ui__editableText__button', {
+      ['ui__editableText__button--placeholder']: isPlaceholder,
+    });
 
     return (
       <div className={editableTextClass}>

@@ -166,17 +166,19 @@ const TableComponent: FC<TableComponentProps> = tableProps => {
 
   return (
     <>
-      <table className="story__proptable">
-        <thead>
-          <tr>
-            <th>Prop</th>
-            <th>Type</th>
-            <th>Default</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>{props}</tbody>
-      </table>
+      <div className="story__proptable__wrapper">
+        <table className="story__proptable">
+          <thead>
+            <tr>
+              <th>Prop</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>{props}</tbody>
+        </table>
+      </div>
       {otherProps ? (
         <div className="story__information">
           Note: Other props exist but are not shown. Check the source to see if this component extends an interface or

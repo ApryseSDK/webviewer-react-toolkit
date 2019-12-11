@@ -3,15 +3,18 @@ $thumbnail-dimensions: 250px;
 .ui__thumbnail {
   padding: $padding;
   position: relative;
-  border: 0;
-  outline: 0;
+  border: 1px solid transparent;
+  outline: none;
   width: 250px;
   height: 250px;
   transition: 0.1s background-color;
   user-select: none;
+  display: flex;
+  flex-direction: column;
 
   &--selected {
-    background-color: $blue-gray-1;
+    // border: 1px solid $blue-gray-1;
+    // TODO: how do we show selected better?
 
     .ui__thumbnail__label {
       text-decoration: underline;
@@ -20,9 +23,10 @@ $thumbnail-dimensions: 250px;
 
   &:hover,
   &.ui__thumbnail--focused {
-    &:not(.ui__thumbnail--selected) {
-      background-color: $mono-background;
-    }
+    // &:not(.ui__thumbnail--selected) {
+    //   background-color: $gray-1;
+    // }
+    background-color: $gray-1;
 
     .ui__thumbnail__controls {
       opacity: 1;
@@ -53,6 +57,7 @@ $thumbnail-dimensions: 250px;
     justify-content: center;
     align-items: center;
     height: 180px;
+    flex: 1 1 auto;
 
     img {
       max-width: 100%;
@@ -63,6 +68,6 @@ $thumbnail-dimensions: 250px;
 
   &__label {
     text-align: center;
-    margin-top: $padding-small;
+    margin-top: $padding;
   }
 }
