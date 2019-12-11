@@ -6,6 +6,8 @@
 > happening quickly and documentation will be updated once we are closer to
 > releasing.
 
+[View the components here!](https://pdftron.github.io/component-library)
+
 This component library will contain various React components that integrate with
 the PDFTron WebViewer API.
 
