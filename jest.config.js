@@ -1,7 +1,7 @@
 module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  collectCoverage: true,
-  coverageDirectory: './coverage/',
+  // collectCoverage: true,
+  // coverageDirectory: './coverage/',
 
   testMatch: [
     // Match any typescript file ending with ComponentName.test.(ts|tsx).

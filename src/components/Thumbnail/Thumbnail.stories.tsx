@@ -9,7 +9,7 @@ import docs from './README.md';
 
 export default { title: 'Thumbnail', parameters: { info: docs } };
 
-const fetchingThumbnail: File = {
+const filePending: File = {
   id: 'test',
   name: 'test_name',
   extension: 'pdf',
@@ -17,7 +17,7 @@ const fetchingThumbnail: File = {
   thumbnail: undefined,
 };
 
-const fetchedThumbnail: File = {
+const file: File = {
   id: 'test',
   name: 'test_name',
   extension: 'pdf',
@@ -25,7 +25,7 @@ const fetchedThumbnail: File = {
   thumbnail: testPdfThumbnail,
 };
 
-const fetchedRotatedThumbnail: File = {
+const fileRotated: File = {
   id: 'test',
   name: 'test_name',
   extension: 'pdf',
@@ -35,7 +35,7 @@ const fetchedRotatedThumbnail: File = {
 
 export const basic = () => (
   <Thumbnail
-    file={boolean('is fetching thumbnail?', false) ? fetchingThumbnail : fetchedThumbnail}
+    file={boolean('is fetching thumbnail?', false) ? filePending : file}
     selected={boolean('selected', false)}
     onClick={action('onClick')}
   />
@@ -43,7 +43,7 @@ export const basic = () => (
 
 export const rotated = () => (
   <Thumbnail
-    file={boolean('is fetching thumbnail?', false) ? fetchingThumbnail : fetchedRotatedThumbnail}
+    file={boolean('is fetching thumbnail?', false) ? filePending : fileRotated}
     selected={boolean('selected', false)}
     onClick={action('onClick')}
   />

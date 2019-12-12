@@ -46,7 +46,7 @@ jobs:
         env:
           CI: true
 
-      - name: Test components
+      - name: Deploy to GitHub pages
         run: yarn deploy-storybook --ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

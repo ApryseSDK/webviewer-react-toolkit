@@ -15,6 +15,22 @@
     }
   }
 
+  &--bordered {
+    .ui__editableText__button {
+      border: 1px solid $blue-gray-1;
+    }
+
+    &:not(.ui__editableText--disabled) .ui__editableText__button {
+      &:hover {
+        background-color: $blue-gray-1;
+      }
+
+      &--placeholder {
+        color: $blue-gray-3;
+      }
+    }
+  }
+
   &__button,
   &__field {
     min-height: 28px;
@@ -23,17 +39,18 @@
     color: $font-primary;
     padding: $padding-tiny;
     border-radius: $border-radius;
-    border: 1px solid $blue-gray-1;
+    border: 1px solid transparent;
   }
 
   &__button {
     display: flex;
     align-items: center;
+    transition: 0.1s background-color;
   }
 
   &:not(.ui__editableText--disabled) .ui__editableText__button {
     &:hover {
-      background: $blue-gray-1;
+      border: 1px solid $blue-gray-1;
     }
 
     &--placeholder {
@@ -42,7 +59,7 @@
   }
 
   &__field {
-    background: $blue-gray-1;
+    background-color: $blue-gray-1;
     outline: none;
 
     &:focus {

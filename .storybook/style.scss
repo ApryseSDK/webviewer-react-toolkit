@@ -19,17 +19,17 @@ html {
 .sb-show-main {
   margin: 0;
 
-  #root {
+  > #root {
     padding: 32px;
     display: flex;
     flex-direction: column;
 
-    div:nth-child(1) {
+    > div:nth-child(1) {
       flex-grow: 0;
       flex-shrink: 0;
     }
 
-    div:nth-child(2) {
+    > div:nth-child(2) {
       flex: 1 1 auto;
     }
   }
@@ -101,6 +101,10 @@ html {
       padding: 8px 24px;
       background-color: rgba(130, 130, 0, 0.1);
       border-radius: 3px;
+
+      p:last-child {
+        margin-bottom: 0;
+      }
     }
 
     /* --- Make inline code have a background color --- */

@@ -48,6 +48,10 @@ export interface EditableTextProps {
    * Center the text within the editable text field.
    */
   centerText?: boolean;
+  /**
+   * Always show a border, and highlight on hover.
+   */
+  bordered?: boolean;
 }
 
 export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
@@ -63,6 +67,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       onRenderText,
       placeholder,
       centerText,
+      bordered,
     },
     ref,
   ) => {
@@ -120,6 +125,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       'ui__base ui__editableText',
       { ['ui__editableText--disabled']: disabled },
       { ['ui__editableText--centerText']: centerText },
+      { ['ui__editableText--bordered']: bordered },
       className,
     );
 

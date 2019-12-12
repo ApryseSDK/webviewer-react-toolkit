@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { getId, UniqueIdentifier } from '../utils/idUtils';
+import { getStringId } from '../utils/idUtils';
 import { Include } from '../utils/typeUtils';
 
 /** The input object provided to the useFile hook. */
@@ -25,7 +25,7 @@ export type FileInitializer = () => FileDetails;
 
 /** Object representing a file. */
 export interface File {
-  id: UniqueIdentifier;
+  id: string;
   name: string;
   originalName: string;
   extension: string;
@@ -52,7 +52,7 @@ function useFile(fileInitializer: FileDetails | FileInitializer, onFailed?: File
   // Constant sync values.
   const { id, name, originalName, extension } = useMemo<Pick<File, 'id' | 'name' | 'originalName' | 'extension'>>(
     () => ({
-      id: getId('File'),
+      id: getStringId('File'),
       name: fileDetails.current.name,
       originalName: fileDetails.current.originalName || fileDetails.current.name,
       // TODO: fallback function for extension.

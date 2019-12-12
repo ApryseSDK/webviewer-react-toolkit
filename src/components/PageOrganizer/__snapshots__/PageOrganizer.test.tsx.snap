@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageOrganizer component snapshot renders default pageOrganizer 1`] = `
+<div
+  className="ui__base ui__pageOrganizer"
+>
+  <DndProvider
+    backend={[Function]}
+  >
+    <Component
+      index={0}
+      key="test"
+      onMove={[Function]}
+      onRenderChildren={[Function]}
+    />
+  </DndProvider>
+</div>
+`;

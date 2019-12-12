@@ -9,6 +9,7 @@ export default { title: 'EditableText', parameters: { info: docs } };
 export const basic = () => (
   <EditableText
     centerText={boolean('centerText', false)}
+    bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
@@ -21,6 +22,7 @@ export const withOnRenderText = () => (
   <EditableText
     onRenderText={value => (value ? `${value}.pdf` : '')}
     centerText={boolean('centerText', false)}
+    bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
@@ -33,6 +35,7 @@ export const controlledValue = () => (
   <EditableText
     value={text('value', '')}
     centerText={boolean('centerText', false)}
+    bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
@@ -45,6 +48,7 @@ export const controlledEditMode = () => (
   <EditableText
     editMode={boolean('editMode', false)}
     centerText={boolean('centerText', false)}
+    bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
@@ -58,6 +62,7 @@ export const fullyControlled = () => (
     value={text('value', '')}
     editMode={boolean('editMode', false)}
     centerText={boolean('centerText', false)}
+    bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
