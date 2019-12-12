@@ -1,10 +1,10 @@
-name: Lint and test components
+name: Lint and test components, then deploy
 
+on: push
 on:
   push:
     branches:
-      - '*'
-      - '!master'
+      - 'master'
 
 jobs:
   build:
@@ -46,3 +46,8 @@ jobs:
         run: yarn test
         env:
           CI: true
+
+      - name: Test components
+        run: yarn deploy-storybook --ci
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
