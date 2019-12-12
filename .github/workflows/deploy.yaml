@@ -1,6 +1,5 @@
 name: Lint and test components, then deploy
 
-on: push
 on:
   push:
     branches:
