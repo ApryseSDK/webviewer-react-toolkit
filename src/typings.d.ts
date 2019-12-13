@@ -15,8 +15,6 @@ declare module '*.png' {
   export default content;
 }
 
-declare interface DocumentObj {}
-
 /* --- Everything below here should be included as a dependency. --- */
 
 /**

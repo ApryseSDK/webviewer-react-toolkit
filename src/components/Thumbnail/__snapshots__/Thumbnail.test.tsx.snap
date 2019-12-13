@@ -5,13 +5,14 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
   className="ui__base ui__thumbnail"
   noFocusStyle={true}
   onBlur={[Function]}
-  onClick={[Function]}
   onFocus={[Function]}
 >
   <div
     className="ui__thumbnail__controls"
   >
-    <ForwardRef>
+    <ForwardRef
+      onClick={[Function]}
+    >
       <img
         alt="rotate"
         src={[Function]}

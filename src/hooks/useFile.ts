@@ -2,6 +2,18 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useS
 import { getStringId } from '../utils/idUtils';
 import { Include } from '../utils/typeUtils';
 
+/** Object representing a file. */
+export interface File {
+  id: string;
+  name: string;
+  originalName: string;
+  extension: string;
+  fileObj?: Blob;
+  thumbnail?: string;
+  documentObj?: CoreControls.Document;
+  rotate?: () => void;
+}
+
 /** The input object provided to the useFile hook. */
 export interface FileDetails {
   /** File name. */
@@ -23,17 +35,6 @@ export type FileFailed = (key: FileAsyncValueKeys, error: any) => any;
 /** Can also initialize with a function to prevent expensive recalculation. */
 export type FileInitializer = () => FileDetails;
 
-/** Object representing a file. */
-export interface File {
-  id: string;
-  name: string;
-  originalName: string;
-  extension: string;
-  fileObj?: Blob;
-  thumbnail?: string;
-  documentObj?: DocumentObj;
-}
-
 type FileAsyncValueKeys = keyof Include<File, 'fileObj' | 'thumbnail' | 'documentObj'>;
 
 type FutureDispatch = <T>(
@@ -48,6 +49,8 @@ function useFile(fileInitializer: FileDetails | FileInitializer, onFailed?: File
   // if it changes. This also allows arrow functions in useFile.
   const fileDetails = useRef(typeof fileInitializer === 'function' ? fileInitializer() : fileInitializer);
   const onFailedRef = useRef(onFailed);
+
+  const [lastMutation, setLastMutation] = useState(new Date());
 
   // Constant sync values.
   const { id, name, originalName, extension } = useMemo<Pick<File, 'id' | 'name' | 'originalName' | 'extension'>>(
@@ -103,15 +106,28 @@ function useFile(fileInitializer: FileDetails | FileInitializer, onFailed?: File
     }
   }, [fileObj, extension]);
 
-  const file = useMemo(() => ({ id, name, originalName, extension, fileObj, thumbnail, documentObj }), [
-    id,
-    name,
-    originalName,
-    extension,
-    fileObj,
-    thumbnail,
-    documentObj,
-  ]);
+  const rotate = useCallback(() => {
+    const coreControls = window.CoreControls;
+    if (!documentObj || !coreControls) return;
+    const pageNumbers = Array.from({ length: documentObj.getPageCount() }, (_v, k) => k + 1);
+    documentObj.rotatePages(pageNumbers, coreControls.PageRotation.e_90);
+    setLastMutation(new Date());
+  }, [documentObj]);
+
+  const file = useMemo(
+    () => ({
+      id,
+      name,
+      originalName,
+      extension,
+      fileObj,
+      thumbnail,
+      documentObj,
+      rotate: documentObj !== undefined ? rotate : undefined,
+      lastMutation, // To force updates when documentObj is updated.
+    }),
+    [id, name, originalName, extension, fileObj, thumbnail, documentObj, rotate, lastMutation],
+  );
 
   return file;
 }

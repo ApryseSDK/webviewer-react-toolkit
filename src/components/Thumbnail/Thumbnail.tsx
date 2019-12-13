@@ -60,7 +60,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         onDragEnd={undefined}
       >
         <div className="ui__thumbnail__controls">
-          <ToolButton disabled={disabled}>
+          <ToolButton disabled={disabled} onClick={() => file.rotate?.()}>
             <img src={rotate} alt={'rotate'} />
           </ToolButton>
           <ToolButton disabled={disabled} onClick={e => onRemove?.(file, e)}>
