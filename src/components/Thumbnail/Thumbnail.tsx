@@ -23,14 +23,20 @@ export interface ThumbnailProps extends ClickableDivProps {
    */
   selected?: boolean;
   /**
+   * Display this thumbnail as a dragging item.
+   */
+  dragging?: boolean;
+  /**
    * Callback fired whenever the remove item button is clicked.
    */
   onRemove?: (file: File, event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
-  ({ file, label, selected, onRemove, className, onClick, disabled, ...divProps }, ref) => {
+  ({ file, label, selected, dragging, onRemove, className, onClick, disabled, ...divProps }, ref) => {
     const [focused, setFocused] = useState(false);
+
+    const handleOnClick = useOnClick(onClick, { blurOnClick: true });
 
     const thumbnailClass = classnames(
       'ui__base ui__thumbnail',
@@ -38,11 +44,10 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         ['ui__thumbnail--selected']: selected,
         ['ui__thumbnail--focused']: focused,
         ['ui__thumbnail--disabled']: disabled,
+        ['ui__thumbnail--dragging']: dragging,
       },
       className,
     );
-
-    const handleOnClick = useOnClick(onClick, { blurOnClick: true });
 
     return (
       <ClickableDiv
@@ -54,6 +59,9 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         disabled={disabled}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        // TODO: prevent highlighting on non-dragged item
+        onDragEnter={undefined}
+        onDragEnd={undefined}
       >
         <div className="ui__thumbnail__controls">
           <ToolButton disabled={disabled}>

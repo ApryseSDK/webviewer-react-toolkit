@@ -10,6 +10,7 @@ exports[`PageOrganizer component snapshot renders default pageOrganizer 1`] = `
     <Component
       index={0}
       key="test"
+      onKeyDown={[Function]}
       onMove={[Function]}
       onRenderChildren={[Function]}
     />

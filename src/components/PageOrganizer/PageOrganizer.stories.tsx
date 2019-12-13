@@ -6,7 +6,7 @@ import testPdfThumbnail from '../../storybook-helpers/images/pdf-preview.png';
 import PageOrganizer, { PageOrganizerProps } from '../PageOrganizer';
 import Thumbnail from '../Thumbnail';
 import docs from './README.md';
-import { number } from '@storybook/addon-knobs';
+import { number, boolean } from '@storybook/addon-knobs';
 
 export default { title: 'PageOrganizer', parameters: { info: docs } };
 
@@ -36,9 +36,8 @@ export const Basic = () => {
     <PageOrganizer
       files={files}
       onMove={handleOnMove}
-      onRenderThumbnail={(file, isDragging) => (
-        <Thumbnail file={file} style={isDragging ? { opacity: 0.4 } : undefined} />
-      )}
+      preventArrowsToMove={boolean('preventArrowsToMove', false)}
+      onRenderThumbnail={(file, isDragging) => <Thumbnail file={file} dragging={isDragging} />}
     />
   );
 };
@@ -78,6 +77,7 @@ export const SetNumberOfPages: FC<{ numFiles: number }> = () => {
     <PageOrganizer
       files={files}
       onMove={handleOnMove}
+      preventArrowsToMove={boolean('preventArrowsToMove', false)}
       onRenderThumbnail={(file, isDragging) => (
         <Thumbnail file={file} style={isDragging ? { opacity: 0.4 } : undefined} />
       )}

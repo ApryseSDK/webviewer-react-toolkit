@@ -107,12 +107,18 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       onSave?.(editValue);
     }, [controlledEditMode, controlledValue, editValue, onSave]);
 
-    const handleKeyUp = useCallback(
+    const handleOnKeyPress = useCallback(
       (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Escape') handleOnCancel();
         if (event.key === 'Enter') handleOnSave();
       },
-      [handleOnSave, handleOnCancel],
+      [handleOnSave],
+    );
+
+    const handleOnKeyDown = useCallback(
+      (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Escape') handleOnCancel();
+      },
+      [handleOnCancel],
     );
 
     const [valueToDisplay, isPlaceholder] = useMemo(() => {
@@ -140,7 +146,8 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
             className="ui__editableText__field"
             value={editValue}
             onChange={e => setEditValue(e.target.value)}
-            onKeyUp={handleKeyUp}
+            onKeyPress={handleOnKeyPress}
+            onKeyDown={handleOnKeyDown}
             ref={inputRef}
             onBlur={handleOnSave}
           />

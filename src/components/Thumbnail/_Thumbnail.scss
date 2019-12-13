@@ -21,6 +21,17 @@ $thumbnail-dimensions: 250px;
     }
   }
 
+  &--dragging {
+    .ui__thumbnail__controls {
+      visibility: hidden;
+    }
+
+    .ui__thumbnail__image,
+    .ui__thumbnail__label {
+      opacity: 0.5;
+    }
+  }
+
   &:hover,
   &.ui__thumbnail--focused:not(.ui__thumbnail--disabled) {
     background-color: $gray-1;

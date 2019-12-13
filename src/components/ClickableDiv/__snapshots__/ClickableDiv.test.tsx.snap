@@ -4,7 +4,7 @@ exports[`ClickableDiv component snapshot renders default clickableDiv 1`] = `
 <div
   className="ui__base ui__clickableDiv"
   onClick={[Function]}
-  onKeyUp={[Function]}
+  onKeyPress={[Function]}
   role="button"
   tabIndex={0}
 />

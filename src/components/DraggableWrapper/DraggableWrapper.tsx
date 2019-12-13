@@ -1,10 +1,10 @@
 import classnames from 'classnames';
-import React, { FC, ReactNode, useEffect, useRef } from 'react';
+import React, { FC, ReactNode, useEffect, useRef, HTMLAttributes } from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 
 const ItemTypes = { Draggable: 'draggable' };
 
-export interface DraggableWrapperProps {
+export interface DraggableWrapperProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * The current index of the draggable wrapper.
    */
@@ -17,10 +17,6 @@ export interface DraggableWrapperProps {
    * If given, will be called any time the draggable wrapper is moved.
    */
   onMove?: (fromIndex: number, toIndex: number) => void;
-  /**
-   * Classname for the wrapper div.
-   */
-  className?: string;
   /**
    * If given, will be called every time the draggable wrapper is dragging.
    * This **must** be memoized in order to work properly. If it is not, then
@@ -49,6 +45,7 @@ export const DraggableWrapper: FC<DraggableWrapperProps> = ({
   className,
   onDragStart,
   onDragEnd,
+  ...divProps
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -90,8 +87,10 @@ export const DraggableWrapper: FC<DraggableWrapperProps> = ({
   const draggableWrapperClass = classnames('ui__base ui__draggableWrapper', className);
 
   return (
-    <div ref={ref} className={draggableWrapperClass}>
-      {onRenderChildren ? onRenderChildren(isDragging) : children}
-    </div>
+    <>
+      <div {...divProps} ref={ref} className={draggableWrapperClass}>
+        {onRenderChildren ? onRenderChildren(isDragging) : children}
+      </div>
+    </>
   );
 };
