@@ -9,19 +9,21 @@
   user-select: none;
   transition: $focus-transition;
 
-  &:hover {
+  &:hover:not(.ui__toolButton--disabled) {
     background-color: rgba(75, 75, 75, 0.7);
   }
 
-  &:focus {
+  &:focus:not(.ui__toolButton--disabled) {
     box-shadow: inset 0 0 0 2px rgba(75, 75, 75, 0.7);
   }
 
-  &:active {
+  &:active:not(.ui__toolButton--disabled) {
     background-color: rgba(50, 50, 50, 0.7);
   }
 
   &--disabled {
+    cursor: default;
+
     .ui__toolButton__internals {
       opacity: 0.5;
     }

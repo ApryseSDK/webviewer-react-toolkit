@@ -17,7 +17,9 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
         src={[Function]}
       />
     </ForwardRef>
-    <ForwardRef>
+    <ForwardRef
+      onClick={[Function]}
+    >
       <img
         alt="close"
         src={[Function]}

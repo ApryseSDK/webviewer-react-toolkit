@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, MouseEvent } from 'react';
 import { File } from '../../hooks/useFile';
 import useOnClick from '../../hooks/useOnClick';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
@@ -22,15 +22,23 @@ export interface ThumbnailProps extends ClickableDivProps {
    * Display thumbnail with selected props.
    */
   selected?: boolean;
+  /**
+   * Callback fired whenever the remove item button is clicked.
+   */
+  onRemove?: (file: File, event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
-  ({ file, label, selected, className, onClick, ...divProps }, ref) => {
+  ({ file, label, selected, onRemove, className, onClick, disabled, ...divProps }, ref) => {
     const [focused, setFocused] = useState(false);
 
     const thumbnailClass = classnames(
       'ui__base ui__thumbnail',
-      { ['ui__thumbnail--selected']: selected, ['ui__thumbnail--focused']: focused },
+      {
+        ['ui__thumbnail--selected']: selected,
+        ['ui__thumbnail--focused']: focused,
+        ['ui__thumbnail--disabled']: disabled,
+      },
       className,
     );
 
@@ -43,14 +51,15 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         ref={ref}
         noFocusStyle
         onClick={handleOnClick}
+        disabled={disabled}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       >
         <div className="ui__thumbnail__controls">
-          <ToolButton>
+          <ToolButton disabled={disabled}>
             <img src={rotate} alt={'rotate'} />
           </ToolButton>
-          <ToolButton>
+          <ToolButton disabled={disabled} onClick={e => onRemove?.(file, e)}>
             <img src={close} alt={'close'} />
           </ToolButton>
         </div>
@@ -62,6 +71,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           value={label || file.name}
           onRenderText={value => (value ? `${value}.pdf` : '')}
           centerText
+          disabled={disabled}
         />
       </ClickableDiv>
     );

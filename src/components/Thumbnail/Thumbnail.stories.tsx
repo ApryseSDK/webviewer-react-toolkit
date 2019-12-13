@@ -37,6 +37,7 @@ export const basic = () => (
   <Thumbnail
     file={boolean('is fetching thumbnail?', false) ? filePending : file}
     selected={boolean('selected', false)}
+    disabled={boolean('disabled', false)}
     onClick={action('onClick')}
   />
 );
@@ -45,6 +46,7 @@ export const rotated = () => (
   <Thumbnail
     file={boolean('is fetching thumbnail?', false) ? filePending : fileRotated}
     selected={boolean('selected', false)}
+    disabled={boolean('disabled', false)}
     onClick={action('onClick')}
   />
 );

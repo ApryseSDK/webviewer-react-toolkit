@@ -13,8 +13,8 @@ $thumbnail-dimensions: 250px;
   flex-direction: column;
 
   &--selected {
-    // border: 1px solid $blue-gray-1;
     // TODO: how do we show selected better?
+    // border: 1px solid $blue-gray-1;
 
     .ui__thumbnail__label {
       text-decoration: underline;
@@ -22,10 +22,7 @@ $thumbnail-dimensions: 250px;
   }
 
   &:hover,
-  &.ui__thumbnail--focused {
-    // &:not(.ui__thumbnail--selected) {
-    //   background-color: $gray-1;
-    // }
+  &.ui__thumbnail--focused:not(.ui__thumbnail--disabled) {
     background-color: $gray-1;
 
     .ui__thumbnail__controls {
@@ -33,7 +30,7 @@ $thumbnail-dimensions: 250px;
     }
   }
 
-  &:focus {
+  &:focus:not(.ui__thumbnail--disabled) {
     .ui__thumbnail__image img {
       @include focus;
       border-color: $focus-shadow;
