@@ -1,13 +1,12 @@
 import classnames from 'classnames';
-import React, { forwardRef, useState, MouseEvent } from 'react';
+import React, { forwardRef, MouseEvent, useState } from 'react';
 import { File } from '../../hooks/useFile';
-import useOnClick from '../../hooks/useOnClick';
+import close from '../../icons/close-24px.svg';
+import rotate from '../../icons/rotate_right-24px.svg';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import EditableText from '../EditableText';
 import Spinner from '../Spinner';
 import ToolButton from '../ToolButton';
-import rotate from '../../icons/rotate_right-24px.svg';
-import close from '../../icons/close-24px.svg';
 
 export interface ThumbnailProps extends ClickableDivProps {
   /**
@@ -33,10 +32,8 @@ export interface ThumbnailProps extends ClickableDivProps {
 }
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
-  ({ file, label, selected, dragging, onRemove, className, onClick, disabled, ...divProps }, ref) => {
+  ({ file, label, selected, dragging, onRemove, className, disabled, ...divProps }, ref) => {
     const [focused, setFocused] = useState(false);
-
-    const handleOnClick = useOnClick(onClick, { blurOnClick: true });
 
     const thumbnailClass = classnames(
       'ui__base ui__thumbnail',
@@ -55,7 +52,6 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         className={thumbnailClass}
         ref={ref}
         noFocusStyle
-        onClick={handleOnClick}
         disabled={disabled}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
