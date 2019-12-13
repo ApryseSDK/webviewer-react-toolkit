@@ -14,11 +14,7 @@ export interface PageOrganizerProps {
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
    */
-  onRenderThumbnail: (params: { file: File; isSelected: boolean; isDragging: boolean; index: number }) => ReactNode;
-  /**
-   * Array of selected files.
-   */
-  selected?: File['id'][];
+  onRenderThumbnail: (file: File, isDragging: boolean, index: number) => ReactNode;
   /**
    * Callback fired when a file is moved within the page organizer.
    */
@@ -29,7 +25,7 @@ export interface PageOrganizerProps {
   className?: string;
 }
 
-export const PageOrganizer: FC<PageOrganizerProps> = ({ files, selected, onMove, onRenderThumbnail, className }) => {
+export const PageOrganizer: FC<PageOrganizerProps> = ({ files, onMove, onRenderThumbnail, className }) => {
   const pageOrganizerClass = classnames('ui__base ui__pageOrganizer', className);
 
   return (
@@ -41,8 +37,7 @@ export const PageOrganizer: FC<PageOrganizerProps> = ({ files, selected, onMove,
             index={index}
             onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
             onRenderChildren={isDragging => {
-              const isSelected = selected?.includes(file.id) ?? false;
-              return onRenderThumbnail({ file, isSelected, isDragging, index });
+              return onRenderThumbnail(file, isDragging, index);
             }}
           />
         ))}

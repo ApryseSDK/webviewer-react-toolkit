@@ -61,9 +61,12 @@
   &__field {
     background-color: $blue-gray-1;
     outline: none;
+    transition: $focus-transition;
 
     &:focus {
       @include focus;
+      // Prevents focus ring "stutter". Remove if transition is removed from focus.
+      transition: none;
     }
   }
 }

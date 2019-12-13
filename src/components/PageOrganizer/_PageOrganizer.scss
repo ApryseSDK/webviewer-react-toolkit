@@ -1,3 +1,5 @@
 .ui__pageOrganizer {
   background-color: $background-canvas;
+  display: flex;
+  flex-wrap: wrap;
 }
