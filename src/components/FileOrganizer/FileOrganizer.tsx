@@ -3,7 +3,7 @@ import React, { FC, KeyboardEvent, ReactNode } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { File } from '../../hooks/useFile';
-import DraggableWrapper from '../DraggableWrapper';
+import Draggable from '../Draggable';
 
 export interface FileOrganizerProps {
   /**
@@ -58,7 +58,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     <div className={FileOrganizerClass}>
       <DndProvider backend={Backend}>
         {files.map((file, index) => (
-          <DraggableWrapper
+          <Draggable
             key={file.id}
             index={index}
             onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}

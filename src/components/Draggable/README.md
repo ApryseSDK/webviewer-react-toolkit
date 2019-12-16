@@ -12,13 +12,13 @@ Here is an absolute basic example of how to implement it:
 import React from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import DraggableWrapper from '../DraggableWrapper';
+import Draggable from '../Draggable';
 
 export const BasicExample = () => (
   <DndProvider backend={Backend}>
-    <DraggableWrapper index={0}>
+    <Draggable index={0}>
       <div>This div is draggable</div>
-    </DraggableWrapper>
+    </Draggable>
   </DndProvider>
 );
 ```
