@@ -16,7 +16,7 @@ describe('ClickableDiv component', () => {
 
   it('clicking clickableDiv triggers onClick prop', () => {
     const onClick = spy();
-    shallow(<ClickableDiv onClick={onClick} />).simulate('click');
+    mount(<ClickableDiv onClick={onClick} />).simulate('click');
     expect(onClick.callCount).toBe(1);
   });
 
