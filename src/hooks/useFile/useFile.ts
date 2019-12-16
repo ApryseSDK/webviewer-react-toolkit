@@ -94,7 +94,7 @@ function useFile(_fileDetails: FileDetails | FileInitializer, _onFailed?: FileFa
   // Call with a promise to set a key of file in the future. Will set the key to
   // undefined while waiting for the future to complete.
   const futureSet = useCallback<FutureSet>(async (key, future, tries = retries.current) => {
-    setAsyncValues(prev => ({ ...prev, [key]: undefined }));
+    setAsyncValues(prev => ({ ...prev, [key]: { value: undefined } }));
     if (future === undefined) return;
     try {
       const value = await future;
@@ -110,23 +110,18 @@ function useFile(_fileDetails: FileDetails | FileInitializer, _onFailed?: FileFa
   useEffect(() => {
     const { fileObj, documentObj } = fileDetails.current;
 
-    // Throw error if one of file or document not given.
-    if (!fileObj && !documentObj) throw new TypeError('One of fileObj or documentObj is required');
+    if (!(fileObj || documentObj)) throw new TypeError('One of fileObj or documentObj is required');
 
-    // Set fileObj, or use documentObj to set it.
-    if (fileObj) {
-      futureSet('fileObj', fileObj);
-    } else if (documentObj) {
-      futureSet('fileObj', documentToBlob(documentObj));
-    }
-
-    // Set documentObj, or use fileObj and extension to set it.
-    if (documentObj) {
-      futureSet('documentObj', documentObj);
-    } else if (fileObj) {
-      futureSet('documentObj', blobToDocument(fileObj, syncValues.extension));
-    }
+    futureSet('fileObj', fileObj ?? documentToBlob(documentObj!));
+    futureSet('documentObj', documentObj ?? blobToDocument(fileObj!, syncValues.extension));
   }, [futureSet, syncValues.extension]);
+
+  // Set documentObj whenever fileObj changes.
+  useEffect(() => {
+    if (asyncValues.fileObj.value) {
+      futureSet('documentObj', blobToDocument(asyncValues.fileObj.value, syncValues.extension));
+    }
+  }, [asyncValues.fileObj, syncValues.extension, futureSet]);
 
   // Set thumbnail whenever documentObj changes.
   useEffect(() => {
