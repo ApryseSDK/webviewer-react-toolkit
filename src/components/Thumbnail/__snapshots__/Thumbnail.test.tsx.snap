@@ -36,6 +36,7 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
     centerText={true}
     className="ui__thumbnail__label"
     onRenderText={[Function]}
+    onSave={[Function]}
     value="Test name"
   />
 </ForwardRef>

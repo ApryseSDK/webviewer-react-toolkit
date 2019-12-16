@@ -35,6 +35,11 @@ export interface EditableTextProps {
    */
   disabled?: boolean;
   /**
+   * Lock the text in view mode. Similar to disabled, but without the reduced
+   * opacity.
+   */
+  locked?: boolean;
+  /**
    * Render out a custom string to display when not in edit mode.
    */
   onRenderText?: (value: string) => string;
@@ -64,6 +69,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       onCancel,
       className,
       disabled,
+      locked,
       onRenderText,
       placeholder,
       centerText,
@@ -130,6 +136,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     const editableTextClass = classnames(
       'ui__base ui__editableText',
       { ['ui__editableText--disabled']: disabled },
+      { ['ui__editableText--locked']: locked },
       { ['ui__editableText--centerText']: centerText },
       { ['ui__editableText--bordered']: bordered },
       className,
@@ -150,9 +157,16 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
             onKeyDown={handleOnKeyDown}
             ref={inputRef}
             onBlur={handleOnSave}
+            onClick={e => e.stopPropagation()}
           />
         ) : (
-          <ClickableDiv className={buttonClass} disabled={disabled} onClick={handleOnEdit} ref={ref} usePointer>
+          <ClickableDiv
+            className={buttonClass}
+            disabled={disabled || locked}
+            onClick={handleOnEdit}
+            ref={ref}
+            usePointer
+          >
             {valueToDisplay}
           </ClickableDiv>
         )}

@@ -1,6 +1,7 @@
 import classnames from 'classnames';
-import React, { forwardRef, HTMLAttributes, MouseEvent, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, HTMLAttributes, useImperativeHandle, useRef } from 'react';
 import useKeyForClick from '../../hooks/useKeyForClick';
+import useOnClick from '../../hooks/useOnClick';
 import { Omit } from '../../utils/typeUtils';
 
 export interface ClickableDivProps extends Omit<HTMLAttributes<HTMLDivElement>, 'role' | 'tabIndex'> {
@@ -24,9 +25,7 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
     const divRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => divRef.current!);
 
-    const handleOnClick = (event: MouseEvent<HTMLDivElement>) => {
-      if (!disabled) onClick?.(event);
-    };
+    const handleOnClick = useOnClick(onClick, { disabled, stopPropagation: true });
 
     const handleKeyUp = useKeyForClick(onKeyPress, divRef);
 

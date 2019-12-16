@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { forwardRef, MouseEvent, useState } from 'react';
-import { File, rotateFile } from '../../hooks/useFile';
+import { File } from '../../hooks/useFile';
 import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
@@ -18,6 +18,10 @@ export interface ThumbnailProps extends ClickableDivProps {
    */
   label?: string;
   /**
+   * Do not add the file's extension onto the end of the label.
+   */
+  hideExtension?: boolean;
+  /**
    * Display thumbnail with selected props.
    */
   selected?: boolean;
@@ -26,13 +30,26 @@ export interface ThumbnailProps extends ClickableDivProps {
    */
   dragging?: boolean;
   /**
-   * Callback fired whenever the remove item button is clicked.
+   * Callback fired when the rotate button is clicked. If not given, will have
+   * no rotate button.
+   */
+  onRotate?: (file: File, event: MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * Callback fired when the remove button is clicked. If not given, will have
+   * no remove button
    */
   onRemove?: (file: File, event: MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * Callback fired when the name is edited and saved.
+   */
+  onRename?: (file: File, newName: string) => void;
 }
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
-  ({ file, label, selected, dragging, onRemove, className, disabled, ...divProps }, ref) => {
+  (
+    { file, label, hideExtension, selected, dragging, onRotate, onRemove, onRename, className, disabled, ...divProps },
+    ref,
+  ) => {
     const [focused, setFocused] = useState(false);
 
     const thumbnailClass = classnames(
@@ -60,22 +77,32 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         onDragEnd={undefined}
       >
         <div className="ui__thumbnail__controls">
-          <ToolButton disabled={disabled} onClick={() => rotateFile(file)}>
-            <img src={rotate} alt={'rotate'} />
-          </ToolButton>
-          <ToolButton disabled={disabled} onClick={e => onRemove?.(file, e)}>
-            <img src={close} alt={'close'} />
-          </ToolButton>
+          {onRotate ? (
+            <ToolButton disabled={disabled} onClick={e => onRotate(file, e)}>
+              <img src={rotate} alt={'rotate'} />
+            </ToolButton>
+          ) : (
+            undefined
+          )}
+          {onRemove ? (
+            <ToolButton disabled={disabled} onClick={e => onRemove(file, e)}>
+              <img src={close} alt={'close'} />
+            </ToolButton>
+          ) : (
+            undefined
+          )}
         </div>
         <div className="ui__thumbnail__image">
           {file.thumbnail ? <img src={file.thumbnail} alt={file.name} /> : <Spinner />}
         </div>
         <EditableText
           className="ui__thumbnail__label"
-          value={label || file.name}
-          onRenderText={value => (value ? `${value}.pdf` : '')}
+          value={label ?? file.name}
+          onRenderText={hideExtension ? undefined : value => value && `${value}.${file.extension}`}
           centerText
           disabled={disabled}
+          locked={!onRename}
+          onSave={s => onRename?.(file, s)}
         />
       </ClickableDiv>
     );

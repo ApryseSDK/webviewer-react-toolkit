@@ -48,7 +48,8 @@
     transition: 0.1s background-color;
   }
 
-  &:not(.ui__editableText--disabled) .ui__editableText__button {
+  &:not(.ui__editableText--disabled):not(.ui__editableText--locked)
+    .ui__editableText__button {
     &:hover {
       border: 1px solid $blue-gray-1;
     }
