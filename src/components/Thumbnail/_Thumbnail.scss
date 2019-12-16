@@ -21,13 +21,15 @@ $thumbnail-dimensions: 250px;
   }
 
   &--dragging {
+    border: 2px dashed $focus-shadow;
+
     .ui__thumbnail__controls {
       visibility: hidden;
     }
 
     .ui__thumbnail__image,
     .ui__thumbnail__label {
-      opacity: 0.5;
+      opacity: 0.3;
     }
   }
 

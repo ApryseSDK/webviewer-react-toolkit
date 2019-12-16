@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, ReactNode, useEffect, useRef, useState, useMemo } from 'react';
+import React, { FC, HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { Motion, spring, SpringHelperConfig } from 'react-motion';
 
@@ -81,26 +81,27 @@ export const Draggable: FC<DraggableProps> = ({
     const { left: prevLeft, top: prevTop } = prev?.getBoundingClientRect() ?? {};
     const { left, top } = divRef.current.getBoundingClientRect();
     setCoords({
-      x: prevLeft === undefined ? 0 : (prevLeft - left) / 3,
-      y: prevTop === undefined ? 0 : (prevTop - top) / 3,
+      x: prevLeft === undefined ? 0 : (prevLeft - left) / 10,
+      y: prevTop === undefined ? 0 : (prevTop - top) / 10,
     });
     prevIndex.current = index;
+    // Revert back to zero after animation frame.
+    requestAnimationFrame(() => {
+      setCoords(prev => {
+        if (prev.x === 0 && prev.y === 0) return prev;
+        return { x: 0, y: 0 };
+      });
+    });
   }, [index]);
-
-  // Whenever coords change, revert back to zero.
-  useEffect(() => {
-    if (coords.x === 0 && coords.y === 0) return;
-    setCoords(prev => ({ ...prev, x: 0, y: 0 }));
-  }, [coords]);
 
   // Only animate if returning back to 0. Otherwise, snap to translate so that
   // the animation looks like it's moving from it's previous location.
   const motionStyle = useMemo(
     () => ({
-      x: coords.x === 0 ? spring(coords.x, SPRING) : coords.x,
-      y: coords.y === 0 ? spring(coords.y, SPRING) : coords.y,
+      x: coords.x === 0 && !isDragging ? spring(coords.x, SPRING) : coords.x,
+      y: coords.y === 0 && !isDragging ? spring(coords.y, SPRING) : coords.y,
     }),
-    [coords.x, coords.y],
+    [coords.x, coords.y, isDragging],
   );
 
   const draggableClass = classnames('ui__base ui__draggable', className);

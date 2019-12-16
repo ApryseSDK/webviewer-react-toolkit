@@ -45,9 +45,7 @@ export const Basic: FC<{ numFiles: number }> = () => {
       files={files}
       onMove={handleOnMove}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      onRenderThumbnail={(file, isDragging) => (
-        <Thumbnail file={file} style={isDragging ? { opacity: 0.4 } : undefined} />
-      )}
+      onRenderThumbnail={(file, isDragging) => <Thumbnail file={file} dragging={isDragging} />}
     />
   );
 };
