@@ -1,6 +1,6 @@
-import { File } from './useFile';
+import { File } from './types';
 
-export function rotate(file: File) {
+export function rotateFile(file: File) {
   const coreControls = window.CoreControls;
   if (!coreControls) return;
   file.mutateDocumentObj(documentObj => {

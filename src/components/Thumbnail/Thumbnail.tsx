@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { forwardRef, MouseEvent, useState } from 'react';
-import { File } from '../../hooks/useFile';
+import { File, rotateFile } from '../../hooks/useFile';
 import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
@@ -60,7 +60,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         onDragEnd={undefined}
       >
         <div className="ui__thumbnail__controls">
-          <ToolButton disabled={disabled} onClick={() => file.rotate?.()}>
+          <ToolButton disabled={disabled} onClick={() => rotateFile(file)}>
             <img src={rotate} alt={'rotate'} />
           </ToolButton>
           <ToolButton disabled={disabled} onClick={e => onRemove?.(file, e)}>
