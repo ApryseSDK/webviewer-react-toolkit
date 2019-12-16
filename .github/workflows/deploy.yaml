@@ -3,7 +3,8 @@ name: Lint and test components, then deploy
 on:
   push:
     branches:
-      - 'master'
+      - 'change_this_to_master_when_this_is_fixed'
+      # - 'master'
 
 jobs:
   build:
