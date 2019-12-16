@@ -22,7 +22,6 @@ describe('ClickableDiv component', () => {
 
   it('clicking disabled clickableDiv does not trigger onClick prop', () => {
     const onClick = spy();
-    // full DOM mount so `clickableDiv` element will use disabled prop
     mount(<ClickableDiv onClick={onClick} disabled />).simulate('click');
     expect(onClick.callCount).toBe(0);
   });

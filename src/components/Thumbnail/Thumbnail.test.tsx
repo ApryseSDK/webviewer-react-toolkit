@@ -35,7 +35,6 @@ describe('Thumbnail component', () => {
 
   it('clicking disabled thumbnail does not trigger onClick prop', () => {
     const onClick = spy();
-    // full DOM mount so `thumbnail` element will use disabled prop
     mount(<Thumbnail file={testFile} onClick={onClick} disabled />).simulate('click');
     expect(onClick.callCount).toBe(0);
   });

@@ -5,7 +5,7 @@ import Backend from 'react-dnd-html5-backend';
 import { File } from '../../hooks/useFile';
 import DraggableWrapper from '../DraggableWrapper';
 
-export interface PageOrganizerProps {
+export interface FileOrganizerProps {
   /**
    * A list of files to render out within the page organizer.
    */
@@ -31,14 +31,14 @@ export interface PageOrganizerProps {
   preventArrowsToMove?: boolean;
 }
 
-export const PageOrganizer: FC<PageOrganizerProps> = ({
+export const FileOrganizer: FC<FileOrganizerProps> = ({
   files,
   onMove,
   onRenderThumbnail,
   className,
   preventArrowsToMove,
 }) => {
-  const pageOrganizerClass = classnames('ui__base ui__pageOrganizer', className);
+  const FileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
     if (preventArrowsToMove) return;
@@ -55,7 +55,7 @@ export const PageOrganizer: FC<PageOrganizerProps> = ({
   };
 
   return (
-    <div className={pageOrganizerClass}>
+    <div className={FileOrganizerClass}>
       <DndProvider backend={Backend}>
         {files.map((file, index) => (
           <DraggableWrapper

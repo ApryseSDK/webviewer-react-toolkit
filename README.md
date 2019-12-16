@@ -22,7 +22,7 @@ document as a prop and displays a thumbnail.
 ## Possible components
 
 - `<Thumbnail />`
-- `<PageOrganizer />`
+- `<FileOrganizer />`
 
 ## Tech stack
 
@@ -58,13 +58,13 @@ export default () => {
 Example of rendering a page organizer
 
 ```js
-import PageOrganizer, {
-  usePageOrganizer,
-} from '@pdftron/component-library/PageOrganizer';
+import FileOrganizer, {
+  useFileOrganizer,
+} from '@pdftron/component-library/FileOrganizer';
 import Thumbnail from '@pdftron/component-library/Thumbnail';
 
 export default () => {
-  const { submit, organizer } = usePageOrganizer({
+  const { submit, organizer } = useFileOrganizer({
     document,
     onComplete: newDocument => {
       // do something with new document
@@ -75,7 +75,7 @@ export default () => {
 
   return (
     <>
-      <PageOrganizer renderThumbnail={renderThumb} organizer={organizer} />
+      <FileOrganizer renderThumbnail={renderThumb} organizer={organizer} />
       <Button onClick={submit} />
     </>
   );

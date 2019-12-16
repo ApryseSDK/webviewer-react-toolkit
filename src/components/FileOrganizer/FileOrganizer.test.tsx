@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import PageOrganizer from '../PageOrganizer';
+import FileOrganizer from '../FileOrganizer';
 import { File } from '../../hooks/useFile';
 
 const testFile: File = {
@@ -15,14 +15,14 @@ const testFile: File = {
   setName: async () => console.log('test'),
 };
 
-describe('PageOrganizer component', () => {
+describe('FileOrganizer component', () => {
   it('renders its contents', () => {
-    const pageOrganizer = shallow(<PageOrganizer files={[testFile]} onRenderThumbnail={() => 'Thumbnail'} />);
-    expect(pageOrganizer.find('.ui__pageOrganizer').length).toEqual(1);
+    const fileOrganizer = shallow(<FileOrganizer files={[testFile]} onRenderThumbnail={() => 'Thumbnail'} />);
+    expect(fileOrganizer.find('.ui__fileOrganizer').length).toEqual(1);
   });
 
-  it('snapshot renders default pageOrganizer', () => {
-    const pageOrganizer = shallow(<PageOrganizer files={[testFile]} onRenderThumbnail={() => 'Thumbnail'} />);
-    expect(pageOrganizer).toMatchSnapshot();
+  it('snapshot renders default FileOrganizer', () => {
+    const fileOrganizer = shallow(<FileOrganizer files={[testFile]} onRenderThumbnail={() => 'Thumbnail'} />);
+    expect(fileOrganizer).toMatchSnapshot();
   });
 });

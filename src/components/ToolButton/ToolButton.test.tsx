@@ -22,7 +22,6 @@ describe('ToolButton component', () => {
 
   it('clicking disabled toolButton does not trigger onClick prop', () => {
     const onClick = spy();
-    // full DOM mount so `toolButton` element will use disabled prop
     mount(<ToolButton onClick={onClick} disabled />).simulate('click');
     expect(onClick.callCount).toBe(0);
   });

@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PageOrganizer component snapshot renders default pageOrganizer 1`] = `
+exports[`FileOrganizer component snapshot renders default FileOrganizer 1`] = `
 <div
-  className="ui__base ui__pageOrganizer"
+  className="ui__base ui__fileOrganizer"
 >
   <DndProvider
     backend={[Function]}

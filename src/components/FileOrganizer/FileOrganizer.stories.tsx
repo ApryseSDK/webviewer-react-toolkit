@@ -1,13 +1,13 @@
 import { action } from '@storybook/addon-actions';
 import React, { useCallback, useState, useEffect, FC } from 'react';
 import { File } from '../../hooks/useFile';
-import PageOrganizer, { PageOrganizerProps } from '../PageOrganizer';
+import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';
 import Thumbnail from '../Thumbnail';
 import docs from './README.md';
 import { number, boolean } from '@storybook/addon-knobs';
 import { createFile } from '../../storybook-helpers/data/files';
 
-export default { title: 'PageOrganizer', parameters: { info: docs } };
+export default { title: 'FileOrganizer', parameters: { info: docs } };
 
 export const Basic: FC<{ numFiles: number }> = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -29,7 +29,7 @@ export const Basic: FC<{ numFiles: number }> = () => {
     });
   }, [numFiles]);
 
-  const handleOnMove = useCallback<NonNullable<PageOrganizerProps['onMove']>>((...args) => {
+  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((...args) => {
     action('onMove')(...args);
     const [fromIndex, toIndex] = args;
     setFiles(prev => {
@@ -41,7 +41,7 @@ export const Basic: FC<{ numFiles: number }> = () => {
   }, []);
 
   return (
-    <PageOrganizer
+    <FileOrganizer
       files={files}
       onMove={handleOnMove}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}

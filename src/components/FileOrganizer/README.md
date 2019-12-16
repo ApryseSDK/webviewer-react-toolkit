@@ -1,5 +1,5 @@
-Page organizer allows you to view multiple page files and use drag-and-drop to
-re-order them.
+The file organizer allows you to view multiple page files and use drag-and-drop
+to re-order them.
 
 ## Handling `onMove`
 
@@ -24,7 +24,7 @@ const handleOnMove = useCallback((fromIndex: number, toIndex: number) => {
 }, []);
 
 return (
-  <PageOrganizer
+  <FileOrganizer
     files={files}
     onMove={handleOnMove}
     //...
