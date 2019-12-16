@@ -9,6 +9,11 @@ const testFile: File = {
   name: 'Test name',
   extension: 'pdf',
   originalName: 'Test original name',
+  mutateDocumentObj: () => console.log('test'),
+  mutateFileObj: () => console.log('test'),
+  setDocumentObj: async () => console.log('test'),
+  setFileObj: async () => console.log('test'),
+  setName: async () => console.log('test'),
 };
 
 describe('Thumbnail component', () => {
