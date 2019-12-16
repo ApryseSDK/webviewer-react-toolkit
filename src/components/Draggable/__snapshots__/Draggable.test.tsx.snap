@@ -10,16 +10,16 @@ exports[`Draggable component snapshot renders default draggable 1`] = `
     <Motion
       style={
         Object {
-          "translateX": Object {
-            "damping": 18,
+          "x": Object {
+            "damping": 30,
             "precision": 0.01,
-            "stiffness": 130,
+            "stiffness": 300,
             "val": 0,
           },
-          "translateY": Object {
-            "damping": 18,
+          "y": Object {
+            "damping": 30,
             "precision": 0.01,
-            "stiffness": 130,
+            "stiffness": 300,
             "val": 0,
           },
         }
@@ -29,8 +29,9 @@ exports[`Draggable component snapshot renders default draggable 1`] = `
         className="ui__base ui__draggable"
         style={
           Object {
-            "WebkitTransform": "translate(0px, 0px)",
-            "transform": "translate(0px, 0px)",
+            "WebkitTransform": "translate3d(0px, 0px, 0)",
+            "transform": "translate3d(0px, 0px, 0)",
+            "zIndex": undefined,
           }
         }
       >
