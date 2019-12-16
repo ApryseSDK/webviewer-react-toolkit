@@ -1,2 +1,3 @@
 export { rotate } from './manipulators';
-export { default, File } from './useFile';
+export { File, FileFailed, FileInitializer } from './types';
+export { default } from './useFile';

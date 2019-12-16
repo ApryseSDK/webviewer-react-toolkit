@@ -1,8 +1,65 @@
 import { Futurable, Include } from '../../utils/typeUtils';
-import { File } from './useFile';
 
-export type DocumentObjMutator = (document: CoreControls.Document) => Futurable<CoreControls.Document>;
-export type FileObjMutator = (document: Blob) => Futurable<Blob>;
+/** The output of this hook is an object representing a file. */
+export interface File {
+  /**
+   * A unique ID generated for the file.
+   */
+  id: string;
+  /**
+   * The name of the file.
+   */
+  name: string;
+  /**
+   * The original name of the file (will fallback to the name if not provided
+   * during initialization).
+   */
+  originalName: string;
+  /**
+   * The extension of the file (for example `'pdf'`).
+   */
+  extension: string;
+  /**
+   * The thumbnail for the file. This will remain undefined until it is fetched
+   * (this may be async).
+   */
+  thumbnail?: string;
+  /**
+   * The file object blob. This will remain undefined until it is fetched (this
+   * may be async). Mutations on this must **not** be done directly, but using
+   * the `setFileObj` function.
+   */
+  fileObj?: Blob;
+  /**
+   * The Document object for the file. This will remain undefined until it is
+   * fetched (this may be async). Mutations on this must **not** be done
+   * directly, but using the `setDocumentObj` function.
+   */
+  documentObj?: CoreControls.Document;
+  /**
+   * Do any mutation on the document object.
+   */
+  mutateDocumentObj: (documentObjMutator: DocumentObjMutator) => void;
+  /**
+   * Do any mutations on the file object.
+   */
+  mutateFileObj: (fileObjMutator: FileObjMutator) => void;
+  /**
+   * Set the document object to a new document object.
+   */
+  setDocumentObj: (newDocumentObj: Futurable<CoreControls.Document>) => Promise<void>;
+  /**
+   * Set the file object to a new file object.
+   */
+  setFileObj: (newFileObj: Futurable<Blob>) => Promise<void>;
+  /**
+   * Set the name of the file.
+   */
+  setName: (newName: string) => Promise<void>;
+}
+
+type DocumentObjMutator = (document: CoreControls.Document) => Futurable<CoreControls.Document>;
+type FileObjMutator = (document: Blob) => Futurable<Blob>;
 
 /** The input object provided to the useFile hook. */
 export interface FileDetails {

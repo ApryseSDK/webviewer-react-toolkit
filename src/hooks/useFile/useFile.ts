@@ -1,66 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getExtension } from '../../utils/fileUtils';
 import { getStringId } from '../../utils/idUtils';
-import { Futurable } from '../../utils/typeUtils';
 import blobToDocument from '../../webviewer/blobToDocument';
 import documentToBlob from '../../webviewer/documentToBlob';
 import getThumbnail from '../../webviewer/getThumbnail';
-import {
-  AsyncValuesState,
-  DocumentObjMutator,
-  FileDetails,
-  FileFailed,
-  FileInitializer,
-  FileObjMutator,
-  FutureSet,
-} from './types';
-
-/** The output of this hook is an object representing a file. */
-export interface File {
-  /**
-   * A unique ID generated for the file.
-   */
-  id: string;
-  /**
-   * The name of the file.
-   */
-  name: string;
-  /**
-   * The original name of the file (will fallback to the name if not provided
-   * during initialization).
-   */
-  originalName: string;
-  /**
-   * The extension of the file (for example `'pdf'`).
-   */
-  extension: string;
-  /**
-   * The thumbnail for the file. This will remain undefined until it is fetched
-   * (this may be async).
-   */
-  thumbnail?: string;
-  /**
-   * The file object blob. This will remain undefined until it is fetched (this
-   * may be async). Mutations on this must **not** be done directly, but using
-   * the `setFileObj` function.
-   */
-  fileObj?: Blob;
-  /**
-   * The Document object for the file. This will remain undefined until it is
-   * fetched (this may be async). Mutations on this must **not** be done
-   * directly, but using the `setDocumentObj` function.
-   */
-  documentObj?: CoreControls.Document;
-  /**
-   * Do any mutation on the document. If your docMutator is a promise and it
-   * rejects, will not update.
-   */
-  mutateDocumentObj: (documentObjMutator: DocumentObjMutator) => void;
-  mutateFileObj: (fileObjMutator: FileObjMutator) => void;
-  setDocumentObj: (newDocumentObj: Futurable<CoreControls.Document>) => Promise<void>;
-  setFileObj: (newFileObj: Futurable<Blob>) => Promise<void>;
-  setName: (newName: string) => Promise<void>;
-}
+import { AsyncValuesState, File, FileDetails, FileFailed, FileInitializer, FutureSet } from './types';
 
 /**
  * This hook generates a file which will update as async pieces are fetched.
