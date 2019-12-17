@@ -22,27 +22,11 @@ $thumbnail-dimensions: 250px;
 
   &--dragging {
     border: 2px dashed $focus-shadow;
-    background-color: transparent;
 
-    .ui__thumbnail__controls {
-      visibility: hidden;
-    }
-
+    .ui__thumbnail__controls,
     .ui__thumbnail__image,
     .ui__thumbnail__label {
-      // visibility: hidden;
-      // opacity: 0.3;
-      // border: 1px solid black;
-    }
-
-    .ui__thumbnail__image img {
-      position: relative;
-
-      &::after {
-        @include absolute-fill;
-        content: '';
-        background-color: black;
-      }
+      visibility: hidden;
     }
   }
 
