@@ -2,15 +2,11 @@
   display: inline-block;
   outline: none;
   border: none;
+  transition: $focus-transition;
 
   // Don't show focus shadow if no focus style or disabled.
   &:focus:not(.ui__clickableDiv--noFocusStyle):not(.ui__clickableDiv--disabled) {
     @include focus;
-  }
-
-  &--disabled {
-    // TODO: Disabled specific style for clickable div?
-    // opacity: 0.8?
   }
 
   &--usePointer {

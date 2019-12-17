@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { forwardRef, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, KeyboardEvent, useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
 import ClickableDiv from '../ClickableDiv';
 
 export interface EditableTextProps {
@@ -77,6 +77,11 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     },
     ref,
   ) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const buttonRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(ref, () => buttonRef.current!);
+
     // Use state if controlled edit mode not provided.
     const [stateEditMode, setStateEditMode] = useState(false);
     const editMode = controlledEditMode ?? stateEditMode;
@@ -90,10 +95,10 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     const [editValue, setEditValue] = useState(value);
     useEffect(() => setEditValue(value), [editMode, value]);
 
-    // Focus input whenever edit mode is enabled.
-    const inputRef = useRef<HTMLInputElement>(null);
+    // Focus input whenever edit mode is enabled, and button when disabled.
     useEffect(() => {
       if (editMode) inputRef.current?.focus();
+      else buttonRef.current?.focus();
     }, [editMode]);
 
     const handleOnEdit = () => {
@@ -158,7 +163,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
             className={buttonClass}
             disabled={disabled || locked}
             onClick={handleOnEdit}
-            ref={ref}
+            ref={buttonRef}
             usePointer
           >
             {valueToDisplay}

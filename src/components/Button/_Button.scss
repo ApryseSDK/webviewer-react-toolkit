@@ -2,6 +2,7 @@
   cursor: pointer;
   outline: none;
   user-select: none;
+  transition: $focus-transition;
 
   &--disabled {
     cursor: default;
@@ -16,41 +17,41 @@
 
   &--style {
     &-default {
-      border: 1px solid $blue-gray-5;
-      background-color: $blue-gray-5;
+      border: 1px solid $blue-gray-6;
+      background-color: $blue-gray-6;
       color: $white-1;
 
       &:active {
-        border-color: $blue-gray-6;
-        background-color: $blue-gray-6;
+        border-color: $blue-gray-7;
+        background-color: $blue-gray-7;
       }
     }
 
     &-borderless {
       border: 1px solid transparent;
       background-color: transparent;
-      color: $blue-gray-5;
+      color: $blue-gray-6;
 
       &:active {
-        color: $blue-gray-6;
+        color: $blue-gray-7;
       }
     }
 
     &-outline {
-      border: 1px solid $blue-gray-5;
+      border: 1px solid $blue-gray-6;
       background-color: transparent;
-      color: $blue-gray-5;
+      color: $blue-gray-6;
       transition: background-color 75ms ease-in-out, color 75ms ease-in-out;
 
       &:focus,
       &:hover {
-        background-color: $blue-gray-5;
+        background-color: $blue-gray-6;
         color: $white-1;
       }
 
       &:active {
-        border-color: $blue-gray-6;
-        background-color: $blue-gray-6;
+        border-color: $blue-gray-7;
+        background-color: $blue-gray-7;
       }
     }
   }

@@ -130,7 +130,14 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           )}
         </div>
         <div className="ui__thumbnail__image">
-          {file.thumbnail ? <img src={file.thumbnail} alt={file.name} /> : <Spinner />}
+          {file.thumbnail ? (
+            <div className="ui__thumbnail__image__wrapper">
+              <img src={file.thumbnail} alt={file.name} />
+              <div className="ui__thumbnail__image__overlay" />
+            </div>
+          ) : (
+            <Spinner />
+          )}
         </div>
         <EditableText
           className="ui__thumbnail__label"

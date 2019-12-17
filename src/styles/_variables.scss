@@ -20,14 +20,14 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --gray-1:            #eee;
   --gray-2:            #ddd;
   --focus-shadow:      rgba(19, 124, 189, 0.3);
-  --mono-focus-shadow: rgba(19, 124, 189, 0.1);
 
   --blue-gray-1:       #dfe2ed;
-  --blue-gray-2:       #abb0c4;
-  --blue-gray-3:       #8b92ab;
-  --blue-gray-4:       #767f9b;
-  --blue-gray-5:       #6077bf;
-  --blue-gray-6:       #415797;
+  --blue-gray-2:       #cbd0e0;
+  --blue-gray-3:       #abb0c4;
+  --blue-gray-4:       #8b92ab;
+  --blue-gray-5:       #767f9b;
+  --blue-gray-6:       #6077bf;
+  --blue-gray-7:       #415797;
   --white-1:           #fafafa;
   --white-2:           #fafafa;
   --white-3:           #f0f0f0;
@@ -62,6 +62,7 @@ $blue-gray-3:       var(--blue-gray-3);
 $blue-gray-4:       var(--blue-gray-4);
 $blue-gray-5:       var(--blue-gray-5);
 $blue-gray-6:       var(--blue-gray-6);
+$blue-gray-7:       var(--blue-gray-7);
 $white-1:           var(--white-1);
 $white-2:           var(--white-2);
 $white-3:           var(--white-3);
@@ -103,3 +104,10 @@ $padding-large: 24px;
 
 $tablet-lower-boundary:  768px;
 $desktop-lower-boundary: 1024px;
+
+
+/* --- Z-Index values. --- */
+
+$z-index-local:    0;
+$z-index-raised:   1;
+$z-index-dragging: 2;

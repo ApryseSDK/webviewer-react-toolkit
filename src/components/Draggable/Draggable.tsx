@@ -132,7 +132,9 @@ export const Draggable: FC<DraggableProps> = ({
     [coords.x, coords.y, isDragging],
   );
 
-  const draggableClass = classnames('ui__base ui__draggable', className);
+  const draggableClass = classnames('ui__base ui__draggable', className, {
+    ['ui__draggable--dragging']: isDragging,
+  });
 
   return (
     <Motion style={motionStyle}>
@@ -143,7 +145,6 @@ export const Draggable: FC<DraggableProps> = ({
           className={draggableClass}
           style={{
             ...style,
-            zIndex: isDragging ? 2 : undefined,
             WebkitTransform: `translate3d(${x}px, ${y}px, 0)`,
             transform: `translate3d(${x}px, ${y}px, 0)`,
           }}

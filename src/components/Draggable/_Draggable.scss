@@ -1,3 +1,7 @@
 .ui__draggable {
   display: inline-block;
+
+  &--dragging {
+    z-index: $z-index-dragging;
+  }
 }

@@ -5,19 +5,16 @@ $thumbnail-dimensions: 250px;
   position: relative;
   border: 1px solid transparent;
   outline: none;
-  width: 250px;
-  height: 250px;
+  width: $thumbnail-dimensions;
+  height: $thumbnail-dimensions;
   transition: 0.1s background-color;
   display: flex;
   flex-direction: column;
+  z-index: $z-index-local;
 
-  &--selected {
+  &--selected:not(.ui__thumbnail--dragging) {
     // TODO: how do we show selected better?
-    // border: 1px solid $blue-gray-1;
-
-    .ui__thumbnail__label {
-      text-decoration: underline;
-    }
+    background-color: $blue-gray-1;
   }
 
   &--dragging {
@@ -34,7 +31,9 @@ $thumbnail-dimensions: 250px;
   &.ui__thumbnail--focused:not(.ui__thumbnail--disabled) {
     // Do not style for hover or focus if anything is dragging
     &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging) {
-      background-color: $gray-1;
+      &:not(.ui__thumbnail--selected) {
+        background-color: $gray-1;
+      }
 
       .ui__thumbnail__controls {
         opacity: 1;
@@ -58,19 +57,35 @@ $thumbnail-dimensions: 250px;
     display: flex;
     overflow: hidden;
     border-radius: $border-radius-small;
+    z-index: $z-index-raised;
   }
 
   &__image {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 180px;
+    // This has to be here?
+    height: 0;
     flex: 1 1 auto;
+
+    &__wrapper {
+      max-height: 100%;
+      position: relative;
+    }
+
+    &__overlay {
+      @include absolute-fill;
+      transition: $focus-transition;
+    }
 
     img {
       max-width: 100%;
       max-height: 100%;
+      display: block;
       border: 1px solid $blue-gray-1;
+      transition: $focus-transition;
+      user-select: none;
     }
   }
 

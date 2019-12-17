@@ -17,12 +17,12 @@
 
   &--bordered {
     .ui__editableText__button {
-      border: 1px solid $blue-gray-1;
+      border: 1px solid $blue-gray-2;
     }
 
     &:not(.ui__editableText--disabled) .ui__editableText__button {
       &:hover {
-        background-color: $blue-gray-1;
+        background-color: $blue-gray-2;
       }
 
       &--placeholder {
@@ -46,12 +46,13 @@
     display: flex;
     align-items: center;
     transition: 0.1s background-color;
+    transition: $focus-transition;
   }
 
   &:not(.ui__editableText--disabled):not(.ui__editableText--locked)
     .ui__editableText__button {
     &:hover {
-      border: 1px solid $blue-gray-1;
+      border: 1px solid $blue-gray-2;
     }
 
     &--placeholder {
@@ -60,7 +61,7 @@
   }
 
   &__field {
-    background-color: $blue-gray-1;
+    background-color: $blue-gray-2;
     outline: none;
     transition: $focus-transition;
 
