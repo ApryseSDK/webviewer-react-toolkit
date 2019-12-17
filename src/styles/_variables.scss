@@ -20,6 +20,7 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --gray-1:            #eee;
   --gray-2:            #ddd;
   --focus-shadow:      rgba(19, 124, 189, 0.3);
+  --mono-focus-shadow: rgba(19, 124, 189, 0.1);
 
   --blue-gray-1:       #dfe2ed;
   --blue-gray-2:       #abb0c4;
@@ -53,6 +54,7 @@ $background-canvas: var(--background-canvas);
 $gray-1:            var(--gray-1);
 $gray-2:            var(--gray-2);
 $focus-shadow:      var(--focus-shadow);
+$mono-focus-shadow: var(--mono-focus-shadow);
 
 $blue-gray-1:       var(--blue-gray-1);
 $blue-gray-2:       var(--blue-gray-2);

@@ -6,13 +6,20 @@ import { File } from '../../hooks/useFile';
 import Draggable from '../Draggable';
 
 export interface OnRenderThumbnailProps {
+  /** The file to render into a thumbnail. */
   file: File;
-  isDragging: boolean;
-  otherDragging: boolean;
-  setEditing: (isEditing: boolean) => void;
-  isEditing: boolean;
-  otherEditing: boolean;
+  /** The index of this file within the file organizer. */
   index: number;
+  /** Is this file being dragged currently. */
+  isDragging: boolean;
+  /** Are other files being dragged other than this one. */
+  otherDragging: boolean;
+  /** Is this thumbnail being edited (dependent on you setting `setEditing`). */
+  isEditing: boolean;
+  /** Are other files being edited other than this one. */
+  otherEditing: boolean;
+  /** Callback for setting whether the thumbnail is in editing mode. */
+  setEditing: (isEditing: boolean) => void;
 }
 
 export interface FileOrganizerProps {

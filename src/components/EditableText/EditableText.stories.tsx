@@ -11,6 +11,7 @@ export const basic = () => (
     centerText={boolean('centerText', false)}
     bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
+    locked={boolean('locked', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
     onCancel={action('onCancel')}
@@ -24,6 +25,7 @@ export const withOnRenderText = () => (
     centerText={boolean('centerText', false)}
     bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
+    locked={boolean('locked', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
     onCancel={action('onCancel')}
@@ -37,6 +39,7 @@ export const controlledValue = () => (
     centerText={boolean('centerText', false)}
     bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
+    locked={boolean('locked', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
     onCancel={action('onCancel')}
@@ -50,6 +53,7 @@ export const controlledEditMode = () => (
     centerText={boolean('centerText', false)}
     bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
+    locked={boolean('locked', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
     onCancel={action('onCancel')}
@@ -64,6 +68,7 @@ export const fullyControlled = () => (
     centerText={boolean('centerText', false)}
     bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}
+    locked={boolean('locked', false)}
     placeholder={text('placeholder', '')}
     onSave={action('onSave')}
     onCancel={action('onCancel')}

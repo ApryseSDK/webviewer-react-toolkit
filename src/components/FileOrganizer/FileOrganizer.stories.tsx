@@ -11,8 +11,28 @@ import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 export default { title: 'FileOrganizer', parameters: { info: docs } };
 
 export const Basic: FC<{ numFiles: number }> = () => {
-  const [files, setFiles] = useState<File[]>([]);
+  const [selectedList, setSelectedList] = useState<string[]>([]);
+  const setSelected = (id: string) => {
+    setSelectedList(prev => {
+      const prevIndex = prev.indexOf(id);
+      if (prevIndex === -1) return [...prev, id];
+      if (prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
+      return prev;
+    });
+  };
 
+  // This is the index organizing function.
+  const [files, setFiles] = useState<File[]>([]);
+  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
+    setFiles(prev => {
+      const clone = prev.slice();
+      const item = clone.splice(fromIndex, 1)[0];
+      clone.splice(toIndex, 0, item);
+      return clone;
+    });
+  }, []);
+
+  // This is just a helper for adding or removing pages.
   const numFiles = number('number of pages', 2);
   useEffect(() => {
     setFiles(prev => {
@@ -30,15 +50,6 @@ export const Basic: FC<{ numFiles: number }> = () => {
     });
   }, [numFiles]);
 
-  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
-    setFiles(prev => {
-      const clone = prev.slice();
-      const item = clone.splice(fromIndex, 1)[0];
-      clone.splice(toIndex, 0, item);
-      return clone;
-    });
-  }, []);
-
   return (
     <FileOrganizer
       files={files}
@@ -49,7 +60,8 @@ export const Basic: FC<{ numFiles: number }> = () => {
           file={file}
           dragging={isDragging}
           otherDragging={otherDragging}
-          onClick={action(`file_${index + 1} onClick`)}
+          selected={selectedList.includes(file.id)}
+          onClick={forwardAction(`file_${index + 1} onClick`, () => setSelected(file.id))}
           onRename={action(`file_${index + 1} onRename`)}
           onRemove={action(`file_${index + 1} onRemove`)}
           onRotate={action(`file_${index + 1} onRotate`)}

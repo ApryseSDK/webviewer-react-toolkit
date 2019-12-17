@@ -9,7 +9,7 @@
 }
 
 @mixin focus-inset-blur {
-  box-shadow: inset 0 0 10px 0 $focus-shadow;
+  box-shadow: inset 0 0 10px 10px $mono-focus-shadow;
   transition: $focus-transition;
 }
 

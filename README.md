@@ -11,6 +11,28 @@
 This component library will contain various React components that integrate with
 the PDFTron WebViewer API.
 
+## Quick guide
+
+### To spin this up:
+
+```sh
+yarn       # 1. To install dependencies (or `npm i`)
+yarn start # 2. To start the Storybook environment (or `npm start`)
+```
+
+### To test:
+
+```sh
+yarn test         # Single test run (or `npm test`)
+yarn test --watch # Watch for changes (or `npm test -- --watch`)
+```
+
+### To lint:
+
+```sh
+yarn lint # Lint for errors (or `npm lint`)
+```
+
 ## Goal
 
 To create a set of highly customizable components that take WebViewer documents
