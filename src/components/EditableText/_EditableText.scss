@@ -49,6 +49,7 @@
     transition: $focus-transition;
 
     &--noFocusTransition {
+      // Prevents focus ring "stutter". Remove if transition is removed from focus.
       transition: none;
     }
   }
