@@ -47,6 +47,10 @@
     align-items: center;
     transition: 0.1s background-color;
     transition: $focus-transition;
+
+    &--noFocusTransition {
+      transition: none;
+    }
   }
 
   &:not(.ui__editableText--disabled):not(.ui__editableText--locked)

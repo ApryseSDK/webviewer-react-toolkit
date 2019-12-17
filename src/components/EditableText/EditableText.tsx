@@ -95,10 +95,17 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     const [editValue, setEditValue] = useState(value);
     useEffect(() => setEditValue(value), [editMode, value]);
 
+    const [noFocusTransition, setNoFocusTransition] = useState(false);
+
     // Focus input whenever edit mode is enabled, and button when disabled.
     useEffect(() => {
-      if (editMode) inputRef.current?.focus();
-      else buttonRef.current?.focus();
+      if (editMode) {
+        inputRef.current?.focus();
+        setNoFocusTransition(true);
+      } else {
+        buttonRef.current?.focus();
+        setNoFocusTransition(false);
+      }
     }, [editMode]);
 
     const handleOnEdit = () => {
@@ -143,6 +150,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
 
     const buttonClass = classnames('ui__editableText__button', {
       ['ui__editableText__button--placeholder']: isPlaceholder,
+      ['ui__editableText__button--noFocusTransition']: noFocusTransition,
     });
 
     return (
