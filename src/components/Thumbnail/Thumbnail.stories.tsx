@@ -13,6 +13,8 @@ export const basic = () => (
     selected={boolean('selected', false)}
     hideExtension={boolean('hideExtension', false)}
     disabled={boolean('disabled', false)}
+    dragging={boolean('dragging', false)}
+    otherDragging={boolean('otherDragging', false)}
     onClick={boolean('has onClick', true) ? action('onClick') : undefined}
     onRename={boolean('has onRename', true) ? action('onRename') : undefined}
     onRemove={boolean('has onRemove', true) ? action('onRemove') : undefined}
@@ -27,6 +29,8 @@ export const withLabel = () => (
     selected={boolean('selected', false)}
     hideExtension={boolean('hideExtension', false)}
     disabled={boolean('disabled', false)}
+    dragging={boolean('dragging', false)}
+    otherDragging={boolean('otherDragging', false)}
     onClick={action('onClick')}
     onRename={action('onRename')}
     onRemove={action('onRemove')}
@@ -40,6 +44,8 @@ export const rotated = () => (
     selected={boolean('selected', false)}
     hideExtension={boolean('hideExtension', false)}
     disabled={boolean('disabled', false)}
+    dragging={boolean('dragging', false)}
+    otherDragging={boolean('otherDragging', false)}
     onClick={action('onClick')}
     onRename={action('onRename')}
     onRemove={action('onRemove')}

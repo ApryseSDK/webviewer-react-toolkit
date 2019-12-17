@@ -1,9 +1,17 @@
 import classnames from 'classnames';
-import React, { FC, KeyboardEvent, ReactNode } from 'react';
+import React, { FC, KeyboardEvent, ReactNode, useState, useCallback } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { File } from '../../hooks/useFile';
 import Draggable from '../Draggable';
+
+export interface OnRenderThumbnailProps {
+  file: File;
+  isDragging: boolean;
+  otherDragging: boolean;
+  setEditing: (isEditing: boolean) => void;
+  index: number;
+}
 
 export interface FileOrganizerProps {
   /**
@@ -14,7 +22,7 @@ export interface FileOrganizerProps {
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
    */
-  onRenderThumbnail: (file: File, isDragging: boolean, index: number) => ReactNode;
+  onRenderThumbnail: (onRenderProps: OnRenderThumbnailProps) => ReactNode;
   /**
    * Callback fired when a file is moved within the page organizer.
    */
@@ -38,7 +46,31 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   className,
   preventArrowsToMove,
 }) => {
-  const FileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
+  const [editingList, setEditingList] = useState<string[]>([]);
+  const setEditing = useCallback(
+    (id: string) => (isEditing: boolean) => {
+      setEditingList(prev => {
+        const prevIndex = prev.indexOf(id);
+        if (isEditing && prevIndex === -1) return [...prev, id];
+        if (!isEditing && prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
+        return prev;
+      });
+    },
+    [],
+  );
+
+  const [draggingList, setDraggingList] = useState<string[]>([]);
+  const setDragging = useCallback(
+    (id: string) => (isDragging: boolean) => {
+      setDraggingList(prev => {
+        const prevIndex = prev.indexOf(id);
+        if (isDragging && prevIndex === -1) return [...prev, id];
+        if (!isDragging && prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
+        return prev;
+      });
+    },
+    [],
+  );
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
     if (preventArrowsToMove) return;
@@ -54,6 +86,8 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     }
   };
 
+  const FileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
+
   return (
     <div className={FileOrganizerClass}>
       <DndProvider backend={Backend}>
@@ -61,11 +95,20 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
           <Draggable
             key={file.id}
             index={index}
+            onDragChange={setDragging(file.id)}
+            disableDrag={editingList.includes(file.id)}
             onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
-            onRenderChildren={isDragging => {
-              return onRenderThumbnail(file, isDragging, index);
-            }}
             onKeyDown={e => handleKeyDown(e, index, file)}
+            onRenderChildren={isDragging => {
+              const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
+              return onRenderThumbnail({
+                file,
+                isDragging,
+                otherDragging,
+                setEditing: setEditing(file.id),
+                index,
+              });
+            }}
           />
         ))}
       </DndProvider>

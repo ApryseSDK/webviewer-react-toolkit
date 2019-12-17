@@ -1,6 +1,7 @@
 import classnames from 'classnames';
-import React, { forwardRef, MouseEvent, useState } from 'react';
+import React, { forwardRef, MouseEvent } from 'react';
 import { File } from '../../hooks/useFile';
+import useFocus from '../../hooks/useFocus';
 import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
@@ -14,7 +15,7 @@ export interface ThumbnailProps extends ClickableDivProps {
    */
   file: File;
   /**
-   * Optional label. Will fallback to file name if not provided.
+   * Optional label. Will use file name if not provided.
    */
   label?: string;
   /**
@@ -30,27 +31,65 @@ export interface ThumbnailProps extends ClickableDivProps {
    */
   dragging?: boolean;
   /**
+   * Set to true while other thumbnails are dragging to prevent changes to
+   * appearance due to mouse hover.
+   */
+  otherDragging?: boolean;
+  /**
    * Callback fired when the rotate button is clicked. If not given, will have
    * no rotate button.
    */
-  onRotate?: (file: File, event: MouseEvent<HTMLButtonElement>) => void;
+  onRotate?: (event: MouseEvent<HTMLButtonElement>, file: File) => void;
   /**
    * Callback fired when the remove button is clicked. If not given, will have
    * no remove button
    */
-  onRemove?: (file: File, event: MouseEvent<HTMLButtonElement>) => void;
+  onRemove?: (event: MouseEvent<HTMLButtonElement>, file: File) => void;
   /**
    * Callback fired when the name is edited and saved.
    */
-  onRename?: (file: File, newName: string) => void;
+  onRename?: (newName: string, file: File) => void;
+  /**
+   * Callback fired whenever edit mode changes.
+   */
+  onEditChanged?: (isEditing: boolean, file: File) => void;
 }
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   (
-    { file, label, hideExtension, selected, dragging, onRotate, onRemove, onRename, className, disabled, ...divProps },
+    {
+      file,
+      label,
+      hideExtension,
+      selected,
+      dragging,
+      otherDragging,
+      onRotate,
+      onRemove,
+      onRename,
+      onEditChanged,
+      className,
+      disabled,
+      onFocus,
+      onBlur,
+      ...divProps
+    },
     ref,
   ) => {
-    const [focused, setFocused] = useState(false);
+    const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
+
+    const handleOnSave = (newName: string) => {
+      onRename?.(newName, file);
+      onEditChanged?.(false, file);
+    };
+
+    const handleOnCancel = () => {
+      onEditChanged?.(false, file);
+    };
+
+    const handleOnEdit = () => {
+      onEditChanged?.(true, file);
+    };
 
     const thumbnailClass = classnames(
       'ui__base ui__thumbnail',
@@ -59,6 +98,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         ['ui__thumbnail--focused']: focused,
         ['ui__thumbnail--disabled']: disabled,
         ['ui__thumbnail--dragging']: dragging,
+        ['ui__thumbnail--otherDragging']: otherDragging,
       },
       className,
     );
@@ -70,22 +110,19 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         ref={ref}
         noFocusStyle
         disabled={disabled}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        // TODO: prevent highlighting on non-dragged item
-        onDragEnter={undefined}
-        onDragEnd={undefined}
+        onFocus={handleOnFocus}
+        onBlur={handleOnBlur}
       >
         <div className="ui__thumbnail__controls">
           {onRotate ? (
-            <ToolButton disabled={disabled} onClick={e => onRotate(file, e)}>
+            <ToolButton disabled={disabled} onClick={e => onRotate(e, file)}>
               <img src={rotate} alt={'rotate'} />
             </ToolButton>
           ) : (
             undefined
           )}
           {onRemove ? (
-            <ToolButton disabled={disabled} onClick={e => onRemove(file, e)}>
+            <ToolButton disabled={disabled} onClick={e => onRemove(e, file)}>
               <img src={close} alt={'close'} />
             </ToolButton>
           ) : (
@@ -102,7 +139,9 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           centerText
           disabled={disabled}
           locked={!onRename}
-          onSave={s => onRename?.(file, s)}
+          onSave={handleOnSave}
+          onCancel={handleOnCancel}
+          onEdit={handleOnEdit}
         />
       </ClickableDiv>
     );

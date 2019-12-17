@@ -8,8 +8,10 @@ exports[`FileOrganizer component snapshot renders default FileOrganizer 1`] = `
     backend={[Function]}
   >
     <Component
+      disableDrag={false}
       index={0}
       key="test"
+      onDragChange={[Function]}
       onKeyDown={[Function]}
       onMove={[Function]}
       onRenderChildren={[Function]}

@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { forwardRef, KeyboardEvent, useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import React, { forwardRef, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import ClickableDiv from '../ClickableDiv';
 
 export interface EditableTextProps {
@@ -96,36 +96,30 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       if (editMode) inputRef.current?.focus();
     }, [editMode]);
 
-    const handleOnEdit = useCallback(() => {
+    const handleOnEdit = () => {
       if (controlledEditMode === undefined) setStateEditMode(true);
       onEdit?.();
-    }, [onEdit, controlledEditMode]);
+    };
 
-    const handleOnCancel = useCallback(() => {
+    const handleOnCancel = () => {
       if (controlledEditMode === undefined) setStateEditMode(false);
       setEditValue(value);
       onCancel?.(value);
-    }, [controlledEditMode, onCancel, value]);
+    };
 
-    const handleOnSave = useCallback(() => {
+    const handleOnSave = () => {
       if (controlledValue === undefined) setStateValue(editValue);
       if (controlledEditMode === undefined) setStateEditMode(false);
       onSave?.(editValue);
-    }, [controlledEditMode, controlledValue, editValue, onSave]);
+    };
 
-    const handleOnKeyPress = useCallback(
-      (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') handleOnSave();
-      },
-      [handleOnSave],
-    );
+    const handleOnKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') handleOnSave();
+    };
 
-    const handleOnKeyDown = useCallback(
-      (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Escape') handleOnCancel();
-      },
-      [handleOnCancel],
-    );
+    const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Escape') handleOnCancel();
+    };
 
     const [valueToDisplay, isPlaceholder] = useMemo(() => {
       const renderedValue = onRenderText ? onRenderText(value) : value;

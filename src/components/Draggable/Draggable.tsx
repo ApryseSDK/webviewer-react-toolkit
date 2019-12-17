@@ -18,18 +18,29 @@ export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
    * If given, will be called any time the draggable wrapper is moved.
    */
   onMove?: (fromIndex: number, toIndex: number) => void;
+  /**
+   * Called whenever the dnd property `isDragging` changes.
+   */
+  onDragChange?: (isDragging: boolean) => void;
+  /**
+   * Prevent this draggable wrapper from dragging.
+   */
+  disableDrag?: boolean;
 }
 
 interface DragItem extends DragObjectWithType {
   index: number;
 }
 
+// Quick animation with no "bounce".
 const SPRING: SpringHelperConfig = { stiffness: 300, damping: 30 };
 
 export const Draggable: FC<DraggableProps> = ({
   index,
-  onMove,
   onRenderChildren,
+  onMove,
+  onDragChange,
+  disableDrag,
   children,
   className,
   style,
@@ -37,7 +48,7 @@ export const Draggable: FC<DraggableProps> = ({
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
 
-  // TODO: drag shield when dragging...
+  /* --- Drag and drop settings. --- */
 
   const [, drop] = useDrop({
     accept: ItemTypes.Draggable,
@@ -65,34 +76,51 @@ export const Draggable: FC<DraggableProps> = ({
   const [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.Draggable, index },
     collect: monitor => ({ isDragging: monitor.isDragging() }),
+    canDrag: !disableDrag,
   });
 
+  useEffect(() => {
+    onDragChange?.(isDragging);
+  }, [onDragChange, isDragging]);
+
   drag(drop(divRef));
+
+  /* --- Animation settings. --- */
+
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const prevIndex = useRef(index);
 
   // Find the difference in position between new index and previous index. Then,
   // get the difference in position and set that as the starting point for the
   // animation.
-  const prevIndex = useRef(index);
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
   useEffect(() => {
     if (!divRef.current) return;
-    const parent = divRef.current.parentElement;
-    const prev = parent?.children.item(prevIndex.current);
+
+    // Get the item occupying the previous index location.
+    const prev = divRef.current.parentElement?.children.item(prevIndex.current);
+
+    // Get the coordinates of the previous item.
     const { left: prevLeft, top: prevTop } = prev?.getBoundingClientRect() ?? {};
+
+    // Get the coordinates of the current item.
     const { left, top } = divRef.current.getBoundingClientRect();
-    setCoords({
-      x: prevLeft === undefined ? 0 : (prevLeft - left) / 10,
-      y: prevTop === undefined ? 0 : (prevTop - top) / 10,
-    });
+
+    // Get the deltas.
+    const deltaX = prevLeft === undefined ? 0 : prevLeft - left;
+    const deltaY = prevTop === undefined ? 0 : prevTop - top;
+
+    // Set the coordinates to the distance divided by 10 for snappy animation.
+    setCoords({ x: deltaX / 10, y: deltaY / 10 });
+
+    // Store index for next swap.
     prevIndex.current = index;
-    // Revert back to zero after animation frame.
-    requestAnimationFrame(() => {
-      setCoords(prev => {
-        if (prev.x === 0 && prev.y === 0) return prev;
-        return { x: 0, y: 0 };
-      });
-    });
   }, [index]);
+
+  // Whenever coords change, revert back to zero.
+  useEffect(() => {
+    if (coords.x === 0 && coords.y === 0) return;
+    requestAnimationFrame(() => setCoords({ x: 0, y: 0 }));
+  }, [coords]);
 
   // Only animate if returning back to 0. Otherwise, snap to translate so that
   // the animation looks like it's moving from it's previous location.

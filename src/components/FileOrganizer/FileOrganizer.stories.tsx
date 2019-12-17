@@ -6,6 +6,7 @@ import Thumbnail from '../Thumbnail';
 import docs from './README.md';
 import { number, boolean } from '@storybook/addon-knobs';
 import { createFile } from '../../storybook-helpers/data/files';
+import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 
 export default { title: 'FileOrganizer', parameters: { info: docs } };
 
@@ -29,9 +30,7 @@ export const Basic: FC<{ numFiles: number }> = () => {
     });
   }, [numFiles]);
 
-  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((...args) => {
-    action('onMove')(...args);
-    const [fromIndex, toIndex] = args;
+  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
       const clone = prev.slice();
       const item = clone.splice(fromIndex, 1)[0];
@@ -43,9 +42,20 @@ export const Basic: FC<{ numFiles: number }> = () => {
   return (
     <FileOrganizer
       files={files}
-      onMove={handleOnMove}
+      onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      onRenderThumbnail={(file, isDragging) => <Thumbnail file={file} dragging={isDragging} />}
+      onRenderThumbnail={({ file, isDragging, otherDragging, setEditing, index }) => (
+        <Thumbnail
+          file={file}
+          dragging={isDragging}
+          otherDragging={otherDragging}
+          onClick={action(`file_${index + 1} onClick`)}
+          onRename={action(`file_${index + 1} onRename`)}
+          onRemove={action(`file_${index + 1} onRemove`)}
+          onRotate={action(`file_${index + 1} onRotate`)}
+          onEditChanged={forwardAction(`file_${index + 1} onEditChanged`, setEditing)}
+        />
+      )}
     />
   );
 };

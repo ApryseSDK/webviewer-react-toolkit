@@ -22,6 +22,7 @@ $thumbnail-dimensions: 250px;
 
   &--dragging {
     border: 2px dashed $focus-shadow;
+    background-color: transparent;
 
     .ui__thumbnail__controls {
       visibility: hidden;
@@ -29,12 +30,24 @@ $thumbnail-dimensions: 250px;
 
     .ui__thumbnail__image,
     .ui__thumbnail__label {
-      opacity: 0.3;
+      // visibility: hidden;
+      // opacity: 0.3;
+      // border: 1px solid black;
+    }
+
+    .ui__thumbnail__image img {
+      position: relative;
+
+      &::after {
+        @include absolute-fill;
+        content: '';
+        background-color: black;
+      }
     }
   }
 
-  &:hover,
-  &.ui__thumbnail--focused:not(.ui__thumbnail--disabled) {
+  &:hover:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging),
+  &.ui__thumbnail--focused:not(.ui__thumbnail--disabled):not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging) {
     background-color: $gray-1;
 
     .ui__thumbnail__controls {
@@ -55,7 +68,6 @@ $thumbnail-dimensions: 250px;
     top: $padding-tiny;
     right: $padding-tiny;
     opacity: 0;
-    position: absolute;
     display: flex;
     overflow: hidden;
     border-radius: $border-radius-small;
