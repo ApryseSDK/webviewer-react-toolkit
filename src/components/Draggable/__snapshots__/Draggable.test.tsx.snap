@@ -31,7 +31,6 @@ exports[`Draggable component snapshot renders default draggable 1`] = `
           Object {
             "WebkitTransform": "translate3d(0px, 0px, 0)",
             "transform": "translate3d(0px, 0px, 0)",
-            "zIndex": undefined,
           }
         }
       >
