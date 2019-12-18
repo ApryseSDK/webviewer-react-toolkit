@@ -3,6 +3,8 @@ import React, { FC, HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useSt
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { Motion, spring, SpringHelperConfig } from 'react-motion';
 
+import { getEmptyImage } from 'react-dnd-html5-backend';
+
 const ItemTypes = { Draggable: 'draggable' };
 
 export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
@@ -26,6 +28,12 @@ export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
    * Prevent this draggable wrapper from dragging.
    */
   disableDrag?: boolean;
+  /**
+   * Hides the snapshot preview of the item while dragging. The most common use
+   * case would be if you're implementing a custom drag layer and you don't want
+   * the preview snapshot to clash with it.
+   */
+  hideDragPreview?: boolean;
 }
 
 interface DragItem extends DragObjectWithType {
@@ -41,6 +49,7 @@ export const Draggable: FC<DraggableProps> = ({
   onMove,
   onDragChange,
   disableDrag,
+  hideDragPreview,
   children,
   className,
   style,
@@ -53,9 +62,6 @@ export const Draggable: FC<DraggableProps> = ({
   const [, drop] = useDrop({
     accept: ItemTypes.Draggable,
     hover(item: DragItem) {
-      // Cancel if ref hasn't been set up.
-      if (!divRef.current) return;
-
       // Previous index.
       const fromIndex = item.index;
 
@@ -73,11 +79,15 @@ export const Draggable: FC<DraggableProps> = ({
     },
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     item: { type: ItemTypes.Draggable, index },
     collect: monitor => ({ isDragging: monitor.isDragging() }),
     canDrag: !disableDrag,
   });
+
+  useEffect(() => {
+    if (hideDragPreview) preview(getEmptyImage(), { captureDraggingState: true });
+  }, [hideDragPreview, preview]);
 
   useEffect(() => {
     onDragChange?.(isDragging);

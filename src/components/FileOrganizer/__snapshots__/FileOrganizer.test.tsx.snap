@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FileOrganizer component snapshot renders default FileOrganizer 1`] = `
-<div
-  className="ui__base ui__fileOrganizer"
+<DndProvider
+  backend={[Function]}
 >
-  <DndProvider
-    backend={[Function]}
+  <div
+    className="ui__base ui__fileOrganizer"
   >
     <Component
-      disableDrag={false}
+      hideDragPreview={false}
       index={0}
       key="test"
       onDragChange={[Function]}
@@ -16,6 +16,6 @@ exports[`FileOrganizer component snapshot renders default FileOrganizer 1`] = `
       onMove={[Function]}
       onRenderChildren={[Function]}
     />
-  </DndProvider>
-</div>
+  </div>
+</DndProvider>
 `;

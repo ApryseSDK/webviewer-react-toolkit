@@ -1,5 +1,3 @@
-$thumbnail-dimensions: 250px;
-
 .ui__thumbnail {
   padding: $padding;
   position: relative;
@@ -61,11 +59,8 @@ $thumbnail-dimensions: 250px;
   }
 
   &__image {
-    display: flex;
+    @include flex-center;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    // This has to be here?
     height: 0;
     flex: 1 1 auto;
 

@@ -7,10 +7,11 @@ import docs from './README.md';
 import { number, boolean } from '@storybook/addon-knobs';
 import { createFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
+import ThumbnailDragLayer from '../ThumbnailDragLayer';
 
 export default { title: 'FileOrganizer', parameters: { info: docs } };
 
-export const Basic: FC<{ numFiles: number }> = () => {
+function useCommonFileOrganizer() {
   const [selectedList, setSelectedList] = useState<string[]>([]);
   const setSelected = (id: string) => {
     setSelectedList(prev => {
@@ -32,8 +33,8 @@ export const Basic: FC<{ numFiles: number }> = () => {
     });
   }, []);
 
-  // This is just a helper for adding or removing pages.
-  const numFiles = number('number of pages', 2);
+  // This is just a helper for adding or removing files.
+  const numFiles = number('number of files', 2);
   useEffect(() => {
     setFiles(prev => {
       if (prev.length > numFiles) {
@@ -50,12 +51,19 @@ export const Basic: FC<{ numFiles: number }> = () => {
     });
   }, [numFiles]);
 
+  return { selectedList, setSelected, files, handleOnMove };
+}
+
+export const Basic: FC<{ numFiles: number }> = () => {
+  const { selectedList, setSelected, files, handleOnMove } = useCommonFileOrganizer();
+
   return (
     <FileOrganizer
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      onRenderThumbnail={({ file, isDragging, otherDragging, setEditing, index }) => (
+      disableMove={boolean('disableMove', false)}
+      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
         <Thumbnail
           file={file}
           dragging={isDragging}
@@ -65,9 +73,36 @@ export const Basic: FC<{ numFiles: number }> = () => {
           onRename={action(`file_${index + 1} onRename`)}
           onRemove={action(`file_${index + 1} onRemove`)}
           onRotate={action(`file_${index + 1} onRotate`)}
-          onEditChanged={forwardAction(`file_${index + 1} onEditChanged`, setEditing)}
+          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
         />
       )}
+    />
+  );
+};
+
+export const WithCustomDragLayer: FC<{ numFiles: number }> = () => {
+  const { selectedList, setSelected, files, handleOnMove } = useCommonFileOrganizer();
+
+  return (
+    <FileOrganizer
+      files={files}
+      onMove={forwardAction('onMove', handleOnMove)}
+      preventArrowsToMove={boolean('preventArrowsToMove', false)}
+      disableMove={boolean('disableMove', false)}
+      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
+        <Thumbnail
+          file={file}
+          dragging={isDragging}
+          otherDragging={otherDragging}
+          selected={selectedList.includes(file.id)}
+          onClick={forwardAction(`file_${index + 1} onClick`, () => setSelected(file.id))}
+          onRename={action(`file_${index + 1} onRename`)}
+          onRemove={action(`file_${index + 1} onRemove`)}
+          onRotate={action(`file_${index + 1} onRotate`)}
+          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
+        />
+      )}
+      onRenderDragLayer={() => <ThumbnailDragLayer />}
     />
   );
 };

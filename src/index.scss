@@ -10,6 +10,9 @@
 // Base style.
 @import './styles/base';
 
+// Global constants style.
+@import './styles/globals';
+
 /**
  * Component style imports: DO NOT MODIFY.
  */
@@ -17,10 +20,12 @@
 // <import-start>
 @import './components/Button/Button';
 @import './components/ClickableDiv/ClickableDiv';
+@import './components/DragLayer/DragLayer';
 @import './components/Draggable/Draggable';
 @import './components/EditableText/EditableText';
 @import './components/FileOrganizer/FileOrganizer';
 @import './components/Spinner/Spinner';
 @import './components/Thumbnail/Thumbnail';
+@import './components/ThumbnailDragLayer/ThumbnailDragLayer';
 @import './components/ToolButton/ToolButton';
 // <import-end>

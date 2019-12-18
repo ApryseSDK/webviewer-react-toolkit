@@ -4,23 +4,7 @@ import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { File } from '../../hooks/useFile';
 import Draggable from '../Draggable';
-
-export interface OnRenderThumbnailProps {
-  /** The file to render into a thumbnail. */
-  file: File;
-  /** The index of this file within the file organizer. */
-  index: number;
-  /** Is this file being dragged currently. */
-  isDragging: boolean;
-  /** Are other files being dragged other than this one. */
-  otherDragging: boolean;
-  /** Is this thumbnail being edited (dependent on you setting `setEditing`). */
-  isEditing: boolean;
-  /** Are other files being edited other than this one. */
-  otherEditing: boolean;
-  /** Callback for setting whether the thumbnail is in editing mode. */
-  setEditing: (isEditing: boolean) => void;
-}
+import DragLayer from '../DragLayer';
 
 export interface FileOrganizerProps {
   /**
@@ -32,6 +16,15 @@ export interface FileOrganizerProps {
    * If you do not want to build your own, try using the `Thumbnail` component.
    */
   onRenderThumbnail: (onRenderProps: OnRenderThumbnailProps) => ReactNode;
+  /**
+   * If provided, will call to render a custom drag layer while a thumbnail is
+   * being dragged. Otherwise will show a preview of the thumbnail.
+   */
+  onRenderDragLayer?: () => ReactNode;
+  /**
+   * If true, will disable drag-and-drop functionality within the organizer.
+   */
+  disableMove?: boolean;
   /**
    * Callback fired when a file is moved within the page organizer.
    */
@@ -48,10 +41,29 @@ export interface FileOrganizerProps {
   preventArrowsToMove?: boolean;
 }
 
+export interface OnRenderThumbnailProps {
+  /** The file to render into a thumbnail. */
+  file: File;
+  /** The index of this file within the file organizer. */
+  index: number;
+  /** Is this file being dragged currently. */
+  isDragging: boolean;
+  /** Are other files being dragged other than this one. */
+  otherDragging: boolean;
+  /** Is this thumbnail being edited (dependent on you setting `setEditing`). */
+  isEditing: boolean;
+  /** Are other files being edited other than this one. */
+  otherEditing: boolean;
+  /** Callback for setting whether the thumbnail is in editing mode. */
+  onEditingChange: (isEditing: boolean) => void;
+}
+
 export const FileOrganizer: FC<FileOrganizerProps> = ({
   files,
   onMove,
   onRenderThumbnail,
+  onRenderDragLayer,
+  disableMove,
   className,
   preventArrowsToMove,
 }) => {
@@ -89,38 +101,40 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     }
   };
 
-  const FileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
+  const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
   return (
-    <div className={FileOrganizerClass}>
-      <DndProvider backend={Backend}>
+    <DndProvider backend={Backend}>
+      <div className={fileOrganizerClass}>
         {files.map((file, index) => {
           const isEditing = editingList.includes(file.id);
+          const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
+          const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
           return (
             <Draggable
               key={file.id}
               index={index}
+              hideDragPreview={!!onRenderDragLayer}
               onDragChange={dragging => setDragging(file.id, dragging)}
-              disableDrag={isEditing}
+              disableDrag={isEditing || disableMove}
               onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
               onKeyDown={e => handleKeyDown(e, index, file)}
               onRenderChildren={isDragging => {
-                const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
-                const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
                 return onRenderThumbnail({
                   file,
                   isDragging,
                   otherDragging,
                   isEditing,
                   otherEditing,
-                  setEditing: editing => setEditing(file.id, editing),
+                  onEditingChange: editing => setEditing(file.id, editing),
                   index,
                 });
               }}
             />
           );
         })}
-      </DndProvider>
-    </div>
+        {onRenderDragLayer ? <DragLayer>{onRenderDragLayer()}</DragLayer> : null}
+      </div>
+    </DndProvider>
   );
 };

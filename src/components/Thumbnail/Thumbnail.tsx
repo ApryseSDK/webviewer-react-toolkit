@@ -52,7 +52,7 @@ export interface ThumbnailProps extends ClickableDivProps {
   /**
    * Callback fired whenever edit mode changes.
    */
-  onEditChanged?: (isEditing: boolean, file: File) => void;
+  onEditingChange?: (isEditing: boolean, file: File) => void;
 }
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
@@ -67,7 +67,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
       onRotate,
       onRemove,
       onRename,
-      onEditChanged,
+      onEditingChange,
       className,
       disabled,
       onFocus,
@@ -80,15 +80,15 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
 
     const handleOnSave = (newName: string) => {
       onRename?.(newName, file);
-      onEditChanged?.(false, file);
+      onEditingChange?.(false, file);
     };
 
     const handleOnCancel = () => {
-      onEditChanged?.(false, file);
+      onEditingChange?.(false, file);
     };
 
     const handleOnEdit = () => {
-      onEditChanged?.(true, file);
+      onEditingChange?.(true, file);
     };
 
     const thumbnailClass = classnames(

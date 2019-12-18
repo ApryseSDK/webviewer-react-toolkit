@@ -1,0 +1,29 @@
+.ui__thumbnailDragLayer {
+  width: $thumbnail-dimensions;
+  height: $thumbnail-dimensions;
+  @include flex-center;
+
+  &__icon {
+    height: $thumbnail-dimensions / 4;
+    width: $thumbnail-dimensions / 4;
+  }
+
+  &__numFiles {
+    @include absolute-fill;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: $font-size-default;
+
+    &__wrapper {
+      margin: -($padding-small);
+      padding: $padding-tiny;
+      border-radius: $border-radius-large;
+      background-color: $blue-gray-3;
+    }
+  }
+
+  &__wrapper {
+    position: relative;
+  }
+}

@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ThumbnailDragLayer component snapshot renders default thumbnailDragLayer 1`] = `
+<div
+  className="ui__base ui__thumbnailDragLayer"
+>
+  <div
+    className="ui__thumbnailDragLayer__wrapper"
+  >
+    <img
+      alt="pages"
+      className="ui__thumbnailDragLayer__icon"
+      src={[Function]}
+    />
+  </div>
+</div>
+`;
