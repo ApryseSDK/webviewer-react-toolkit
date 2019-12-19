@@ -11,7 +11,6 @@
   z-index: $z-index-local;
 
   &--selected:not(.ui__thumbnail--dragging) {
-    // TODO: how do we show selected better?
     background-color: $blue-gray-1;
   }
 
@@ -63,25 +62,6 @@
     flex-direction: column;
     height: 0;
     flex: 1 1 auto;
-
-    &__wrapper {
-      max-height: 100%;
-      position: relative;
-    }
-
-    &__overlay {
-      @include absolute-fill;
-      transition: $focus-transition;
-    }
-
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      display: block;
-      border: 1px solid $blue-gray-1;
-      transition: $focus-transition;
-      user-select: none;
-    }
   }
 
   &__label {

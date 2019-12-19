@@ -52,3 +52,18 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin skeleton {
+  animation: timeline 2s linear infinite;
+  background: linear-gradient(to right, $gray-1 0%, $gray-2 10%, $gray-1 20%);
+  background-size: 600px auto;
+}
+
+@keyframes timeline {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}

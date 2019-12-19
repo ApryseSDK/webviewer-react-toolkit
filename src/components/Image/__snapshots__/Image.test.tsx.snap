@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image component snapshot renders default image 1`] = `
+<div
+  className="ui__base ui__image__wrapper"
+>
+  <img
+    className="ui__image ui__image--loading"
+  />
+  <div
+    className="ui__image__overlay ui__image__overlay--loading ui__image__overlay--hide"
+  />
+</div>
+`;

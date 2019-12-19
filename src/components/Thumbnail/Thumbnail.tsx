@@ -6,8 +6,9 @@ import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import EditableText from '../EditableText';
-import Spinner from '../Spinner';
 import ToolButton from '../ToolButton';
+import Image from '../Image';
+import FileSkeleton from '../FileSkeleton';
 
 export interface ThumbnailProps extends ClickableDivProps {
   /**
@@ -130,14 +131,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           )}
         </div>
         <div className="ui__thumbnail__image">
-          {file.thumbnail ? (
-            <div className="ui__thumbnail__image__wrapper">
-              <img src={file.thumbnail} alt={file.name} />
-              <div className="ui__thumbnail__image__overlay" />
-            </div>
-          ) : (
-            <Spinner />
-          )}
+          <Image src={file.thumbnail} alt={file.name} onRenderLoading={() => <FileSkeleton />} />
         </div>
         <EditableText
           className="ui__thumbnail__label"

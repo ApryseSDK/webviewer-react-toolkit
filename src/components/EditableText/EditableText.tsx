@@ -98,8 +98,11 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     const [noFocusTransition, setNoFocusTransition] = useState(false);
 
     // Focus input whenever edit mode is enabled, and button when disabled.
+    const firstRender = useRef(true);
     useEffect(() => {
-      if (editMode) {
+      if (firstRender.current) {
+        firstRender.current = false;
+      } else if (editMode) {
         inputRef.current?.focus();
         setNoFocusTransition(true);
       } else {

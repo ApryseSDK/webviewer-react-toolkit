@@ -65,3 +65,10 @@ export type ItemOf<T extends any[]> = T[number]; // eslint-disable-line @typescr
  * Something is either a promise to return a type `T`, or `T`.
  */
 export type Futurable<T> = Promise<T> | T;
+
+/**
+ * Function that returns a `Futurable`.
+ */
+export type FuturableGetter<T> = () => Futurable<T>;
+
+export type FuturableOrGetter<T> = () => Futurable<T> | FuturableGetter<T>;

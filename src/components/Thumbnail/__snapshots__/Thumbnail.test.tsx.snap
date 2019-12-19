@@ -13,7 +13,10 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
   <div
     className="ui__thumbnail__image"
   >
-    <Component />
+    <ForwardRef
+      alt="Test name"
+      onRenderLoading={[Function]}
+    />
   </div>
   <ForwardRef
     centerText={true}
