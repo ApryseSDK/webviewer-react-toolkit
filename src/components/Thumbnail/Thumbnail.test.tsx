@@ -1,20 +1,10 @@
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import { File } from '../../hooks/useFile';
+import { createFile } from '../../storybook-helpers/data/files';
 import Thumbnail from '../Thumbnail';
 
-const testFile: File = {
-  id: 'test',
-  name: 'Test name',
-  extension: 'pdf',
-  originalName: 'Test original name',
-  mutateDocumentObj: () => console.log('test'),
-  mutateFileObj: () => console.log('test'),
-  setDocumentObj: async () => console.log('test'),
-  setFileObj: async () => console.log('test'),
-  setName: async () => console.log('test'),
-};
+const testFile = createFile(0, true);
 
 describe('Thumbnail component', () => {
   it('renders its contents', () => {
@@ -29,13 +19,7 @@ describe('Thumbnail component', () => {
 
   it('clicking thumbnail triggers onClick prop', () => {
     const onClick = spy();
-    mount(<Thumbnail file={testFile} onClick={onClick} />).simulate('click');
+    shallow(<Thumbnail file={testFile} onClick={onClick} />).simulate('click');
     expect(onClick.callCount).toBe(1);
-  });
-
-  it('clicking disabled thumbnail does not trigger onClick prop', () => {
-    const onClick = spy();
-    mount(<Thumbnail file={testFile} onClick={onClick} disabled />).simulate('click');
-    expect(onClick.callCount).toBe(0);
   });
 });

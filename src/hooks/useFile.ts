@@ -1,66 +1,73 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { File } from '../data/file';
-import { FileEvent, FileEventType } from '../data/fileEvent';
+import { FileEventType } from '../data/fileEvent';
 
 /** The output of this hook is an object representing a file. */
 interface FileHook {
+  file: File;
+
   id: File['id'];
   name: File['name'];
   originalName: File['originalName'];
   extension: File['extension'];
-  getThumbnail: File['getThumbnail'];
-  setThumbnail: File['setThumbnail'];
-  getFileObj: File['getFileObj'];
-  setFileObj: File['setFileObj'];
-  getDocumentObj: File['getDocumentObj'];
-  setDocumentObj: File['setDocumentObj'];
-  rotate: File['rotate'];
-  addEventListener: File['addEventListener'];
-  removeEventListener: File['removeEventListener'];
-  removeAllEventListeners: File['removeAllEventListeners'];
+
+  thumbnail?: string;
+  fileObj?: Blob;
+  documentObj?: CoreControls.Document;
 }
 
 /**
- * This hook generates a file which will update as async pieces are fetched.
+ * This hook converts a file class with async values into a React-friendly hook
+ * with async values set to undefined until they are fetched.
  * @param fileDetails The file details object, or function returning file details.
  * @param onFailed A callback which is fired whenever async fetching of a value fails.
  */
-function useFile(file: File): FileHook {
-  const [fileClass, setFileClass] = useState({ file });
+function useFile(inputFile: File): FileHook {
+  const [file, _setFile] = useState({ file: inputFile });
+  const setFile = useCallback(async () => _setFile({ file: inputFile }), [inputFile]);
 
-  const changeListener = useCallback((event: FileEvent) => {
-    // Set the file class to the same file (event.target), but inside new object
-    // to trigger the refresh.
-    setFileClass({ file: event.target });
-  }, []);
+  const [thumbnail, _setThumbnail] = useState<string>();
+  const setThumbnail = useCallback(async () => _setThumbnail(await inputFile.getThumbnail()), [inputFile]);
+
+  const [fileObj, _setFileObj] = useState<Blob>();
+  const setFileObj = useCallback(async () => _setFileObj(await inputFile.getFileObj()), [inputFile]);
+
+  const [documentObj, _setDocumentObj] = useState<CoreControls.Document>();
+  const setDocumentObj = useCallback(async () => _setDocumentObj(await inputFile.getDocumentObj()), [inputFile]);
 
   useEffect(() => {
-    setFileClass({ file });
-    file.addEventListener(FileEventType.Change, changeListener);
+    setFile();
+    setThumbnail();
+    setFileObj();
+    setDocumentObj();
+
+    inputFile.addEventListener(FileEventType.Change, setFile);
+    inputFile.addEventListener(FileEventType.ThumbnailChange, setThumbnail);
+    inputFile.addEventListener(FileEventType.FileObjChange, setFileObj);
+    inputFile.addEventListener(FileEventType.DocumentObjChange, setDocumentObj);
     return () => {
-      file.removeEventListener(FileEventType.Change, changeListener);
+      inputFile.removeEventListener(FileEventType.Change, setFile);
+      inputFile.removeEventListener(FileEventType.ThumbnailChange, setThumbnail);
+      inputFile.removeEventListener(FileEventType.FileObjChange, setFileObj);
+      inputFile.removeEventListener(FileEventType.DocumentObjChange, setDocumentObj);
     };
-  }, [changeListener, file]);
+  }, [inputFile, setFile, setThumbnail, setFileObj, setDocumentObj]);
 
   const fileHook = useMemo<FileHook>(() => {
-    const f = fileClass.file;
+    const f = file.file;
     return {
+      file: f,
+
       id: f.id,
       name: f.name,
       originalName: f.originalName,
       extension: f.extension,
-      getThumbnail: f.getThumbnail,
-      setThumbnail: f.setThumbnail,
-      getFileObj: f.getFileObj,
-      setFileObj: f.setFileObj,
-      getDocumentObj: f.getDocumentObj,
-      setDocumentObj: f.setDocumentObj,
-      rotate: f.rotate,
-      addEventListener: f.addEventListener,
-      removeEventListener: f.removeEventListener,
-      removeAllEventListeners: f.removeAllEventListeners,
+
+      thumbnail,
+      fileObj,
+      documentObj,
     };
-  }, [fileClass]);
+  }, [documentObj, file, fileObj, thumbnail]);
 
   return fileHook;
 }
