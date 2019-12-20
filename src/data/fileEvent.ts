@@ -37,10 +37,8 @@ export class FileEvent {
   private _bubbles: boolean;
   private _cancelable: boolean;
   private _defaultPrevented: boolean;
-
   private _isPropagationStopped: boolean;
   private _isImmediatePropagationStopped: boolean;
-
   private _eventDefault?: Function;
   private _listeners?: FileEventListenersObj;
 

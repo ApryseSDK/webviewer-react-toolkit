@@ -13,13 +13,12 @@ function useKeyForClick<T extends HTMLElement>(onKeyPress?: KeyboardEventHandler
     (event: KeyboardEvent<T>) => {
       // Fire click on space or enter press.
       if (event.key === ' ' || event.key === 'Enter') {
-        // Stop scrolling if space is pressed.
-        if (event.key === ' ') event.preventDefault();
+        // If ref is provided and it matches the event target, click ref.
         if (ref && event.target === ref.current) {
-          // If ref is provided and it matches the event target, click ref.
           ref.current.click();
+          // Stop scrolling if space is pressed.
+          if (event.key === ' ') event.preventDefault();
         } else if (!ref) {
-          // If no ref provided, click the target of the event.
           (event.target as HTMLElement).click();
         }
       }

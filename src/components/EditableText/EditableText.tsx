@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { forwardRef, KeyboardEvent, useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
+import React, { forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import ClickableDiv from '../ClickableDiv';
 
 export interface EditableTextProps {

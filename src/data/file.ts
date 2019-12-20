@@ -28,7 +28,6 @@ export class File {
   private _name: string;
   private _originalName: string;
   private _extension: string;
-
   private _fileObj: FuturableOrLazy<Blob>;
   private _documentObj: FuturableOrLazy<CoreControls.Document>;
   private _thumbnail: FuturableOrLazy<string>;
@@ -45,6 +44,7 @@ export class File {
     this._documentObj = documentObj ?? this._generateDocumentObj;
     this._fileObj = fileObj ?? this._generateFileObj;
     this._thumbnail = thumbnail ?? this._generateThumbnail;
+
     this._eventListeners = {};
   }
 
