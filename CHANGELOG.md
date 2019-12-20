@@ -1,0 +1,1 @@
+- [File] Added event-based file methods (#1) @liamross
