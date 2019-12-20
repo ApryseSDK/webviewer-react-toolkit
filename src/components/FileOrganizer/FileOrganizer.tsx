@@ -39,6 +39,11 @@ export interface FileOrganizerProps {
    * call `onMove` if a file is focused.
    */
   preventArrowsToMove?: boolean;
+  /**
+   * If provided, will virtualize the files to prevent jank when rendering out
+   * your thumbnails. This will also allow for
+   */
+  virtualizeThreshold?: number;
 }
 
 export interface OnRenderThumbnailProps {

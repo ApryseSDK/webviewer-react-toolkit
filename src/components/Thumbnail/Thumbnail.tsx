@@ -80,7 +80,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   ) => {
     const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
-    const file = useFile(fileClass);
+    const file = useFile(fileClass, 500);
 
     const handleOnSave = (newName: string) => {
       onRename?.(newName, file.file);
