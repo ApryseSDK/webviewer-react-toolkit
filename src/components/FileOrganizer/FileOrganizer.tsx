@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React, { FC, KeyboardEvent, ReactNode, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import { File } from '../../hooks/useFile';
+import { File } from '../../data/file';
 import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
 

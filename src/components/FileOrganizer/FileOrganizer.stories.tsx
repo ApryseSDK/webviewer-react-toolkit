@@ -1,13 +1,13 @@
 import { action } from '@storybook/addon-actions';
-import React, { useCallback, useState, useEffect, FC } from 'react';
-import { File } from '../../hooks/useFile';
-import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';
-import Thumbnail from '../Thumbnail';
-import docs from './README.md';
-import { number, boolean } from '@storybook/addon-knobs';
+import { boolean, number } from '@storybook/addon-knobs';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { File } from '../../data/file';
 import { createFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
+import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';
+import Thumbnail from '../Thumbnail';
 import ThumbnailDragLayer from '../ThumbnailDragLayer';
+import docs from './README.md';
 
 export default { title: 'FileOrganizer', parameters: { info: docs } };
 

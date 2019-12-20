@@ -6,16 +6,6 @@ exports[`FileOrganizer component snapshot renders default FileOrganizer 1`] = `
 >
   <div
     className="ui__base ui__fileOrganizer"
-  >
-    <Component
-      hideDragPreview={false}
-      index={0}
-      key="test"
-      onDragChange={[Function]}
-      onKeyDown={[Function]}
-      onMove={[Function]}
-      onRenderChildren={[Function]}
-    />
-  </div>
+  />
 </DndProvider>
 `;

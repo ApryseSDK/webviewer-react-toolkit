@@ -1,14 +1,15 @@
 import classnames from 'classnames';
 import React, { forwardRef, MouseEvent } from 'react';
-import { File } from '../../hooks/useFile';
+import { File } from '../../data/file';
+import useFile from '../../hooks/useFile';
 import useFocus from '../../hooks/useFocus';
 import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import EditableText from '../EditableText';
-import ToolButton from '../ToolButton';
-import Image from '../Image';
 import FileSkeleton from '../FileSkeleton';
+import Image from '../Image';
+import ToolButton from '../ToolButton';
 
 export interface ThumbnailProps extends ClickableDivProps {
   /**
@@ -59,7 +60,7 @@ export interface ThumbnailProps extends ClickableDivProps {
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   (
     {
-      file,
+      file: fileClass,
       label,
       hideExtension,
       selected,
@@ -79,17 +80,19 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   ) => {
     const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
+    const file = useFile(fileClass);
+
     const handleOnSave = (newName: string) => {
-      onRename?.(newName, file);
-      onEditingChange?.(false, file);
+      onRename?.(newName, file.file);
+      onEditingChange?.(false, file.file);
     };
 
     const handleOnCancel = () => {
-      onEditingChange?.(false, file);
+      onEditingChange?.(false, file.file);
     };
 
     const handleOnEdit = () => {
-      onEditingChange?.(true, file);
+      onEditingChange?.(true, file.file);
     };
 
     const thumbnailClass = classnames(
@@ -116,14 +119,14 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
       >
         <div className="ui__thumbnail__controls">
           {onRotate ? (
-            <ToolButton disabled={disabled} onClick={e => onRotate(e, file)}>
+            <ToolButton disabled={disabled} onClick={e => onRotate(e, file.file)}>
               <img src={rotate} alt={'rotate'} />
             </ToolButton>
           ) : (
             undefined
           )}
           {onRemove ? (
-            <ToolButton disabled={disabled} onClick={e => onRemove(e, file)}>
+            <ToolButton disabled={disabled} onClick={e => onRemove(e, file.file)}>
               <img src={close} alt={'close'} />
             </ToolButton>
           ) : (

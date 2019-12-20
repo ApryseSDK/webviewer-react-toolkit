@@ -4,7 +4,7 @@
   "description": "Component Library",
   "license": "GPL-3.0",
   "scripts": {
-    "start": "start-storybook -p 6006",
+    "start": "start-storybook -s public -p 6006",
     "make": "ts-node scripts/make",
     "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
     "build": "yarn clean && webpack --config webpack.config.ts && tsc -p ./configs/tsbuild.json",
