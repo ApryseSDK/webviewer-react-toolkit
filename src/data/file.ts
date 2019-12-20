@@ -4,7 +4,7 @@ import blobToDocument from '../webviewer/blobToDocument';
 import documentToBlob from '../webviewer/documentToBlob';
 import getRotatedDocument from '../webviewer/getRotatedDocument';
 import getThumbnail from '../webviewer/getThumbnail';
-import { FileEvent, FileEventListener, FileEventType } from './fileEvent';
+import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
 import { FuturableOrGetter, futureableOrGetterToFuturable } from './futurable';
 
 /** The input object provided to the File constructor. */
@@ -24,42 +24,62 @@ export interface FileDetails {
 }
 
 export class File {
-  /**
-   * A unique ID generated for the file.
-   */
-  id: string;
-  /**
-   * The name of the file.
-   */
-  name: string;
-  /**
-   * The original name of the file (will fallback to the name if not provided
-   * during initialization).
-   */
-  originalName: string;
-  /**
-   * The extension of the file (for example `'pdf'`).
-   */
-  extension: string;
+  private _id: string;
+  private _name: string;
+  private _originalName: string;
+  private _extension: string;
 
   private _fileObj: FuturableOrGetter<Blob>;
   private _documentObj: FuturableOrGetter<CoreControls.Document>;
   private _thumbnail: FuturableOrGetter<string>;
-  private _eventListeners: Partial<{ [type in FileEventType]: FileEventListener[] }>;
+  private _eventListeners: FileEventListenersObj;
 
   constructor({ name, originalName, extension, fileObj, documentObj, thumbnail }: FileDetails) {
     if (!fileObj && !documentObj) throw new Error('One of `fileObj` or `documentObj` is required');
 
-    this.id = getStringId('File');
-    this.name = name;
-    this.originalName = originalName || name;
-    this.extension = extension || getExtension(name);
+    this._id = getStringId('File');
+    this._name = name;
+    this._originalName = originalName || name;
+    this._extension = extension || getExtension(name);
 
     this._documentObj = documentObj ?? this._generateDocumentObj;
     this._fileObj = fileObj ?? this._generateFileObj;
     this._thumbnail = thumbnail ?? this._generateThumbnail;
-
     this._eventListeners = {};
+  }
+
+  /**
+   * A unique ID generated for the file.
+   */
+  get id() {
+    return this._id;
+  }
+
+  /**
+   * The name of the file.
+   */
+  get name() {
+    return this._name;
+  }
+  set name(name: string) {
+    this._dispatchEvent(FileEventType.NameChange, () => {
+      this._name = name;
+    });
+  }
+
+  /**
+   * The original name of the file (will fallback to the name if not provided
+   * during initialization).
+   */
+  get originalName() {
+    return this._originalName;
+  }
+
+  /**
+   * The extension of the file (for example `'pdf'`).
+   */
+  get extension() {
+    return this._extension;
   }
 
   /**
@@ -167,8 +187,7 @@ export class File {
   }
 
   private _dispatchEvent(type: FileEventType, eventDefault?: Function) {
-    const listeners = this._eventListeners[type];
-    new FileEvent(type, this, { listeners, eventDefault });
+    new FileEvent(type, this, { eventDefault, listeners: this._eventListeners });
   }
 
   private _generateThumbnail() {
