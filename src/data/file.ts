@@ -2,6 +2,7 @@ import { getExtension } from '../utils/fileUtils';
 import { getStringId } from '../utils/idUtils';
 import blobToDocument from '../webviewer/blobToDocument';
 import documentToBlob from '../webviewer/documentToBlob';
+import getRotatedDocument from '../webviewer/getRotatedDocument';
 import getThumbnail from '../webviewer/getThumbnail';
 import { FileEvent, FileEventListener, FileEventType } from './fileEvent';
 import { FuturableOrGetter, futureableOrGetterToFuturable } from './futurable';
@@ -73,7 +74,9 @@ export class File {
    * @param thumbnail The thumbnail, promise, or getter for the thumbnail.
    */
   setThumbnail(thumbnail?: FuturableOrGetter<string>) {
-    this._thumbnail = thumbnail ?? this._generateThumbnail;
+    this._dispatchEvent(FileEventType.ThumbnailChange, () => {
+      this._thumbnail = thumbnail ?? this._generateThumbnail;
+    });
   }
 
   /**
@@ -88,7 +91,11 @@ export class File {
    * @param fileObj The fileObj, promise, or getter for the fileObj.
    */
   setFileObj(fileObj?: FuturableOrGetter<Blob>) {
-    this._fileObj = fileObj ?? this._generateFileObj;
+    this._dispatchEvent(FileEventType.FileObjChange, () => {
+      this._fileObj = fileObj ?? this._generateFileObj;
+      // Only update documentObj if fileObj was given, not generated.
+      if (fileObj) this.setDocumentObj();
+    });
   }
 
   /**
@@ -101,16 +108,44 @@ export class File {
   /**
    * Set the documentObj or give a futurable or getter.
    * @param documentObj The documentObj, promise, or getter for the documentObj.
+   * @param stopPropagation Prevent updates to _fileObj and thumbnail.
    */
   setDocumentObj(documentObj?: FuturableOrGetter<CoreControls.Document>) {
-    this._documentObj = documentObj ?? this._generateDocumentObj;
+    this._dispatchEvent(FileEventType.DocumentObjChange, () => {
+      this._documentObj = documentObj ?? this._generateDocumentObj;
+      // Only update fileObj if documentObj was given, not generated.
+      if (documentObj) this.setFileObj();
+      this.setThumbnail();
+    });
   }
 
+  /**
+   * Rotate the file 90 degrees clockwise.
+   */
+  rotate() {
+    this._dispatchEvent(FileEventType.Rotate, () => {
+      this.setDocumentObj(getRotatedDocument(this.getDocumentObj));
+    });
+  }
+
+  /**
+   * Appends an event listener for events whose type attribute value is type.
+   * The callback argument sets the callback that will be invoked when the event
+   * is dispatched.
+   * @param type The event type that will invoke the listener.
+   * @param listener The listener function that will be invoked.
+   */
   addEventListener(type: FileEventType, listener: FileEventListener) {
     const eventListeners = this._eventListeners[type] ?? (this._eventListeners[type] = []);
     if (!eventListeners.includes(listener)) eventListeners.push(listener);
   }
 
+  /**
+   * Removes the event listener in target's event listener list with the same
+   * type and callback.
+   * @param type The event type that the listener is registered for.
+   * @param listener The listener to remove.
+   */
   removeEventListener(type: FileEventType, listener: FileEventListener) {
     const eventListeners = this._eventListeners[type];
     if (!eventListeners) return;
@@ -118,20 +153,22 @@ export class File {
     if (index > -1) eventListeners.splice(index, 1);
   }
 
-  private _dispatchEvent(type: FileEventType) {
-    const fileEvent = new FileEvent(type, this);
-
-    const eventListeners = this._eventListeners[fileEvent.type] ?? [];
-
-    for (let index = 0; index < eventListeners.length; index++) {
-      if (!fileEvent.bubbles) break;
-      const listener = eventListeners[index];
-      listener(fileEvent);
+  /**
+   * Removes all event listeners for a given type, or if no type is given, will
+   * remove all event listeners across every type.
+   * @param type Optional. The event type to remove all listeners from.
+   */
+  removeAllEventListeners(type?: FileEventType) {
+    if (typeof type === 'string') {
+      this._eventListeners[type] = [];
+    } else if (type === undefined) {
+      this._eventListeners = {};
     }
+  }
 
-    if (fileEvent.defaultPrevented) return;
-    const eventDefault = this._getEventDefaultByType(fileEvent.type);
-    eventDefault?.();
+  private _dispatchEvent(type: FileEventType, eventDefault?: Function) {
+    const listeners = this._eventListeners[type];
+    new FileEvent(type, this, { listeners, eventDefault });
   }
 
   private _generateThumbnail() {
@@ -144,14 +181,5 @@ export class File {
 
   private _generateDocumentObj() {
     return blobToDocument(this.getFileObj, this.extension);
-  }
-
-  private _getEventDefaultByType(type: FileEventType): Function | null {
-    if (type === 'rotate') {
-      return () => {
-        //
-      };
-    }
-    return null;
   }
 }
