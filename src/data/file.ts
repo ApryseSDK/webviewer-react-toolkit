@@ -1,9 +1,10 @@
 import { getExtension } from '../utils/fileUtils';
 import { getStringId } from '../utils/idUtils';
-import { FuturableGetter, FuturableOrGetter } from '../utils/typeUtils';
 import blobToDocument from '../webviewer/blobToDocument';
 import documentToBlob from '../webviewer/documentToBlob';
 import getThumbnail from '../webviewer/getThumbnail';
+import { FileEvent, FileEventListener, FileEventType } from './fileEvent';
+import { FuturableOrGetter, futureableOrGetterToFuturable } from './futurable';
 
 /** The input object provided to the File constructor. */
 export interface FileDetails {
@@ -14,11 +15,11 @@ export interface FileDetails {
   /** File extension. For example, `'pdf'`. */
   extension?: string;
   /** File object, or function to get it. One of `fileObj` or `documentObj` must be given. */
-  fileObj?: Blob | FuturableGetter<Blob>;
+  fileObj?: FuturableOrGetter<Blob>;
   /** Document object, or function to get it. One of `fileObj` or `documentObj` must be given. */
-  documentObj?: CoreControls.Document | FuturableGetter<CoreControls.Document>;
+  documentObj?: FuturableOrGetter<CoreControls.Document>;
   /** Thumbnail data URL string, or function to get it. */
-  thumbnail?: string | FuturableGetter<string>;
+  thumbnail?: FuturableOrGetter<string>;
 }
 
 export class File {
@@ -40,82 +41,117 @@ export class File {
    */
   extension: string;
 
-  private _fileObj?: Blob | FuturableGetter<Blob>;
-  private _documentObj?: CoreControls.Document | FuturableGetter<CoreControls.Document>;
-  private _thumbnail?: string | FuturableGetter<string>;
+  private _fileObj: FuturableOrGetter<Blob>;
+  private _documentObj: FuturableOrGetter<CoreControls.Document>;
+  private _thumbnail: FuturableOrGetter<string>;
+  private _eventListeners: Partial<{ [type in FileEventType]: FileEventListener[] }>;
 
-  constructor(fileDetails: FileDetails) {
+  constructor({ name, originalName, extension, fileObj, documentObj, thumbnail }: FileDetails) {
+    if (!fileObj && !documentObj) throw new Error('One of `fileObj` or `documentObj` is required');
+
     this.id = getStringId('File');
-    this.name = fileDetails.name;
-    this.originalName = fileDetails.originalName || fileDetails.name;
-    this.extension = fileDetails.extension || getExtension(fileDetails.name);
+    this.name = name;
+    this.originalName = originalName || name;
+    this.extension = extension || getExtension(name);
 
-    this._thumbnail = fileDetails.thumbnail;
-    this._fileObj = fileDetails.fileObj;
-    this._documentObj = fileDetails.documentObj;
+    this._documentObj = documentObj ?? this._generateDocumentObj;
+    this._fileObj = fileObj ?? this._generateFileObj;
+    this._thumbnail = thumbnail ?? this._generateThumbnail;
+
+    this._eventListeners = {};
   }
 
   /**
-   * The thumbnail for the file. This will remain undefined until it is fetched
-   * (this may be async).
+   * Get a promise for the thumbnail.
    */
-  getThumbnail(): Promise<string> {
-    return this._getHelper('_thumbnail', this._thumbnail, () => getThumbnail(this.getDocumentObj()));
-  }
-
-  setThumbnail(thumbnail: FuturableOrGetter<string>) {
-    this._setHelper('_thumbnail', thumbnail);
+  async getThumbnail(): Promise<string> {
+    return futureableOrGetterToFuturable(this._thumbnail);
   }
 
   /**
-   * The file object blob. This will remain undefined until it is fetched (this
-   * may be async). Mutations on this must **not** be done directly, but using
-   * the `setFileObj` function.
+   * Set the thumbnail or give a futurable or getter.
+   * @param thumbnail The thumbnail, promise, or getter for the thumbnail.
    */
-  getFileObj(): Promise<Blob> {
-    return this._getHelper('_fileObj', this._fileObj, () => documentToBlob(this.getDocumentObj()));
-  }
-
-  setFileObj(fileObj: FuturableOrGetter<Blob>) {
-    this._setHelper('_fileObj', fileObj);
+  setThumbnail(thumbnail?: FuturableOrGetter<string>) {
+    this._thumbnail = thumbnail ?? this._generateThumbnail;
   }
 
   /**
-   * The Document object for the file. This will remain undefined until it is
-   * fetched (this may be async). Mutations on this must **not** be done
-   * directly, but using the `setDocumentObj` function.
+   * Get a promise for the fileObj.
    */
-  getDocumentObj(): Promise<CoreControls.Document> {
-    return this._getHelper('_documentObj', this._documentObj, () => blobToDocument(this.getFileObj(), this.extension));
+  async getFileObj(): Promise<Blob> {
+    return futureableOrGetterToFuturable(this._fileObj);
   }
 
-  setDocumentObj(documentObj: FuturableOrGetter<CoreControls.Document>) {
-    this._setHelper('_documentObj', documentObj);
+  /**
+   * Set the fileObj or give a futurable or getter.
+   * @param fileObj The fileObj, promise, or getter for the fileObj.
+   */
+  setFileObj(fileObj?: FuturableOrGetter<Blob>) {
+    this._fileObj = fileObj ?? this._generateFileObj;
   }
 
-  /** Gets a lazy property, and stores it if it was async retrieved. */
-  protected _getHelper = async <T>(
-    key: '_fileObj' | '_documentObj' | '_thumbnail',
-    property: FuturableGetter<T> | T | undefined,
-    fallback: FuturableGetter<T>,
-  ) => {
-    if (!(typeof property === 'function') && property != undefined) {
-      return Promise.resolve(property);
+  /**
+   * Get a promise for the documentObj.
+   */
+  async getDocumentObj(): Promise<CoreControls.Document> {
+    return futureableOrGetterToFuturable(this._documentObj);
+  }
+
+  /**
+   * Set the documentObj or give a futurable or getter.
+   * @param documentObj The documentObj, promise, or getter for the documentObj.
+   */
+  setDocumentObj(documentObj?: FuturableOrGetter<CoreControls.Document>) {
+    this._documentObj = documentObj ?? this._generateDocumentObj;
+  }
+
+  addEventListener(type: FileEventType, listener: FileEventListener) {
+    const eventListeners = this._eventListeners[type] ?? (this._eventListeners[type] = []);
+    if (!eventListeners.includes(listener)) eventListeners.push(listener);
+  }
+
+  removeEventListener(type: FileEventType, listener: FileEventListener) {
+    const eventListeners = this._eventListeners[type];
+    if (!eventListeners) return;
+    const index = eventListeners.indexOf(listener);
+    if (index > -1) eventListeners.splice(index, 1);
+  }
+
+  private _dispatchEvent(type: FileEventType) {
+    const fileEvent = new FileEvent(type, this);
+
+    const eventListeners = this._eventListeners[fileEvent.type] ?? [];
+
+    for (let index = 0; index < eventListeners.length; index++) {
+      if (!fileEvent.bubbles) break;
+      const listener = eventListeners[index];
+      listener(fileEvent);
     }
-    const futureGetter = property instanceof Function ? property : fallback;
-    const value = await futureGetter();
-    this[key] = value as any;
-    return value;
-  };
 
-  /** Sets a lazy property within the File. */
-  protected _setHelper = async <T>(key: '_fileObj' | '_documentObj' | '_thumbnail', property: FuturableOrGetter<T>) => {
-    if (property instanceof Promise) {
-      this[key] = () => property;
-    } else if (typeof property === 'function') {
-      this[key] = property as any;
-    } else {
-      this[key] = property as any;
+    if (fileEvent.defaultPrevented) return;
+    const eventDefault = this._getEventDefaultByType(fileEvent.type);
+    eventDefault?.();
+  }
+
+  private _generateThumbnail() {
+    return getThumbnail(this.getDocumentObj);
+  }
+
+  private _generateFileObj() {
+    return documentToBlob(this.getDocumentObj);
+  }
+
+  private _generateDocumentObj() {
+    return blobToDocument(this.getFileObj, this.extension);
+  }
+
+  private _getEventDefaultByType(type: FileEventType): Function | null {
+    if (type === 'rotate') {
+      return () => {
+        //
+      };
     }
-  };
+    return null;
+  }
 }

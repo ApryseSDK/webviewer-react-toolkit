@@ -1,4 +1,5 @@
-import { Futurable, Include } from '../../utils/typeUtils';
+import { Include } from '../../utils/typeUtils';
+import { Futurable } from '../../data/futurable';
 
 /** The output of this hook is an object representing a file. */
 export interface File {
