@@ -5,7 +5,7 @@ import documentToBlob from '../webviewer/documentToBlob';
 import getRotatedDocument from '../webviewer/getRotatedDocument';
 import getThumbnail from '../webviewer/getThumbnail';
 import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
-import { FuturableOrGetter, futureableOrGetterToFuturable } from './futurable';
+import { FuturableOrLazy, futureableOrGetterToFuturable } from './futurable';
 
 /** The input object provided to the File constructor. */
 export interface FileDetails {
@@ -16,11 +16,11 @@ export interface FileDetails {
   /** File extension. For example, `'pdf'`. */
   extension?: string;
   /** File object, or function to get it. One of `fileObj` or `documentObj` must be given. */
-  fileObj?: FuturableOrGetter<Blob>;
+  fileObj?: FuturableOrLazy<Blob>;
   /** Document object, or function to get it. One of `fileObj` or `documentObj` must be given. */
-  documentObj?: FuturableOrGetter<CoreControls.Document>;
+  documentObj?: FuturableOrLazy<CoreControls.Document>;
   /** Thumbnail data URL string, or function to get it. */
-  thumbnail?: FuturableOrGetter<string>;
+  thumbnail?: FuturableOrLazy<string>;
 }
 
 export class File {
@@ -29,9 +29,9 @@ export class File {
   private _originalName: string;
   private _extension: string;
 
-  private _fileObj: FuturableOrGetter<Blob>;
-  private _documentObj: FuturableOrGetter<CoreControls.Document>;
-  private _thumbnail: FuturableOrGetter<string>;
+  private _fileObj: FuturableOrLazy<Blob>;
+  private _documentObj: FuturableOrLazy<CoreControls.Document>;
+  private _thumbnail: FuturableOrLazy<string>;
   private _eventListeners: FileEventListenersObj;
 
   constructor({ name, originalName, extension, fileObj, documentObj, thumbnail }: FileDetails) {
@@ -93,7 +93,7 @@ export class File {
    * Set the thumbnail or give a futurable or getter.
    * @param thumbnail The thumbnail, promise, or getter for the thumbnail.
    */
-  setThumbnail(thumbnail?: FuturableOrGetter<string>) {
+  setThumbnail(thumbnail?: FuturableOrLazy<string>) {
     this._dispatchEvent(FileEventType.ThumbnailChange, () => {
       this._thumbnail = thumbnail ?? this._generateThumbnail;
     });
@@ -110,7 +110,7 @@ export class File {
    * Set the fileObj or give a futurable or getter.
    * @param fileObj The fileObj, promise, or getter for the fileObj.
    */
-  setFileObj(fileObj?: FuturableOrGetter<Blob>) {
+  setFileObj(fileObj?: FuturableOrLazy<Blob>) {
     this._dispatchEvent(FileEventType.FileObjChange, () => {
       this._fileObj = fileObj ?? this._generateFileObj;
       // Only update documentObj if fileObj was given, not generated.
@@ -130,7 +130,7 @@ export class File {
    * @param documentObj The documentObj, promise, or getter for the documentObj.
    * @param stopPropagation Prevent updates to _fileObj and thumbnail.
    */
-  setDocumentObj(documentObj?: FuturableOrGetter<CoreControls.Document>) {
+  setDocumentObj(documentObj?: FuturableOrLazy<CoreControls.Document>) {
     this._dispatchEvent(FileEventType.DocumentObjChange, () => {
       this._documentObj = documentObj ?? this._generateDocumentObj;
       // Only update fileObj if documentObj was given, not generated.

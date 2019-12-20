@@ -1,6 +1,6 @@
-import { FuturableOrGetter, futureableOrGetterToFuturable } from '../data/futurable';
+import { FuturableOrLazy, futureableOrGetterToFuturable } from '../data/futurable';
 
-async function getThumbnail(documentObj: FuturableOrGetter<CoreControls.Document>) {
+async function getThumbnail(documentObj: FuturableOrLazy<CoreControls.Document>) {
   const fetchedDocument = await futureableOrGetterToFuturable(documentObj);
   const canvas: HTMLCanvasElement = await new Promise(resolve => {
     const pageWidth = fetchedDocument.getPageInfo(0).width;

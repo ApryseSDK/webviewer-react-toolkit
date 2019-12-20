@@ -6,25 +6,25 @@ export type Futurable<T> = Promise<T> | T;
 /**
  * Function that returns a `Futurable`.
  */
-export type FuturableGetter<T> = () => Futurable<T>;
+export type LazyFuturable<T> = () => Futurable<T>;
 
 /**
- * A `FuturableGetter`, or a `Futurable`.
+ * A `LazyFuturable`, or a `Futurable`.
  */
-export type FuturableOrGetter<T> = Futurable<T> | FuturableGetter<T>;
+export type FuturableOrLazy<T> = Futurable<T> | LazyFuturable<T>;
 
 /**
  * Returns a futurable.
- * @param futurableOrGetter A `Futurable` or a `FuturableGetter`.
+ * @param futurableOrLazy A `Futurable` or a `LazyFuturable`.
  */
-export function futureableOrGetterToFuturable<T>(futurableOrGetter: FuturableOrGetter<T>): Futurable<T> {
-  return futurableOrGetter instanceof Function ? futurableOrGetter() : futurableOrGetter;
+export function futureableOrGetterToFuturable<T>(futurableOrLazy: FuturableOrLazy<T>): Futurable<T> {
+  return futurableOrLazy instanceof Function ? futurableOrLazy() : futurableOrLazy;
 }
 
 /**
  * Returns a function to get a futurable.
- * @param futurableOrGetter A `Futurable` or a `FuturableGetter`.
+ * @param futurableOrLazy A `Futurable` or a `LazyFuturable`.
  */
-export function futureableOrGetterToFuturableGetter<T>(futurableOrGetter: FuturableOrGetter<T>): FuturableGetter<T> {
-  return futurableOrGetter instanceof Function ? futurableOrGetter : () => futurableOrGetter;
+export function futureableOrGetterToLazyFuturable<T>(futurableOrLazy: FuturableOrLazy<T>): LazyFuturable<T> {
+  return futurableOrLazy instanceof Function ? futurableOrLazy : () => futurableOrLazy;
 }

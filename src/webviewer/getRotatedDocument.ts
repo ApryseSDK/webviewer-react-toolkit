@@ -1,6 +1,6 @@
-import { FuturableOrGetter, futureableOrGetterToFuturable } from '../data/futurable';
+import { FuturableOrLazy, futureableOrGetterToFuturable } from '../data/futurable';
 
-async function getRotatedDocument(documentObj: FuturableOrGetter<CoreControls.Document>) {
+async function getRotatedDocument(documentObj: FuturableOrLazy<CoreControls.Document>) {
   const coreControls = window.CoreControls;
   const fetchedDocument = await futureableOrGetterToFuturable(documentObj);
 

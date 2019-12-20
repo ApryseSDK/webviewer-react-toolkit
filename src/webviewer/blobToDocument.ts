@@ -1,6 +1,6 @@
-import { FuturableOrGetter, futureableOrGetterToFuturable } from '../data/futurable';
+import { FuturableOrLazy, futureableOrGetterToFuturable } from '../data/futurable';
 
-async function blobToDocument(blob: FuturableOrGetter<Blob>, extension: string) {
+async function blobToDocument(blob: FuturableOrLazy<Blob>, extension: string) {
   const coreControls = window.CoreControls;
   const fetchedBlob = await futureableOrGetterToFuturable(blob);
   // @ts-ignore (TODO: fix types)
