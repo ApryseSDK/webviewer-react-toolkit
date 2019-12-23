@@ -13,7 +13,7 @@ export interface CreateFileOptions {
 export function createFile(index: number, options: CreateFileOptions = {}) {
   const getParameter = <T>(parameter: T) => {
     const internals = (() => {
-      if (options.pending) return new Promise(() => {});
+      if (options.pending) return async () => new Promise(() => {});
       if (options.lazy) return async () => parameter;
       return parameter;
     })();
@@ -26,8 +26,8 @@ export function createFile(index: number, options: CreateFileOptions = {}) {
     originalName: `file_${index + 1}`,
     extension: 'pdf',
     thumbnail: getParameter(index % 2 ? testPdfThumbnailRotated : testPdfThumbnail),
-    fileObj: getParameter(new Blob()),
-    documentObj: getParameter('Document_Object'),
+    fileObj: {},
+    documentObj: {},
     rotate: () => {},
     addEventListener: () => {},
     removeEventListener: () => {},
