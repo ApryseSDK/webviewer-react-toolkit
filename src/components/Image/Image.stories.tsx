@@ -27,12 +27,20 @@ export const basic = () => (
   </div>
 );
 
-export const lazy = () => (
+export const withPromiseSrc = () => (
   <div style={style}>
     <Image
-      src={Promise.resolve(
-        'https://www.webfx.com/blog/images/cdn.designinstruct.com/files/582-how-to-image-placeholders/generic-image-placeholder.png',
-      )}
+      src={
+        new Promise(res =>
+          setTimeout(
+            () =>
+              res(
+                'https://www.webfx.com/blog/images/cdn.designinstruct.com/files/582-how-to-image-placeholders/generic-image-placeholder.png',
+              ),
+            500,
+          ),
+        )
+      }
       onRenderLoading={() => <Spinner />}
       loading={boolean('loading', false)}
     />

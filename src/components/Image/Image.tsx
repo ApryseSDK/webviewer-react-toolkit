@@ -1,7 +1,6 @@
 import classnames from 'classnames';
 import React, { forwardRef, ImgHTMLAttributes, ReactNode, useCallback, useEffect, useState } from 'react';
-import { FuturableOrLazy, futureableOrGetterToFuturable } from '../../data/futurable';
-import useThrottle from '../../hooks/useThrottle';
+import { FuturableOrLazy, futureableOrLazyToFuturable } from '../../data/futurable';
 import { Omit } from '../../utils/typeUtils';
 
 export interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
@@ -23,28 +22,21 @@ export interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 's
    * Render out an element to be shown while src is loading.
    */
   onRenderLoading?: () => ReactNode;
-  /**
-   * Timeout to throttle getting the image. Only applies if `src` is a function.
-   * @default 500
-   */
-  throttleTimeout?: number;
 }
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, loading, classes, onRenderLoading, throttleTimeout = 500, alt, className, ...imgProps }, ref) => {
+  ({ src, loading, classes, onRenderLoading, alt, className, ...imgProps }, ref) => {
     const [source, setSource] = useState<string | undefined>(typeof src === 'string' ? src : undefined);
 
     const getSource = useCallback(async (srcGetter: FuturableOrLazy<string>) => {
-      const fetchedSource = await futureableOrGetterToFuturable(srcGetter);
+      const fetchedSource = await futureableOrLazyToFuturable(srcGetter);
       setSource(fetchedSource);
     }, []);
 
-    const throttledGetSource = useThrottle(getSource, throttleTimeout);
-
     useEffect(() => {
       if (typeof src === 'string' || src === undefined) return setSource(src);
-      throttledGetSource(src);
-    }, [src, throttledGetSource]);
+      getSource(src);
+    }, [src, getSource]);
 
     const wrapperClass = classnames('ui__base ui__image__wrapper', classes?.wrapper);
 
