@@ -11,6 +11,10 @@
   display: block;
   border: 1px solid $blue-gray-1;
   transition: $focus-transition;
+
+  &--loading {
+    opacity: 0;
+  }
 }
 
 .ui__image__overlay {

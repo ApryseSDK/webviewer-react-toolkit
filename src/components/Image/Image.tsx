@@ -1,13 +1,14 @@
 import classnames from 'classnames';
-import React, { forwardRef, ImgHTMLAttributes, useCallback, useEffect, useState, ReactNode } from 'react';
+import React, { forwardRef, ImgHTMLAttributes, ReactNode, useCallback, useEffect, useState } from 'react';
+import { FuturableOrLazy, futureableOrLazyToFuturable } from '../../data/futurable';
 import { Omit } from '../../utils/typeUtils';
 
 export interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   /**
-   * The image source can be either a string, or a function that returns a
-   * promise to get a string. If not given, will show as loading.
+   * The image source can be a `Futurable` or `LazyFuturable`, or undefined. If
+   * undefined or if a promise will display as loading.
    */
-  src?: string | (() => Promise<string>);
+  src?: FuturableOrLazy<string>;
   /**
    * If given, will override the loading based on whether src is fetched.
    */
@@ -21,27 +22,21 @@ export interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 's
    * Render out an element to be shown while src is loading.
    */
   onRenderLoading?: () => ReactNode;
-  /**
-   * Timeout to throttle getting the image. Only applies if `src` is a function.
-   * @default 500;
-   */
-  throttleTimeout?: number;
 }
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, loading, classes, onRenderLoading, throttleTimeout = 500, alt, className, ...imgProps }, ref) => {
-    const [source, setSource] = useState<string | undefined>(typeof src !== 'function' ? src : undefined);
+  ({ src, loading, classes, onRenderLoading, alt, className, ...imgProps }, ref) => {
+    const [source, setSource] = useState<string | undefined>(typeof src === 'string' ? src : undefined);
 
-    const getSource = useCallback(async (srcGetter: () => Promise<string>) => {
-      const fetchedSource = await srcGetter();
+    const getSource = useCallback(async (srcGetter: FuturableOrLazy<string>) => {
+      const fetchedSource = await futureableOrLazyToFuturable(srcGetter);
       setSource(fetchedSource);
     }, []);
 
     useEffect(() => {
-      if (typeof src !== 'function') return setSource(src);
-      const timeout = setTimeout(() => getSource(src), throttleTimeout);
-      return () => clearTimeout(timeout);
-    }, [src, getSource, throttleTimeout]);
+      if (typeof src === 'string' || src === undefined) return setSource(src);
+      getSource(src);
+    }, [src, getSource]);
 
     const wrapperClass = classnames('ui__base ui__image__wrapper', classes?.wrapper);
 
@@ -55,7 +50,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(
     const overlayClass = classnames(
       'ui__image__overlay',
       {
-        ['ui__image__overlay--loading']: loading ?? !source,
+        ['ui__image__overlay--loading']: loading || !source,
         ['ui__image__overlay--hide']: !onRenderLoading,
       },
       classes?.overlay,

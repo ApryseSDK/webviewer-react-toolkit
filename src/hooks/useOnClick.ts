@@ -1,13 +1,19 @@
-import { MouseEvent, useCallback, MouseEventHandler } from 'react';
+import { MouseEvent, MouseEventHandler, useCallback } from 'react';
 
-export interface OnClickOptions {
+export interface UseOnClickOptions {
   stopPropagation?: boolean;
   preventDefault?: boolean;
   blurOnClick?: boolean;
   disabled?: boolean;
 }
 
-function useOnClick<T>(onClick?: MouseEventHandler<T>, options: OnClickOptions = {}) {
+/**
+ * Returns the handler for onClick. Allows you to add specific options to the
+ * event before passing it through to the default onClick.
+ * @param onClick The onClick prop if it's available.
+ * @param options UseOnClickOptions for the hook.
+ */
+function useOnClick<T>(onClick?: MouseEventHandler<T>, options: UseOnClickOptions = {}) {
   const stopPropagation = !!options.stopPropagation;
   const preventDefault = !!options.preventDefault;
   const blurOnClick = !!options.blurOnClick;

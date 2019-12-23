@@ -1,5 +1,11 @@
 import { FocusEvent, FocusEventHandler, useCallback, useState } from 'react';
 
+/**
+ * Returns handlers for onFocus and onBlur, as well as a property focused which
+ * is true if the component or any child is being focused.
+ * @param onFocus The onFocus prop if it's available.
+ * @param onBlur The onBlur prop if it's available.
+ */
 function useFocus<T>(onFocus?: FocusEventHandler<T>, onBlur?: FocusEventHandler<T>) {
   const [focused, setFocused] = useState(false);
 

@@ -60,7 +60,7 @@ export interface ThumbnailProps extends ClickableDivProps {
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   (
     {
-      file: fileClass,
+      file: _file,
       label,
       hideExtension,
       selected,
@@ -80,7 +80,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   ) => {
     const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
-    const file = useFile(fileClass);
+    const file = useFile(_file);
 
     const handleOnSave = (newName: string) => {
       onRename?.(newName, file.file);

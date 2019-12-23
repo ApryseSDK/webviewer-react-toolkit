@@ -5,7 +5,8 @@ import documentToBlob from '../webviewer/documentToBlob';
 import getRotatedDocument from '../webviewer/getRotatedDocument';
 import getThumbnail from '../webviewer/getThumbnail';
 import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
-import { FuturableOrLazy, futureableOrGetterToFuturable } from './futurable';
+import { FuturableOrLazy } from './futurable';
+import MemoizedPromise from './memoizedPromise';
 
 /** The input object provided to the File constructor. */
 export interface FileDetails {
@@ -28,9 +29,9 @@ export class File {
   private _name: string;
   private _originalName: string;
   private _extension: string;
-  private _fileObj: FuturableOrLazy<Blob>;
-  private _documentObj: FuturableOrLazy<CoreControls.Document>;
-  private _thumbnail: FuturableOrLazy<string>;
+  private _fileObj: MemoizedPromise<Blob>;
+  private _documentObj: MemoizedPromise<CoreControls.Document>;
+  private _thumbnail: MemoizedPromise<string>;
   private _eventListeners: FileEventListenersObj;
 
   constructor({ name, originalName, extension, fileObj, documentObj, thumbnail }: FileDetails) {
@@ -41,18 +42,11 @@ export class File {
     this._originalName = originalName || name;
     this._extension = extension || getExtension(name);
 
-    this._documentObj = documentObj ?? this._generateDocumentObj;
-    this._fileObj = fileObj ?? this._generateFileObj;
-    this._thumbnail = thumbnail ?? this._generateThumbnail;
+    this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
+    this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
+    this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
 
     this._eventListeners = {};
-  }
-
-  /**
-   * A unique ID generated for the file.
-   */
-  get id() {
-    return this._id;
   }
 
   /**
@@ -65,6 +59,13 @@ export class File {
     this._dispatchEvent(FileEventType.NameChange, () => {
       this._name = name;
     });
+  }
+
+  /**
+   * A unique ID generated for the file.
+   */
+  get id() {
+    return this._id;
   }
 
   /**
@@ -83,10 +84,24 @@ export class File {
   }
 
   /**
-   * Get a promise for the thumbnail.
+   * A promise getter for the thumbnail.
    */
-  async getThumbnail(): Promise<string> {
-    return futureableOrGetterToFuturable(this._thumbnail);
+  get thumbnail() {
+    return this._thumbnail;
+  }
+
+  /**
+   * A promise getter for the fileObj.
+   */
+  get fileObj() {
+    return this._fileObj;
+  }
+
+  /**
+   * A promise getter for the documentObj.
+   */
+  get documentObj() {
+    return this._documentObj;
   }
 
   /**
@@ -95,15 +110,8 @@ export class File {
    */
   setThumbnail(thumbnail?: FuturableOrLazy<string>) {
     this._dispatchEvent(FileEventType.ThumbnailChange, () => {
-      this._thumbnail = thumbnail ?? this._generateThumbnail;
+      this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
     });
-  }
-
-  /**
-   * Get a promise for the fileObj.
-   */
-  async getFileObj(): Promise<Blob> {
-    return futureableOrGetterToFuturable(this._fileObj);
   }
 
   /**
@@ -112,17 +120,10 @@ export class File {
    */
   setFileObj(fileObj?: FuturableOrLazy<Blob>) {
     this._dispatchEvent(FileEventType.FileObjChange, () => {
-      this._fileObj = fileObj ?? this._generateFileObj;
+      this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
       // Only update documentObj if fileObj was given, not generated.
       if (fileObj) this.setDocumentObj();
     });
-  }
-
-  /**
-   * Get a promise for the documentObj.
-   */
-  async getDocumentObj(): Promise<CoreControls.Document> {
-    return futureableOrGetterToFuturable(this._documentObj);
   }
 
   /**
@@ -132,7 +133,7 @@ export class File {
    */
   setDocumentObj(documentObj?: FuturableOrLazy<CoreControls.Document>) {
     this._dispatchEvent(FileEventType.DocumentObjChange, () => {
-      this._documentObj = documentObj ?? this._generateDocumentObj;
+      this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
       // Only update fileObj if documentObj was given, not generated.
       if (documentObj) this.setFileObj();
       this.setThumbnail();
@@ -144,7 +145,7 @@ export class File {
    */
   rotate() {
     this._dispatchEvent(FileEventType.Rotate, () => {
-      this.setDocumentObj(getRotatedDocument(this.getDocumentObj));
+      this.setDocumentObj(getRotatedDocument(this.documentObj.get()));
     });
   }
 
@@ -186,19 +187,23 @@ export class File {
     }
   }
 
+  /** Dispatch an event for the file. */
   private _dispatchEvent(type: FileEventType, eventDefault?: Function) {
     new FileEvent(type, this, { eventDefault, listeners: this._eventListeners });
   }
 
+  /** Generate a thumbnail from document object. */
   private _generateThumbnail() {
-    return getThumbnail(this.getDocumentObj);
+    return getThumbnail(this.documentObj.get());
   }
 
+  /** Generate a file object from document object. */
   private _generateFileObj() {
-    return documentToBlob(this.getDocumentObj);
+    return documentToBlob(this.documentObj.get());
   }
 
+  /** Generate a document object from file object and extension. */
   private _generateDocumentObj() {
-    return blobToDocument(this.getFileObj, this.extension);
+    return blobToDocument(this.fileObj.get(), this.extension);
   }
 }

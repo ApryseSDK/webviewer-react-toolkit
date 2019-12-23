@@ -17,7 +17,7 @@ export type FuturableOrLazy<T> = Futurable<T> | LazyFuturable<T>;
  * Returns a futurable.
  * @param futurableOrLazy A `Futurable` or a `LazyFuturable`.
  */
-export function futureableOrGetterToFuturable<T>(futurableOrLazy: FuturableOrLazy<T>): Futurable<T> {
+export function futureableOrLazyToFuturable<T>(futurableOrLazy: FuturableOrLazy<T>): Futurable<T> {
   return futurableOrLazy instanceof Function ? futurableOrLazy() : futurableOrLazy;
 }
 
@@ -25,6 +25,6 @@ export function futureableOrGetterToFuturable<T>(futurableOrLazy: FuturableOrLaz
  * Returns a function to get a futurable.
  * @param futurableOrLazy A `Futurable` or a `LazyFuturable`.
  */
-export function futureableOrGetterToLazyFuturable<T>(futurableOrLazy: FuturableOrLazy<T>): LazyFuturable<T> {
+export function futureableOrLazyToLazyFuturable<T>(futurableOrLazy: FuturableOrLazy<T>): LazyFuturable<T> {
   return futurableOrLazy instanceof Function ? futurableOrLazy : () => futurableOrLazy;
 }

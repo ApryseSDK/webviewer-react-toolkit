@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { createFile } from '../../storybook-helpers/data/files';
 import Thumbnail from '../Thumbnail';
 
-const testFile = createFile(0, true);
+const testFile = createFile(0, { pending: true });
 
 describe('Thumbnail component', () => {
   it('renders its contents', () => {

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Omit specific properties from an interface. Use `"field1" | "field2"` to
  * exclude multiple. This is useful if you are adding a layer over a general
@@ -59,4 +61,16 @@ export type Include<T, K extends keyof T> = Pick<T, Extract<keyof T, K>>;
  * type Item = ItemOf<typeof x>; // {a: string; b: string}
  * ```
  */
-export type ItemOf<T extends any[]> = T[number]; // eslint-disable-line @typescript-eslint/no-explicit-any
+export type ItemOf<T extends any[]> = T[number];
+
+/**
+ * Extracts the types of the arguments given to a function.
+ *
+ * Usage:
+ *
+ * ```ts
+ * const x = (a: string, b: number) => a + b;
+ * type Arguments = ArgumentTypes<typeof x>; // [string, number]
+ * ```
+ */
+export type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
