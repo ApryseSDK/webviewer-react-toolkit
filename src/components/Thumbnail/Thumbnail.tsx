@@ -142,7 +142,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           onRenderText={hideExtension ? undefined : value => value && `${value}.${file.extension}`}
           centerText
           disabled={disabled}
-          locked={!onRename}
+          locked={!onRename || otherDragging}
           onSave={handleOnSave}
           onCancel={handleOnCancel}
           onEdit={handleOnEdit}
