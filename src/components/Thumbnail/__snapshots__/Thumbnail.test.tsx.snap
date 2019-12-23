@@ -14,7 +14,7 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
     className="ui__thumbnail__image"
   >
     <ForwardRef
-      alt="nodejs"
+      alt="file_1"
       onRenderLoading={[Function]}
     />
   </div>
@@ -26,7 +26,7 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
     onEdit={[Function]}
     onRenderText={[Function]}
     onSave={[Function]}
-    value="nodejs"
+    value="file_1"
   />
 </ForwardRef>
 `;
