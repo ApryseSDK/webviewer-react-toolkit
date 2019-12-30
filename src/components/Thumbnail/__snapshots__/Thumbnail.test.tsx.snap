@@ -8,9 +8,6 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
   onFocus={[Function]}
 >
   <div
-    className="ui__thumbnail__controls"
-  />
-  <div
     className="ui__thumbnail__image"
   >
     <ForwardRef
@@ -18,6 +15,9 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
       onRenderLoading={[Function]}
     />
   </div>
+  <div
+    className="ui__thumbnail__controls"
+  />
   <ForwardRef
     centerText={true}
     className="ui__thumbnail__label"
