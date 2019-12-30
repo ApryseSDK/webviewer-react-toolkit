@@ -1,8 +1,8 @@
 import classnames from 'classnames';
-import React, { HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState, FC } from 'react';
+import React, { HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState, FC, useCallback } from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { Motion, spring, SpringHelperConfig } from 'react-motion';
+import { Motion, spring, SpringHelperConfig, PlainStyle } from 'react-motion';
 import { Omit } from '../../utils/typeUtils';
 
 const ItemTypes = { Draggable: 'draggable' };
@@ -105,8 +105,13 @@ export const Draggable: FC<DraggableProps> = ({
   useEffect(() => {
     if (!divRef.current) return;
 
+    const siblings = Array.from(divRef.current.parentElement!.children);
+    const nodeIndex = siblings.indexOf(divRef.current);
+
+    const indexDiff = prevIndex.current - index;
+
     // Get the item occupying the previous index location.
-    const prev = divRef.current.parentElement?.children.item(prevIndex.current);
+    const prev = siblings[nodeIndex + indexDiff];
 
     // Get the coordinates of the previous item.
     const { left: prevLeft, top: prevTop } = prev?.getBoundingClientRect() ?? {};
@@ -118,8 +123,8 @@ export const Draggable: FC<DraggableProps> = ({
     const deltaX = prevLeft === undefined ? 0 : prevLeft - left;
     const deltaY = prevTop === undefined ? 0 : prevTop - top;
 
-    // Set the coordinates to the distance divided by 10 for snappy animation.
-    setCoords({ x: deltaX / 10, y: deltaY / 10 });
+    // Set the coordinates to the distance.
+    setCoords({ x: deltaX / 6, y: deltaY / 6 });
 
     // Store index for next swap.
     prevIndex.current = index;
@@ -143,21 +148,28 @@ export const Draggable: FC<DraggableProps> = ({
 
   const draggableClass = classnames('ui__base ui__draggable', className);
 
-  return (
-    <Motion style={motionStyle}>
-      {({ x, y }) => (
+  const onMotionRender = useCallback(
+    ({ x, y }: PlainStyle) => {
+      const inMotion = !!(x || y);
+
+      return (
         <div {...divProps} ref={divRef} className={draggableClass}>
           <div
             style={{
-              pointerEvents: x || y ? 'none' : undefined,
               WebkitTransform: `translate3d(${x}px, ${y}px, 0)`,
               transform: `translate3d(${x}px, ${y}px, 0)`,
             }}
+            className={classnames('ui__draggable__animated', {
+              ['ui__draggable__animated--inMotion']: inMotion,
+            })}
           >
             {onRenderChildren ? onRenderChildren(isDragging) : children}
           </div>
         </div>
-      )}
-    </Motion>
+      );
+    },
+    [children, divProps, draggableClass, isDragging, onRenderChildren],
   );
+
+  return <Motion style={motionStyle}>{onMotionRender}</Motion>;
 };

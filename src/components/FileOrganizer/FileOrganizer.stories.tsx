@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, FC } from 'react';
 import { File } from '../../data/file';
 import { createFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
@@ -107,7 +107,11 @@ export const WithCustomDragLayer = () => {
   );
 };
 
-const Virtualized = () => {
+const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: number }> = ({
+  lazy,
+  dragLayer,
+  numFiles,
+}) => {
   const [selectedList, setSelectedList] = useState<string[]>([]);
   const setSelected = (id: string) => {
     setSelectedList(prev => {
@@ -120,7 +124,7 @@ const Virtualized = () => {
 
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>(() =>
-    Array.from({ length: 101 }, (_, index) => createFile(index, { lazy: true })),
+    Array.from({ length: 1000 }, (_, index) => createFile(index, { lazy })),
   );
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
@@ -131,8 +135,25 @@ const Virtualized = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (numFiles === undefined) return;
+    setFiles(prev => {
+      if (prev.length > numFiles) {
+        return prev.slice(0, numFiles);
+      }
+      if (prev.length < numFiles) {
+        const newFiles = [];
+        for (let index = prev.length; index < numFiles; index++) {
+          newFiles.push(createFile(index));
+        }
+        return [...prev, ...newFiles];
+      }
+      return prev;
+    });
+  }, [numFiles]);
+
   return (
-    <div style={{ height: 400 }}>
+    <div style={{ height: '70vh' }}>
       <FileOrganizer
         files={files}
         onMove={handleOnMove}
@@ -146,10 +167,15 @@ const Virtualized = () => {
             onEditingChange={onEditingChange}
           />
         )}
-        // onRenderDragLayer={() => <ThumbnailDragLayer />}
+        onRenderDragLayer={dragLayer ? () => <ThumbnailDragLayer /> : undefined}
       />
     </div>
   );
 };
 
-export const VirtualizedList = () => <Virtualized />;
+export const Virtualized = () => <VirtualizedExample />;
+export const VirtualizedLazyThumbnails = () => <VirtualizedExample lazy />;
+export const VirtualizedWithCustomDragLayer = () => <VirtualizedExample dragLayer />;
+export const BasicToVirtualized = () => (
+  <VirtualizedExample lazy numFiles={number('number of files', 50, { min: 0, max: 1000, step: 50, range: true })} />
+);

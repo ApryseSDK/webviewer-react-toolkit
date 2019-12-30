@@ -149,7 +149,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   return (
     <DndProvider backend={Backend}>
       <div className={fileOrganizerClass}>
-        {files.length > virtualizeThreshold ? (
+        {files.length >= virtualizeThreshold ? (
           <MemoAutoSizer files={files} renderItem={renderItem} />
         ) : (
           files.map((file, index) => renderItem(file, index))

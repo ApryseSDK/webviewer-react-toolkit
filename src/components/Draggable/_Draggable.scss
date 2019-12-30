@@ -1,3 +1,11 @@
 .ui__draggable {
   display: inline-block;
+  // z-index: $z-index-local;
+
+  &__animated {
+    &--inMotion {
+      z-index: $z-index-dragging;
+      pointer-events: none;
+    }
+  }
 }
