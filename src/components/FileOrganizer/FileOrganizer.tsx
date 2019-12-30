@@ -1,7 +1,9 @@
 import classnames from 'classnames';
-import React, { FC, KeyboardEvent, ReactNode, useState } from 'react';
+import React, { CSSProperties, FC, KeyboardEvent, ReactNode, useCallback, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeGrid as Grid } from 'react-window';
 import { File } from '../../data/file';
 import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
@@ -41,7 +43,8 @@ export interface FileOrganizerProps {
   preventArrowsToMove?: boolean;
   /**
    * If provided, will virtualize the files to prevent jank when rendering out
-   * your thumbnails. This will also allow for
+   * your thumbnails. This will also allow for lazy loading of thumbnails.
+   * @default 100
    */
   virtualizeThreshold?: number;
 }
@@ -63,6 +66,10 @@ export interface OnRenderThumbnailProps {
   onEditingChange: (isEditing: boolean) => void;
 }
 
+const getItemIndex = (rowIndex: number, columnIndex: number, numColumns: number) => {
+  return rowIndex * numColumns + columnIndex;
+};
+
 export const FileOrganizer: FC<FileOrganizerProps> = ({
   files,
   onMove,
@@ -71,6 +78,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   disableMove,
   className,
   preventArrowsToMove,
+  virtualizeThreshold = 100,
 }) => {
   const [editingList, setEditingList] = useState<string[]>([]);
   const setEditing = (id: string, isEditing: boolean) => {
@@ -83,14 +91,14 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   };
 
   const [draggingList, setDraggingList] = useState<string[]>([]);
-  const setDragging = (id: string, isDragging: boolean) => {
+  const setDragging = useCallback((isDragging: boolean, id: string) => {
     setDraggingList(prev => {
       const prevIndex = prev.indexOf(id);
       if (isDragging && prevIndex === -1) return [...prev, id];
       if (!isDragging && prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
       return prev;
     });
-  };
+  }, []);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
     if (preventArrowsToMove) return;
@@ -108,36 +116,73 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
 
   const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
+  const renderItem = (file: File, index: number, style?: CSSProperties) => {
+    const isEditing = editingList.includes(file.id);
+    const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
+    const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
+    return (
+      <Draggable
+        key={file.id}
+        index={index}
+        style={style}
+        hideDragPreview={!!onRenderDragLayer}
+        onDragChange={isDragging => setDragging(isDragging, file.id)}
+        disableDrag={isEditing || disableMove}
+        onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
+        onKeyDown={e => handleKeyDown(e, index, file)}
+        onRenderChildren={isDragging => {
+          return onRenderThumbnail({
+            file,
+            isDragging,
+            otherDragging,
+            isEditing,
+            otherEditing,
+            onEditingChange: editing => setEditing(file.id, editing),
+            index,
+          });
+        }}
+      />
+    );
+  };
+
+  const getVirtualizedOrganizer = () => {
+    return (
+      <AutoSizer>
+        {({ width, height }) => {
+          let columnCount = Math.floor(width / 250);
+          if (columnCount > files.length) columnCount = files.length;
+          return (
+            <Grid
+              columnWidth={250}
+              rowHeight={250}
+              height={height}
+              width={width}
+              columnCount={columnCount}
+              rowCount={Math.ceil(files.length / columnCount)}
+              itemKey={({ columnIndex, rowIndex }) => {
+                const index = getItemIndex(rowIndex, columnIndex, columnCount);
+                return files[index]?.id ?? index;
+              }}
+            >
+              {({ columnIndex, rowIndex, style }) => {
+                const index = getItemIndex(rowIndex, columnIndex, columnCount);
+                const file = files[index];
+                if (!file) return null;
+                return renderItem(file, index, style);
+              }}
+            </Grid>
+          );
+        }}
+      </AutoSizer>
+    );
+  };
+
   return (
     <DndProvider backend={Backend}>
       <div className={fileOrganizerClass}>
-        {files.map((file, index) => {
-          const isEditing = editingList.includes(file.id);
-          const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
-          const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
-          return (
-            <Draggable
-              key={file.id}
-              index={index}
-              hideDragPreview={!!onRenderDragLayer}
-              onDragChange={dragging => setDragging(file.id, dragging)}
-              disableDrag={isEditing || disableMove}
-              onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
-              onKeyDown={e => handleKeyDown(e, index, file)}
-              onRenderChildren={isDragging => {
-                return onRenderThumbnail({
-                  file,
-                  isDragging,
-                  otherDragging,
-                  isEditing,
-                  otherEditing,
-                  onEditingChange: editing => setEditing(file.id, editing),
-                  index,
-                });
-              }}
-            />
-          );
-        })}
+        {files.length > virtualizeThreshold
+          ? getVirtualizedOrganizer()
+          : files.map((file, index) => renderItem(file, index))}
         {onRenderDragLayer ? <DragLayer>{onRenderDragLayer()}</DragLayer> : null}
       </div>
     </DndProvider>

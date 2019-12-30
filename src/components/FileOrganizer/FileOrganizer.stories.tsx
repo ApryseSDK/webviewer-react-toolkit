@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { File } from '../../data/file';
 import { createFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
@@ -34,7 +34,7 @@ function useCommonFileOrganizer() {
   }, []);
 
   // This is just a helper for adding or removing files.
-  const numFiles = number('number of files', 2);
+  const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
   useEffect(() => {
     setFiles(prev => {
       if (prev.length > numFiles) {
@@ -54,7 +54,7 @@ function useCommonFileOrganizer() {
   return { selectedList, setSelected, files, handleOnMove };
 }
 
-export const Basic: FC<{ numFiles: number }> = () => {
+export const Basic = () => {
   const { selectedList, setSelected, files, handleOnMove } = useCommonFileOrganizer();
 
   return (
@@ -80,7 +80,7 @@ export const Basic: FC<{ numFiles: number }> = () => {
   );
 };
 
-export const WithCustomDragLayer: FC<{ numFiles: number }> = () => {
+export const WithCustomDragLayer = () => {
   const { selectedList, setSelected, files, handleOnMove } = useCommonFileOrganizer();
 
   return (
@@ -104,5 +104,50 @@ export const WithCustomDragLayer: FC<{ numFiles: number }> = () => {
       )}
       onRenderDragLayer={() => <ThumbnailDragLayer />}
     />
+  );
+};
+
+export const Virtualized = () => {
+  const [selectedList, setSelectedList] = useState<string[]>([]);
+  const setSelected = (id: string) => {
+    setSelectedList(prev => {
+      const prevIndex = prev.indexOf(id);
+      if (prevIndex === -1) return [...prev, id];
+      if (prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
+      return prev;
+    });
+  };
+
+  // This is the index organizing function.
+  const [files, setFiles] = useState<File[]>(() =>
+    Array.from({ length: 101 }, (_, index) => createFile(index, { lazy: true })),
+  );
+  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
+    setFiles(prev => {
+      const clone = prev.slice();
+      const item = clone.splice(fromIndex, 1)[0];
+      clone.splice(toIndex, 0, item);
+      return clone;
+    });
+  }, []);
+
+  return (
+    <div style={{ height: 400 }}>
+      <FileOrganizer
+        files={files}
+        onMove={handleOnMove}
+        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange }) => (
+          <Thumbnail
+            file={file}
+            dragging={isDragging}
+            otherDragging={otherDragging}
+            selected={selectedList.includes(file.id)}
+            onClick={() => setSelected(file.id)}
+            onEditingChange={onEditingChange}
+          />
+        )}
+        // onRenderDragLayer={() => <ThumbnailDragLayer />}
+      />
+    </div>
   );
 };

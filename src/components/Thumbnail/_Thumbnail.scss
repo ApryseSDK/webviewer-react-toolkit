@@ -8,7 +8,6 @@
   transition: 0.1s background-color;
   display: flex;
   flex-direction: column;
-  z-index: $z-index-local;
 
   &--selected:not(.ui__thumbnail--dragging) {
     background-color: $blue-gray-1;
@@ -54,7 +53,6 @@
     display: flex;
     overflow: hidden;
     border-radius: $border-radius-small;
-    z-index: $z-index-raised;
   }
 
   &__image {

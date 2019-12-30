@@ -1,17 +1,27 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState, FC } from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
-import { Motion, spring, SpringHelperConfig } from 'react-motion';
-
 import { getEmptyImage } from 'react-dnd-html5-backend';
+import { Motion, spring, SpringHelperConfig } from 'react-motion';
+import { Omit } from '../../utils/typeUtils';
 
 const ItemTypes = { Draggable: 'draggable' };
 
-export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
+export interface DraggableProps extends Omit<HTMLAttributes<HTMLDivElement>, 'id'> {
   /**
    * The current index of the draggable wrapper.
    */
   index: number;
+  /**
+   * Prevent this draggable wrapper from dragging.
+   */
+  disableDrag?: boolean;
+  /**
+   * Hides the snapshot preview of the item while dragging. The most common use
+   * case would be if you're implementing a custom drag layer and you don't want
+   * the preview snapshot to clash with it.
+   */
+  hideDragPreview?: boolean;
   /**
    * Call instead of providing children if you wish to use the isDragging prop.
    */
@@ -24,16 +34,6 @@ export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
    * Called whenever the dnd property `isDragging` changes.
    */
   onDragChange?: (isDragging: boolean) => void;
-  /**
-   * Prevent this draggable wrapper from dragging.
-   */
-  disableDrag?: boolean;
-  /**
-   * Hides the snapshot preview of the item while dragging. The most common use
-   * case would be if you're implementing a custom drag layer and you don't want
-   * the preview snapshot to clash with it.
-   */
-  hideDragPreview?: boolean;
 }
 
 interface DragItem extends DragObjectWithType {
@@ -45,14 +45,13 @@ const SPRING: SpringHelperConfig = { stiffness: 300, damping: 30 };
 
 export const Draggable: FC<DraggableProps> = ({
   index,
+  disableDrag,
+  hideDragPreview,
   onRenderChildren,
   onMove,
   onDragChange,
-  disableDrag,
-  hideDragPreview,
   children,
   className,
-  style,
   ...divProps
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
@@ -61,9 +60,9 @@ export const Draggable: FC<DraggableProps> = ({
 
   const [, drop] = useDrop({
     accept: ItemTypes.Draggable,
-    hover(item: DragItem) {
+    hover(dragItem: DragItem) {
       // Previous index.
-      const fromIndex = item.index;
+      const fromIndex = dragItem.index;
 
       // Index it has been dragged to.
       const toIndex = index;
@@ -75,7 +74,7 @@ export const Draggable: FC<DraggableProps> = ({
       onMove?.(fromIndex, toIndex);
 
       // Set the item index to be the new index.
-      item.index = toIndex;
+      dragItem.index = toIndex;
     },
   });
 
@@ -142,24 +141,21 @@ export const Draggable: FC<DraggableProps> = ({
     [coords.x, coords.y, isDragging],
   );
 
-  const draggableClass = classnames('ui__base ui__draggable', className, {
-    ['ui__draggable--dragging']: isDragging,
-  });
+  const draggableClass = classnames('ui__base ui__draggable', className);
 
   return (
     <Motion style={motionStyle}>
       {({ x, y }) => (
-        <div
-          {...divProps}
-          ref={divRef}
-          className={draggableClass}
-          style={{
-            ...style,
-            WebkitTransform: `translate3d(${x}px, ${y}px, 0)`,
-            transform: `translate3d(${x}px, ${y}px, 0)`,
-          }}
-        >
-          {onRenderChildren ? onRenderChildren(isDragging) : children}
+        <div {...divProps} ref={divRef} className={draggableClass}>
+          <div
+            style={{
+              pointerEvents: x || y ? 'none' : undefined,
+              WebkitTransform: `translate3d(${x}px, ${y}px, 0)`,
+              transform: `translate3d(${x}px, ${y}px, 0)`,
+            }}
+          >
+            {onRenderChildren ? onRenderChildren(isDragging) : children}
+          </div>
         </div>
       )}
     </Motion>

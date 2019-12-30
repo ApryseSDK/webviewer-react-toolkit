@@ -47,6 +47,7 @@
     align-items: center;
     transition: 0.1s background-color;
     transition: $focus-transition;
+    line-height: 1.15; // FIX: match the normalize.css for input.
 
     &--noFocusTransition {
       // Prevents focus ring "stutter". Remove if transition is removed from focus.
