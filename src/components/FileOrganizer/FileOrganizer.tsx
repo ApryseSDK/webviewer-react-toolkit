@@ -1,10 +1,11 @@
 import classnames from 'classnames';
-import React, { FC, KeyboardEvent, ReactNode, useState } from 'react';
+import React, { CSSProperties, FC, KeyboardEvent, ReactNode, useCallback, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { File } from '../../data/file';
 import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
+import { MemoAutoSizer } from './MemoAutoSizer';
 
 export interface FileOrganizerProps {
   /**
@@ -41,7 +42,8 @@ export interface FileOrganizerProps {
   preventArrowsToMove?: boolean;
   /**
    * If provided, will virtualize the files to prevent jank when rendering out
-   * your thumbnails. This will also allow for
+   * your thumbnails. This will also allow for lazy loading of thumbnails.
+   * @default 100
    */
   virtualizeThreshold?: number;
 }
@@ -71,6 +73,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   disableMove,
   className,
   preventArrowsToMove,
+  virtualizeThreshold = 100,
 }) => {
   const [editingList, setEditingList] = useState<string[]>([]);
   const setEditing = (id: string, isEditing: boolean) => {
@@ -83,61 +86,74 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   };
 
   const [draggingList, setDraggingList] = useState<string[]>([]);
-  const setDragging = (id: string, isDragging: boolean) => {
+  const setDragging = useCallback((isDragging: boolean, id: string) => {
     setDraggingList(prev => {
       const prevIndex = prev.indexOf(id);
       if (isDragging && prevIndex === -1) return [...prev, id];
       if (!isDragging && prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
       return prev;
     });
-  };
+  }, []);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
-    if (preventArrowsToMove) return;
-    if (editingList.includes(file.id)) return;
-    if (event.key === 'ArrowLeft') {
-      if (index === 0) return;
-      onMove?.(index, index - 1, file);
-      event.preventDefault();
-    } else if (event.key === 'ArrowRight') {
-      if (index === files.length - 1) return;
-      onMove?.(index, index + 1, file);
-      event.preventDefault();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
+      if (preventArrowsToMove) return;
+      if (editingList.includes(file.id)) return;
+      if (event.key === 'ArrowLeft') {
+        if (index === 0) return;
+        onMove?.(index, index - 1, file);
+        event.preventDefault();
+      } else if (event.key === 'ArrowRight') {
+        if (index === files.length - 1) return;
+        onMove?.(index, index + 1, file);
+        event.preventDefault();
+      }
+    },
+    [editingList, files.length, onMove, preventArrowsToMove],
+  );
+
+  const renderItem = useCallback(
+    (file: File, index: number, style?: CSSProperties) => {
+      const isEditing = editingList.includes(file.id);
+      const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
+      const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
+      return (
+        <Draggable
+          key={file.id}
+          index={index}
+          style={style}
+          hideDragPreview={!!onRenderDragLayer}
+          onDragChange={isDragging => setDragging(isDragging, file.id)}
+          disableDrag={isEditing || disableMove}
+          onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
+          onKeyDown={e => handleKeyDown(e, index, file)}
+          onRenderChildren={isDragging => {
+            return onRenderThumbnail({
+              file,
+              isDragging,
+              otherDragging,
+              isEditing,
+              otherEditing,
+              onEditingChange: editing => setEditing(file.id, editing),
+              index,
+            });
+          }}
+        />
+      );
+    },
+    [disableMove, draggingList, editingList, handleKeyDown, onMove, onRenderDragLayer, onRenderThumbnail, setDragging],
+  );
 
   const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
   return (
     <DndProvider backend={Backend}>
       <div className={fileOrganizerClass}>
-        {files.map((file, index) => {
-          const isEditing = editingList.includes(file.id);
-          const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
-          const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
-          return (
-            <Draggable
-              key={file.id}
-              index={index}
-              hideDragPreview={!!onRenderDragLayer}
-              onDragChange={dragging => setDragging(file.id, dragging)}
-              disableDrag={isEditing || disableMove}
-              onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
-              onKeyDown={e => handleKeyDown(e, index, file)}
-              onRenderChildren={isDragging => {
-                return onRenderThumbnail({
-                  file,
-                  isDragging,
-                  otherDragging,
-                  isEditing,
-                  otherEditing,
-                  onEditingChange: editing => setEditing(file.id, editing),
-                  index,
-                });
-              }}
-            />
-          );
-        })}
+        {files.length >= virtualizeThreshold ? (
+          <MemoAutoSizer files={files} renderItem={renderItem} />
+        ) : (
+          files.map((file, index) => renderItem(file, index))
+        )}
         {onRenderDragLayer ? <DragLayer>{onRenderDragLayer()}</DragLayer> : null}
       </div>
     </DndProvider>

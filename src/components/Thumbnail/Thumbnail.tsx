@@ -117,6 +117,9 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         onFocus={handleOnFocus}
         onBlur={handleOnBlur}
       >
+        <div className="ui__thumbnail__image">
+          <Image src={file.thumbnail} alt={file.name} onRenderLoading={() => <FileSkeleton />} />
+        </div>
         <div className="ui__thumbnail__controls">
           {onRotate ? (
             <ToolButton disabled={disabled} onClick={e => onRotate(e, file.file)}>
@@ -132,9 +135,6 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           ) : (
             undefined
           )}
-        </div>
-        <div className="ui__thumbnail__image">
-          <Image src={file.thumbnail} alt={file.name} onRenderLoading={() => <FileSkeleton />} />
         </div>
         <EditableText
           className="ui__thumbnail__label"

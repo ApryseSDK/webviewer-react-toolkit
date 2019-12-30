@@ -22,6 +22,16 @@ export function futureableOrLazyToFuturable<T>(futurableOrLazy: FuturableOrLazy<
 }
 
 /**
+ * Returns the promise of a futurable or lazy futurable. This should only be
+ * used if you want to ensure the returned result is a promise, unlike
+ * `futureableOrLazyToFuturable` which might just return `T`.
+ * @param futurableOrLazy A `Futurable` or a `LazyFuturable`.
+ */
+export async function futureableOrLazyToPromise<T>(futurableOrLazy: FuturableOrLazy<T>): Promise<T> {
+  return futureableOrLazyToFuturable(futurableOrLazy);
+}
+
+/**
  * Returns a function to get a futurable.
  * @param futurableOrLazy A `Futurable` or a `LazyFuturable`.
  */
