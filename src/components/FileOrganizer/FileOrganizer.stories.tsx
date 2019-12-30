@@ -107,7 +107,7 @@ export const WithCustomDragLayer = () => {
   );
 };
 
-export const Virtualized = () => {
+const Virtualized = () => {
   const [selectedList, setSelectedList] = useState<string[]>([]);
   const setSelected = (id: string) => {
     setSelectedList(prev => {
@@ -151,3 +151,5 @@ export const Virtualized = () => {
     </div>
   );
 };
+
+export const VirtualizedList = () => <Virtualized />;

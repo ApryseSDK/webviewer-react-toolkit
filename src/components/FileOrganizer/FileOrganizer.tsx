@@ -2,11 +2,10 @@ import classnames from 'classnames';
 import React, { CSSProperties, FC, KeyboardEvent, ReactNode, useCallback, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { FixedSizeGrid as Grid } from 'react-window';
 import { File } from '../../data/file';
 import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
+import { MemoAutoSizer } from './MemoAutoSizer';
 
 export interface FileOrganizerProps {
   /**
@@ -66,10 +65,6 @@ export interface OnRenderThumbnailProps {
   onEditingChange: (isEditing: boolean) => void;
 }
 
-const getItemIndex = (rowIndex: number, columnIndex: number, numColumns: number) => {
-  return rowIndex * numColumns + columnIndex;
-};
-
 export const FileOrganizer: FC<FileOrganizerProps> = ({
   files,
   onMove,
@@ -100,89 +95,65 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     });
   }, []);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
-    if (preventArrowsToMove) return;
-    if (editingList.includes(file.id)) return;
-    if (event.key === 'ArrowLeft') {
-      if (index === 0) return;
-      onMove?.(index, index - 1, file);
-      event.preventDefault();
-    } else if (event.key === 'ArrowRight') {
-      if (index === files.length - 1) return;
-      onMove?.(index, index + 1, file);
-      event.preventDefault();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
+      if (preventArrowsToMove) return;
+      if (editingList.includes(file.id)) return;
+      if (event.key === 'ArrowLeft') {
+        if (index === 0) return;
+        onMove?.(index, index - 1, file);
+        event.preventDefault();
+      } else if (event.key === 'ArrowRight') {
+        if (index === files.length - 1) return;
+        onMove?.(index, index + 1, file);
+        event.preventDefault();
+      }
+    },
+    [editingList, files.length, onMove, preventArrowsToMove],
+  );
+
+  const renderItem = useCallback(
+    (file: File, index: number, style?: CSSProperties) => {
+      const isEditing = editingList.includes(file.id);
+      const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
+      const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
+      return (
+        <Draggable
+          key={file.id}
+          index={index}
+          style={style}
+          hideDragPreview={!!onRenderDragLayer}
+          onDragChange={isDragging => setDragging(isDragging, file.id)}
+          disableDrag={isEditing || disableMove}
+          onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
+          onKeyDown={e => handleKeyDown(e, index, file)}
+          onRenderChildren={isDragging => {
+            return onRenderThumbnail({
+              file,
+              isDragging,
+              otherDragging,
+              isEditing,
+              otherEditing,
+              onEditingChange: editing => setEditing(file.id, editing),
+              index,
+            });
+          }}
+        />
+      );
+    },
+    [disableMove, draggingList, editingList, handleKeyDown, onMove, onRenderDragLayer, onRenderThumbnail, setDragging],
+  );
 
   const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
-
-  const renderItem = (file: File, index: number, style?: CSSProperties) => {
-    const isEditing = editingList.includes(file.id);
-    const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
-    const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
-    return (
-      <Draggable
-        key={file.id}
-        index={index}
-        style={style}
-        hideDragPreview={!!onRenderDragLayer}
-        onDragChange={isDragging => setDragging(isDragging, file.id)}
-        disableDrag={isEditing || disableMove}
-        onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
-        onKeyDown={e => handleKeyDown(e, index, file)}
-        onRenderChildren={isDragging => {
-          return onRenderThumbnail({
-            file,
-            isDragging,
-            otherDragging,
-            isEditing,
-            otherEditing,
-            onEditingChange: editing => setEditing(file.id, editing),
-            index,
-          });
-        }}
-      />
-    );
-  };
-
-  const getVirtualizedOrganizer = () => {
-    return (
-      <AutoSizer>
-        {({ width, height }) => {
-          let columnCount = Math.floor(width / 250);
-          if (columnCount > files.length) columnCount = files.length;
-          return (
-            <Grid
-              columnWidth={250}
-              rowHeight={250}
-              height={height}
-              width={width}
-              columnCount={columnCount}
-              rowCount={Math.ceil(files.length / columnCount)}
-              itemKey={({ columnIndex, rowIndex }) => {
-                const index = getItemIndex(rowIndex, columnIndex, columnCount);
-                return files[index]?.id ?? index;
-              }}
-            >
-              {({ columnIndex, rowIndex, style }) => {
-                const index = getItemIndex(rowIndex, columnIndex, columnCount);
-                const file = files[index];
-                if (!file) return null;
-                return renderItem(file, index, style);
-              }}
-            </Grid>
-          );
-        }}
-      </AutoSizer>
-    );
-  };
 
   return (
     <DndProvider backend={Backend}>
       <div className={fileOrganizerClass}>
-        {files.length > virtualizeThreshold
-          ? getVirtualizedOrganizer()
-          : files.map((file, index) => renderItem(file, index))}
+        {files.length > virtualizeThreshold ? (
+          <MemoAutoSizer files={files} renderItem={renderItem} />
+        ) : (
+          files.map((file, index) => renderItem(file, index))
+        )}
         {onRenderDragLayer ? <DragLayer>{onRenderDragLayer()}</DragLayer> : null}
       </div>
     </DndProvider>
