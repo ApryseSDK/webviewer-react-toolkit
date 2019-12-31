@@ -1,8 +1,9 @@
 import classnames from 'classnames';
-import React, { CSSProperties, FC, KeyboardEvent, ReactNode, useCallback, useState } from 'react';
+import React, { CSSProperties, FC, KeyboardEvent, ReactNode, useCallback, useEffect, useState, Fragment } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { File } from '../../data/file';
+import useCurrentRef from '../../hooks/useCurrentRef';
 import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
@@ -13,23 +14,9 @@ export interface FileOrganizerProps {
    */
   files: File[];
   /**
-   * On render function for generating the thumbnails for the page organizer.
-   * If you do not want to build your own, try using the `Thumbnail` component.
-   */
-  onRenderThumbnail: (onRenderProps: OnRenderThumbnailProps) => ReactNode;
-  /**
-   * If provided, will call to render a custom drag layer while a thumbnail is
-   * being dragged. Otherwise will show a preview of the thumbnail.
-   */
-  onRenderDragLayer?: () => ReactNode;
-  /**
    * If true, will disable drag-and-drop functionality within the organizer.
    */
   disableMove?: boolean;
-  /**
-   * Callback fired when a file is moved within the page organizer.
-   */
-  onMove?: (fromIndex: number, toIndex: number, file: File) => void;
   /**
    * Classname for outer div.
    */
@@ -46,6 +33,25 @@ export interface FileOrganizerProps {
    * @default 100
    */
   virtualizeThreshold?: number;
+  /**
+   * On render function for generating the thumbnails for the page organizer.
+   * If you do not want to build your own, try using the `Thumbnail` component.
+   */
+  onRenderThumbnail: (onRenderProps: OnRenderThumbnailProps) => ReactNode;
+  /**
+   * If provided, will call to render a custom drag layer while a thumbnail is
+   * being dragged. Otherwise will show a preview of the thumbnail.
+   */
+  onRenderDragLayer?: () => ReactNode;
+  /**
+   * Callback fired when a file is moved within the page organizer.
+   */
+  onMove?: (fromIndex: number, toIndex: number, file: File) => void;
+  /**
+   * Called whenever dragging begins or ends. If drag ends, the id will be
+   * undefined.
+   */
+  onDragChange?: (id?: string) => void;
 }
 
 export interface OnRenderThumbnailProps {
@@ -68,6 +74,7 @@ export interface OnRenderThumbnailProps {
 export const FileOrganizer: FC<FileOrganizerProps> = ({
   files,
   onMove,
+  onDragChange,
   onRenderThumbnail,
   onRenderDragLayer,
   disableMove,
@@ -75,30 +82,17 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   preventArrowsToMove,
   virtualizeThreshold = 100,
 }) => {
-  const [editingList, setEditingList] = useState<string[]>([]);
-  const setEditing = (id: string, isEditing: boolean) => {
-    setEditingList(prev => {
-      const prevIndex = prev.indexOf(id);
-      if (isEditing && prevIndex === -1) return [...prev, id];
-      if (!isEditing && prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
-      return prev;
-    });
-  };
+  const [editingId, setEditingId] = useState<string>();
+  const [draggingId, setDraggingId] = useState<string>();
 
-  const [draggingList, setDraggingList] = useState<string[]>([]);
-  const setDragging = useCallback((isDragging: boolean, id: string) => {
-    setDraggingList(prev => {
-      const prevIndex = prev.indexOf(id);
-      if (isDragging && prevIndex === -1) return [...prev, id];
-      if (!isDragging && prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
-      return prev;
-    });
-  }, []);
+  const onDragChangeRef = useCurrentRef(onDragChange);
+  useEffect(() => {
+    onDragChangeRef.current?.(draggingId);
+  }, [draggingId, onDragChangeRef]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
-      if (preventArrowsToMove) return;
-      if (editingList.includes(file.id)) return;
+      if (preventArrowsToMove || editingId !== undefined) return;
       if (event.key === 'ArrowLeft') {
         if (index === 0) return;
         onMove?.(index, index - 1, file);
@@ -109,39 +103,40 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
         event.preventDefault();
       }
     },
-    [editingList, files.length, onMove, preventArrowsToMove],
+    [editingId, files.length, onMove, preventArrowsToMove],
   );
 
   const renderItem = useCallback(
-    (file: File, index: number, style?: CSSProperties) => {
-      const isEditing = editingList.includes(file.id);
-      const otherEditing = editingList.length > 0 && !editingList.includes(file.id);
-      const otherDragging = draggingList.length > 0 && !draggingList.includes(file.id);
+    (file: File | undefined, index: number, style?: CSSProperties) => {
+      if (!file) return <Fragment key={'__null'}>{null}</Fragment>;
+      const isEditing = editingId === file.id;
+      const otherEditing = editingId !== undefined && editingId === file.id;
+      const otherDragging = draggingId !== undefined && draggingId === file.id;
       return (
         <Draggable
           key={file.id}
           index={index}
           style={style}
           hideDragPreview={!!onRenderDragLayer}
-          onDragChange={isDragging => setDragging(isDragging, file.id)}
+          onDragChange={isDragging => setDraggingId(isDragging ? file.id : undefined)}
           disableDrag={isEditing || disableMove}
           onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
           onKeyDown={e => handleKeyDown(e, index, file)}
           onRenderChildren={isDragging => {
             return onRenderThumbnail({
+              index,
               file,
               isDragging,
               otherDragging,
               isEditing,
               otherEditing,
-              onEditingChange: editing => setEditing(file.id, editing),
-              index,
+              onEditingChange: isEditing => setEditingId(isEditing ? file.id : undefined),
             });
           }}
         />
       );
     },
-    [disableMove, draggingList, editingList, handleKeyDown, onMove, onRenderDragLayer, onRenderThumbnail, setDragging],
+    [disableMove, draggingId, editingId, handleKeyDown, onMove, onRenderDragLayer, onRenderThumbnail],
   );
 
   const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);

@@ -8,6 +8,7 @@ import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';
 import Thumbnail from '../Thumbnail';
 import ThumbnailDragLayer from '../ThumbnailDragLayer';
 import docs from './README.md';
+import useManagedFiles from '../../hooks/useManagedFiles';
 
 export default { title: 'FileOrganizer', parameters: { info: docs } };
 
@@ -63,6 +64,7 @@ export const Basic = () => {
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
+      onDragChange={action('onDragChange')}
       onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
         <Thumbnail
           file={file}
@@ -89,6 +91,7 @@ export const WithCustomDragLayer = () => {
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
+      onDragChange={action('onDragChange')}
       onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
         <Thumbnail
           file={file}
@@ -157,6 +160,7 @@ const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: n
       <FileOrganizer
         files={files}
         onMove={handleOnMove}
+        onDragChange={action('onDragChange')}
         onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange }) => (
           <Thumbnail
             file={file}
@@ -179,3 +183,32 @@ export const VirtualizedWithCustomDragLayer = () => <VirtualizedExample dragLaye
 export const BasicToVirtualized = () => (
   <VirtualizedExample lazy numFiles={number('number of files', 50, { min: 0, max: 1000, step: 50, range: true })} />
 );
+
+export const WithUseManagedFilesHook = () => {
+  const { files, moveFile, selectedIds, toggleSelectedId, onDragChange } = useManagedFiles({
+    initialFiles: Array.from({ length: 8 }, (_, index) => createFile(index)),
+  });
+
+  return (
+    <FileOrganizer
+      files={files}
+      onMove={moveFile}
+      preventArrowsToMove={boolean('preventArrowsToMove', false)}
+      disableMove={boolean('disableMove', false)}
+      onDragChange={onDragChange}
+      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
+        <Thumbnail
+          file={file}
+          dragging={isDragging}
+          otherDragging={otherDragging}
+          selected={selectedIds.includes(file.id)}
+          onClick={() => toggleSelectedId(file.id)}
+          onRename={action(`file_${index + 1} onRename`)}
+          onRemove={action(`file_${index + 1} onRemove`)}
+          onRotate={action(`file_${index + 1} onRotate`)}
+          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
+        />
+      )}
+    />
+  );
+};

@@ -1,8 +1,9 @@
 import classnames from 'classnames';
-import React, { HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState, FC, useCallback } from 'react';
+import React, { FC, HTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { Motion, spring, SpringHelperConfig, PlainStyle } from 'react-motion';
+import { Motion, PlainStyle, spring, SpringHelperConfig } from 'react-motion';
+import useCurrentRef from '../../hooks/useCurrentRef';
 import { Omit } from '../../utils/typeUtils';
 
 const ItemTypes = { Draggable: 'draggable' };
@@ -88,9 +89,11 @@ export const Draggable: FC<DraggableProps> = ({
     if (hideDragPreview) preview(getEmptyImage(), { captureDraggingState: true });
   }, [hideDragPreview, preview]);
 
+  // Call onDragChange whenever isDragging changes.
+  const onDragChangeRef = useCurrentRef(onDragChange);
   useEffect(() => {
-    onDragChange?.(isDragging);
-  }, [onDragChange, isDragging]);
+    onDragChangeRef.current?.(isDragging);
+  }, [isDragging, onDragChangeRef]);
 
   drag(drop(divRef));
 
