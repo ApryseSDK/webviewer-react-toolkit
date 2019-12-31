@@ -185,17 +185,26 @@ export const BasicToVirtualized = () => (
 );
 
 export const WithUseManagedFilesHook = () => {
-  const { files, moveFile, selectedIds, toggleSelectedId, onDragChange } = useManagedFiles({
+  const {
+    files,
+    moveFile,
+    selectedIds,
+    toggleSelectedId,
+    onDragChange,
+    unselectAll,
+    numDraggingFiles,
+  } = useManagedFiles({
     initialFiles: Array.from({ length: 8 }, (_, index) => createFile(index)),
+    preventMultiDrag: boolean('preventMultiDrag', false),
   });
 
   return (
     <FileOrganizer
       files={files}
       onMove={moveFile}
-      preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      disableMove={boolean('disableMove', false)}
       onDragChange={onDragChange}
+      onCancelSelect={unselectAll}
+      onRenderDragLayer={() => <ThumbnailDragLayer numFiles={numDraggingFiles} />}
       onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
         <Thumbnail
           file={file}

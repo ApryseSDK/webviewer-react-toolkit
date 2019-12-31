@@ -20,6 +20,8 @@
       padding: $padding-tiny;
       border-radius: $border-radius-large;
       background-color: $blue-gray-3;
+      min-width: 20px;
+      @include flex-center;
     }
   }
 

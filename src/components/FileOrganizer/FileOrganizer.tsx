@@ -1,5 +1,17 @@
 import classnames from 'classnames';
-import React, { CSSProperties, FC, KeyboardEvent, ReactNode, useCallback, useEffect, useState, Fragment } from 'react';
+import React, {
+  CSSProperties,
+  FC,
+  KeyboardEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+  Fragment,
+  useRef,
+  MouseEventHandler,
+  KeyboardEventHandler,
+} from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { File } from '../../data/file';
@@ -7,6 +19,8 @@ import useCurrentRef from '../../hooks/useCurrentRef';
 import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
+
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 
 export interface FileOrganizerProps {
   /**
@@ -52,6 +66,11 @@ export interface FileOrganizerProps {
    * undefined.
    */
   onDragChange?: (id?: string) => void;
+  /**
+   * Called whenever escape key is pressed while focusing the file organizer, or
+   * if background of organizer is clicked.
+   */
+  onCancelSelect?: () => void;
 }
 
 export interface OnRenderThumbnailProps {
@@ -75,6 +94,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   files,
   onMove,
   onDragChange,
+  onCancelSelect,
   onRenderThumbnail,
   onRenderDragLayer,
   disableMove,
@@ -82,6 +102,8 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   preventArrowsToMove,
   virtualizeThreshold = 100,
 }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+
   const [editingId, setEditingId] = useState<string>();
   const [draggingId, setDraggingId] = useState<string>();
 
@@ -90,7 +112,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     onDragChangeRef.current?.(draggingId);
   }, [draggingId, onDragChangeRef]);
 
-  const handleKeyDown = useCallback(
+  const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
       if (preventArrowsToMove || editingId !== undefined) return;
       if (event.key === 'ArrowLeft') {
@@ -121,7 +143,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
           onDragChange={isDragging => setDraggingId(isDragging ? file.id : undefined)}
           disableDrag={isEditing || disableMove}
           onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
-          onKeyDown={e => handleKeyDown(e, index, file)}
+          onKeyDown={e => handleItemKeyDown(e, index, file)}
           onRenderChildren={isDragging => {
             return onRenderThumbnail({
               index,
@@ -136,14 +158,28 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
         />
       );
     },
-    [disableMove, draggingId, editingId, handleKeyDown, onMove, onRenderDragLayer, onRenderThumbnail],
+    [disableMove, draggingId, editingId, handleItemKeyDown, onMove, onRenderDragLayer, onRenderThumbnail],
+  );
+
+  const handleOnClick = useCallback<MouseEventHandler<HTMLDivElement>>(
+    event => {
+      if (event.target === divRef.current) onCancelSelect?.();
+    },
+    [onCancelSelect],
+  );
+
+  const handleOnKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(
+    event => {
+      if (event.key === 'Escape') onCancelSelect?.();
+    },
+    [onCancelSelect],
   );
 
   const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
   return (
     <DndProvider backend={Backend}>
-      <div className={fileOrganizerClass}>
+      <div className={fileOrganizerClass} ref={divRef} onClick={handleOnClick} onKeyDown={handleOnKeyDown} role="grid">
         {files.length >= virtualizeThreshold ? (
           <MemoAutoSizer files={files} renderItem={renderItem} />
         ) : (
