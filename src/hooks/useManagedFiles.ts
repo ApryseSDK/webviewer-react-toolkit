@@ -6,6 +6,38 @@ export interface UseManagedFilesOptions {
   preventMultiDrag?: boolean;
 }
 
+function replaceItemInArray<I>(prev: I[], toReplace: I, replaceWith: I[]) {
+  const newIndex = prev.indexOf(toReplace);
+  return [...prev.slice(0, newIndex), ...replaceWith, ...prev.slice(newIndex + 1)];
+}
+
+function separateArrayWithTarget<I extends { id: string }>(
+  allItems: I[],
+  separateIds: string[],
+  targetId: string,
+): [I[], I[], I] {
+  let target: I;
+  const remaining: I[] = [];
+  const separated: I[] = [];
+
+  allItems.forEach(item => {
+    if (!separateIds.includes(item.id)) {
+      // Keep all unselected files in the files array.
+      remaining.push(item);
+    } else {
+      // Add selected files to the dragging array.
+      separated.push(item);
+      // Set matching file as target.
+      if (item.id === targetId) target = item;
+    }
+  });
+
+  const targetIndex = allItems.indexOf(target!);
+  remaining.splice(targetIndex, 0, target!);
+
+  return [separated, remaining, target!];
+}
+
 function useManagedFiles(options: UseManagedFilesOptions = {}) {
   const { initialFiles, preventMultiDrag } = options;
 
@@ -37,8 +69,7 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       // files array.
       if (!id) {
         if (dragging) {
-          const newIndex = files.indexOf(dragging.target);
-          setFiles(prev => [...prev.slice(0, newIndex), ...dragging.files, ...prev.slice(newIndex + 1)]);
+          setFiles(prev => replaceItemInArray(prev, dragging.target, dragging.files));
           setDragging(undefined);
         }
         return;
@@ -63,24 +94,7 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       // If drag begins on selected item and there are multiple, remove files
       // from DOM, and add to dragging list for placement when drag ends.
       if (!preventMultiDrag && selectedIds.length > 1) {
-        let target: File;
-        const newFiles: File[] = [];
-        const newDraggingFiles: File[] = [];
-
-        files.forEach(file => {
-          if (!selectedIds.includes(file.id)) {
-            // Keep all unselected files in the files array.
-            newFiles.push(file);
-          } else {
-            // Add selected files to the dragging array.
-            newDraggingFiles.push(file);
-            // Set matching file as target.
-            if (file.id === id) target = file;
-          }
-        });
-
-        const targetIndex = files.indexOf(target!);
-        newFiles.splice(targetIndex, 0, target!);
+        const [newDraggingFiles, newFiles, target] = separateArrayWithTarget(files, selectedIds, id);
         setFiles(newFiles);
         setDragging({ files: newDraggingFiles, target: target! });
       }
