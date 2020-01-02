@@ -55,6 +55,10 @@ export interface ThumbnailProps extends ClickableDivProps {
    * Callback fired whenever edit mode changes.
    */
   onEditingChange?: (isEditing: boolean, file: File) => void;
+  /**
+   * If provided, can set the delay for fetching any lazy async items from file.
+   */
+  throttle?: number;
 }
 
 export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
@@ -70,6 +74,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
       onRemove,
       onRename,
       onEditingChange,
+      throttle,
       className,
       disabled,
       onFocus,
@@ -80,7 +85,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
   ) => {
     const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
-    const file = useFile(_file);
+    const file = useFile(_file, throttle);
 
     const handleOnSave = (newName: string) => {
       onRename?.(newName, file.file);

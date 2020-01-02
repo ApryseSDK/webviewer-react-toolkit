@@ -6,6 +6,9 @@ exports[`FileOrganizer component snapshot renders default FileOrganizer 1`] = `
 >
   <div
     className="ui__base ui__fileOrganizer"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="grid"
   />
 </DndProvider>
 `;

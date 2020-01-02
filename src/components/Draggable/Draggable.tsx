@@ -1,13 +1,13 @@
 import classnames from 'classnames';
-import React, { HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState, FC, useCallback } from 'react';
+import React, { FC, HTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { Motion, spring, SpringHelperConfig, PlainStyle } from 'react-motion';
-import { Omit } from '../../utils/typeUtils';
+import { Motion, PlainStyle, spring, SpringHelperConfig } from 'react-motion';
+import useCurrentRef from '../../hooks/useCurrentRef';
 
 const ItemTypes = { Draggable: 'draggable' };
 
-export interface DraggableProps extends Omit<HTMLAttributes<HTMLDivElement>, 'id'> {
+export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * The current index of the draggable wrapper.
    */
@@ -54,7 +54,7 @@ export const Draggable: FC<DraggableProps> = ({
   className,
   ...divProps
 }) => {
-  const divRef = useRef<HTMLDivElement>(null);
+  const draggableRef = useRef<HTMLDivElement>(null);
 
   /* --- Drag and drop settings. --- */
 
@@ -88,11 +88,13 @@ export const Draggable: FC<DraggableProps> = ({
     if (hideDragPreview) preview(getEmptyImage(), { captureDraggingState: true });
   }, [hideDragPreview, preview]);
 
+  // Call onDragChange whenever isDragging changes.
+  const onDragChangeRef = useCurrentRef(onDragChange);
   useEffect(() => {
-    onDragChange?.(isDragging);
-  }, [onDragChange, isDragging]);
+    onDragChangeRef.current?.(isDragging);
+  }, [isDragging, onDragChangeRef]);
 
-  drag(drop(divRef));
+  drag(drop(draggableRef));
 
   /* --- Animation settings. --- */
 
@@ -103,10 +105,10 @@ export const Draggable: FC<DraggableProps> = ({
   // get the difference in position and set that as the starting point for the
   // animation.
   useEffect(() => {
-    if (!divRef.current) return;
+    if (!draggableRef.current) return;
 
-    const siblings = Array.from(divRef.current.parentElement!.children);
-    const nodeIndex = siblings.indexOf(divRef.current);
+    const siblings = Array.from(draggableRef.current.parentElement!.children);
+    const nodeIndex = siblings.indexOf(draggableRef.current);
 
     const indexDiff = prevIndex.current - index;
 
@@ -117,7 +119,7 @@ export const Draggable: FC<DraggableProps> = ({
     const { left: prevLeft, top: prevTop } = prev?.getBoundingClientRect() ?? {};
 
     // Get the coordinates of the current item.
-    const { left, top } = divRef.current.getBoundingClientRect();
+    const { left, top } = draggableRef.current.getBoundingClientRect();
 
     // Get the deltas.
     const deltaX = prevLeft === undefined ? 0 : prevLeft - left;
@@ -153,7 +155,7 @@ export const Draggable: FC<DraggableProps> = ({
       const inMotion = !!(x || y);
 
       return (
-        <div {...divProps} ref={divRef} className={draggableClass}>
+        <div {...divProps} ref={draggableRef} className={draggableClass}>
           <div
             style={{
               WebkitTransform: `translate3d(${x}px, ${y}px, 0)`,
