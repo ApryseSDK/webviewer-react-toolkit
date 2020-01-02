@@ -35,6 +35,7 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
     });
   }, []);
   const unselectAll = useCallback(() => setSelectedIds([]), []);
+  const selectAll = useCallback(() => setSelectedIds(files.map(file => file.id)), [files]);
 
   const [dragging, setDragging] = useState<{ files: File[]; target: File }>();
   const onDragChange = useCallback(
@@ -108,10 +109,11 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       selectedIds,
       toggleSelectedId,
       unselectAll,
+      selectAll,
       onDragChange,
       draggingFiles: dragging?.files,
     }),
-    [files, moveFile, onDragChange, selectedIds, toggleSelectedId, unselectAll, dragging],
+    [files, moveFile, onDragChange, selectAll, selectedIds, toggleSelectedId, unselectAll, dragging],
   );
 
   return managedFiles;

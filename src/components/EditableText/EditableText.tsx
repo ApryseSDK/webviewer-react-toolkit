@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 import React, { forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import ClickableDiv from '../ClickableDiv';
+import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 
-export interface EditableTextProps {
+export interface EditableTextProps extends ClickableDivProps {
   /**
    * If provided, value becomes controlled. The component will request to change
    * the value with the onSave callback, and this must be set to change.
@@ -30,10 +30,6 @@ export interface EditableTextProps {
    * Classname for outermost div.
    */
   className?: string;
-  /**
-   * Is the editable text disabled (will not be editable).
-   */
-  disabled?: boolean;
   /**
    * Lock the text in view mode. Similar to disabled, but without the reduced
    * opacity.
@@ -74,6 +70,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       placeholder,
       centerText,
       bordered,
+      ...clickableDivProps
     },
     ref,
   ) => {
@@ -171,6 +168,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
           />
         ) : (
           <ClickableDiv
+            {...clickableDivProps}
             className={buttonClass}
             disabled={disabled || locked}
             onClick={handleOnEdit}

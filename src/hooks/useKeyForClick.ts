@@ -7,6 +7,7 @@ function generateClickEventFromKeyboardEvent<T>(keyboardEvent: KeyboardEvent<T>)
     altKey: keyboardEvent.altKey,
     shiftKey: keyboardEvent.shiftKey,
     ctrlKey: keyboardEvent.ctrlKey,
+    metaKey: keyboardEvent.metaKey,
     // TODO: add any more that need to transfer through.
   });
   return clickEvent;

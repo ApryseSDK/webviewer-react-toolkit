@@ -98,11 +98,7 @@ export const WithCustomDragLayer = () => {
   );
 };
 
-const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: number }> = ({
-  lazy,
-  dragLayer,
-  numFiles,
-}) => {
+const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number }> = ({ lazy, numFiles }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>(() =>
     Array.from({ length: 1000 }, (_, index) => createFile(index, { lazy })),
@@ -150,7 +146,6 @@ const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: n
             throttle={isShownOnLoad ? 0 : undefined}
           />
         )}
-        onRenderDragLayer={dragLayer ? () => <ThumbnailDragLayer /> : undefined}
       />
     </div>
   );
@@ -158,41 +153,44 @@ const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: n
 
 export const Virtualized = () => <VirtualizedExample />;
 export const VirtualizedLazyThumbnails = () => <VirtualizedExample lazy />;
-export const VirtualizedWithCustomDragLayer = () => <VirtualizedExample dragLayer />;
 export const BasicToVirtualized = () => (
   <VirtualizedExample lazy numFiles={number('number of files', 50, { min: 0, max: 1000, step: 50, range: true })} />
 );
 
-const UseManagedFilesHookExample = () => {
-  const { files, moveFile, selectedIds, toggleSelectedId, onDragChange, unselectAll, draggingFiles } = useManagedFiles({
-    initialFiles: Array.from({ length: 8 }, (_, index) => createFile(index)),
+const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
+  const { files, moveFile, selectedIds, toggleSelectedId, onDragChange, unselectAll, selectAll } = useManagedFiles({
+    initialFiles: Array.from({ length: virtualized ? 100 : 8 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('useManagedFiles.options preventMultiDrag', false),
   });
 
   return (
-    <FileOrganizer
-      files={files}
-      onMove={moveFile}
-      onDragChange={onDragChange}
-      onCancelSelect={unselectAll}
-      onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
-      preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      disableMove={boolean('disableMove', false)}
-      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
-        <Thumbnail
-          file={file}
-          dragging={isDragging}
-          otherDragging={otherDragging}
-          selected={selectedIds.includes(file.id)}
-          onClick={event => toggleSelectedId(file.id, event)}
-          onRename={action(`file_${index + 1} onRename`)}
-          onRemove={action(`file_${index + 1} onRemove`)}
-          onRotate={action(`file_${index + 1} onRotate`)}
-          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
-        />
-      )}
-    />
+    <div style={virtualized ? { height: '70vh' } : undefined}>
+      <FileOrganizer
+        files={files}
+        onMove={moveFile}
+        onDragChange={onDragChange}
+        onCancelSelect={unselectAll}
+        onSelectAll={selectAll}
+        // onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
+        preventArrowsToMove={boolean('preventArrowsToMove', false)}
+        disableMove={boolean('disableMove', false)}
+        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
+          <Thumbnail
+            file={file}
+            dragging={isDragging}
+            otherDragging={otherDragging}
+            selected={selectedIds.includes(file.id)}
+            onClick={event => toggleSelectedId(file.id, event)}
+            onRename={action(`file_${index + 1} onRename`)}
+            onRemove={action(`file_${index + 1} onRemove`)}
+            onRotate={action(`file_${index + 1} onRotate`)}
+            onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
+          />
+        )}
+      />
+    </div>
   );
 };
 
-export const WithUseManagedFilesHook = () => <UseManagedFilesHookExample />;
+export const UseManagedFilesHook = () => <UseManagedFilesHookExample />;
+export const UseManagedFilesHookVirtualized = () => <UseManagedFilesHookExample virtualized />;

@@ -127,14 +127,14 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         </div>
         <div className="ui__thumbnail__controls">
           {onRotate ? (
-            <ToolButton disabled={disabled} onClick={e => onRotate(e, file.file)}>
+            <ToolButton disabled={disabled} onClick={e => onRotate(e, file.file)} tabIndex={selected ? undefined : -1}>
               <img src={rotate} alt={'rotate'} />
             </ToolButton>
           ) : (
             undefined
           )}
           {onRemove ? (
-            <ToolButton disabled={disabled} onClick={e => onRemove(e, file.file)}>
+            <ToolButton disabled={disabled} onClick={e => onRemove(e, file.file)} tabIndex={selected ? undefined : -1}>
               <img src={close} alt={'close'} />
             </ToolButton>
           ) : (
@@ -151,6 +151,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           onSave={handleOnSave}
           onCancel={handleOnCancel}
           onEdit={handleOnEdit}
+          tabIndex={selected ? undefined : -1}
         />
       </ClickableDiv>
     );
