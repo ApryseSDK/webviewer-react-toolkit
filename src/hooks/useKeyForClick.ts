@@ -1,5 +1,17 @@
 import { KeyboardEvent, KeyboardEventHandler, RefObject, useCallback } from 'react';
 
+function generateClickEventFromKeyboardEvent<T>(keyboardEvent: KeyboardEvent<T>) {
+  const clickEvent = new MouseEvent('click', {
+    bubbles: keyboardEvent.bubbles,
+    cancelable: keyboardEvent.cancelable,
+    altKey: keyboardEvent.altKey,
+    shiftKey: keyboardEvent.shiftKey,
+    ctrlKey: keyboardEvent.ctrlKey,
+    // TODO: add any more that need to transfer through.
+  });
+  return clickEvent;
+}
+
 /**
  * Returns the handler for onKeyPress. If it hears a space or Enter key, it will
  * fire onClick. If you provide a ref, will compare the target and make sure it
@@ -13,13 +25,15 @@ function useKeyForClick<T extends HTMLElement>(onKeyPress?: KeyboardEventHandler
     (event: KeyboardEvent<T>) => {
       // Fire click on space or enter press.
       if (event.key === ' ' || event.key === 'Enter') {
+        const clickEvent = generateClickEventFromKeyboardEvent(event);
+
         // If ref is provided and it matches the event target, click ref.
         if (ref && event.target === ref.current) {
-          ref.current.click();
+          ref.current.dispatchEvent(clickEvent);
           // Stop scrolling if space is pressed.
           if (event.key === ' ') event.preventDefault();
         } else if (!ref) {
-          (event.target as HTMLElement).click();
+          (event.target as HTMLElement).dispatchEvent(clickEvent);
         }
       }
       onKeyPress?.(event);

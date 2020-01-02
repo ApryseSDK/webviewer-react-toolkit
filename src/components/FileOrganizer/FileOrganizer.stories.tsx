@@ -13,16 +13,6 @@ import useManagedFiles from '../../hooks/useManagedFiles';
 export default { title: 'FileOrganizer', parameters: { info: docs } };
 
 function useCommonFileOrganizer() {
-  const [selectedList, setSelectedList] = useState<string[]>([]);
-  const setSelected = (id: string) => {
-    setSelectedList(prev => {
-      const prevIndex = prev.indexOf(id);
-      if (prevIndex === -1) return [...prev, id];
-      if (prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
-      return prev;
-    });
-  };
-
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
@@ -52,11 +42,11 @@ function useCommonFileOrganizer() {
     });
   }, [numFiles]);
 
-  return { selectedList, setSelected, files, handleOnMove };
+  return { files, handleOnMove };
 }
 
 export const Basic = () => {
-  const { selectedList, setSelected, files, handleOnMove } = useCommonFileOrganizer();
+  const { files, handleOnMove } = useCommonFileOrganizer();
 
   return (
     <FileOrganizer
@@ -70,8 +60,7 @@ export const Basic = () => {
           file={file}
           dragging={isDragging}
           otherDragging={otherDragging}
-          selected={selectedList.includes(file.id)}
-          onClick={forwardAction(`file_${index + 1} onClick`, () => setSelected(file.id))}
+          onClick={action(`file_${index + 1} onClick`)}
           onRename={action(`file_${index + 1} onRename`)}
           onRemove={action(`file_${index + 1} onRemove`)}
           onRotate={action(`file_${index + 1} onRotate`)}
@@ -83,7 +72,7 @@ export const Basic = () => {
 };
 
 export const WithCustomDragLayer = () => {
-  const { selectedList, setSelected, files, handleOnMove } = useCommonFileOrganizer();
+  const { files, handleOnMove } = useCommonFileOrganizer();
 
   return (
     <FileOrganizer
@@ -97,8 +86,7 @@ export const WithCustomDragLayer = () => {
           file={file}
           dragging={isDragging}
           otherDragging={otherDragging}
-          selected={selectedList.includes(file.id)}
-          onClick={forwardAction(`file_${index + 1} onClick`, () => setSelected(file.id))}
+          onClick={action(`file_${index + 1} onClick`)}
           onRename={action(`file_${index + 1} onRename`)}
           onRemove={action(`file_${index + 1} onRemove`)}
           onRotate={action(`file_${index + 1} onRotate`)}
@@ -153,12 +141,11 @@ const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: n
         onDragChange={action('onDragChange')}
         preventArrowsToMove={boolean('preventArrowsToMove', false)}
         disableMove={boolean('disableMove', false)}
-        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index, isShownOnLoad }) => (
+        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, isShownOnLoad }) => (
           <Thumbnail
             file={file}
             dragging={isDragging}
             otherDragging={otherDragging}
-            onClick={action(`file_${index + 1} onRename`)}
             onEditingChange={onEditingChange}
             throttle={isShownOnLoad ? 0 : undefined}
           />
@@ -197,7 +184,7 @@ const UseManagedFilesHookExample = () => {
           dragging={isDragging}
           otherDragging={otherDragging}
           selected={selectedIds.includes(file.id)}
-          onClick={() => toggleSelectedId(file.id)}
+          onClick={event => toggleSelectedId(file.id, event)}
           onRename={action(`file_${index + 1} onRename`)}
           onRemove={action(`file_${index + 1} onRemove`)}
           onRotate={action(`file_${index + 1} onRotate`)}
