@@ -73,6 +73,11 @@ export interface FileOrganizerProps {
    * if background of organizer is clicked.
    */
   onCancelSelect?: () => void;
+  /**
+   * Called whenever all items are selected at once (usually `ctrl` or `command`
+   * + `A`).
+   */
+  onSelectAll?: () => void;
 }
 
 export interface OnRenderThumbnailProps {
@@ -99,6 +104,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   onMove,
   onDragChange,
   onCancelSelect,
+  onSelectAll,
   onRenderThumbnail,
   onRenderDragLayer,
   disableMove,
@@ -118,6 +124,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
 
   const [initialShownIds, setInitialShownIds] = useState<string[]>([]);
   useEffect(() => {
+    // If we don't request animation frame, children are not yet rendered.
     requestAnimationFrame(() => {
       if (!fileOrganizerRef.current) return;
       const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
@@ -196,9 +203,13 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
 
   const handleOnKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(
     event => {
-      if (event.key === 'Escape') onCancelSelect?.();
+      if (event.key === 'Escape') return onCancelSelect?.();
+      if (event.key === 'a' && event.metaKey) {
+        onSelectAll?.();
+        event.preventDefault();
+      }
     },
-    [onCancelSelect],
+    [onCancelSelect, onSelectAll],
   );
 
   const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);

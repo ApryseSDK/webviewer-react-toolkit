@@ -4,7 +4,7 @@ import useKeyForClick from '../../hooks/useKeyForClick';
 import useOnClick from '../../hooks/useOnClick';
 import { Omit } from '../../utils/typeUtils';
 
-export interface ClickableDivProps extends Omit<HTMLAttributes<HTMLDivElement>, 'role' | 'tabIndex'> {
+export interface ClickableDivProps extends Omit<HTMLAttributes<HTMLDivElement>, 'role'> {
   /**
    * Is the clickable div disabled. Disabled will stop the onClick callback from
    * firing (similar to a button).
@@ -21,7 +21,7 @@ export interface ClickableDivProps extends Omit<HTMLAttributes<HTMLDivElement>, 
 }
 
 export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
-  ({ onClick, onKeyPress, disabled, noFocusStyle, usePointer, className, children, ...divProps }, ref) => {
+  ({ onClick, onKeyPress, disabled, noFocusStyle, usePointer, className, children, tabIndex, ...divProps }, ref) => {
     const clickableDivRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => clickableDivRef.current!);
 
@@ -43,7 +43,7 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
       <div
         {...divProps}
         role="button"
-        tabIndex={disabled ? -1 : 0}
+        tabIndex={disabled ? -1 : tabIndex ?? 0}
         className={clickableDivClass}
         onClick={handleOnClick}
         onKeyPress={handleKeyUp}

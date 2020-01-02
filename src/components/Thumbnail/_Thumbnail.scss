@@ -24,14 +24,14 @@
   }
 
   &:hover,
-  &.ui__thumbnail--focused:not(.ui__thumbnail--disabled) {
+  &--focused:not(.ui__thumbnail--disabled) {
     // Do not style for hover or focus if anything is dragging
     &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging) {
       &:not(.ui__thumbnail--selected) {
         background-color: $gray-1;
       }
 
-      .ui__thumbnail__controls {
+      &.ui__thumbnail--selected .ui__thumbnail__controls {
         opacity: 1;
       }
     }
