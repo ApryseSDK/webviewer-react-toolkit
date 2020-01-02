@@ -115,16 +115,6 @@ const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: n
   dragLayer,
   numFiles,
 }) => {
-  const [selectedList, setSelectedList] = useState<string[]>([]);
-  const setSelected = (id: string) => {
-    setSelectedList(prev => {
-      const prevIndex = prev.indexOf(id);
-      if (prevIndex === -1) return [...prev, id];
-      if (prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
-      return prev;
-    });
-  };
-
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>(() =>
     Array.from({ length: 1000 }, (_, index) => createFile(index, { lazy })),
@@ -159,16 +149,18 @@ const VirtualizedExample: FC<{ lazy?: boolean; dragLayer?: boolean; numFiles?: n
     <div style={{ height: '70vh' }}>
       <FileOrganizer
         files={files}
-        onMove={handleOnMove}
+        onMove={forwardAction('onMove', handleOnMove)}
         onDragChange={action('onDragChange')}
-        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange }) => (
+        preventArrowsToMove={boolean('preventArrowsToMove', false)}
+        disableMove={boolean('disableMove', false)}
+        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index, isShownOnLoad }) => (
           <Thumbnail
             file={file}
             dragging={isDragging}
             otherDragging={otherDragging}
-            selected={selectedList.includes(file.id)}
-            onClick={() => setSelected(file.id)}
+            onClick={action(`file_${index + 1} onRename`)}
             onEditingChange={onEditingChange}
+            throttle={isShownOnLoad ? 0 : undefined}
           />
         )}
         onRenderDragLayer={dragLayer ? () => <ThumbnailDragLayer /> : undefined}
@@ -184,18 +176,10 @@ export const BasicToVirtualized = () => (
   <VirtualizedExample lazy numFiles={number('number of files', 50, { min: 0, max: 1000, step: 50, range: true })} />
 );
 
-export const WithUseManagedFilesHook = () => {
-  const {
-    files,
-    moveFile,
-    selectedIds,
-    toggleSelectedId,
-    onDragChange,
-    unselectAll,
-    numDraggingFiles,
-  } = useManagedFiles({
+const UseManagedFilesHookExample = () => {
+  const { files, moveFile, selectedIds, toggleSelectedId, onDragChange, unselectAll, draggingFiles } = useManagedFiles({
     initialFiles: Array.from({ length: 8 }, (_, index) => createFile(index)),
-    preventMultiDrag: boolean('preventMultiDrag', false),
+    preventMultiDrag: boolean('useManagedFiles.options preventMultiDrag', false),
   });
 
   return (
@@ -204,7 +188,9 @@ export const WithUseManagedFilesHook = () => {
       onMove={moveFile}
       onDragChange={onDragChange}
       onCancelSelect={unselectAll}
-      onRenderDragLayer={() => <ThumbnailDragLayer numFiles={numDraggingFiles} />}
+      onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
+      preventArrowsToMove={boolean('preventArrowsToMove', false)}
+      disableMove={boolean('disableMove', false)}
       onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
         <Thumbnail
           file={file}
@@ -221,3 +207,5 @@ export const WithUseManagedFilesHook = () => {
     />
   );
 };
+
+export const WithUseManagedFilesHook = () => <UseManagedFilesHookExample />;

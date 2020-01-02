@@ -1,67 +1,16 @@
 import { useCallback, useMemo, useState } from 'react';
 import { File } from '../data/file';
+import { separateItemsWithTarget, moveMultiFromIndexToIndex } from '../utils/arrayUtils';
 
 export interface UseManagedFilesOptions {
   initialFiles?: File[];
   preventMultiDrag?: boolean;
 }
 
-function replaceTargetWithItems<I>(prev: I[], items: I[], target: I) {
-  const newIndex = prev.indexOf(target);
-  return [...prev.slice(0, newIndex), ...items, ...prev.slice(newIndex + 1)];
-}
-
 /**
- * Separates the ids from the main list and returns separated and remaining.
- * @param allItems
- * @param separateIds
- */
-function separateItemsById<I extends { id: string }>(allItems: I[], separateIds: string[]): [I[], I[]] {
-  const separated: I[] = [];
-  const remaining: I[] = [];
-
-  allItems.forEach(item => {
-    if (!separateIds.includes(item.id)) {
-      // Keep all unselected files in the files array.
-      remaining.push(item);
-    } else {
-      // Add selected files to the dragging array.
-      separated.push(item);
-    }
-  });
-
-  return [separated, remaining];
-}
-
-/**
- * Separates the ids from the main list, but also re-inserts the target back
- * into the remaining items and returns it if it exists.
- * @param allItems
- * @param separateIds
- * @param targetId
- */
-function separateItemsWithTarget<I extends { id: string }>(
-  allItems: I[],
-  separateIds: string[],
-  targetId: string,
-): [I[], I[], I | undefined] {
-  const [separated, remaining] = separateItemsById(allItems, separateIds);
-
-  const target = allItems.find(item => item.id === targetId);
-  if (target) {
-    const targetIndex = allItems.indexOf(target!);
-    remaining.splice(targetIndex, 0, target!);
-  }
-
-  return [separated, remaining, target];
-}
-
-// function insertItemsWithTargetAtIndex<I extends { id: string }>(prev: I[], items: I[], target: I, index: number): I[] {
-// }
-
-/**
- *
- * @param options
+ * Combines most of the necessary functionality to manage files for the
+ * `FileOrganizer` component.
+ * @param options Options for managing files.
  */
 function useManagedFiles(options: UseManagedFilesOptions = {}) {
   const { initialFiles, preventMultiDrag } = options;
@@ -83,10 +32,13 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
   const onDragChange = useCallback(
     (id?: string) => {
       // When drag ends, if dragging was set, insert dragging items back into
-      // files array.
+      // files array, replacing target.
       if (!id) {
         if (dragging) {
-          setFiles(prev => replaceTargetWithItems(prev, dragging.files, dragging.target));
+          setFiles(prev => {
+            const newIndex = prev.indexOf(dragging.target);
+            return [...prev.slice(0, newIndex), ...dragging.files, ...prev.slice(newIndex + 1)];
+          });
           setDragging(undefined);
         }
         return;
@@ -106,8 +58,8 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       // from DOM, and add to dragging list for placement when drag ends.
       if (!preventMultiDrag && selectedIds.length > 1) {
         const [newDraggingFiles, newFiles, target] = separateItemsWithTarget(files, selectedIds, id);
-        setFiles(newFiles);
         setDragging({ files: newDraggingFiles, target: target! });
+        setFiles(newFiles);
       }
     },
     [preventMultiDrag, dragging, files, selectedIds],
@@ -128,8 +80,7 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       // If preventMultiDrag is false, selectedIds is many, dragging is undefined
       setFiles(prev => {
         if (!preventMultiDrag && selectedIds.includes(fromFile.id) && selectedIds.length > 1 && !dragging) {
-          const [filesToMove, remainingFiles] = separateItemsById(prev, selectedIds);
-          return [...remainingFiles.slice(0, toIndex), ...filesToMove, ...remainingFiles.slice(toIndex)];
+          return moveMultiFromIndexToIndex(prev, selectedIds, fromIndex, toIndex);
         }
 
         const clone = prev.slice();
@@ -150,7 +101,7 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       toggleSelectedId,
       unselectAll,
       onDragChange,
-      numDraggingFiles: dragging?.files.length,
+      draggingFiles: dragging?.files,
     }),
     [files, moveFile, onDragChange, selectedIds, toggleSelectedId, unselectAll, dragging],
   );

@@ -2,15 +2,15 @@ import classnames from 'classnames';
 import React, {
   CSSProperties,
   FC,
+  Fragment,
   KeyboardEvent,
+  KeyboardEventHandler,
+  MouseEventHandler,
   ReactNode,
   useCallback,
   useEffect,
-  useState,
-  Fragment,
   useRef,
-  MouseEventHandler,
-  KeyboardEventHandler,
+  useState,
 } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
@@ -42,8 +42,10 @@ export interface FileOrganizerProps {
    */
   preventArrowsToMove?: boolean;
   /**
-   * If provided, will virtualize the files to prevent jank when rendering out
-   * your thumbnails. This will also allow for lazy loading of thumbnails.
+   * If the number of files exceeds this threshold, will virtualize the files
+   * outside of the view in order to prevent jank when rendering out your
+   * thumbnails. This will also allow for lazy loading of thumbnails that are
+   * out of view.
    * @default 100
    */
   virtualizeThreshold?: number;
@@ -88,6 +90,8 @@ export interface OnRenderThumbnailProps {
   otherEditing: boolean;
   /** Callback for setting whether the thumbnail is in editing mode. */
   onEditingChange: (isEditing: boolean) => void;
+  /** Is this thumbnail shown on initial load. Use to turn off throttling. */
+  isShownOnLoad: boolean;
 }
 
 export const FileOrganizer: FC<FileOrganizerProps> = ({
@@ -102,7 +106,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   preventArrowsToMove,
   virtualizeThreshold = 100,
 }) => {
-  const divRef = useRef<HTMLDivElement>(null);
+  const fileOrganizerRef = useRef<HTMLDivElement>(null);
 
   const [editingId, setEditingId] = useState<string>();
   const [draggingId, setDraggingId] = useState<string>();
@@ -111,6 +115,17 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   useEffect(() => {
     onDragChangeRef.current?.(draggingId);
   }, [draggingId, onDragChangeRef]);
+
+  const [initialShownIds, setInitialShownIds] = useState<string[]>([]);
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      if (!fileOrganizerRef.current) return;
+      const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
+      const ids: string[] = [];
+      itemsInView.forEach(draggableItem => ids.push(draggableItem.id));
+      setInitialShownIds(ids);
+    });
+  }, []);
 
   const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
@@ -137,6 +152,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
       return (
         <Draggable
           key={file.id}
+          id={file.id}
           index={index}
           style={style}
           hideDragPreview={!!onRenderDragLayer}
@@ -152,18 +168,28 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
               otherDragging,
               isEditing,
               otherEditing,
+              isShownOnLoad: initialShownIds.includes(file.id),
               onEditingChange: isEditing => setEditingId(isEditing ? file.id : undefined),
             });
           }}
         />
       );
     },
-    [disableMove, draggingId, editingId, handleItemKeyDown, onMove, onRenderDragLayer, onRenderThumbnail],
+    [
+      disableMove,
+      draggingId,
+      editingId,
+      handleItemKeyDown,
+      onMove,
+      onRenderDragLayer,
+      onRenderThumbnail,
+      initialShownIds,
+    ],
   );
 
   const handleOnClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     event => {
-      if (event.target === divRef.current) onCancelSelect?.();
+      if (event.target === fileOrganizerRef.current) onCancelSelect?.();
     },
     [onCancelSelect],
   );
@@ -179,7 +205,13 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
 
   return (
     <DndProvider backend={Backend}>
-      <div className={fileOrganizerClass} ref={divRef} onClick={handleOnClick} onKeyDown={handleOnKeyDown} role="grid">
+      <div
+        className={fileOrganizerClass}
+        ref={fileOrganizerRef}
+        onClick={handleOnClick}
+        onKeyDown={handleOnKeyDown}
+        role="grid"
+      >
         {files.length >= virtualizeThreshold ? (
           <MemoAutoSizer files={files} renderItem={renderItem} />
         ) : (

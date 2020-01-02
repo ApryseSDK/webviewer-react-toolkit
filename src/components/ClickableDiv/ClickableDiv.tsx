@@ -22,12 +22,12 @@ export interface ClickableDivProps extends Omit<HTMLAttributes<HTMLDivElement>, 
 
 export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
   ({ onClick, onKeyPress, disabled, noFocusStyle, usePointer, className, children, ...divProps }, ref) => {
-    const divRef = useRef<HTMLDivElement>(null);
-    useImperativeHandle(ref, () => divRef.current!);
+    const clickableDivRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(ref, () => clickableDivRef.current!);
 
     const handleOnClick = useOnClick(onClick, { disabled, stopPropagation: true });
 
-    const handleKeyUp = useKeyForClick(onKeyPress, divRef);
+    const handleKeyUp = useKeyForClick(onKeyPress, clickableDivRef);
 
     const clickableDivClass = classnames(
       'ui__base ui__clickableDiv',
@@ -47,7 +47,7 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
         className={clickableDivClass}
         onClick={handleOnClick}
         onKeyPress={handleKeyUp}
-        ref={divRef}
+        ref={clickableDivRef}
       >
         {children}
       </div>
