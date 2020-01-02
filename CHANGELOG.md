@@ -1,5 +1,6 @@
 # Unreleased changes (in master but not released in a version)
 
+- [useManagedFiles] Shift key required for multi-select (#9) @liamross
 - [FileOrganizer] Click off items or press Escape to unselect all (#7) @liamross
 - [FileOrganizer] Passes isShownOnLoad to thumbnail render (#7) @liamross
 - [useManagedFiles] Hook for managing files for FileOrganizer (#7) @liamross

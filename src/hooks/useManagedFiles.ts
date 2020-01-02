@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, MouseEvent } from 'react';
 import { File } from '../data/file';
 import { separateItemsWithTarget, moveMultiFromIndexToIndex } from '../utils/arrayUtils';
 
@@ -18,11 +18,19 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
   const [files, setFiles] = useState(initialFiles ?? []);
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const toggleSelectedId = useCallback((id: string) => {
+  const toggleSelectedId = useCallback((id: string, event: MouseEvent<HTMLElement>) => {
+    const shiftKeyPressed = event.shiftKey;
     setSelectedIds(prev => {
-      const prevIndex = prev.indexOf(id);
-      if (prevIndex === -1) return [...prev, id];
-      if (prevIndex !== -1) return [...prev.slice(0, prevIndex), ...prev.slice(prevIndex + 1)];
+      const toggleIndex = prev.indexOf(id);
+      if (toggleIndex === -1) {
+        if (shiftKeyPressed) return [...prev, id];
+        return [id];
+      }
+      if (toggleIndex !== -1) {
+        if (shiftKeyPressed) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
+        if (prev.length > 1) return [id];
+        return [];
+      }
       return prev;
     });
   }, []);
