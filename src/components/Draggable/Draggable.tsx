@@ -1,9 +1,20 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  HTMLAttributes,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Motion, PlainStyle, spring, SpringHelperConfig } from 'react-motion';
 import useCurrentRef from '../../hooks/useCurrentRef';
+import { getSibling } from '../../utils/domUtils';
 
 const ItemTypes = { Draggable: 'draggable' };
 
@@ -43,135 +54,127 @@ interface DragItem extends DragObjectWithType {
 // Quick animation with no "bounce".
 const SPRING: SpringHelperConfig = { stiffness: 300, damping: 30 };
 
-export const Draggable: FC<DraggableProps> = ({
-  index,
-  disableDrag,
-  hideDragPreview,
-  onRenderChildren,
-  onMove,
-  onDragChange,
-  children,
-  className,
-  ...divProps
-}) => {
-  const draggableRef = useRef<HTMLDivElement>(null);
+export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
+  (
+    { index, disableDrag, hideDragPreview, onRenderChildren, onMove, onDragChange, children, className, ...divProps },
+    ref,
+  ) => {
+    const draggableRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(ref, () => draggableRef.current!);
 
-  /* --- Drag and drop settings. --- */
+    /* --- Drag and drop settings. --- */
 
-  const [, drop] = useDrop({
-    accept: ItemTypes.Draggable,
-    hover(dragItem: DragItem) {
-      // Previous index.
-      const fromIndex = dragItem.index;
+    const [, drop] = useDrop({
+      accept: ItemTypes.Draggable,
+      hover(dragItem: DragItem) {
+        // Previous index.
+        const fromIndex = dragItem.index;
 
-      // Index it has been dragged to.
-      const toIndex = index;
+        // Index it has been dragged to.
+        const toIndex = index;
 
-      // Cancel if index has not changed.
-      if (fromIndex === toIndex) return;
+        // Cancel if index has not changed.
+        if (fromIndex === toIndex) return;
 
-      // Call onMove when index changes.
-      onMove?.(fromIndex, toIndex);
+        // Call onMove when index changes.
+        onMove?.(fromIndex, toIndex);
 
-      // Set the item index to be the new index.
-      dragItem.index = toIndex;
-    },
-  });
+        // Set the item index to be the new index.
+        dragItem.index = toIndex;
+      },
+    });
 
-  const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: ItemTypes.Draggable, index },
-    collect: monitor => ({ isDragging: monitor.isDragging() }),
-    canDrag: !disableDrag,
-  });
+    const [{ isDragging }, drag, preview] = useDrag({
+      item: { type: ItemTypes.Draggable, index },
+      collect: monitor => ({ isDragging: monitor.isDragging() }),
+      canDrag: !disableDrag,
+    });
 
-  useEffect(() => {
-    if (hideDragPreview) preview(getEmptyImage(), { captureDraggingState: true });
-  }, [hideDragPreview, preview]);
+    useEffect(() => {
+      if (hideDragPreview) preview(getEmptyImage(), { captureDraggingState: true });
+    }, [hideDragPreview, preview]);
 
-  // Call onDragChange whenever isDragging changes.
-  const onDragChangeRef = useCurrentRef(onDragChange);
-  useEffect(() => {
-    onDragChangeRef.current?.(isDragging);
-  }, [isDragging, onDragChangeRef]);
+    // Call onDragChange whenever isDragging changes.
+    const onDragChangeRef = useCurrentRef(onDragChange);
+    useEffect(() => {
+      onDragChangeRef.current?.(isDragging);
+    }, [isDragging, onDragChangeRef]);
 
-  drag(drop(draggableRef));
+    drag(drop(draggableRef));
 
-  /* --- Animation settings. --- */
+    /* --- Animation settings. --- */
 
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const prevIndex = useRef(index);
+    const [coords, setCoords] = useState({ x: 0, y: 0 });
+    const prevIndex = useRef(index);
 
-  // Find the difference in position between new index and previous index. Then,
-  // get the difference in position and set that as the starting point for the
-  // animation.
-  useEffect(() => {
-    if (!draggableRef.current) return;
+    // Find the difference in position between new index and previous index. Then,
+    // get the difference in position and set that as the starting point for the
+    // animation.
+    useEffect(() => {
+      if (!draggableRef.current) return;
 
-    const siblings = Array.from(draggableRef.current.parentElement!.children);
-    const nodeIndex = siblings.indexOf(draggableRef.current);
+      // Get sibling that occupies previous spot to find params.
+      const indexDiff = prevIndex.current - index;
+      const prev = getSibling(draggableRef.current, indexDiff);
 
-    const indexDiff = prevIndex.current - index;
+      // Get the coordinates of the previous item.
+      const { left: prevLeft, top: prevTop } = prev?.getBoundingClientRect() ?? {};
 
-    // Get the item occupying the previous index location.
-    const prev = siblings[nodeIndex + indexDiff];
+      // Get the coordinates of the current item.
+      const { left, top } = draggableRef.current.getBoundingClientRect();
 
-    // Get the coordinates of the previous item.
-    const { left: prevLeft, top: prevTop } = prev?.getBoundingClientRect() ?? {};
+      // Get the deltas.
+      const deltaX = prevLeft === undefined ? 0 : prevLeft - left;
+      const deltaY = prevTop === undefined ? 0 : prevTop - top;
 
-    // Get the coordinates of the current item.
-    const { left, top } = draggableRef.current.getBoundingClientRect();
+      // Set the coordinates to the distance.
+      setCoords({ x: deltaX / 6, y: deltaY / 6 });
 
-    // Get the deltas.
-    const deltaX = prevLeft === undefined ? 0 : prevLeft - left;
-    const deltaY = prevTop === undefined ? 0 : prevTop - top;
+      // Store index for next swap.
+      prevIndex.current = index;
+    }, [index]);
 
-    // Set the coordinates to the distance.
-    setCoords({ x: deltaX / 6, y: deltaY / 6 });
+    // Whenever coords change, revert back to zero.
+    useEffect(() => {
+      if (coords.x === 0 && coords.y === 0) return;
+      requestAnimationFrame(() => setCoords({ x: 0, y: 0 }));
+    }, [coords]);
 
-    // Store index for next swap.
-    prevIndex.current = index;
-  }, [index]);
+    // Only animate if returning back to 0. Otherwise, snap to translate so that
+    // the animation looks like it's moving from it's previous location.
+    const motionStyle = useMemo(
+      () => ({
+        x: coords.x === 0 && !isDragging ? spring(coords.x, SPRING) : coords.x,
+        y: coords.y === 0 && !isDragging ? spring(coords.y, SPRING) : coords.y,
+      }),
+      [coords.x, coords.y, isDragging],
+    );
 
-  // Whenever coords change, revert back to zero.
-  useEffect(() => {
-    if (coords.x === 0 && coords.y === 0) return;
-    requestAnimationFrame(() => setCoords({ x: 0, y: 0 }));
-  }, [coords]);
+    const draggableClass = classnames('ui__base ui__draggable', className);
 
-  // Only animate if returning back to 0. Otherwise, snap to translate so that
-  // the animation looks like it's moving from it's previous location.
-  const motionStyle = useMemo(
-    () => ({
-      x: coords.x === 0 && !isDragging ? spring(coords.x, SPRING) : coords.x,
-      y: coords.y === 0 && !isDragging ? spring(coords.y, SPRING) : coords.y,
-    }),
-    [coords.x, coords.y, isDragging],
-  );
+    const onMotionRender = useCallback(
+      ({ x, y }: PlainStyle) => {
+        const inMotion = !!(x || y);
 
-  const draggableClass = classnames('ui__base ui__draggable', className);
-
-  const onMotionRender = useCallback(
-    ({ x, y }: PlainStyle) => {
-      const inMotion = !!(x || y);
-
-      return (
-        <div {...divProps} ref={draggableRef} className={draggableClass}>
-          <div
-            style={{
-              WebkitTransform: `translate3d(${x}px, ${y}px, 0)`,
-              transform: `translate3d(${x}px, ${y}px, 0)`,
-            }}
-            className={classnames('ui__draggable__animated', {
-              ['ui__draggable__animated--inMotion']: inMotion,
-            })}
-          >
-            {onRenderChildren ? onRenderChildren(isDragging) : children}
+        return (
+          <div {...divProps} ref={draggableRef} className={draggableClass}>
+            <div
+              style={{
+                WebkitTransform: `translate3d(${x}px, ${y}px, 0)`,
+                transform: `translate3d(${x}px, ${y}px, 0)`,
+              }}
+              className={classnames('ui__draggable__animated', {
+                ['ui__draggable__animated--inMotion']: inMotion,
+              })}
+            >
+              {onRenderChildren ? onRenderChildren(isDragging) : children}
+            </div>
           </div>
-        </div>
-      );
-    },
-    [children, divProps, draggableClass, isDragging, onRenderChildren],
-  );
+        );
+      },
+      [children, divProps, draggableClass, isDragging, onRenderChildren],
+    );
 
-  return <Motion style={motionStyle}>{onMotionRender}</Motion>;
-};
+    return <Motion style={motionStyle}>{onMotionRender}</Motion>;
+  },
+);

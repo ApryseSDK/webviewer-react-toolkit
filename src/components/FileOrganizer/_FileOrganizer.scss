@@ -1,7 +1,10 @@
 .ui__fileOrganizer {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   position: relative;
   height: 100%;
   overflow: auto;
+  padding: $padding;
+  background-color: $background-canvas;
 }

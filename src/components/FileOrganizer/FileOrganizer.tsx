@@ -1,12 +1,15 @@
 import classnames from 'classnames';
 import React, {
+  createRef,
   CSSProperties,
   FC,
   Fragment,
+  HTMLAttributes,
   KeyboardEvent,
   KeyboardEventHandler,
   MouseEventHandler,
   ReactNode,
+  RefObject,
   useCallback,
   useEffect,
   useRef,
@@ -14,15 +17,18 @@ import React, {
 } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
+import { FixedSizeGrid as Grid } from 'react-window';
 import { File } from '../../data/file';
 import useCurrentRef from '../../hooks/useCurrentRef';
+import { getSibling, isScrolledIntoView } from '../../utils/domUtils';
+import { getRowAndColumnIndex } from '../../utils/gridUtils';
 import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
 
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 
-export interface FileOrganizerProps {
+export interface FileOrganizerProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * A list of files to render out within the page organizer.
    */
@@ -46,7 +52,7 @@ export interface FileOrganizerProps {
    * outside of the view in order to prevent jank when rendering out your
    * thumbnails. This will also allow for lazy loading of thumbnails that are
    * out of view.
-   * @default 100
+   * @default 50
    */
   virtualizeThreshold?: number;
   /**
@@ -110,9 +116,13 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   disableMove,
   className,
   preventArrowsToMove,
-  virtualizeThreshold = 100,
+  virtualizeThreshold = 50,
+  ...divProps
 }) => {
   const fileOrganizerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<Grid>(null);
+
+  const [columnCount, setColumnCount] = useState(0);
 
   const [editingId, setEditingId] = useState<string>();
   const [draggingId, setDraggingId] = useState<string>();
@@ -122,9 +132,9 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     onDragChangeRef.current?.(draggingId);
   }, [draggingId, onDragChangeRef]);
 
+  // Detect all shown items and set as array of IDs to notify onRenderThumbnail.
   const [initialShownIds, setInitialShownIds] = useState<string[]>([]);
   useEffect(() => {
-    // If we don't request animation frame, children are not yet rendered.
     requestAnimationFrame(() => {
       if (!fileOrganizerRef.current) return;
       const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
@@ -135,19 +145,32 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   }, []);
 
   const handleItemKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>, index: number, file: File) => {
-      if (preventArrowsToMove || editingId !== undefined) return;
-      if (event.key === 'ArrowLeft') {
-        if (index === 0) return;
-        onMove?.(index, index - 1, file);
-        event.preventDefault();
-      } else if (event.key === 'ArrowRight') {
-        if (index === files.length - 1) return;
-        onMove?.(index, index + 1, file);
-        event.preventDefault();
+    (event: KeyboardEvent<HTMLDivElement>, index: number, file: File, draggableRef: RefObject<HTMLDivElement>) => {
+      if (preventArrowsToMove || editingId !== undefined || !onMove) return;
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+
+      const indexDiff = event.key === 'ArrowLeft' ? -1 : 1;
+
+      onMove(index, index + indexDiff, file);
+      event.preventDefault();
+
+      const newLocation = getSibling(draggableRef.current, indexDiff);
+      const { isVisible, isAbove, isBelow } = isScrolledIntoView(newLocation, fileOrganizerRef.current);
+
+      if (isVisible) return;
+
+      // Use scrollIntoView for non-virtualized items.
+      if (!gridRef.current) {
+        if (isAbove) newLocation?.scrollIntoView(true);
+        if (isBelow) newLocation?.scrollIntoView(false);
+        return;
       }
+
+      // Use react-window scrollToItem api for virtualized items.
+      const { rowIndex } = getRowAndColumnIndex(index + indexDiff, columnCount);
+      gridRef.current.scrollToItem({ align: 'smart', rowIndex });
     },
-    [editingId, files.length, onMove, preventArrowsToMove],
+    [editingId, onMove, preventArrowsToMove, columnCount],
   );
 
   const renderItem = useCallback(
@@ -156,17 +179,19 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
       const isEditing = editingId === file.id;
       const otherEditing = editingId !== undefined && editingId === file.id;
       const otherDragging = draggingId !== undefined && draggingId === file.id;
+      const draggableRef = createRef<HTMLDivElement>();
       return (
         <Draggable
           key={file.id}
           id={file.id}
           index={index}
           style={style}
+          ref={draggableRef}
           hideDragPreview={!!onRenderDragLayer}
           onDragChange={isDragging => setDraggingId(isDragging ? file.id : undefined)}
           disableDrag={isEditing || disableMove}
           onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
-          onKeyDown={e => handleItemKeyDown(e, index, file)}
+          onKeyDown={e => handleItemKeyDown(e, index, file, draggableRef)}
           onRenderChildren={isDragging => {
             return onRenderThumbnail({
               index,
@@ -217,6 +242,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   return (
     <DndProvider backend={Backend}>
       <div
+        {...divProps}
         className={fileOrganizerClass}
         ref={fileOrganizerRef}
         onClick={handleOnClick}
@@ -224,7 +250,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
         role="grid"
       >
         {files.length >= virtualizeThreshold ? (
-          <MemoAutoSizer files={files} renderItem={renderItem} />
+          <MemoAutoSizer ref={gridRef} files={files} renderItem={renderItem} onColumnCountChange={setColumnCount} />
         ) : (
           files.map((file, index) => renderItem(file, index))
         )}

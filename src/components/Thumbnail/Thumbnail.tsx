@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { forwardRef, MouseEvent } from 'react';
+import React, { forwardRef, MouseEvent, useRef, useImperativeHandle, useEffect } from 'react';
 import { File } from '../../data/file';
 import useFile from '../../hooks/useFile';
 import useFocus from '../../hooks/useFocus';
@@ -83,7 +83,16 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
     },
     ref,
   ) => {
+    const thumbnailRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(ref, () => thumbnailRef.current!);
+
     const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
+
+    useEffect(() => {
+      if (!selected && focused && thumbnailRef.current) {
+        thumbnailRef.current.focus();
+      }
+    }, [focused, selected]);
 
     const file = useFile(_file, throttle);
 
@@ -116,7 +125,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
       <ClickableDiv
         {...divProps}
         className={thumbnailClass}
-        ref={ref}
+        ref={thumbnailRef}
         noFocusStyle
         disabled={disabled}
         onFocus={handleOnFocus}

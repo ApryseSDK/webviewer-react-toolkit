@@ -1,14 +1,14 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
-import React, { useCallback, useEffect, useState, FC } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { File } from '../../data/file';
+import useManagedFiles from '../../hooks/useManagedFiles';
 import { createFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';
 import Thumbnail from '../Thumbnail';
 import ThumbnailDragLayer from '../ThumbnailDragLayer';
 import docs from './README.md';
-import useManagedFiles from '../../hooks/useManagedFiles';
 
 export default { title: 'FileOrganizer', parameters: { info: docs } };
 
@@ -50,6 +50,7 @@ export const Basic = () => {
 
   return (
     <FileOrganizer
+      style={{ height: '70vh', margin: -32 }}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
@@ -76,6 +77,7 @@ export const WithCustomDragLayer = () => {
 
   return (
     <FileOrganizer
+      style={{ height: '70vh', margin: -32 }}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
@@ -130,65 +132,72 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number }> = ({ lazy, n
   }, [numFiles]);
 
   return (
-    <div style={{ height: '70vh' }}>
-      <FileOrganizer
-        files={files}
-        onMove={forwardAction('onMove', handleOnMove)}
-        onDragChange={action('onDragChange')}
-        preventArrowsToMove={boolean('preventArrowsToMove', false)}
-        disableMove={boolean('disableMove', false)}
-        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, isShownOnLoad }) => (
-          <Thumbnail
-            file={file}
-            dragging={isDragging}
-            otherDragging={otherDragging}
-            onEditingChange={onEditingChange}
-            throttle={isShownOnLoad ? 0 : undefined}
-          />
-        )}
-      />
-    </div>
+    <FileOrganizer
+      style={{ height: '70vh', margin: -32 }}
+      files={files}
+      onMove={forwardAction('onMove', handleOnMove)}
+      onDragChange={action('onDragChange')}
+      preventArrowsToMove={boolean('preventArrowsToMove', false)}
+      disableMove={boolean('disableMove', false)}
+      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, isShownOnLoad }) => (
+        <Thumbnail
+          file={file}
+          dragging={isDragging}
+          otherDragging={otherDragging}
+          onEditingChange={onEditingChange}
+          throttle={isShownOnLoad ? 0 : undefined}
+        />
+      )}
+    />
   );
 };
 
 export const Virtualized = () => <VirtualizedExample />;
 export const VirtualizedLazyThumbnails = () => <VirtualizedExample lazy />;
 export const BasicToVirtualized = () => (
-  <VirtualizedExample lazy numFiles={number('number of files', 50, { min: 0, max: 1000, step: 50, range: true })} />
+  <VirtualizedExample lazy numFiles={number('number of files', 25, { min: 0, max: 100, step: 25, range: true })} />
 );
 
 const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
-  const { files, moveFile, selectedIds, toggleSelectedId, onDragChange, unselectAll, selectAll } = useManagedFiles({
-    initialFiles: Array.from({ length: virtualized ? 100 : 8 }, (_, index) => createFile(index)),
+  const {
+    files,
+    moveFile,
+    selectedIds,
+    toggleSelectedId,
+    onDragChange,
+    unselectAll,
+    selectAll,
+    draggingFiles,
+  } = useManagedFiles({
+    initialFiles: Array.from({ length: virtualized ? 100 : 25 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('useManagedFiles.options preventMultiDrag', false),
   });
 
   return (
-    <div style={virtualized ? { height: '70vh' } : undefined}>
-      <FileOrganizer
-        files={files}
-        onMove={moveFile}
-        onDragChange={onDragChange}
-        onCancelSelect={unselectAll}
-        onSelectAll={selectAll}
-        // onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
-        preventArrowsToMove={boolean('preventArrowsToMove', false)}
-        disableMove={boolean('disableMove', false)}
-        onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
-          <Thumbnail
-            file={file}
-            dragging={isDragging}
-            otherDragging={otherDragging}
-            selected={selectedIds.includes(file.id)}
-            onClick={event => toggleSelectedId(file.id, event)}
-            onRename={action(`file_${index + 1} onRename`)}
-            onRemove={action(`file_${index + 1} onRemove`)}
-            onRotate={action(`file_${index + 1} onRotate`)}
-            onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
-          />
-        )}
-      />
-    </div>
+    <FileOrganizer
+      style={{ height: '70vh', margin: -32 }}
+      files={files}
+      onMove={moveFile}
+      onDragChange={onDragChange}
+      onCancelSelect={unselectAll}
+      onSelectAll={selectAll}
+      onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
+      preventArrowsToMove={boolean('preventArrowsToMove', false)}
+      disableMove={boolean('disableMove', false)}
+      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
+        <Thumbnail
+          file={file}
+          dragging={isDragging}
+          otherDragging={otherDragging}
+          selected={selectedIds.includes(file.id)}
+          onClick={event => toggleSelectedId(file.id, event)}
+          onRename={action(`file_${index + 1} onRename`)}
+          onRemove={action(`file_${index + 1} onRemove`)}
+          onRotate={action(`file_${index + 1} onRotate`)}
+          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
+        />
+      )}
+    />
   );
 };
 

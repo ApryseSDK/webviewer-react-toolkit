@@ -126,11 +126,17 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     };
 
     const handleOnKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') handleOnSave();
+      if (event.key === 'Enter') {
+        handleOnSave();
+        event.stopPropagation();
+      }
     };
 
     const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Escape') handleOnCancel();
+      if (event.key === 'Escape') {
+        handleOnCancel();
+        event.stopPropagation();
+      }
     };
 
     const [valueToDisplay, isPlaceholder] = useMemo(() => {
