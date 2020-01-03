@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState, MouseEvent } from 'react';
+import { MouseEvent, useCallback, useMemo, useState } from 'react';
 import { File } from '../data/file';
-import { separateItemsWithTarget, moveMultiFromIndexToIndex } from '../utils/arrayUtils';
+import { moveMultiFromIndexToIndex, separateItemsWithTarget } from '../utils/arrayUtils';
 
 export interface UseManagedFilesOptions {
   initialFiles?: File[];
@@ -86,11 +86,14 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
         setSelectedIds([fromFile.id]);
       }
 
-      // If preventMultiDrag is false, selectedIds is many, dragging is undefined
+      // If preventMultiDrag is false, selectedIds is many, dragging is undefined.
       setFiles(prev => {
         if (!preventMultiDrag && selectedIds.includes(fromFile.id) && selectedIds.length > 1 && !dragging) {
           return moveMultiFromIndexToIndex(prev, selectedIds, fromIndex, toIndex);
         }
+
+        // Don't allow "wrapping".
+        if (toIndex < 0 || toIndex >= prev.length) return prev;
 
         const clone = prev.slice();
         const item = clone.splice(fromIndex, 1)[0];
