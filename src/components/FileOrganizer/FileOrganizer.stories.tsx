@@ -17,6 +17,7 @@ function useCommonFileOrganizer() {
   const [files, setFiles] = useState<File[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
+      if (toIndex < 0 || toIndex >= prev.length) return prev;
       const clone = prev.slice();
       const item = clone.splice(fromIndex, 1)[0];
       clone.splice(toIndex, 0, item);
@@ -103,10 +104,11 @@ export const WithCustomDragLayer = () => {
 const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number }> = ({ lazy, numFiles }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>(() =>
-    Array.from({ length: 1000 }, (_, index) => createFile(index, { lazy })),
+    Array.from({ length: 100 }, (_, index) => createFile(index, { lazy })),
   );
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
+      if (toIndex < 0 || toIndex >= prev.length) return prev;
       const clone = prev.slice();
       const item = clone.splice(fromIndex, 1)[0];
       clone.splice(toIndex, 0, item);
