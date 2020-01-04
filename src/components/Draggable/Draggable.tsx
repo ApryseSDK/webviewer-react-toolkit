@@ -164,7 +164,7 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
                 transform: `translate3d(${x}px, ${y}px, 0)`,
               }}
               className={classnames('ui__draggable__animated', {
-                ['ui__draggable__animated--inMotion']: inMotion,
+                'ui__draggable__animated--inMotion': inMotion,
               })}
             >
               {onRenderChildren ? onRenderChildren(isDragging) : children}

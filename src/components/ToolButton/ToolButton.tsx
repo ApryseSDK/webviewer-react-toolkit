@@ -10,7 +10,7 @@ export const ToolButton = forwardRef<HTMLButtonElement, ToolButtonProps>(
 
     const toolButtonClass = classnames(
       'ui__base ui__toolButton',
-      { ['ui__toolButton--disabled']: buttonProps.disabled },
+      { 'ui__toolButton--disabled': buttonProps.disabled },
       className,
     );
 

@@ -32,9 +32,9 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
     const clickableDivClass = classnames(
       'ui__base ui__clickableDiv',
       {
-        ['ui__clickableDiv--disabled']: disabled,
-        ['ui__clickableDiv--noFocusStyle']: noFocusStyle,
-        ['ui__clickableDiv--usePointer']: usePointer && !disabled,
+        'ui__clickableDiv--disabled': disabled,
+        'ui__clickableDiv--noFocusStyle': noFocusStyle,
+        'ui__clickableDiv--usePointer': usePointer && !disabled,
       },
       className,
     );

@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { forwardRef, ButtonHTMLAttributes } from 'react';
+import React, { ButtonHTMLAttributes, forwardRef } from 'react';
 
 export enum ButtonStyle {
   Default = 'default',
@@ -40,7 +40,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'ui__base ui__button',
       `ui__button--style-${buttonStyle}`,
       `ui__button--size-${buttonSize}`,
-      { ['ui__button--disabled']: buttonProps.disabled },
+      { 'ui__button--disabled': buttonProps.disabled },
       className,
     );
 

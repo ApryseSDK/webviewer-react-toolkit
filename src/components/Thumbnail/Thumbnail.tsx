@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { forwardRef, MouseEvent, useRef, useImperativeHandle, useEffect } from 'react';
+import React, { forwardRef, MouseEvent, useEffect, useImperativeHandle, useRef } from 'react';
 import { File } from '../../data/file';
 import useFile from '../../hooks/useFile';
 import useFocus from '../../hooks/useFocus';
@@ -112,11 +112,11 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
     const thumbnailClass = classnames(
       'ui__base ui__thumbnail',
       {
-        ['ui__thumbnail--selected']: selected,
-        ['ui__thumbnail--focused']: focused,
-        ['ui__thumbnail--disabled']: disabled,
-        ['ui__thumbnail--dragging']: dragging,
-        ['ui__thumbnail--otherDragging']: otherDragging,
+        'ui__thumbnail--selected': selected,
+        'ui__thumbnail--focused': focused,
+        'ui__thumbnail--disabled': disabled,
+        'ui__thumbnail--dragging': dragging,
+        'ui__thumbnail--otherDragging': otherDragging,
       },
       className,
     );

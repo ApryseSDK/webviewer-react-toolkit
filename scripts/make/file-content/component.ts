@@ -1,5 +1,5 @@
-import { pascalToCamel } from '../utils/stringUtils';
 import { STYLE_PREFIX } from '../constants';
+import { pascalToCamel } from '../utils/stringUtils';
 
 /* prettier-ignore */
 export const component = (componentName: string) =>
@@ -17,7 +17,7 @@ export interface ${componentName}Props extends ButtonHTMLAttributes<HTMLButtonEl
 export const ${componentName}: FC<${componentName}Props> = ({ someProp = 'Default value', className, ...buttonProps }) => {
   const ${pascalToCamel(componentName)}Class = classnames(
     '${STYLE_PREFIX}__base ${STYLE_PREFIX}__${pascalToCamel(componentName)}',
-    { ['${STYLE_PREFIX}__${pascalToCamel(componentName)}--disabled']: buttonProps.disabled },
+    { '${STYLE_PREFIX}__${pascalToCamel(componentName)}--disabled': buttonProps.disabled },
     className,
   );
 

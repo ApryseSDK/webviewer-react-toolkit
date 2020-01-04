@@ -1,5 +1,8 @@
 # Unreleased changes (in master but not released in a version)
 
+- [FileOrganizer] Centered custom drag layer on mouse (#13) @liamross
+- [DragLayer] Added customTranslate prop to adjust coords (#13) @liamross
+- [FileOrganizer] Removed padding to match virtualized (#13) @liamross
 - [FileOrganizer] Keeps items scrolled in view when moving (#12) @liamross
 - [Thumbnail] Focuses main when selection ends (#12) @liamross
 - [Draggable] Forwards ref to wrapper (#12) @liamross

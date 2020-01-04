@@ -147,16 +147,18 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
 
     const editableTextClass = classnames(
       'ui__base ui__editableText',
-      { ['ui__editableText--disabled']: disabled },
-      { ['ui__editableText--locked']: locked },
-      { ['ui__editableText--centerText']: centerText },
-      { ['ui__editableText--bordered']: bordered },
+      {
+        'ui__editableText--disabled': disabled,
+        'ui__editableText--locked': locked,
+        'ui__editableText--centerText': centerText,
+        'ui__editableText--bordered': bordered,
+      },
       className,
     );
 
     const buttonClass = classnames('ui__editableText__button', {
-      ['ui__editableText__button--placeholder']: isPlaceholder,
-      ['ui__editableText__button--noFocusTransition']: noFocusTransition,
+      'ui__editableText__button--placeholder': isPlaceholder,
+      'ui__editableText__button--noFocusTransition': noFocusTransition,
     });
 
     return (

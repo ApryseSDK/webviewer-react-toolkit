@@ -40,18 +40,13 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(
 
     const wrapperClass = classnames('ui__base ui__image__wrapper', classes?.wrapper);
 
-    const imageClass = classnames(
-      'ui__image',
-      { ['ui__image--loading']: loading ?? !source },
-      classes?.image,
-      className,
-    );
+    const imageClass = classnames('ui__image', { 'ui__image--loading': loading ?? !source }, classes?.image, className);
 
     const overlayClass = classnames(
       'ui__image__overlay',
       {
-        ['ui__image__overlay--loading']: loading || !source,
-        ['ui__image__overlay--hide']: !onRenderLoading,
+        'ui__image__overlay--loading': loading || !source,
+        'ui__image__overlay--hide': !onRenderLoading,
       },
       classes?.overlay,
     );

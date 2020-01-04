@@ -20,10 +20,11 @@ import Backend from 'react-dnd-html5-backend';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { File } from '../../data/file';
 import useCurrentRef from '../../hooks/useCurrentRef';
+import { THUMBNAIL_WIDTH } from '../../utils/constantUtils';
 import { getSibling, isScrolledIntoView } from '../../utils/domUtils';
 import { getRowAndColumnIndex } from '../../utils/gridUtils';
 import Draggable from '../Draggable';
-import DragLayer from '../DragLayer';
+import DragLayer, { DragLayerProps } from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
 
 /* eslint-disable jsx-a11y/interactive-supports-focus */
@@ -237,7 +238,21 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     [onCancelSelect, onSelectAll],
   );
 
-  const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
+  const customDragLayerTranslate = useCallback<NonNullable<DragLayerProps['customTranslate']>>(({ mousePosition }) => {
+    const x = mousePosition.x - THUMBNAIL_WIDTH / 2;
+    const y = mousePosition.y - THUMBNAIL_WIDTH / 2;
+    return { x, y };
+  }, []);
+
+  const isVirtualized = files.length >= virtualizeThreshold;
+
+  const fileOrganizerClass = classnames(
+    'ui__base ui__fileOrganizer',
+    {
+      'ui__fileOrganizer--virtualized': isVirtualized,
+    },
+    className,
+  );
 
   return (
     <DndProvider backend={Backend}>
@@ -249,12 +264,14 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
         onKeyDown={handleOnKeyDown}
         role="grid"
       >
-        {files.length >= virtualizeThreshold ? (
+        {isVirtualized ? (
           <MemoAutoSizer ref={gridRef} files={files} renderItem={renderItem} onColumnCountChange={setColumnCount} />
         ) : (
           files.map((file, index) => renderItem(file, index))
         )}
-        {onRenderDragLayer ? <DragLayer>{onRenderDragLayer()}</DragLayer> : null}
+        {onRenderDragLayer ? (
+          <DragLayer customTranslate={customDragLayerTranslate}>{onRenderDragLayer()}</DragLayer>
+        ) : null}
       </div>
     </DndProvider>
   );

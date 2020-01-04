@@ -154,6 +154,7 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number }> = ({ lazy, n
 
 export const Virtualized = () => <VirtualizedExample />;
 export const VirtualizedLazyThumbnails = () => <VirtualizedExample lazy />;
+export const VirtualizedStressTest = () => <VirtualizedExample lazy numFiles={1000} />;
 export const BasicToVirtualized = () => (
   <VirtualizedExample lazy numFiles={number('number of files', 25, { min: 0, max: 100, step: 25, range: true })} />
 );
