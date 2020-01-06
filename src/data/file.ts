@@ -1,5 +1,6 @@
 import { getExtension } from '../utils/fileUtils';
 import { getStringId } from '../utils/idUtils';
+import { RequireAtLeastOne } from '../utils/typeUtils';
 import blobToDocument from '../webviewer/blobToDocument';
 import documentToBlob from '../webviewer/documentToBlob';
 import getRotatedDocument from '../webviewer/getRotatedDocument';
@@ -8,8 +9,7 @@ import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } fr
 import { FuturableOrLazy } from './futurable';
 import MemoizedPromise from './memoizedPromise';
 
-/** The input object provided to the File constructor. */
-export interface FileDetails {
+interface FileDetailsBase {
   /** File name. */
   name: string;
   /** The original name of the file */
@@ -23,6 +23,9 @@ export interface FileDetails {
   /** Thumbnail data URL string, or function to get it. */
   thumbnail?: FuturableOrLazy<string>;
 }
+
+/** The input object provided to the File constructor. */
+export type FileDetails = RequireAtLeastOne<FileDetailsBase, 'fileObj' | 'documentObj'>;
 
 export class File {
   private _id: string;

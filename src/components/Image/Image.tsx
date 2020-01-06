@@ -1,9 +1,9 @@
 import classnames from 'classnames';
 import React, { forwardRef, ImgHTMLAttributes, ReactNode, useCallback, useEffect, useState } from 'react';
 import { FuturableOrLazy, futureableOrLazyToFuturable } from '../../data/futurable';
-import { Omit } from '../../utils/typeUtils';
+import { Remove } from '../../utils/typeUtils';
 
-export interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
+export interface ImageProps extends Remove<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   /**
    * The image source can be a `Futurable` or `LazyFuturable`, or undefined. If
    * undefined or if a promise will display as loading.

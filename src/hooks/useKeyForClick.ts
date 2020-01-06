@@ -1,17 +1,5 @@
 import { KeyboardEvent, KeyboardEventHandler, RefObject, useCallback } from 'react';
-
-function generateClickEventFromKeyboardEvent<T>(keyboardEvent: KeyboardEvent<T>) {
-  const clickEvent = new MouseEvent('click', {
-    bubbles: keyboardEvent.bubbles,
-    cancelable: keyboardEvent.cancelable,
-    altKey: keyboardEvent.altKey,
-    shiftKey: keyboardEvent.shiftKey,
-    ctrlKey: keyboardEvent.ctrlKey,
-    metaKey: keyboardEvent.metaKey,
-    // TODO: add any more that need to transfer through.
-  });
-  return clickEvent;
-}
+import { generateClickEventFromKeyboardEvent } from '../utils/domUtils';
 
 /**
  * Returns the handler for onKeyPress. If it hears a space or Enter key, it will

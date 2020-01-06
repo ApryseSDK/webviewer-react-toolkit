@@ -1,3 +1,5 @@
+import { KeyboardEvent } from 'react';
+
 /**
  * Returns an object describing whether the object is visible. It will detect if
  * the item is cut off by either the top or bottom of the window, or by the
@@ -39,4 +41,21 @@ export function getSibling(element: HTMLElement | null | undefined, indexDiff: n
   const sibling = siblings[nodeIndex + indexDiff];
 
   return sibling;
+}
+
+/**
+ * Generates a click mouse event from an input keyboard event.
+ * @param keyboardEvent The keyboard event to translate into a mouse event.
+ */
+export function generateClickEventFromKeyboardEvent(keyboardEvent: KeyboardEvent<HTMLElement>) {
+  const clickEvent = new MouseEvent('click', {
+    bubbles: keyboardEvent.bubbles,
+    cancelable: keyboardEvent.cancelable,
+    altKey: keyboardEvent.altKey,
+    shiftKey: keyboardEvent.shiftKey,
+    ctrlKey: keyboardEvent.ctrlKey,
+    metaKey: keyboardEvent.metaKey,
+    // TODO: add any more that need to transfer through.
+  });
+  return clickEvent;
 }

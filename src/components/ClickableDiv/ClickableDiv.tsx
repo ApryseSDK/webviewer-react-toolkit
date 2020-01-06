@@ -2,9 +2,9 @@ import classnames from 'classnames';
 import React, { forwardRef, HTMLAttributes, useImperativeHandle, useRef } from 'react';
 import useKeyForClick from '../../hooks/useKeyForClick';
 import useOnClick from '../../hooks/useOnClick';
-import { Omit } from '../../utils/typeUtils';
+import { Remove } from '../../utils/typeUtils';
 
-export interface ClickableDivProps extends Omit<HTMLAttributes<HTMLDivElement>, 'role'> {
+export interface ClickableDivProps extends Remove<HTMLAttributes<HTMLDivElement>, 'role'> {
   /**
    * Is the clickable div disabled. Disabled will stop the onClick callback from
    * firing (similar to a button).

@@ -1,76 +1,48 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * Omit specific properties from an interface. Use `"field1" | "field2"` to
- * exclude multiple. This is useful if you are adding a layer over a general
- * component and want to exclude specific props from being passed into the
- * layer.
+ * Remove the specified Keys of T. Like Omit, but with autocompletion.
  *
- * Usage:
- *
- * ```ts
- * interface SomeProps {
- *   field1: string;
- *   field2: string;
- *   field3: string;
- * }
- *
- * export interface OmittedProps extends Omit<SomeProps, 'field2' | 'field3'> {
- *   // Some other props if you wish or just leave empty
- * }
- *
- * export const fewer: FC<OmittedProps> = ({ field1 }) => {
- *   // Function contents
- * }
- * ```
+ * @example
+ * type SomeProps = {field1: string; field2: string};
+ * const x: Remove<SomeProps, 'field2'> = {field1: 'Hello, World!'};
  */
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type Remove<T, Keys extends keyof T> = Pick<T, Exclude<keyof T, Keys>>;
 
 /**
- * Include specific properties from an interface. Use `"field1" | "field2"` to
- * include ultiple. This is useful if you are adding a layer over a general
- * component and want to include only specific props to pass into the layer.
+ * Include only the specified Keys of T.
  *
- * Usage:
- *
- * ```ts
- * interface SomeProps {
- *   field1: string;
- *   field2: string;
- *   field3: string;
- * }
- *
- * export interface IncludedProps extends Include<SomeProps, 'field2' | 'field3'> {
- *   // Some other props if you wish or just leave empty
- * }
- *
- * export const fewer: FC<IncludedProps> = ({ field2, field3 }) => {
- *   // Function contents
- * }
- * ```
+ * @example
+ * type SomeProps = {field1: string; field2: string};
+ * const x: Include<SomeProps, 'field2'> = {field2: 'Hello, World!'};
  */
-export type Include<T, K extends keyof T> = Pick<T, Extract<keyof T, K>>;
+export type Include<T, Keys extends keyof T> = Pick<T, Extract<keyof T, Keys>>;
 
 /**
- * Extract the type of an item in array of similar items.
+ * Extract the common item type in array of similar items T.
  *
- * Usage:
- *
- * ```ts
+ * @example
  * const x = [{a: 'a', b: 'b'}, {a: 'aa', b: 'bb'}];
- * type Item = ItemOf<typeof x>; // {a: string; b: string}
- * ```
+ * const y: ItemOf<typeof x> = {a: 'Hello'; b: 'World'};
  */
 export type ItemOf<T extends any[]> = T[number];
 
 /**
- * Extracts the types of the arguments given to a function.
+ * Extracts an array of argument types of T.
  *
- * Usage:
- *
- * ```ts
+ * @example
  * const x = (a: string, b: number) => a + b;
- * type Arguments = ArgumentTypes<typeof x>; // [string, number]
- * ```
+ * const x: ArgumentTypes<typeof x> = ['Hello, World!', 100];
  */
-export type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
+export type ArgumentTypes<T extends Function> = T extends (...args: infer A) => any ? A : never;
+
+/**
+ * Requires at least one of the specified Keys of T. If no keys provided, will
+ * require at least one of any keyof T.
+ *
+ * @example
+ * type SomeProps = {field1?: string; field2?: string};
+ * const x: RequireAtLeastOne<SomeProps, 'hello' | 'world'> = {field1: 'Hello, World!'};
+ */
+export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Remove<T, Keys> &
+  { [K in Keys]-?: Required<Pick<T, K>> & Partial<Remove<T, Keys>> }[Keys];
