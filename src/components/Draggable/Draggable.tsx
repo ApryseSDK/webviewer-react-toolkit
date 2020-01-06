@@ -34,7 +34,8 @@ export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
    */
   hideDragPreview?: boolean;
   /**
-   * Call instead of providing children if you wish to use the isDragging prop.
+   * Call instead of providing children if you wish to use the `isDragging`
+   * prop.
    */
   onRenderChildren?: (isDragging: boolean) => ReactNode;
   /**
