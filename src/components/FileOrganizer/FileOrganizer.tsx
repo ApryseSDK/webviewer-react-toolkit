@@ -69,7 +69,7 @@ export interface FileOrganizerProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * Callback fired when a file is moved within the page organizer.
    */
-  onMove?: (fromIndex: number, toIndex: number, file: File) => void;
+  onMove?: (fromIndex: number, toIndex: number) => void;
   /**
    * Called whenever dragging begins or ends. If drag ends, the id will be
    * undefined.
@@ -146,13 +146,13 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   }, []);
 
   const handleItemKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>, index: number, file: File, draggableRef: RefObject<HTMLDivElement>) => {
+    (event: KeyboardEvent<HTMLDivElement>, index: number, _file: File, draggableRef: RefObject<HTMLDivElement>) => {
       if (preventArrowsToMove || editingId !== undefined || !onMove) return;
       if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
 
       const indexDiff = event.key === 'ArrowLeft' ? -1 : 1;
 
-      onMove(index, index + indexDiff, file);
+      onMove(index, index + indexDiff);
       event.preventDefault();
 
       const newLocation = getSibling(draggableRef.current, indexDiff);
@@ -191,7 +191,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
           hideDragPreview={!!onRenderDragLayer}
           onDragChange={isDragging => setDraggingId(isDragging ? file.id : undefined)}
           disableDrag={isEditing || disableMove}
-          onMove={(fromIndex, toIndex) => onMove?.(fromIndex, toIndex, file)}
+          onMove={onMove}
           onKeyDown={e => handleItemKeyDown(e, index, file, draggableRef)}
           onRenderChildren={isDragging => {
             return onRenderThumbnail({

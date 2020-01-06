@@ -1,5 +1,8 @@
 # Unreleased changes (in master but not released in a version)
 
+- [useManagedFile] Select any moved files (#14) @liamross
+- [FileOrganizer] removed file argument from onMove callback (#14) @liamross
+- [core] Updated type files for WebViewer API (#14) @liamross
 - [FileOrganizer] Centered custom drag layer on mouse (#13) @liamross
 - [DragLayer] Added customTranslate prop to adjust coords (#13) @liamross
 - [FileOrganizer] Removed padding to match virtualized (#13) @liamross

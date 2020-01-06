@@ -1,12 +1,11 @@
 import { Options as InfoOptions, withInfo } from '@storybook/addon-info';
 import { withKnobs } from '@storybook/addon-knobs';
 import { addDecorator, addParameters, configure } from '@storybook/react';
+import '../src/index.scss';
 import { InfoStyle } from './InfoStyle';
+import './style.scss';
 import TableComponent from './TableComponent';
 import Theme from './Theme';
-
-import './style.scss';
-import '../src/index.scss';
 
 /**
  * Add global decorators.
@@ -17,7 +16,7 @@ addDecorator(
   withInfo({
     header: false,
     TableComponent,
-    maxPropsIntoLine: 1, // Wrap props if more than one
+    maxPropsIntoLine: 2, // Wrap props if more than one
     styles: InfoStyle,
     inline: true,
   } as InfoOptions) as any,

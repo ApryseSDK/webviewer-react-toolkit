@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { CSSProperties, FC, useCallback, useEffect, useState } from 'react';
 import { File } from '../../data/file';
 import useManagedFiles from '../../hooks/useManagedFiles';
 import { createFile } from '../../storybook-helpers/data/files';
@@ -11,6 +11,8 @@ import ThumbnailDragLayer from '../ThumbnailDragLayer';
 import docs from './README.md';
 
 export default { title: 'FileOrganizer', parameters: { info: docs } };
+
+const style: CSSProperties = { height: '60vh', margin: -32 };
 
 function useCommonFileOrganizer() {
   // This is the index organizing function.
@@ -51,7 +53,7 @@ export const Basic = () => {
 
   return (
     <FileOrganizer
-      style={{ height: '70vh', margin: -32 }}
+      style={style}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
@@ -78,7 +80,7 @@ export const WithCustomDragLayer = () => {
 
   return (
     <FileOrganizer
-      style={{ height: '70vh', margin: -32 }}
+      style={style}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
@@ -135,7 +137,7 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number }> = ({ lazy, n
 
   return (
     <FileOrganizer
-      style={{ height: '70vh', margin: -32 }}
+      style={style}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       onDragChange={action('onDragChange')}
@@ -178,7 +180,7 @@ const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized
 
   return (
     <FileOrganizer
-      style={{ height: '70vh', margin: -32 }}
+      style={style}
       files={files}
       onMove={moveFile}
       onDragChange={onDragChange}

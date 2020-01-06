@@ -17,7 +17,10 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
 
   const [files, setFiles] = useState(initialFiles ?? []);
 
+  /* --- Selection. --- */
+
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
   const toggleSelectedId = useCallback((id: string, event: MouseEvent<HTMLElement>) => {
     const shiftKeyPressed = event.shiftKey;
     setSelectedIds(prev => {
@@ -34,8 +37,12 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       return prev;
     });
   }, []);
+
   const unselectAll = useCallback(() => setSelectedIds([]), []);
+
   const selectAll = useCallback(() => setSelectedIds(files.map(file => file.id)), [files]);
+
+  /* --- Multiple drag items. --- */
 
   const [dragging, setDragging] = useState<{ files: File[]; target: File }>();
   const onDragChange = useCallback(
@@ -56,8 +63,8 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
       // Do nothing if no selected items.
       if (selectedIds.length === 0) return;
 
-      // Unselect all items if drag begins on non-selected item.
-      if (!selectedIds.includes(id)) return setSelectedIds([]);
+      // Select dragging item if drag begins on unselected.
+      if (!selectedIds.includes(id)) return setSelectedIds([id]);
 
       // If multidrag is disabled and more than one item is selected, reduce to
       // only dragged item.
@@ -74,20 +81,23 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
     [preventMultiDrag, dragging, files, selectedIds],
   );
 
+  /* --- Moving items. --- */
+
   const moveFile = useCallback(
     (fromIndex: number, toIndex: number) => {
       const fromFile = files[fromIndex];
-
       if (!fromFile) return;
 
-      if (!selectedIds.includes(fromFile.id)) {
-        setSelectedIds([]);
-      } else if (preventMultiDrag && selectedIds.length > 1) {
+      // Select only moved file if previously unselected, or if multi drag is off.
+      if (!selectedIds.includes(fromFile.id) || (preventMultiDrag && selectedIds.length > 1)) {
         setSelectedIds([fromFile.id]);
       }
 
-      // If preventMultiDrag is false, selectedIds is many, dragging is undefined.
       setFiles(prev => {
+        // If multi drag is permitted, and multiple items are selected, and
+        // there are no items being dragged, do a multi move. This will be a
+        // keyboard-specific operation, as multi dragging is managed by the
+        // dragging handlers.
         if (!preventMultiDrag && selectedIds.includes(fromFile.id) && selectedIds.length > 1 && !dragging) {
           return moveMultiFromIndexToIndex(prev, selectedIds, fromIndex, toIndex);
         }
