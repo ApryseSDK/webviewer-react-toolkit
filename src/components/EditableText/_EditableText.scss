@@ -71,7 +71,7 @@
     outline: none;
     transition: $focus-transition;
 
-    &:focus {
+    &:focus.ui__editableText__field--tabbing {
       @include focus;
       // Prevents focus ring "stutter". Remove if transition is removed from focus.
       transition: none;

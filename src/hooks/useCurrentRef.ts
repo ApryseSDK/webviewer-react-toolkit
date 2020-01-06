@@ -1,11 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-function useCurrentRef<T>(toRef: T) {
+export default function useCurrentRef<T>(toRef: T) {
   const toRefRef = useRef<T>(toRef);
   useEffect(() => {
     toRefRef.current = toRef;
   });
   return toRefRef;
 }
-
-export default useCurrentRef;

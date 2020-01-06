@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import React, { forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import useAccessibleFocus from '../../hooks/useAccessibleFocus';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 
 export interface EditableTextProps extends ClickableDivProps {
@@ -145,6 +146,8 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       return [renderedValue, false];
     }, [onRenderText, placeholder, value]);
 
+    const isUserTabbing = useAccessibleFocus();
+
     const editableTextClass = classnames(
       'ui__base ui__editableText',
       {
@@ -161,11 +164,15 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
       'ui__editableText__button--noFocusTransition': noFocusTransition,
     });
 
+    const fieldClass = classnames('ui__editableText__field', {
+      'ui__editableText__field--tabbing': isUserTabbing,
+    });
+
     return (
       <div className={editableTextClass}>
         {editMode ? (
           <input
-            className="ui__editableText__field"
+            className={fieldClass}
             value={editValue}
             onChange={e => setEditValue(e.target.value)}
             onKeyPress={handleOnKeyPress}

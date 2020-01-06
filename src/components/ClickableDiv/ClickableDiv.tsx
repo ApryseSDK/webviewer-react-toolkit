@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import React, { forwardRef, HTMLAttributes, useImperativeHandle, useRef } from 'react';
+import useAccessibleFocus from '../../hooks/useAccessibleFocus';
 import useKeyForClick from '../../hooks/useKeyForClick';
 import useOnClick from '../../hooks/useOnClick';
 import { Remove } from '../../utils/typeUtils';
@@ -29,10 +30,13 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
 
     const handleKeyUp = useKeyForClick(onKeyPress, clickableDivRef);
 
+    const isUserTabbing = useAccessibleFocus();
+
     const clickableDivClass = classnames(
       'ui__base ui__clickableDiv',
       {
         'ui__clickableDiv--disabled': disabled,
+        'ui__clickableDiv--tabbing': isUserTabbing,
         'ui__clickableDiv--noFocusStyle': noFocusStyle,
         'ui__clickableDiv--usePointer': usePointer && !disabled,
       },

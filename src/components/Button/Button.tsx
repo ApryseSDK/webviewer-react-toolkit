@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import React, { ButtonHTMLAttributes, forwardRef } from 'react';
+import useAccessibleFocus from '../../hooks/useAccessibleFocus';
 
 export enum ButtonStyle {
   Default = 'default',
@@ -36,11 +37,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     { buttonStyle = ButtonStyle.Default, buttonSize = ButtonSize.Default, type = 'button', className, ...buttonProps },
     ref,
   ) => {
+    const isUserTabbing = useAccessibleFocus();
+
     const buttonClass = classnames(
       'ui__base ui__button',
       `ui__button--style-${buttonStyle}`,
       `ui__button--size-${buttonSize}`,
-      { 'ui__button--disabled': buttonProps.disabled },
+      {
+        'ui__button--disabled': buttonProps.disabled,
+        'ui__button--tabbing': isUserTabbing,
+      },
       className,
     );
 

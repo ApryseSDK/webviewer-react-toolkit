@@ -12,7 +12,7 @@ export interface UseManagedFilesOptions {
  * `FileOrganizer` component.
  * @param options Options for managing files.
  */
-function useManagedFiles(options: UseManagedFilesOptions = {}) {
+export default function useManagedFiles(options: UseManagedFilesOptions = {}) {
   const { initialFiles, preventMultiDrag } = options;
 
   const [files, setFiles] = useState(initialFiles ?? []);
@@ -131,5 +131,3 @@ function useManagedFiles(options: UseManagedFilesOptions = {}) {
 
   return managedFiles;
 }
-
-export default useManagedFiles;

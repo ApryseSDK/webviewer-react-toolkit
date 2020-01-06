@@ -18,7 +18,7 @@ export interface UseFileSubscribeOptions {
  * @param getCurrentValue Function to extract the current value from the file.
  * @param eventType The event type to subscribe. Won't subscribe if not given.
  */
-function useFileSubscribe<T>(
+export default function useFileSubscribe<T>(
   file: File,
   getCurrentValue: (file: File) => T | MemoizedPromise<T>,
   eventType?: FileEventType,
@@ -72,5 +72,3 @@ function useFileSubscribe<T>(
 
   return valueStateArray;
 }
-
-export default useFileSubscribe;

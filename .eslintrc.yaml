@@ -46,3 +46,4 @@ overrides:
       '@typescript-eslint/no-triple-slash-reference': off
       '@typescript-eslint/no-non-null-assertion': off
       '@typescript-eslint/ban-ts-ignore': off
+      '@typescript-eslint/no-use-before-define': off

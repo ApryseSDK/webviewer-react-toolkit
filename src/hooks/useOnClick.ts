@@ -13,7 +13,7 @@ export interface UseOnClickOptions {
  * @param onClick The onClick prop if it's available.
  * @param options UseOnClickOptions for the hook.
  */
-function useOnClick<T>(onClick?: MouseEventHandler<T>, options: UseOnClickOptions = {}) {
+export default function useOnClick<T>(onClick?: MouseEventHandler<T>, options: UseOnClickOptions = {}) {
   const stopPropagation = !!options.stopPropagation;
   const preventDefault = !!options.preventDefault;
   const blurOnClick = !!options.blurOnClick;
@@ -35,5 +35,3 @@ function useOnClick<T>(onClick?: MouseEventHandler<T>, options: UseOnClickOption
 
   return handler;
 }
-
-export default useOnClick;

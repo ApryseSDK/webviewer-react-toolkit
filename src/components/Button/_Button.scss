@@ -9,7 +9,7 @@
     opacity: 0.7;
   }
 
-  &:focus {
+  &:focus.ui__button--tabbing {
     @include focus;
   }
 

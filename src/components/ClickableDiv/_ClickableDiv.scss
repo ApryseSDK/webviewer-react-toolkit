@@ -5,7 +5,7 @@
   transition: $focus-transition;
 
   // Don't show focus shadow if no focus style or disabled.
-  &:focus:not(.ui__clickableDiv--noFocusStyle):not(.ui__clickableDiv--disabled) {
+  &:focus.ui__clickableDiv--tabbing:not(.ui__clickableDiv--noFocusStyle):not(.ui__clickableDiv--disabled) {
     @include focus;
   }
 

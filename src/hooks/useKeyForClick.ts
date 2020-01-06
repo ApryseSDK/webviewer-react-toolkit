@@ -9,7 +9,10 @@ import { generateClickEventFromKeyboardEvent } from '../utils/domUtils';
  * @param onKeyPress The onKeyPress prop if it's available.
  * @param ref If given, will compare event target to prevent any bubbling events.
  */
-function useKeyForClick<T extends HTMLElement>(onKeyPress?: KeyboardEventHandler<T>, ref?: RefObject<T>) {
+export default function useKeyForClick<T extends HTMLElement>(
+  onKeyPress?: KeyboardEventHandler<T>,
+  ref?: RefObject<T>,
+) {
   const handler = useCallback(
     (event: KeyboardEvent<T>) => {
       // Fire click on space or enter press.
@@ -32,5 +35,3 @@ function useKeyForClick<T extends HTMLElement>(onKeyPress?: KeyboardEventHandler
 
   return handler;
 }
-
-export default useKeyForClick;

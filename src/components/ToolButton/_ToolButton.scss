@@ -13,7 +13,7 @@
     background-color: rgba(75, 75, 75, 0.7);
   }
 
-  &:focus:not(.ui__toolButton--disabled) {
+  &:focus.ui__toolButton--tabbing:not(.ui__toolButton--disabled) {
     box-shadow: inset 0 0 0 2px rgba(75, 75, 75, 0.7);
   }
 

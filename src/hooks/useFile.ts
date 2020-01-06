@@ -29,7 +29,7 @@ interface FileHook {
  * @param file The file to convert to react observable values.
  * @param throttle The timeout if unfetched memo promise.
  */
-function useFile(file: File, throttle?: number): FileHook {
+export default function useFile(file: File, throttle?: number): FileHook {
   const [name] = useFileSubscribe(file, f => f.name, FileEventType.NameChange, { throttle });
   const [thumbnail] = useFileSubscribe(file, f => f.thumbnail, FileEventType.ThumbnailChange, { throttle });
   const [fileObj] = useFileSubscribe(file, f => f.fileObj, FileEventType.FileObjChange, { throttle });
@@ -51,5 +51,3 @@ function useFile(file: File, throttle?: number): FileHook {
 
   return fileValue;
 }
-
-export default useFile;

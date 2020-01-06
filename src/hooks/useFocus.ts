@@ -6,7 +6,7 @@ import { FocusEvent, FocusEventHandler, useCallback, useState } from 'react';
  * @param onFocus The onFocus prop if it's available.
  * @param onBlur The onBlur prop if it's available.
  */
-function useFocus<T>(onFocus?: FocusEventHandler<T>, onBlur?: FocusEventHandler<T>) {
+export default function useFocus<T>(onFocus?: FocusEventHandler<T>, onBlur?: FocusEventHandler<T>) {
   const [focused, setFocused] = useState(false);
 
   const handleOnFocus = useCallback(
@@ -27,5 +27,3 @@ function useFocus<T>(onFocus?: FocusEventHandler<T>, onBlur?: FocusEventHandler<
 
   return { focused, handleOnFocus, handleOnBlur };
 }
-
-export default useFocus;
