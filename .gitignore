@@ -18,6 +18,7 @@ dist
 lib
 docs
 .out
+storybook-static
 
 # Size json
 size.json

@@ -45,4 +45,4 @@ export type ArgumentTypes<T extends Function> = T extends (...args: infer A) => 
  * const x: RequireAtLeastOne<SomeProps, 'hello' | 'world'> = {field1: 'Hello, World!'};
  */
 export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Remove<T, Keys> &
-  { [K in Keys]-?: Required<Pick<T, K>> & Partial<Remove<T, Keys>> }[Keys];
+  { [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>> }[Keys];
