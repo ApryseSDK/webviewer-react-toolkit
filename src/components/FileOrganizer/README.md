@@ -8,7 +8,8 @@ prevent stuttering at 50 items. You can adjust this using the
 ## Rendering files
 
 The easiest way to get started would be to use the `Thumbnail` element as the
-item that is rendered in the `FileOrganizer`. The
+item that is rendered in the `FileOrganizer`. The `Thumbnail` component includes
+many default props that integrate well with the `FileOrganizer`.
 
 ## Managing files
 
