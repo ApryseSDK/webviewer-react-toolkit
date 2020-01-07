@@ -109,6 +109,11 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
       onEditingChange?.(true, file.file);
     };
 
+    const onRenderText = (value: string) => {
+      if (!value) return '';
+      return `${value}.${file.extension}`;
+    };
+
     const thumbnailClass = classnames(
       'ui__base ui__thumbnail',
       {
@@ -153,7 +158,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         <EditableText
           className="ui__thumbnail__label"
           value={label ?? file.name}
-          onRenderText={hideExtension ? undefined : value => value && `${value}.${file.extension}`}
+          onRenderText={hideExtension ? undefined : onRenderText}
           centerText
           disabled={disabled}
           locked={!onRename || otherDragging}

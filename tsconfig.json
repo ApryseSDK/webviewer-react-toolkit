@@ -1,7 +1,5 @@
 {
   "extends": "./configs/tsconfig",
-  "compilerOptions": {
-    "sourceMap": true
-  },
+  "compilerOptions": { "sourceMap": true },
   "include": ["./src"]
 }

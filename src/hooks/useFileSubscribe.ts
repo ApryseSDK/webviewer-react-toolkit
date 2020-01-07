@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { File } from '../data/file';
 import { FileEventType } from '../data/fileEvent';
-import MemoizedPromise from '../data/memoizedPromise';
+import { MemoizedPromise } from '../data/memoizedPromise';
 import { DEFAULT_THROTTLE_TIMEOUT } from '../utils/constantUtils';
 
 export interface UseFileSubscribeOptions {

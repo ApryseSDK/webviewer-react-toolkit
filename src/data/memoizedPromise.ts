@@ -10,7 +10,7 @@ export type MemoizeOptions = {
  * will start the task, and resolve with the result. If the task has already
  * been executed once, it will resolve immediatly with the last result.
  */
-export default class MemoizedPromise<T> {
+export class MemoizedPromise<T> {
   private _futurableOrLazy: FuturableOrLazy<T>;
   private _result?: Futurable<T>;
   private _done: boolean;

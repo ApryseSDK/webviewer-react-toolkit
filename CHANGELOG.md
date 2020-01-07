@@ -1,5 +1,6 @@
 # Unreleased changes (in master but not released in a version)
 
+- [core] Include Lato font with kit (#16) @liamross
 - [style] Only show focus rings when using keyboard navigation (#15) @liamross
 - [useManagedFile] Select any moved files (#14) @liamross
 - [FileOrganizer] removed file argument from onMove callback (#14) @liamross

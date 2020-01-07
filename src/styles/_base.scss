@@ -2,12 +2,14 @@
 .ui__base {
   // Scope normalize css into the base.
   @import '~normalize.css';
+
   box-sizing: border-box;
   font-size: $font-size-default;
+  line-height: 1.25;
   font-family: inherit;
   color: $font-primary;
   font-weight: $font-weight-normal;
-  font-family: 'Carlito', sans-serif;
+  font-family: 'Lato', sans-serif;
 
   *,
   *:before,

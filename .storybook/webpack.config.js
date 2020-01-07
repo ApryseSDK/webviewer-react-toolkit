@@ -1,13 +1,20 @@
 const path = require('path');
 
 module.exports = ({ config: defaultConfig }) => {
+  // Only add file types you want to resolve inline without extension.
+  defaultConfig.resolve.extensions.push('.ts', '.tsx', '.scss');
+
   // Sass loader:
   defaultConfig.module.rules.push({
     test: /\.scss$/,
-    loaders: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
-    include: [path.resolve(__dirname, '../src'), path.resolve(__dirname)],
+    use: [
+      { loader: require.resolve('style-loader') },
+      { loader: require.resolve('css-loader') },
+      { loader: require.resolve('postcss-loader') },
+      { loader: require.resolve('sass-loader') },
+    ],
+    include: [path.resolve(__dirname, '../')],
   });
-  defaultConfig.resolve.extensions.push('.scss');
 
   // TypeScript loader:
   defaultConfig.module.rules.push({
@@ -16,7 +23,14 @@ module.exports = ({ config: defaultConfig }) => {
       { loader: require.resolve('ts-loader') },
       { loader: require.resolve('react-docgen-typescript-loader') },
     ],
+    include: [path.resolve(__dirname, '../')],
   });
-  defaultConfig.resolve.extensions.push('.ts', '.tsx');
+
+  // Font and file loader:
+  defaultConfig.module.rules.push({
+    test: /\.(woff|woff2|eot|ttf)$/,
+    use: [{ loader: require.resolve('file-loader') }],
+  });
+
   return defaultConfig;
 };

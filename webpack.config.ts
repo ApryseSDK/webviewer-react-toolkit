@@ -22,21 +22,17 @@ const config: webpack.Configuration = {
   },
   devtool: 'source-map',
   externals: [nodeExternals()],
-  // externals: [
-  // /node_modules/,
-  // 'react',
-  // 'react-dom',
-  // ],
+  // externals: [/node_modules/, 'react', 'react-dom'],
   plugins: [
     new MiniCssExtractPlugin({ filename: `${LIBRARY_PATH}/style.css` }),
     new CopyPlugin([
       {
         from: `${BASE_URL}/styles/_variables.scss`,
-        to: `${LIBRARY_PATH}/variables.scss`,
+        to: `${LIBRARY_PATH}/_variables.scss`,
       },
       {
         from: `${BASE_URL}/styles/_mixins.scss`,
-        to: `${LIBRARY_PATH}/mixins.scss`,
+        to: `${LIBRARY_PATH}/_mixins.scss`,
       },
     ]),
   ],
@@ -57,7 +53,8 @@ const config: webpack.Configuration = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.scss'],
+    // Only add file types you want to resolve inline without extension.
+    extensions: ['.ts', '.tsx', '.scss', '.json'],
     plugins: [
       new TsconfigPathsPlugin({
         configFile: './tsconfig.json',
@@ -71,22 +68,35 @@ const config: webpack.Configuration = {
         enforce: 'pre',
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
-        use: 'eslint-loader',
+        use: [{ loader: require.resolve('eslint-loader') }],
       },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: require.resolve('babel-loader'),
             options: { presets: ['@babel/preset-env', '@babel/preset-react'] },
           },
-          { loader: 'ts-loader', options: { transpileOnly: true } },
+          { loader: require.resolve('ts-loader'), options: { transpileOnly: true } },
         ],
       },
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+        use: [
+          { loader: MiniCssExtractPlugin.loader },
+          { loader: require.resolve('css-loader') },
+          { loader: require.resolve('postcss-loader') },
+          { loader: require.resolve('sass-loader') },
+        ],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf)$/,
+        use: [{ loader: require.resolve('file-loader'), options: { name: `${LIBRARY_PATH}/fonts/[name].[ext]` } }],
+      },
+      {
+        test: /\.svg$/,
+        use: [{ loader: require.resolve('file-loader'), options: { name: `${LIBRARY_PATH}/icons/[name].[ext]` } }],
       },
     ],
   },

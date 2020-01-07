@@ -67,11 +67,13 @@
     &-default {
       border-radius: $border-radius;
       padding: $padding-tiny $padding-small;
+      min-width: 80px;
     }
 
     &-large {
       border-radius: $border-radius;
       padding: $padding-small $padding-large;
+      min-width: 80px;
     }
   }
 }

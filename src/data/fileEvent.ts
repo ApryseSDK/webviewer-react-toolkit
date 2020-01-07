@@ -30,6 +30,7 @@ export type FileEventListener = (event: FileEvent) => void;
 
 export type FileEventListenersObj = Partial<{ [type in FileEventType]: FileEventListener[] }>;
 
+/** An event dispatched from a `File`. */
 export class FileEvent {
   private _type: FileEventType;
   private _originalType: FileEventType;
@@ -105,14 +106,14 @@ export class FileEvent {
     }
   }
 
-  /** Prevent event from propagating on change listeners. */
+  /** Prevent event from propagating to on change listeners. */
   stopPropagation() {
     this._isPropagationStopped = true;
   }
 
   /**
-   * Prevent event from calling any other listeners, including those listeners
-   * in the current event.
+   * Prevent event from propagating to on change listeners, as well as to any
+   * further listeners in the current event.
    */
   stopImmediatePropagation() {
     this._isImmediatePropagationStopped = true;
@@ -121,19 +122,27 @@ export class FileEvent {
   private _dispatch() {
     const thisTypeListeners = this._listeners?.[this.type] ?? [];
 
+    // Call every listener until they are all called, or one listener indicates
+    // propagation should be stopped immediately.
     for (let index = 0; index < thisTypeListeners.length; index++) {
       if (this._isImmediatePropagationStopped) break;
       const listener = thisTypeListeners[index];
       listener(this);
     }
 
+    // Propagation stops if either are true.
+    const propagationStopped = this._isPropagationStopped || this._isImmediatePropagationStopped;
+
     // Call default if event is already onchange, or if propagation has been
-    // stopped. Otherwise, give the eventDefault to an onchange event so that
-    // onchange listeners have an opportunity to receive the event prior to it
-    // firing the default.
-    if (this._isPropagationStopped || this.type === FileEventType.Change) {
-      this._eventDefault?.();
-    } else if (!this._isPropagationStopped) {
+    // stopped.
+    if (propagationStopped || this.type === FileEventType.Change) {
+      return this._eventDefault?.();
+    }
+
+    // Otherwise, if propagation has not been stopped, give the eventDefault to
+    // an onchange event so that onchange listeners have an opportunity to
+    // receive the event prior to it firing the default.
+    if (!propagationStopped) {
       const fileEventInit: FileEventInit = {
         bubbles: this.bubbles,
         cancelable: this.cancellable,

@@ -7,7 +7,7 @@ import getRotatedDocument from '../webviewer/getRotatedDocument';
 import getThumbnail from '../webviewer/getThumbnail';
 import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
 import { FuturableOrLazy } from './futurable';
-import MemoizedPromise from './memoizedPromise';
+import { MemoizedPromise } from './memoizedPromise';
 
 interface FileDetailsBase {
   /** File name. */
@@ -27,6 +27,7 @@ interface FileDetailsBase {
 /** The input object provided to the File constructor. */
 export type FileDetails = RequireAtLeastOne<FileDetailsBase, 'fileObj' | 'documentObj'>;
 
+/** A representation of the data within a file. */
 export class File {
   private _id: string;
   private _name: string;
@@ -38,7 +39,9 @@ export class File {
   private _eventListeners: FileEventListenersObj;
 
   constructor({ name, originalName, extension, fileObj, documentObj, thumbnail }: FileDetails) {
-    if (!fileObj && !documentObj) throw new Error('One of `fileObj` or `documentObj` is required');
+    if (!fileObj && !documentObj) {
+      throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');
+    }
 
     this._id = getStringId('File');
     this._name = name;
@@ -52,57 +55,42 @@ export class File {
     this._eventListeners = {};
   }
 
-  /**
-   * The name of the file.
-   */
+  /** The name of the file. */
   get name() {
     return this._name;
   }
   set name(name: string) {
-    this._dispatchEvent(FileEventType.NameChange, () => {
+    this.dispatchEvent(FileEventType.NameChange, () => {
       this._name = name;
     });
   }
 
-  /**
-   * A unique ID generated for the file.
-   */
+  /** A unique ID generated for the file. */
   get id() {
     return this._id;
   }
 
-  /**
-   * The original name of the file (will fallback to the name if not provided
-   * during initialization).
-   */
+  /** The original name of the file. */
   get originalName() {
     return this._originalName;
   }
 
-  /**
-   * The extension of the file (for example `'pdf'`).
-   */
+  /** The extension of the file (for example `'pdf'`). */
   get extension() {
     return this._extension;
   }
 
-  /**
-   * A promise getter for the thumbnail.
-   */
+  /** A memoized promise for the thumbnail. */
   get thumbnail() {
     return this._thumbnail;
   }
 
-  /**
-   * A promise getter for the fileObj.
-   */
+  /** A memoized promise for the fileObj. */
   get fileObj() {
     return this._fileObj;
   }
 
-  /**
-   * A promise getter for the documentObj.
-   */
+  /** A memoized promise for the documentObj. */
   get documentObj() {
     return this._documentObj;
   }
@@ -112,7 +100,7 @@ export class File {
    * @param thumbnail The thumbnail, promise, or getter for the thumbnail.
    */
   setThumbnail(thumbnail?: FuturableOrLazy<string>) {
-    this._dispatchEvent(FileEventType.ThumbnailChange, () => {
+    this.dispatchEvent(FileEventType.ThumbnailChange, () => {
       this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
     });
   }
@@ -122,7 +110,7 @@ export class File {
    * @param fileObj The fileObj, promise, or getter for the fileObj.
    */
   setFileObj(fileObj?: FuturableOrLazy<Blob>) {
-    this._dispatchEvent(FileEventType.FileObjChange, () => {
+    this.dispatchEvent(FileEventType.FileObjChange, () => {
       this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
       // Only update documentObj if fileObj was given, not generated.
       if (fileObj) this.setDocumentObj();
@@ -135,7 +123,7 @@ export class File {
    * @param stopPropagation Prevent updates to _fileObj and thumbnail.
    */
   setDocumentObj(documentObj?: FuturableOrLazy<CoreControls.Document>) {
-    this._dispatchEvent(FileEventType.DocumentObjChange, () => {
+    this.dispatchEvent(FileEventType.DocumentObjChange, () => {
       this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
       // Only update fileObj if documentObj was given, not generated.
       if (documentObj) this.setFileObj();
@@ -144,11 +132,12 @@ export class File {
   }
 
   /**
-   * Rotate the file 90 degrees clockwise.
+   * Rotate 90 degrees clockwise unless `counterclockwise` is true.
+   * @param counterclockwise Rotate 90 degrees counterclockwise.
    */
-  rotate() {
-    this._dispatchEvent(FileEventType.Rotate, () => {
-      this.setDocumentObj(getRotatedDocument(this.documentObj.get()));
+  rotate(counterclockwise?: boolean) {
+    this.dispatchEvent(FileEventType.Rotate, () => {
+      this.setDocumentObj(getRotatedDocument(this.documentObj.get(), counterclockwise));
     });
   }
 
@@ -190,8 +179,13 @@ export class File {
     }
   }
 
-  /** Dispatch an event for the file. */
-  private _dispatchEvent(type: FileEventType, eventDefault?: Function) {
+  /**
+   * Dispatch an event for this file. The event will complete by calling the
+   * event default once it has finished propagating through all the listeners.
+   * @param type The file event type to dispatch.
+   * @param eventDefault The default action once all event listeners are called.
+   */
+  dispatchEvent(type: FileEventType, eventDefault?: Function) {
     new FileEvent(type, this, { eventDefault, listeners: this._eventListeners });
   }
 

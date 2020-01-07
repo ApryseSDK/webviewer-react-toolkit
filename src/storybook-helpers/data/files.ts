@@ -1,5 +1,5 @@
 import { File } from '../../data/file';
-import MemoizedPromise from '../../data/memoizedPromise';
+import { MemoizedPromise } from '../../data/memoizedPromise';
 import testPdfThumbnailRotated from '../images/pdf-preview-2.png';
 import testPdfThumbnail from '../images/pdf-preview.png';
 
