@@ -7,6 +7,8 @@ export interface UseOnClickOptions {
   disabled?: boolean;
 }
 
+type UseOnClickOutput<T> = (event: MouseEvent<T>) => void;
+
 /**
  * Returns the handler for onClick. Allows you to add specific options to the
  * event before passing it through to the default onClick.
@@ -19,8 +21,8 @@ export default function useOnClick<T>(onClick?: MouseEventHandler<T>, options: U
   const blurOnClick = !!options.blurOnClick;
   const disabled = !!options.disabled;
 
-  const handler = useCallback(
-    (event: MouseEvent<T>) => {
+  const handler = useCallback<UseOnClickOutput<T>>(
+    event => {
       if (preventDefault) event.preventDefault();
       if (stopPropagation) event.stopPropagation();
       if (disabled) return;

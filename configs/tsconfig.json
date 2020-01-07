@@ -3,7 +3,7 @@
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
-    "declaration": false, // TODO: fix
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -19,7 +19,6 @@
     "outDir": "../lib",
     "resolveJsonModule": true,
     "strict": true,
-    "suppressImplicitAnyIndexErrors": true,
     "target": "es5"
   }
 }

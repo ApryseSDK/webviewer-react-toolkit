@@ -1,8 +1,8 @@
-import { FuturableOrLazy, futureableOrLazyToFuturable } from '../data/futurable';
+import { Futurable } from '../data/futurable';
 
-async function getRotatedDocument(documentObj: FuturableOrLazy<CoreControls.Document>, counterclockwise?: boolean) {
+async function getRotatedDocument(documentObj: Futurable<CoreControls.Document>, counterclockwise?: boolean) {
   const coreControls = window.CoreControls;
-  const fetchedDocument = await futureableOrLazyToFuturable(documentObj);
+  const fetchedDocument = await documentObj;
 
   const pageNumbers = Array.from({ length: fetchedDocument.getPageCount() }, (_v, k) => k + 1);
 

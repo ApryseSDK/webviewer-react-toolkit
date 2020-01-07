@@ -43,6 +43,14 @@ export class FileEvent {
   private _eventDefault?: Function;
   private _listeners?: FileEventListenersObj;
 
+  /**
+   * Initialize a `FileEvent`.
+   * @param type The type of event to create.
+   * @param target The target `File` that the event is triggered on.
+   * @param fileEventInit The initialization object.
+   * @param originalType Generally this is not given, as it is inferred from
+   * type. This will be set if the event propagates to change listeners.
+   */
   constructor(type: FileEventType, target: File, fileEventInit: FileEventInit = {}, originalType = type) {
     this._type = type;
     this._originalType = originalType;

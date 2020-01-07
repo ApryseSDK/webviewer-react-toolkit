@@ -1,3 +1,5 @@
+import { MemoizedPromise } from './memoizedPromise';
+
 /** Either a promise to return a type `T`, or `T` itself. */
 export type Futurable<T> = Promise<T> | T;
 
@@ -15,4 +17,14 @@ export type FuturableOrLazy<T> = Futurable<T> | LazyFuturable<T>;
  */
 export function futureableOrLazyToFuturable<T>(futurableOrLazy: FuturableOrLazy<T>): Futurable<T> {
   return futurableOrLazy instanceof Function ? futurableOrLazy() : futurableOrLazy;
+}
+
+/**
+ * If the MemoizedPromise is done, will turn into Promise, otherwise will turn
+ * into lazy Promise
+ * @param memoizedPromise The memoized promise to convert.
+ */
+export function memoizedPromiseToFuturableOrLazy<T>(memoizedPromise: MemoizedPromise<T>): FuturableOrLazy<T> {
+  if (memoizedPromise.done) return memoizedPromise.get();
+  return memoizedPromise.get;
 }

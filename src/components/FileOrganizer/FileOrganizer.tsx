@@ -123,6 +123,8 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   const fileOrganizerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<Grid>(null);
 
+  const isVirtualized = files.length >= virtualizeThreshold;
+
   const [columnCount, setColumnCount] = useState(0);
 
   const [editingId, setEditingId] = useState<string>();
@@ -134,8 +136,10 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   }, [draggingId, onDragChangeRef]);
 
   // Detect all shown items and set as array of IDs to notify onRenderThumbnail.
-  const [initialShownIds, setInitialShownIds] = useState<string[]>([]);
+  // Set to null if all IDs are shown (no virtualization).
+  const [initialShownIds, setInitialShownIds] = useState<string[] | null>([]);
   useEffect(() => {
+    if (!isVirtualized) return setInitialShownIds(null);
     requestAnimationFrame(() => {
       if (!fileOrganizerRef.current) return;
       const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
@@ -143,7 +147,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
       itemsInView.forEach(draggableItem => ids.push(draggableItem.id));
       setInitialShownIds(ids);
     });
-  }, []);
+  }, [isVirtualized]);
 
   const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, _file: File, draggableRef: RefObject<HTMLDivElement>) => {
@@ -161,17 +165,19 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
       if (isVisible) return;
 
       // Use scrollIntoView for non-virtualized items.
-      if (!gridRef.current) {
+      if (!isVirtualized) {
         if (isAbove) newLocation?.scrollIntoView(true);
         if (isBelow) newLocation?.scrollIntoView(false);
         return;
       }
 
+      if (!gridRef.current) return;
+
       // Use react-window scrollToItem api for virtualized items.
       const { rowIndex } = getRowAndColumnIndex(index + indexDiff, columnCount);
       gridRef.current.scrollToItem({ align: 'smart', rowIndex });
     },
-    [editingId, onMove, preventArrowsToMove, columnCount],
+    [editingId, onMove, preventArrowsToMove, isVirtualized, columnCount],
   );
 
   const renderItem = useCallback(
@@ -201,7 +207,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
               otherDragging,
               isEditing,
               otherEditing,
-              isShownOnLoad: initialShownIds.includes(file.id),
+              isShownOnLoad: !initialShownIds || initialShownIds.includes(file.id),
               onEditingChange: isEditing => setEditingId(isEditing ? file.id : undefined),
             });
           }}
@@ -244,13 +250,9 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
     return { x, y };
   }, []);
 
-  const isVirtualized = files.length >= virtualizeThreshold;
-
   const fileOrganizerClass = classnames(
     'ui__base ui__fileOrganizer',
-    {
-      'ui__fileOrganizer--virtualized': isVirtualized,
-    },
+    { 'ui__fileOrganizer--virtualized': isVirtualized },
     className,
   );
 

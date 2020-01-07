@@ -1,6 +1,5 @@
 {
   "extends": "./tsconfig",
-  "compilerOptions": { "declaration": true },
   "include": ["../src"],
-  "exclude": ["**/*.test.*", "**/*.stories.*", "./src/storybook-helpers/"]
+  "exclude": ["**/*.test.*", "**/*.stories.*", "./storybook-helpers/"]
 }

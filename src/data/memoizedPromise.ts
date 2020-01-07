@@ -1,4 +1,4 @@
-import { Futurable, FuturableOrLazy, futureableOrLazyToFuturable } from './futurable';
+import { Futurable, FuturableOrLazy, futureableOrLazyToFuturable, memoizedPromiseToFuturableOrLazy } from './futurable';
 
 export type MemoizeOptions = {
   preprocess?: boolean;
@@ -15,37 +15,32 @@ export class MemoizedPromise<T> {
   private _result?: Futurable<T>;
   private _done: boolean;
 
-  constructor(futurableOrLazy: FuturableOrLazy<T>, options: MemoizeOptions = {}) {
-    this._futurableOrLazy = futurableOrLazy;
+  constructor(futurableOrLazy: MemoizedPromise<T> | FuturableOrLazy<T>, options: MemoizeOptions = {}) {
+    if (futurableOrLazy instanceof MemoizedPromise) {
+      this._futurableOrLazy = memoizedPromiseToFuturableOrLazy(futurableOrLazy);
+    } else {
+      this._futurableOrLazy = futurableOrLazy;
+    }
+
     this._result = undefined;
     this._done = false;
 
-    // If the option to preprocess is specified, or the provided input is not
-    // a lazy function, then immediately set the result and set done to true.
-    if (options.preprocess || typeof futurableOrLazy !== 'function') {
+    if (options.preprocess || typeof this._futurableOrLazy !== 'function') {
       this._result = futureableOrLazyToFuturable(this._futurableOrLazy);
       this._done = true;
     }
   }
 
-  /**
-   * Is true if the value is no longer a lazy function so that calling `get`
-   * will immediately return your promise.
-   */
+  /** Is true if the value is memoized. */
   get done() {
     return this._done;
   }
 
-  /**
-   * Resolves with the result of the task given in the constructor
-   * If its already been resolved, it just resolves immediatly with the
-   * calculated value.
-   */
+  /** Resolves with a promise for the value. */
   async get() {
-    if (this._result !== undefined) return this._result;
+    if (this._done) return this._result as Futurable<T>;
     this._result = futureableOrLazyToFuturable(this._futurableOrLazy);
-    const tempValue = await this._result;
     this._done = true;
-    return tempValue;
+    return this._result;
   }
 }

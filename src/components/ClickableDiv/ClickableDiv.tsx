@@ -3,7 +3,6 @@ import React, { forwardRef, HTMLAttributes, useImperativeHandle, useRef } from '
 import useAccessibleFocus from '../../hooks/useAccessibleFocus';
 import useKeyForClick from '../../hooks/useKeyForClick';
 import useOnClick from '../../hooks/useOnClick';
-import { Remove } from '../../utils/typeUtils';
 
 export interface ClickableDivProps extends Remove<HTMLAttributes<HTMLDivElement>, 'role'> {
   /**

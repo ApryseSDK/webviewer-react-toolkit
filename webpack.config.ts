@@ -34,6 +34,14 @@ const config: webpack.Configuration = {
         from: `${BASE_URL}/styles/_mixins.scss`,
         to: `${LIBRARY_PATH}/_mixins.scss`,
       },
+      {
+        from: `${BASE_URL}/fonts/`,
+        to: `${LIBRARY_PATH}/fonts/`,
+      },
+      {
+        from: `${BASE_URL}/*.d.ts`,
+        to: `${LIBRARY_PATH}/[name].[ext]`,
+      },
     ]),
   ],
   optimization: {
@@ -91,12 +99,13 @@ const config: webpack.Configuration = {
         ],
       },
       {
-        test: /\.(woff|woff2|eot|ttf)$/,
-        use: [{ loader: require.resolve('file-loader'), options: { name: `${LIBRARY_PATH}/fonts/[name].[ext]` } }],
-      },
-      {
         test: /\.svg$/,
-        use: [{ loader: require.resolve('file-loader'), options: { name: `${LIBRARY_PATH}/icons/[name].[ext]` } }],
+        use: [
+          {
+            loader: require.resolve('file-loader'),
+            options: { name: '[name].[ext]', outputPath: `${LIBRARY_PATH}/icons` },
+          },
+        ],
       },
     ],
   },

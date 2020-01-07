@@ -1,8 +1,8 @@
-import { FuturableOrLazy, futureableOrLazyToFuturable } from '../data/futurable';
+import { Futurable } from '../data/futurable';
 
-async function blobToDocument(blob: FuturableOrLazy<Blob>, extension: string) {
+async function blobToDocument(blob: Futurable<Blob>, extension: string) {
   const coreControls = window.CoreControls;
-  const fetchedBlob = await futureableOrLazyToFuturable(blob);
+  const fetchedBlob = await blob;
   const documentObj: CoreControls.Document = await coreControls.createDocument(fetchedBlob, { extension });
   return documentObj;
 }

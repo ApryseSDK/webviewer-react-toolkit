@@ -1,10 +1,22 @@
-import { MouseEvent, useCallback, useMemo, useState } from 'react';
+import { Dispatch, MouseEvent, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { File } from '../data/file';
 import { moveMultiFromIndexToIndex, separateItemsWithTarget } from '../utils/arrayUtils';
 
 export interface UseManagedFilesOptions {
   initialFiles?: File[];
   preventMultiDrag?: boolean;
+}
+
+interface UseManagedFilesOutput {
+  files: File[];
+  setFiles: Dispatch<SetStateAction<File[]>>;
+  moveFile: (fromIndex: number, toIndex: number) => void;
+  selectedIds: string[];
+  toggleSelectedId: (id: string, event: MouseEvent<HTMLElement>) => void;
+  unselectAll: () => void;
+  selectAll: () => void;
+  onDragChange: (id?: string | undefined) => void;
+  draggingFiles: File[] | undefined;
 }
 
 /**
@@ -114,7 +126,7 @@ export default function useManagedFiles(options: UseManagedFilesOptions = {}) {
     [dragging, files, preventMultiDrag, selectedIds],
   );
 
-  const managedFiles = useMemo(
+  const managedFiles = useMemo<UseManagedFilesOutput>(
     () => ({
       files,
       setFiles,

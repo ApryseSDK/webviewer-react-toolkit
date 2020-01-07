@@ -1,6 +1,5 @@
 import { getExtension } from '../utils/fileUtils';
 import { getStringId } from '../utils/idUtils';
-import { RequireAtLeastOne } from '../utils/typeUtils';
 import blobToDocument from '../webviewer/blobToDocument';
 import documentToBlob from '../webviewer/documentToBlob';
 import getRotatedDocument from '../webviewer/getRotatedDocument';
@@ -17,11 +16,11 @@ interface FileDetailsBase {
   /** File extension. For example, `'pdf'`. */
   extension?: string;
   /** File object, or function to get it. One of `fileObj` or `documentObj` must be given. */
-  fileObj?: FuturableOrLazy<Blob>;
+  fileObj?: MemoizedPromise<Blob> | FuturableOrLazy<Blob>;
   /** Document object, or function to get it. One of `fileObj` or `documentObj` must be given. */
-  documentObj?: FuturableOrLazy<CoreControls.Document>;
+  documentObj?: MemoizedPromise<CoreControls.Document> | FuturableOrLazy<CoreControls.Document>;
   /** Thumbnail data URL string, or function to get it. */
-  thumbnail?: FuturableOrLazy<string>;
+  thumbnail?: MemoizedPromise<string> | FuturableOrLazy<string>;
 }
 
 /** The input object provided to the File constructor. */
@@ -38,7 +37,14 @@ export class File {
   private _thumbnail: MemoizedPromise<string>;
   private _eventListeners: FileEventListenersObj;
 
-  constructor({ name, originalName, extension, fileObj, documentObj, thumbnail }: FileDetails) {
+  /**
+   * Initialize the `File`.
+   * @param fileDetails The file details object or file-like class to initialize
+   * this `File` with.
+   */
+  constructor(fileDetails: FileDetails) {
+    const { name, originalName, extension, fileObj, documentObj, thumbnail } = fileDetails;
+
     if (!fileObj && !documentObj) {
       throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');
     }
@@ -173,7 +179,7 @@ export class File {
    */
   removeAllEventListeners(type?: FileEventType) {
     if (typeof type === 'string') {
-      this._eventListeners[type] = [];
+      delete this._eventListeners[type];
     } else if (type === undefined) {
       this._eventListeners = {};
     }
