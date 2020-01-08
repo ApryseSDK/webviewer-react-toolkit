@@ -35,8 +35,8 @@ const config: webpack.Configuration = {
         to: `${LIBRARY_PATH}/_mixins.scss`,
       },
       {
-        from: `${BASE_URL}/*.d.ts`,
-        to: `${LIBRARY_PATH}/[name].[ext]`,
+        from: `${BASE_URL}/types.d.ts`,
+        to: `${LIBRARY_PATH}/types.d.ts`,
       },
     ]),
   ],
