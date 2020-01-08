@@ -1,8 +1,12 @@
 {
-  "name": "component-library",
-  "version": "0.0.0",
-  "description": "Component Library",
+  "name": "@pdftron/webviewer-react-toolkit",
+  "version": "0.0.0-beta.0",
+  "description": "A React component library for integrating with PDFTron WebViewer API.",
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XodoDocs/component-library.git"
+  },
   "scripts": {
     "start": "start-storybook -s public -p 6006",
     "make": "ts-node scripts/make",
@@ -95,11 +99,19 @@
     "webpack-cli": "^3.3.10",
     "webpack-node-externals": "^1.7.2"
   },
+  "keywords": [
+    "pdftron",
+    "webviewer",
+    "react",
+    "component",
+    "library"
+  ],
   "engines": {
     "node": "12.x"
   },
   "main": "lib/index.js",
   "style": "lib/style.css",
+  "types": "lib/index.d.ts",
   "unpkg": "dist/component_library.bundle.js",
   "sideEffects": false,
   "files": [

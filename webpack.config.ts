@@ -35,10 +35,6 @@ const config: webpack.Configuration = {
         to: `${LIBRARY_PATH}/_mixins.scss`,
       },
       {
-        from: `${BASE_URL}/fonts/`,
-        to: `${LIBRARY_PATH}/fonts/`,
-      },
-      {
         from: `${BASE_URL}/*.d.ts`,
         to: `${LIBRARY_PATH}/[name].[ext]`,
       },
@@ -74,7 +70,7 @@ const config: webpack.Configuration = {
     rules: [
       {
         enforce: 'pre',
-        test: /\.(js|jsx|ts|tsx)$/,
+        test: /\.(jsx?|tsx?)$/,
         exclude: /node_modules/,
         use: [{ loader: require.resolve('eslint-loader') }],
       },
@@ -99,11 +95,20 @@ const config: webpack.Configuration = {
         ],
       },
       {
+        test: /\.woff2?$/,
+        use: [
+          {
+            loader: require.resolve('file-loader'),
+            options: { name: '[name].[ext]', outputPath: `${LIBRARY_PATH}/font/` },
+          },
+        ],
+      },
+      {
         test: /\.svg$/,
         use: [
           {
             loader: require.resolve('file-loader'),
-            options: { name: '[name].[ext]', outputPath: `${LIBRARY_PATH}/icons` },
+            options: { name: '[name].[ext]', outputPath: `${LIBRARY_PATH}/icons/` },
           },
         ],
       },
