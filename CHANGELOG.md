@@ -1,4 +1,6 @@
-# Unreleased changes (in master but not released in a version)
+## [Unreleased]
+
+## [0.0.0-beta.1] - 2020-01-08
 
 - [core] Include Lato font with kit (#16) @liamross
 - [style] Only show focus rings when using keyboard navigation (#15) @liamross
