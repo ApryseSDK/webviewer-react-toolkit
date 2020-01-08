@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- [core] Remove Lato from bundle (#18) @liamross
+
 ## [0.0.0-beta.1] - 2020-01-08
 
 - [core] Include Lato font with kit (#16) @liamross

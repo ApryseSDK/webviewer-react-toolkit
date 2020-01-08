@@ -95,15 +95,6 @@ const config: webpack.Configuration = {
         ],
       },
       {
-        test: /\.woff2?$/,
-        use: [
-          {
-            loader: require.resolve('file-loader'),
-            options: { name: '[name].[ext]', outputPath: `${LIBRARY_PATH}/font/` },
-          },
-        ],
-      },
-      {
         test: /\.svg$/,
         use: [
           {

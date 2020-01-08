@@ -11,7 +11,19 @@
 This component library will contain various React components that integrate with
 the PDFTron WebViewer API.
 
-## Quick guide
+## Using the toolkit:
+
+We have designed these components to look good with the
+[Lato](https://fonts.google.com/specimen/Lato) font. It should work with any
+font, but if you want to include Lato as the base font, you can do it like this:
+
+```html
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i&display=swap');
+</style>
+```
+
+## Cloning this repo:
 
 ### To spin this up:
 

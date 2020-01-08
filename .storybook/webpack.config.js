@@ -26,11 +26,5 @@ module.exports = ({ config: defaultConfig }) => {
     include: [path.resolve(__dirname, '../')],
   });
 
-  // Font and file loader:
-  defaultConfig.module.rules.push({
-    test: /\.(woff|woff2|eot|ttf)$/,
-    use: [{ loader: require.resolve('file-loader') }],
-  });
-
   return defaultConfig;
 };
