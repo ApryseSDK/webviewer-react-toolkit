@@ -1,12 +1,7 @@
 ## [Unreleased]
 
-## [0.0.0-beta.2] - 2020-01-08
+## [0.0.0-beta.3] - 2020-01-08
 
-- [core] Remove Lato from bundle (#18) @liamross
-
-## [0.0.0-beta.1] - 2020-01-08
-
-- [core] Include Lato font with kit (#16) @liamross
 - [style] Only show focus rings when using keyboard navigation (#15) @liamross
 - [useManagedFile] Select any moved files (#14) @liamross
 - [FileOrganizer] removed file argument from onMove callback (#14) @liamross
