@@ -1,5 +1,10 @@
 {
   "extends": "./tsconfig",
   "include": ["../src"],
-  "exclude": ["**/*.test.*", "**/*.stories.*", "./storybook-helpers/"]
+  "exclude": [
+    "../node_modules",
+    "../src/**/*.test.*",
+    "../src/**/*.stories.*",
+    "../src/storybook-helpers"
+  ]
 }
