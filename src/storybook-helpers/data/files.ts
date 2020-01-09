@@ -32,6 +32,8 @@ class FakeFile {
     this.documentObj = new MemoizedPromise<CoreControls.Document>(('' as unknown) as CoreControls.Document);
   }
 
+  /* eslint-disable @typescript-eslint/no-empty-function */
+
   private _getParameter<T>(parameter: T, options: CreateFileOptions) {
     const internals = (() => {
       if (options.pending) return async () => new Promise(() => {});
@@ -40,8 +42,6 @@ class FakeFile {
     })();
     return new MemoizedPromise(internals as FuturableOrLazy<T>);
   }
-
-  /* eslint-disable @typescript-eslint/no-empty-function */
 
   rotate() {}
   addEventListener() {}
