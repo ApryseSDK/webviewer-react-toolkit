@@ -6,7 +6,7 @@ import Backend from 'react-dnd-html5-backend';
 import Draggable from '../Draggable';
 import docs from './README.md';
 
-export default { title: 'Draggable', parameters: { info: docs } };
+export default { title: 'Draggable', component: Draggable, parameters: { info: docs } };
 
 const commonStyle: CSSProperties = {
   padding: 16,

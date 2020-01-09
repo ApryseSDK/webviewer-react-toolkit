@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
-import React, { CSSProperties, FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { File } from '../../data/file';
 import useManagedFiles from '../../hooks/useManagedFiles';
 import { createFile } from '../../storybook-helpers/data/files';
@@ -10,9 +10,7 @@ import Thumbnail from '../Thumbnail';
 import ThumbnailDragLayer from '../ThumbnailDragLayer';
 import docs from './README.md';
 
-export default { title: 'FileOrganizer', parameters: { info: docs } };
-
-const style: CSSProperties = { height: '60vh', margin: -32 };
+export default { title: 'FileOrganizer', component: FileOrganizer, parameters: { info: { docs, disable: true } } };
 
 function useCommonFileOrganizer() {
   // This is the index organizing function.
@@ -53,7 +51,6 @@ export const Basic = () => {
 
   return (
     <FileOrganizer
-      style={style}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
@@ -80,7 +77,6 @@ export const WithCustomDragLayer = () => {
 
   return (
     <FileOrganizer
-      style={style}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
@@ -103,10 +99,14 @@ export const WithCustomDragLayer = () => {
   );
 };
 
-const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number }> = ({ lazy, numFiles }) => {
+const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThreshold?: number }> = ({
+  lazy,
+  numFiles,
+  virtualizeThreshold,
+}) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>(() =>
-    Array.from({ length: 100 }, (_, index) => createFile(index, { lazy })),
+    Array.from({ length: 50 }, (_, index) => createFile(index, { lazy })),
   );
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
@@ -137,12 +137,12 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number }> = ({ lazy, n
 
   return (
     <FileOrganizer
-      style={style}
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       onDragChange={action('onDragChange')}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
+      virtualizeThreshold={virtualizeThreshold ?? undefined}
       onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, isShownOnLoad }) => (
         <Thumbnail
           file={file}
@@ -160,7 +160,7 @@ export const Virtualized = () => <VirtualizedExample />;
 export const VirtualizedLazyThumbnails = () => <VirtualizedExample lazy />;
 export const VirtualizedStressTest = () => <VirtualizedExample lazy numFiles={1000} />;
 export const BasicToVirtualized = () => (
-  <VirtualizedExample lazy numFiles={number('number of files', 25, { min: 0, max: 100, step: 25, range: true })} />
+  <VirtualizedExample lazy virtualizeThreshold={boolean('is virtualized', false) ? 50 : 51} />
 );
 
 const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
@@ -180,7 +180,6 @@ const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized
 
   return (
     <FileOrganizer
-      style={style}
       files={files}
       onMove={moveFile}
       onDragChange={onDragChange}

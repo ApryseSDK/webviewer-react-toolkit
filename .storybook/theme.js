@@ -1,13 +1,8 @@
 import { create } from '@storybook/theming';
-// @ts-ignore
-import logo from './logo.png';
 
 export default create({
   // Theme base
   base: 'dark',
-
-  // Size of underlay grid
-  // gridCellSize: 8,
 
   // Main colors
   colorPrimary: '#00a3e3',
@@ -40,6 +35,6 @@ export default create({
 
   // Branding
   brandTitle: `${require('../package.json').version}`,
-  brandUrl: 'https://github.com/PDFTron/component-library',
-  brandImage: logo,
+  brandUrl: 'https://github.com/XodoDocs/component-library',
+  brandImage: 'https://www.pdftron.com/brand-assets/pdftron-logo-blue.png',
 });

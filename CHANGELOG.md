@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- [FileOrganizer] Correctly forward default div props (#21) @liamross
+- [FileOrganizer] Prevent arrow keys from moving when disabled (#21) @liamross
+- [docs] Updated the docs and appearance of Storybook (#21) @liamross
 - [EditableText] Bordered style fix, now shows border (#20) @liamross
 
 ## [0.0.0-beta.3] - 2020-01-08

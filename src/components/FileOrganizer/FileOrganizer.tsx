@@ -115,9 +115,11 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   onRenderThumbnail,
   onRenderDragLayer,
   disableMove,
-  className,
   preventArrowsToMove,
   virtualizeThreshold = 50,
+  className,
+  onClick,
+  onKeyDown,
   ...divProps
 }) => {
   const fileOrganizerRef = useRef<HTMLDivElement>(null);
@@ -151,7 +153,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
 
   const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, _file: File, draggableRef: RefObject<HTMLDivElement>) => {
-      if (preventArrowsToMove || editingId !== undefined || !onMove) return;
+      if (preventArrowsToMove || disableMove || editingId !== undefined || !onMove) return;
       if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
 
       const indexDiff = event.key === 'ArrowLeft' ? -1 : 1;
@@ -177,7 +179,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
       const { rowIndex } = getRowAndColumnIndex(index + indexDiff, columnCount);
       gridRef.current.scrollToItem({ align: 'smart', rowIndex });
     },
-    [editingId, onMove, preventArrowsToMove, isVirtualized, columnCount],
+    [editingId, disableMove, onMove, preventArrowsToMove, isVirtualized, columnCount],
   );
 
   const renderItem = useCallback(
@@ -228,20 +230,22 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
 
   const handleOnClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     event => {
+      onClick?.(event);
       if (event.target === fileOrganizerRef.current) onCancelSelect?.();
     },
-    [onCancelSelect],
+    [onCancelSelect, onClick],
   );
 
   const handleOnKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(
     event => {
+      onKeyDown?.(event);
       if (event.key === 'Escape') return onCancelSelect?.();
       if (event.key === 'a' && event.metaKey) {
         onSelectAll?.();
         event.preventDefault();
       }
     },
-    [onCancelSelect, onSelectAll],
+    [onCancelSelect, onSelectAll, onKeyDown],
   );
 
   const customDragLayerTranslate = useCallback<NonNullable<DragLayerProps['customTranslate']>>(({ mousePosition }) => {

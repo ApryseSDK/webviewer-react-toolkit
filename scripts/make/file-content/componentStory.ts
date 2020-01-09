@@ -5,7 +5,7 @@ import React from 'react';
 import ${componentName} from '../${componentName}';
 import docs from './README.md';
 
-export default { title: '${componentName}', parameters: { info: docs } };
+export default { title: '${componentName}', component: ${componentName}, parameters: { info: docs } };
 
 export const basic = () => (
   <${componentName}

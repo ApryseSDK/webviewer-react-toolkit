@@ -4,7 +4,7 @@ import Image from '../Image';
 import Spinner from '../Spinner';
 import docs from './README.md';
 
-export default { title: 'Image', parameters: { info: docs } };
+export default { title: 'Image', component: Image, parameters: { info: docs } };
 
 const style: CSSProperties = {
   height: 250,

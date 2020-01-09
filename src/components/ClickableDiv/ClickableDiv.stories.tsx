@@ -4,7 +4,7 @@ import React from 'react';
 import ClickableDiv from '../ClickableDiv';
 import docs from './README.md';
 
-export default { title: 'ClickableDiv', parameters: { info: docs } };
+export default { title: 'ClickableDiv', component: ClickableDiv, parameters: { info: docs } };
 
 export const basic = () => (
   <ClickableDiv

@@ -3,7 +3,7 @@ import { enumSelect } from '../../storybook-helpers/knobs/enumSelect';
 import Spinner, { SpinnerSize, SpinnerStyle } from '../Spinner';
 import docs from './README.md';
 
-export default { title: 'Spinner', parameters: { info: docs } };
+export default { title: 'Spinner', component: Spinner, parameters: { info: docs } };
 
 export const basic = () => (
   <Spinner

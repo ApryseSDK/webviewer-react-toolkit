@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React, { FC, HTMLAttributes, useEffect } from 'react';
-import single_page from '../../icons/single_page-24px.svg';
 import multi_page from '../../icons/multi_page-24px.svg';
+import single_page from '../../icons/single_page-24px.svg';
 
 export interface ThumbnailDragLayerProps extends HTMLAttributes<HTMLDivElement> {
   /**

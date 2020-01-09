@@ -5,7 +5,7 @@ import { createFile, CreateFileOptions } from '../../storybook-helpers/data/file
 import Thumbnail, { ThumbnailProps } from '../Thumbnail';
 import docs from './README.md';
 
-export default { title: 'Thumbnail', parameters: { info: docs } };
+export default { title: 'Thumbnail', component: Thumbnail, parameters: { info: docs } };
 
 const defaultProps = (options?: CreateFileOptions, index = 0): ThumbnailProps => ({
   file: createFile(index, options),

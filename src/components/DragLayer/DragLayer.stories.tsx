@@ -5,7 +5,7 @@ import Draggable from '../Draggable';
 import DragLayer from '../DragLayer';
 import docs from './README.md';
 
-export default { title: 'DragLayer', parameters: { info: { text: docs, propTablesExclude: [Draggable] } } };
+export default { title: 'DragLayer', component: DragLayer, parameters: { info: docs } };
 
 const WIDTH = 200;
 const HEIGHT = 50;
