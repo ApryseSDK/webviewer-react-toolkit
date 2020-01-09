@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- [EditableText] Bordered style fix, now shows border (#20) @liamross
+
 ## [0.0.0-beta.3] - 2020-01-08
 
 - [style] Only show focus rings when using keyboard navigation (#15) @liamross

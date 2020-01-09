@@ -31,11 +31,14 @@
     }
   }
 
-  .ui__editableText__button,
   .ui__editableText__field {
+    line-height: 1;
+  }
+
+  &__button,
+  &__field {
     min-height: 28px;
     min-width: 100%;
-    line-height: 1;
     color: $font-primary;
     padding: $padding-tiny;
     border-radius: $border-radius;
