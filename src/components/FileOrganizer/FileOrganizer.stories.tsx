@@ -12,7 +12,9 @@ import docs from './README.md';
 
 export default { title: 'FileOrganizer', component: FileOrganizer, parameters: { info: { docs, disable: true } } };
 
-function useCommonFileOrganizer() {
+/* --- Basic. --- */
+
+const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
@@ -43,12 +45,6 @@ function useCommonFileOrganizer() {
     });
   }, [numFiles]);
 
-  return { files, handleOnMove };
-}
-
-export const Basic = () => {
-  const { files, handleOnMove } = useCommonFileOrganizer();
-
   return (
     <FileOrganizer
       files={files}
@@ -56,6 +52,7 @@ export const Basic = () => {
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
       onDragChange={action('onDragChange')}
+      onRenderDragLayer={onRenderDragLayer ? () => <ThumbnailDragLayer /> : undefined}
       onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
         <Thumbnail
           file={file}
@@ -72,32 +69,10 @@ export const Basic = () => {
   );
 };
 
-export const WithCustomDragLayer = () => {
-  const { files, handleOnMove } = useCommonFileOrganizer();
+export const Basic = () => <BasicExample />;
+export const WithCustomDragLayer = () => <BasicExample onRenderDragLayer />;
 
-  return (
-    <FileOrganizer
-      files={files}
-      onMove={forwardAction('onMove', handleOnMove)}
-      preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      disableMove={boolean('disableMove', false)}
-      onDragChange={action('onDragChange')}
-      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
-        <Thumbnail
-          file={file}
-          dragging={isDragging}
-          otherDragging={otherDragging}
-          onClick={action(`file_${index + 1} onClick`)}
-          onRename={action(`file_${index + 1} onRename`)}
-          onRemove={action(`file_${index + 1} onRemove`)}
-          onRotate={action(`file_${index + 1} onRotate`)}
-          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
-        />
-      )}
-      onRenderDragLayer={() => <ThumbnailDragLayer />}
-    />
-  );
-};
+/* --- Virtualized. --- */
 
 const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThreshold?: number }> = ({
   lazy,
@@ -106,7 +81,7 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThre
 }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<File[]>(() =>
-    Array.from({ length: 50 }, (_, index) => createFile(index, { lazy })),
+    Array.from({ length: numFiles ?? 50 }, (_, index) => createFile(index, { lazy })),
   );
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
@@ -117,23 +92,6 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThre
       return clone;
     });
   }, []);
-
-  useEffect(() => {
-    if (numFiles === undefined) return;
-    setFiles(prev => {
-      if (prev.length > numFiles) {
-        return prev.slice(0, numFiles);
-      }
-      if (prev.length < numFiles) {
-        const newFiles = [];
-        for (let index = prev.length; index < numFiles; index++) {
-          newFiles.push(createFile(index));
-        }
-        return [...prev, ...newFiles];
-      }
-      return prev;
-    });
-  }, [numFiles]);
 
   return (
     <FileOrganizer
@@ -162,6 +120,8 @@ export const VirtualizedStressTest = () => <VirtualizedExample lazy numFiles={10
 export const BasicToVirtualized = () => (
   <VirtualizedExample lazy virtualizeThreshold={boolean('is virtualized', false) ? 50 : 51} />
 );
+
+/* --- With useManagedHook. --- */
 
 const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
   const {
