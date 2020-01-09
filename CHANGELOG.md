@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.4] - 2020-01-09
+
 - [FileOrganizer] Correctly forward default div props (#21) @liamross
 - [FileOrganizer] Prevent arrow keys from moving when disabled (#21) @liamross
 - [docs] Updated the docs and appearance of Storybook (#21) @liamross
