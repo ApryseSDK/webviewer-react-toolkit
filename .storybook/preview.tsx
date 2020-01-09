@@ -1,9 +1,4 @@
-import {
-  Description,
-  Props,
-  Subtitle,
-  Title,
-} from '@storybook/addon-docs/dist/blocks';
+import { Description, Props, Subtitle, Title } from '@storybook/addon-docs/dist/blocks';
 import { withInfo } from '@storybook/addon-info';
 import { withKnobs } from '@storybook/addon-knobs';
 import { addDecorator, addParameters } from '@storybook/react';
@@ -16,11 +11,12 @@ import theme from './theme';
 
 addDecorator(
   // TODO: Remove once features are supported in docs.
+  // @ts-ignore
   withInfo({
     inline: true,
     header: false,
     TableComponent: () => null,
-    styles: base => ({
+    styles: (base: any) => ({
       ...base,
       // The wrapper around info.
       infoBody: { padding: '30px 20px' },
@@ -28,9 +24,6 @@ addDecorator(
       infoStory: { padding: '30px 20px' },
       // Hide prop table header.
       propTableHead: { display: 'none' },
-      maxPropObjectKeys: 10,
-      maxPropArrayLength: 3,
-      maxPropStringLength: 100,
     }),
   }),
 );
@@ -57,7 +50,7 @@ addParameters({
 
     // Since we do not add component description in code (instead inserting it
     // into a .md file) we extract it using the following.
-    extractComponentDescription: (_c, { info }) => {
+    extractComponentDescription: (_c: unknown, { info }: { info: string | { docs?: string; text?: string } }) => {
       if (typeof info === 'string') return info;
       if (info.docs) return info.docs;
       if (info.text) return info.text;
