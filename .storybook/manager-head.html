@@ -1,2 +1,47 @@
 <link rel="shortcut icon" href="./favicon.ico" />
 <link rel="icon" type="image/png" href="./favicon.png" sizes="291x291" />
+<script>
+  const STORYBOOK_IFRAME_SELECTOR = '#storybook-preview-iframe';
+  const CODE_PREVIEW_SELECTOR = '#root > div:not(#story-root):not([class])';
+  const DOCS_ROOT_SELECTOR = '#docs-root';
+
+  function withIframe(iframe) {
+    const iframeWindow = iframe.contentWindow;
+
+    const zoomObserver = new MutationObserver(() => {
+      const iframeBody = iframeWindow.document.body;
+      const zoom = Number(iframeBody.style.zoom || 1);
+      const adjustedZoom = 1 / zoom;
+      const codePreviewWindow = iframeBody.querySelector(CODE_PREVIEW_SELECTOR);
+      const docsRoot = iframeBody.querySelector(DOCS_ROOT_SELECTOR);
+      if (codePreviewWindow) codePreviewWindow.style.zoom = adjustedZoom;
+      if (docsRoot) docsRoot.style.zoom = adjustedZoom;
+    });
+
+    iframeWindow.addEventListener('DOMContentLoaded', () => {
+      zoomObserver.observe(iframeWindow.document.body, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ['style'],
+      });
+    });
+  }
+
+  const nodeAddedObserver = new MutationObserver(mutations => {
+    const iframe = document.querySelector(STORYBOOK_IFRAME_SELECTOR);
+    if (!iframe || !withIframe) return;
+    nodeAddedObserver.disconnect();
+    withIframe(iframe);
+    withIframe = null;
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    nodeAddedObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: false,
+    });
+  });
+</script>
