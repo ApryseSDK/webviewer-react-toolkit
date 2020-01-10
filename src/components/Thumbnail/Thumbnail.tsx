@@ -1,15 +1,18 @@
 import classnames from 'classnames';
-import React, { forwardRef, MouseEvent, useEffect, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, MouseEvent, ReactNode, useEffect, useImperativeHandle, useRef } from 'react';
 import { File } from '../../data/file';
 import useFile from '../../hooks/useFile';
 import useFocus from '../../hooks/useFocus';
-import close from '../../icons/close-24px.svg';
-import rotate from '../../icons/rotate_right-24px.svg';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import EditableText from '../EditableText';
 import FileSkeleton from '../FileSkeleton';
 import Image from '../Image';
 import ToolButton from '../ToolButton';
+
+export interface ThumbnailButtonProps {
+  onClick: (event: MouseEvent<HTMLButtonElement>, file: File) => void;
+  children: ReactNode;
+}
 
 export interface ThumbnailProps extends ClickableDivProps {
   /**
@@ -38,15 +41,9 @@ export interface ThumbnailProps extends ClickableDivProps {
    */
   otherDragging?: boolean;
   /**
-   * Callback fired when the rotate button is clicked. If not given, will have
-   * no rotate button.
+   * Provide an array of button props to add tool buttons on thumbnail.
    */
-  onRotate?: (event: MouseEvent<HTMLButtonElement>, file: File) => void;
-  /**
-   * Callback fired when the remove button is clicked. If not given, will have
-   * no remove button
-   */
-  onRemove?: (event: MouseEvent<HTMLButtonElement>, file: File) => void;
+  buttonProps?: ThumbnailButtonProps[];
   /**
    * Callback fired when the name is edited and saved.
    */
@@ -70,8 +67,7 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
       selected,
       dragging,
       otherDragging,
-      onRotate,
-      onRemove,
+      buttonProps,
       onRename,
       onEditingChange,
       throttle,
@@ -140,20 +136,15 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
           <Image src={file.thumbnail} alt={file.name} onRenderLoading={() => <FileSkeleton />} />
         </div>
         <div className="ui__thumbnail__controls">
-          {onRotate ? (
-            <ToolButton disabled={disabled} onClick={e => onRotate(e, file.file)} tabIndex={selected ? undefined : -1}>
-              <img src={rotate} alt={'rotate'} />
+          {buttonProps?.map(buttonPropObject => (
+            <ToolButton
+              disabled={disabled}
+              onClick={e => buttonPropObject.onClick(e, file.file)}
+              tabIndex={selected ? undefined : -1}
+            >
+              {buttonPropObject.children}
             </ToolButton>
-          ) : (
-            undefined
-          )}
-          {onRemove ? (
-            <ToolButton disabled={disabled} onClick={e => onRemove(e, file.file)} tabIndex={selected ? undefined : -1}>
-              <img src={close} alt={'close'} />
-            </ToolButton>
-          ) : (
-            undefined
-          )}
+          ))}
         </div>
         <EditableText
           className="ui__thumbnail__label"

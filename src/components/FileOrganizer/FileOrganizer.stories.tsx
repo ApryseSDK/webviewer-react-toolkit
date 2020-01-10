@@ -60,8 +60,6 @@ const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }
           otherDragging={otherDragging}
           onClick={action(`file_${index + 1} onClick`)}
           onRename={action(`file_${index + 1} onRename`)}
-          onRemove={action(`file_${index + 1} onRemove`)}
-          onRotate={action(`file_${index + 1} onRotate`)}
           onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
         />
       )}
@@ -156,8 +154,6 @@ const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized
           selected={selectedIds.includes(file.id)}
           onClick={event => toggleSelectedId(file.id, event)}
           onRename={action(`file_${index + 1} onRename`)}
-          onRemove={action(`file_${index + 1} onRemove`)}
-          onRotate={action(`file_${index + 1} onRotate`)}
           onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
         />
       )}

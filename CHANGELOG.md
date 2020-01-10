@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+- [Thumbnail] **BREAKING:** New buttonProps array prop (#23) @liamross
+  - No longer takes onRemove and onRotate
+  - `buttonProps` is array of objects with properties `onClick` and `children`
+  - Allows for flexibility when defining button on `Thumbnail`
+
 ## [0.0.0-beta.4] - 2020-01-09
 
 - [FileOrganizer] Correctly forward default div props (#21) @liamross
