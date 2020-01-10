@@ -1,8 +1,8 @@
 import { prompt } from 'enquirer';
+import { clearTerminal, log, redErr } from '../utils/logUtils';
 import { generateFiles } from './generateFiles';
 import { optionPicker } from './optionPicker';
 import { summaryLog } from './summaryLog';
-import { clearTerminal, log, redErr } from '../utils/logUtils';
 
 (async () => {
   clearTerminal();
@@ -19,8 +19,8 @@ import { clearTerminal, log, redErr } from '../utils/logUtils';
 
       /* --- Check for final approval before generating files --- */
 
-      const approvedOptions: 'quit' | 'no' | 'yes' = (
-        await prompt({
+      const approvedOptions = (
+        await prompt<{ approvedOptions: 'quit' | 'no' | 'yes' }>({
           type: 'select',
           name: 'approvedOptions',
           message: `Do these options look ok?`,

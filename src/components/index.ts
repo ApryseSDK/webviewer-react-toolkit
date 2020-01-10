@@ -5,6 +5,7 @@
 // <import-start>
 export { default as Button } from './Button';
 export { default as ClickableDiv } from './ClickableDiv';
+export { default as DndMultiProvider } from './DndMultiProvider';
 export { default as DragLayer } from './DragLayer';
 export { default as Draggable } from './Draggable';
 export { default as EditableText } from './EditableText';

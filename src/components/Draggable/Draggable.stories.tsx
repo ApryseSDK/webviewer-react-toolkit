@@ -1,8 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 import React, { CSSProperties } from 'react';
-import { DndProvider } from 'react-dnd';
-import Backend from 'react-dnd-html5-backend';
+import DndMultiProvider from '../DndMultiProvider';
 import Draggable from '../Draggable';
 import docs from './README.md';
 
@@ -17,7 +16,7 @@ const commonStyle: CSSProperties = {
 };
 
 export const basic = () => (
-  <DndProvider backend={Backend}>
+  <DndMultiProvider>
     <Draggable
       index={0}
       onMove={action('onMove')}
@@ -27,11 +26,11 @@ export const basic = () => (
     >
       <div style={{ ...commonStyle, border: '1px solid red' }}>This div is draggable!</div>
     </Draggable>
-  </DndProvider>
+  </DndMultiProvider>
 );
 
 export const withOnRenderChildren = () => (
-  <DndProvider backend={Backend}>
+  <DndMultiProvider>
     <Draggable
       index={0}
       onRenderChildren={isDragging => (
@@ -44,5 +43,5 @@ export const withOnRenderChildren = () => (
       disableDrag={boolean('disableDrag', false)}
       hideDragPreview={boolean('hideDragPreview', false)}
     />
-  </DndProvider>
+  </DndMultiProvider>
 );

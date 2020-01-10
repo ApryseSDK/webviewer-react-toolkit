@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 declare module '*.svg' {
   const content: string;
   export default content;
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+declare module 'react-dnd-multi-backend/dist/esm/HTML5toTouch' {
+  const HTML5toTouch: any;
+  export default HTML5toTouch;
+}
 
 /**
  * Remove the specified Keys of T. Like Omit, but with autocompletion.

@@ -7,8 +7,8 @@ import { MakeOptions } from './types';
 export const optionPicker = async (): Promise<MakeOptions> => {
   /* --- Naming the component --- */
 
-  const componentName: string = (
-    await prompt({
+  const componentName = (
+    await prompt<{ componentName: string }>({
       type: 'input',
       name: 'componentName',
       message: 'What will your component be called?',
@@ -29,9 +29,9 @@ export const optionPicker = async (): Promise<MakeOptions> => {
 
   /* --- Forwards ref --- */
 
-  const isRef: boolean = await (async () => {
+  const isRef = await (async () => {
     const result = (
-      await prompt({
+      await prompt<{ isRef: 'no' | 'yes' }>({
         type: 'select',
         name: 'isRef',
         message: 'Will your component forward a ref?',

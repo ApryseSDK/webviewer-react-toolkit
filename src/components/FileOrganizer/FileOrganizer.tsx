@@ -15,14 +15,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { DndProvider } from 'react-dnd';
-import Backend from 'react-dnd-html5-backend';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { File } from '../../data/file';
 import useCurrentRef from '../../hooks/useCurrentRef';
 import { THUMBNAIL_WIDTH } from '../../utils/constantUtils';
 import { getSibling, isScrolledIntoView } from '../../utils/domUtils';
 import { getRowAndColumnIndex } from '../../utils/gridUtils';
+import DndMultiProvider from '../DndMultiProvider';
 import Draggable from '../Draggable';
 import DragLayer, { DragLayerProps } from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
@@ -261,7 +260,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   );
 
   return (
-    <DndProvider backend={Backend}>
+    <DndMultiProvider>
       <div
         {...divProps}
         className={fileOrganizerClass}
@@ -279,6 +278,6 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
           <DragLayer customTranslate={customDragLayerTranslate}>{onRenderDragLayer()}</DragLayer>
         ) : null}
       </div>
-    </DndProvider>
+    </DndMultiProvider>
   );
 };

@@ -1,5 +1,6 @@
 import c from 'ansi-colors';
 import fs from 'fs';
+import { err, timeErr, timeLog } from '../utils/logUtils';
 import { component } from './file-content/component';
 import { componentIndex } from './file-content/componentIndex';
 import { componentReadme } from './file-content/componentReadme';
@@ -9,7 +10,6 @@ import { componentStyle } from './file-content/componentStyle';
 import { componentTest } from './file-content/componentTest';
 import { MakeOptions } from './types';
 import { updateImportFile } from './utils/fileUtils';
-import { err, timeErr, timeLog } from '../utils/logUtils';
 import { getPaths, pathify } from './utils/pathUtils';
 
 /**
@@ -116,7 +116,7 @@ export const generateFiles = ({ isRef, componentName }: MakeOptions) => {
   // Add the new component import into the root index file.
   updateImportFile(
     pathify(componentCommonDir, componentIndexFile),
-    `export {default as ${componentName}} from './${componentName}';`,
+    `export { default as ${componentName} } from './${componentName}';`,
     error => {
       if (error) timeErr('index', 'Could not add import to TypeScript index file');
       else timeLog('index', 'Added import to TypeScript index file');
