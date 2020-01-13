@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.6] - 2020-01-13
+
 - [Thumbnail] **BREAKING:** New buttonProps array prop (#23) @liamross
   - No longer takes onRemove and onRotate
   - `buttonProps` is array of objects with properties `onClick` and `children`
