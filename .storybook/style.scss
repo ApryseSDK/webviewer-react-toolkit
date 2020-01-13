@@ -45,7 +45,6 @@ $background-canvas: #eff5f5;
   // Story root or div with class should be auto flexed.
   > #story-root,
   > div[class] {
-    background-color: $background-canvas;
     flex: 1 1 auto;
     overflow: auto;
   }

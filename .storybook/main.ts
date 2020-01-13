@@ -8,6 +8,7 @@ module.exports = {
     '@storybook/addon-actions/register',
     '@storybook/addon-viewport/register',
     '@storybook/addon-a11y',
+    '@storybook/addon-backgrounds',
   ],
   presets: [
     '@storybook/preset-scss',

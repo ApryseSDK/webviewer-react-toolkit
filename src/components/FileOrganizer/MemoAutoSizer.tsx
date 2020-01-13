@@ -33,8 +33,8 @@ const MemoGrid = memo(
     return (
       <Grid
         ref={ref}
-        columnWidth={250}
-        rowHeight={250}
+        columnWidth={THUMBNAIL_WIDTH}
+        rowHeight={THUMBNAIL_WIDTH}
         height={height}
         width={width}
         columnCount={data.columnCount}

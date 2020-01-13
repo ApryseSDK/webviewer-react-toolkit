@@ -60,20 +60,24 @@
 
   &--size {
     &-small {
-      border-radius: $border-radius-small;
+      border-radius: $border-radius;
       font-size: $font-size-small;
+      padding: ($padding-tiny / 2) $padding-tiny;
+      min-height: 24px;
     }
 
     &-default {
       border-radius: $border-radius;
       padding: $padding-tiny $padding-small;
-      min-width: 80px;
+      min-width: 88px;
+      min-height: 32px;
     }
 
     &-large {
       border-radius: $border-radius;
-      padding: $padding-small $padding-large;
-      min-width: 80px;
+      padding: $padding-tiny $padding-large;
+      min-width: 120px;
+      min-height: 40px;
     }
   }
 }

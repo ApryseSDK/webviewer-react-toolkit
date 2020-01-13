@@ -1398,27 +1398,26 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@storybook/addon-a11y@^5.2.8":
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-a11y/-/addon-a11y-5.2.8.tgz#30ca043dd376711eed9dd4443410d70754050178"
-  integrity sha512-rIujvSAmXhivMecdTAqIwWQ0PARLBmMBKqdLtCfkfwtRjfASJxEFGWRmRJramx37vIDYWS5r7uHfUpZbYSn6Fg==
+"@storybook/addon-a11y@^5.3.0-rc.12":
+  version "5.3.0-rc.12"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-a11y/-/addon-a11y-5.3.0-rc.12.tgz#968077ec83c30236cf8296ba06a8f2e9cce8de91"
+  integrity sha512-0x65bCPbPKUJ3Zisuny5pVXlpY2TiquyTfBtG72V/91Fo1eQ6FaafmthPEv26yR5/rcp5ByB6z/YtYO+gk5yXg==
   dependencies:
-    "@storybook/addons" "5.2.8"
-    "@storybook/api" "5.2.8"
-    "@storybook/client-logger" "5.2.8"
-    "@storybook/components" "5.2.8"
-    "@storybook/core-events" "5.2.8"
-    "@storybook/theming" "5.2.8"
+    "@storybook/addons" "5.3.0-rc.12"
+    "@storybook/api" "5.3.0-rc.12"
+    "@storybook/client-logger" "5.3.0-rc.12"
+    "@storybook/components" "5.3.0-rc.12"
+    "@storybook/core-events" "5.3.0-rc.12"
+    "@storybook/theming" "5.3.0-rc.12"
     axe-core "^3.3.2"
-    common-tags "^1.8.0"
     core-js "^3.0.1"
     global "^4.3.2"
-    hoist-non-react-statics "^3.3.0"
     memoizerific "^1.11.3"
     react "^16.8.3"
     react-redux "^7.0.2"
     react-sizeme "^2.5.2"
     redux "^4.0.1"
+    ts-dedent "^1.1.0"
     util-deprecate "^1.0.2"
 
 "@storybook/addon-actions@^5.3.0-rc.12":
@@ -1440,6 +1439,22 @@
     react "^16.8.3"
     react-inspector "^4.0.0"
     uuid "^3.3.2"
+
+"@storybook/addon-backgrounds@^5.3.0-rc.12":
+  version "5.3.0-rc.12"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-backgrounds/-/addon-backgrounds-5.3.0-rc.12.tgz#67ff51d90a97ac331f0423a8eeabf99d371539df"
+  integrity sha512-ohk4FfNXfDbMfu8N2VAhjT1cF3oZ4auqplNm/9TmgEpPKyn90yJLw/qSV6kUayffZVv3B4JqgJnn++tiJ0+yIQ==
+  dependencies:
+    "@storybook/addons" "5.3.0-rc.12"
+    "@storybook/api" "5.3.0-rc.12"
+    "@storybook/client-logger" "5.3.0-rc.12"
+    "@storybook/components" "5.3.0-rc.12"
+    "@storybook/core-events" "5.3.0-rc.12"
+    "@storybook/theming" "5.3.0-rc.12"
+    core-js "^3.0.1"
+    memoizerific "^1.11.3"
+    react "^16.8.3"
+    util-deprecate "^1.0.2"
 
 "@storybook/addon-docs@^5.3.0-rc.12":
   version "5.3.0-rc.12"

@@ -20,9 +20,9 @@ addDecorator(
     styles: (base: any) => ({
       ...base,
       // The wrapper around info.
-      infoBody: { padding: '30px 20px' },
+      infoBody: { padding: 40, backgroundColor: 'rgb(51, 51, 51)' },
       // The wrapper around the story.
-      infoStory: { padding: '30px 20px' },
+      infoStory: { padding: 40 },
       // Hide prop table header.
       propTableHead: { display: 'none' },
     }),
@@ -36,6 +36,11 @@ addDecorator(withA11y);
 addParameters({
   // TODO: Move `options` to `manager.js` once it's supported more.
   options: { panelPosition: 'right', theme },
+  backgrounds: [
+    { name: 'canvas', value: '#eff5f5', default: true },
+    { name: 'dark-canvas', value: '#161625' },
+  ],
+  grid: { cellSize: 8 },
   docs: {
     // Remove primary and stories until they allow props and show correct
     // code previews.

@@ -66,6 +66,10 @@
     flex-direction: column;
     height: 0;
     flex: 1 1 auto;
+
+    img {
+      border: 1px solid $blue-gray-1;
+    }
   }
 
   &__label {

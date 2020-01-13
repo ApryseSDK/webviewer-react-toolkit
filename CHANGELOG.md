@@ -4,6 +4,9 @@
   - No longer takes onRemove and onRotate
   - `buttonProps` is array of objects with properties `onClick` and `children`
   - Allows for flexibility when defining button on `Thumbnail`
+- [docs] Added a11y and background plugins (#25) @liamross
+- [Button] Changed style of small buttons (#25) @liamross
+- [Thumbnail] Restored thumbnail outline, now smaller (#25) @liamross
 - [DndMultiProvider] Supports touch and mouse events (#24) @liamross
 
 ## [0.0.0-beta.4] - 2020-01-09
