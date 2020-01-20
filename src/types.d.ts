@@ -1,15 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-declare module '*.svg' {
-  const content: string;
-  export default content;
-}
-
-declare module 'react-dnd-multi-backend/dist/esm/HTML5toTouch' {
-  const HTML5toTouch: any;
-  export default HTML5toTouch;
-}
-
 /**
  * Remove the specified Keys of T. Like Omit, but with autocompletion.
  *
@@ -17,7 +7,7 @@ declare module 'react-dnd-multi-backend/dist/esm/HTML5toTouch' {
  * type SomeProps = {field1: string; field2: string};
  * const x: Remove<SomeProps, 'field2'> = {field1: 'Hello, World!'};
  */
-declare type Remove<T, Keys extends keyof T> = Pick<T, Exclude<keyof T, Keys>>;
+export type Remove<T, Keys extends keyof T> = Pick<T, Exclude<keyof T, Keys>>;
 
 /**
  * Include only the specified Keys of T.
@@ -26,7 +16,7 @@ declare type Remove<T, Keys extends keyof T> = Pick<T, Exclude<keyof T, Keys>>;
  * type SomeProps = {field1: string; field2: string};
  * const x: Include<SomeProps, 'field2'> = {field2: 'Hello, World!'};
  */
-declare type Include<T, Keys extends keyof T> = Pick<T, Extract<keyof T, Keys>>;
+export type Include<T, Keys extends keyof T> = Pick<T, Extract<keyof T, Keys>>;
 
 /**
  * Extract the common item type in array of similar items T.
@@ -35,7 +25,7 @@ declare type Include<T, Keys extends keyof T> = Pick<T, Extract<keyof T, Keys>>;
  * const x = [{a: 'a', b: 'b'}, {a: 'aa', b: 'bb'}];
  * const y: ItemOf<typeof x> = {a: 'Hello'; b: 'World'};
  */
-declare type ItemOf<T extends any[]> = T[number];
+export type ItemOf<T extends any[]> = T[number];
 
 /**
  * Extracts an array of argument types of T.
@@ -44,7 +34,7 @@ declare type ItemOf<T extends any[]> = T[number];
  * const x = (a: string, b: number) => a + b;
  * const x: ArgumentTypes<typeof x> = ['Hello, World!', 100];
  */
-declare type ArgumentTypes<T extends Function> = T extends (...args: infer A) => any ? A : never;
+export type ArgumentTypes<T extends Function> = T extends (...args: infer A) => any ? A : never;
 
 /**
  * Requires at least one of the specified Keys of T. If no keys provided, will
@@ -54,5 +44,5 @@ declare type ArgumentTypes<T extends Function> = T extends (...args: infer A) =>
  * type SomeProps = {field1?: string; field2?: string};
  * const x: RequireAtLeastOne<SomeProps, 'hello' | 'world'> = {field1: 'Hello, World!'};
  */
-declare type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Remove<T, Keys> &
+export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Remove<T, Keys> &
   { [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>> }[Keys];

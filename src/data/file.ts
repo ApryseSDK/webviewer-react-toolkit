@@ -1,3 +1,4 @@
+import { RequireAtLeastOne } from '../types';
 import { blobToDocument, documentToBlob, getExtension, getRotatedDocument, getStringId, getThumbnail } from '../utils';
 import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
 import { FuturableOrLazy } from './futurable';

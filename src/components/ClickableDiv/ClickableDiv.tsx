@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import React, { forwardRef, HTMLAttributes, useImperativeHandle, useRef } from 'react';
 import { useAccessibleFocus, useKeyForClick, useOnClick } from '../../hooks';
+import { Remove } from '../../types';
 
 export interface ClickableDivProps extends Remove<HTMLAttributes<HTMLDivElement>, 'role'> {
   /**
