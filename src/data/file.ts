@@ -1,10 +1,9 @@
-import { RequireAtLeastOne } from '../types';
 import { blobToDocument, documentToBlob, getExtension, getRotatedDocument, getStringId, getThumbnail } from '../utils';
 import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
 import { FuturableOrLazy } from './futurable';
 import { MemoizedPromise } from './memoizedPromise';
 
-interface FileDetailsBase {
+export interface FileDetails {
   /** File name. */
   name: string;
   /** The original name of the file */
@@ -18,9 +17,6 @@ interface FileDetailsBase {
   /** Thumbnail data URL string, or function to get it. */
   thumbnail?: MemoizedPromise<string> | FuturableOrLazy<string>;
 }
-
-/** The input object provided to the File constructor. */
-export type FileDetails = RequireAtLeastOne<FileDetailsBase, 'fileObj' | 'documentObj'>;
 
 export interface FileLike {
   id: string;

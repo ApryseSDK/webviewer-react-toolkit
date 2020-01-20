@@ -34,10 +34,6 @@ const config: webpack.Configuration = {
         from: `${BASE_URL}/styles/_mixins.scss`,
         to: `${LIBRARY_PATH}/_mixins.scss`,
       },
-      {
-        from: `${BASE_URL}/types.d.ts`,
-        to: `${LIBRARY_PATH}/types.d.ts`,
-      },
     ]),
   ],
   optimization: {
