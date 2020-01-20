@@ -204,17 +204,17 @@ export class File implements FileLike {
   /* --- Private helpers. --- */
 
   /** Generate a thumbnail from document object. */
-  private _generateThumbnail() {
+  private _generateThumbnail = () => {
     return getThumbnail(this.documentObj.get());
-  }
+  };
 
   /** Generate a file object from document object. */
-  private _generateFileObj() {
+  private _generateFileObj = () => {
     return documentToBlob(this.documentObj.get());
-  }
+  };
 
   /** Generate a document object from file object and extension. */
-  private _generateDocumentObj() {
+  private _generateDocumentObj = () => {
     return blobToDocument(this.fileObj.get(), this.extension);
-  }
+  };
 }
