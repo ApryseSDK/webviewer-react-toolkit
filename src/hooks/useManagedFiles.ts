@@ -1,5 +1,5 @@
 import { Dispatch, MouseEvent, SetStateAction, useCallback, useMemo, useState } from 'react';
-import { moveMultiFromIndexToIndex, separateItemsWithTarget } from '../utils';
+import { moveMultiFromIndexToIndex, ObjectWithId, separateItemsWithTarget } from '../utils';
 
 export interface UseManagedFilesOptions<F> {
   initialFiles?: F[];
@@ -25,7 +25,7 @@ interface UseManagedFilesOutput<F> {
  * `FileOrganizer` component.
  * @param options Options for managing files.
  */
-export function useManagedFiles<F extends { id: string }>(options: UseManagedFilesOptions<F> = {}) {
+export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFilesOptions<F> = {}) {
   const { initialFiles, preventMultiDrag } = options;
 
   const [files, setFiles] = useState(initialFiles ?? []);

@@ -21,8 +21,20 @@ interface FileDetailsBase {
 /** The input object provided to the File constructor. */
 export type FileDetails = RequireAtLeastOne<FileDetailsBase, 'fileObj' | 'documentObj'>;
 
+export interface FileLike {
+  id: string;
+  name: string;
+  originalName: string;
+  extension: string;
+  thumbnail: MemoizedPromise<string>;
+  fileObj: MemoizedPromise<Blob>;
+  documentObj: MemoizedPromise<CoreControls.Document>;
+  addEventListener: Function;
+  removeEventListener: Function;
+}
+
 /** A representation of the data within a file. */
-export class File {
+export class File implements FileLike {
   private _id: string;
   private _name: string;
   private _originalName: string;

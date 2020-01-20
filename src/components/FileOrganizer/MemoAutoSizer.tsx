@@ -1,13 +1,12 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo } from 'react';
 import AutoSizer, { Size } from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid, GridChildComponentProps } from 'react-window';
-import { File } from '../../data';
-import { getItemIndex, THUMBNAIL_WIDTH } from '../../utils';
+import { getItemIndex, ObjectWithId, THUMBNAIL_WIDTH } from '../../utils';
 
 interface VirtualizedProps {
-  files: File[];
+  files: ObjectWithId[];
   onColumnCountChange: (newColumnCount: number) => void;
-  renderItem: (file: File, index: number, style: React.CSSProperties | undefined) => JSX.Element;
+  renderItem: (file: any, index: number, style: React.CSSProperties | undefined) => JSX.Element;
 }
 
 const MemoGridItem = memo<GridChildComponentProps>(({ columnIndex, rowIndex, style, data }) => {

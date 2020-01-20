@@ -1,9 +1,8 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { File } from '../../data';
 import { useManagedFiles } from '../../hooks';
-import { createFile } from '../../storybook-helpers/data/files';
+import { createFile, FakeFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';
 import Thumbnail from '../Thumbnail';
@@ -16,8 +15,8 @@ export default { title: 'FileOrganizer', component: FileOrganizer, parameters: {
 
 const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }) => {
   // This is the index organizing function.
-  const [files, setFiles] = useState<File[]>([]);
-  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
+  const [files, setFiles] = useState<FakeFile[]>([]);
+  const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
       if (toIndex < 0 || toIndex >= prev.length) return prev;
       const clone = prev.slice();
@@ -78,10 +77,10 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThre
   virtualizeThreshold,
 }) => {
   // This is the index organizing function.
-  const [files, setFiles] = useState<File[]>(() =>
+  const [files, setFiles] = useState(() =>
     Array.from({ length: numFiles ?? 50 }, (_, index) => createFile(index, { lazy })),
   );
-  const handleOnMove = useCallback<NonNullable<FileOrganizerProps['onMove']>>((fromIndex, toIndex) => {
+  const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
     setFiles(prev => {
       if (toIndex < 0 || toIndex >= prev.length) return prev;
       const clone = prev.slice();

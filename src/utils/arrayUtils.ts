@@ -1,4 +1,4 @@
-type ObjectWithId = { id: string };
+import { ObjectWithId } from './constantUtils';
 
 /**
  * Separates the ids from the main list and returns separated and remaining.

@@ -3,13 +3,13 @@ import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
-import { createFile, CreateFileOptions } from '../../storybook-helpers/data/files';
+import { createFile, CreateFileOptions, FakeFile } from '../../storybook-helpers/data/files';
 import Thumbnail, { ThumbnailProps } from '../Thumbnail';
 import docs from './README.md';
 
 export default { title: 'Thumbnail', component: Thumbnail, parameters: { info: docs } };
 
-const defaultProps = (options?: CreateFileOptions, index = 0, withToolButtons?: boolean): ThumbnailProps => ({
+const defaultProps = (options?: CreateFileOptions, index = 0, withToolButtons?: boolean): ThumbnailProps<FakeFile> => ({
   file: createFile(index, options),
   selected: boolean('selected', false),
   hideExtension: boolean('hideExtension', false),

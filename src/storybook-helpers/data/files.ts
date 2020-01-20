@@ -1,4 +1,4 @@
-import { File } from '../../data/file';
+import { FileLike } from '../../data/file';
 import { FuturableOrLazy } from '../../data/futurable';
 import { MemoizedPromise } from '../../data/memoizedPromise';
 import testPdfThumbnailRotated from '../images/pdf-preview-2.png';
@@ -10,10 +10,10 @@ export interface CreateFileOptions {
 }
 
 export function createFile(index: number, options: CreateFileOptions = {}) {
-  return (new FakeFile(index, options) as unknown) as File;
+  return new FakeFile(index, options);
 }
 
-class FakeFile {
+export class FakeFile implements FileLike {
   id: string;
   name: string;
   originalName: string;

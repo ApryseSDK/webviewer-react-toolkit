@@ -1,19 +1,19 @@
 import { useMemo } from 'react';
-import { File } from '../data';
+import { FileLike } from '../data';
 import { useFileSubscribe } from './useFileSubscribe';
 
 /** The output of this hook is an object representing a file. */
-interface FileHook {
+interface FileHook<F> {
   /** The entire file class. */
-  file: File;
+  file: F;
   /** The file id. */
-  id: File['id'];
+  id: string;
   /** The file originalName. */
-  originalName: File['originalName'];
+  originalName: string;
   /** The file extension. */
-  extension: File['extension'];
+  extension: string;
   /** The file name. */
-  name?: File['name'];
+  name?: string;
   /** The resolved file thumbnail or undefined until it is resolved. */
   thumbnail?: string;
   /** The resolved file fileObj or undefined until it is resolved. */
@@ -28,13 +28,13 @@ interface FileHook {
  * @param file The file to convert to react observable values.
  * @param throttle The timeout if unfetched memo promise.
  */
-export function useFile(file: File, throttle?: number): FileHook {
+export function useFile<F extends FileLike>(file: F, throttle?: number): FileHook<F> {
   const [name] = useFileSubscribe(file, f => f.name, 'onnamechange', { throttle });
   const [thumbnail] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', { throttle });
   const [fileObj] = useFileSubscribe(file, f => f.fileObj, 'onfileobjchange', { throttle });
   const [documentObj] = useFileSubscribe(file, f => f.documentObj, 'ondocumentobjchange', { throttle });
 
-  const fileValue = useMemo<FileHook>(
+  const fileValue = useMemo<FileHook<F>>(
     () => ({
       file,
       id: file.id,

@@ -2,7 +2,6 @@ import classnames from 'classnames';
 import React, {
   createRef,
   CSSProperties,
-  FC,
   Fragment,
   HTMLAttributes,
   KeyboardEvent,
@@ -16,9 +15,8 @@ import React, {
   useState,
 } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
-import { File } from '../../data';
 import { useCurrentRef } from '../../hooks';
-import { getRowAndColumnIndex, getSibling, isScrolledIntoView, THUMBNAIL_WIDTH } from '../../utils';
+import { getRowAndColumnIndex, getSibling, isScrolledIntoView, ObjectWithId, THUMBNAIL_WIDTH } from '../../utils';
 import DndMultiProvider from '../DndMultiProvider';
 import Draggable from '../Draggable';
 import DragLayer, { DragLayerProps } from '../DragLayer';
@@ -26,11 +24,11 @@ import { MemoAutoSizer } from './MemoAutoSizer';
 
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 
-export interface FileOrganizerProps extends HTMLAttributes<HTMLDivElement> {
+export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
   /**
    * A list of files to render out within the page organizer.
    */
-  files: File[];
+  files: F[];
   /**
    * If true, will disable drag-and-drop functionality within the organizer.
    */
@@ -57,7 +55,7 @@ export interface FileOrganizerProps extends HTMLAttributes<HTMLDivElement> {
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
    */
-  onRenderThumbnail: (onRenderProps: OnRenderThumbnailProps) => ReactNode;
+  onRenderThumbnail: (onRenderProps: OnRenderThumbnailProps<F>) => ReactNode;
   /**
    * If provided, will call to render a custom drag layer while a thumbnail is
    * being dragged. Otherwise will show a preview of the thumbnail.
@@ -84,9 +82,9 @@ export interface FileOrganizerProps extends HTMLAttributes<HTMLDivElement> {
   onSelectAll?: () => void;
 }
 
-export interface OnRenderThumbnailProps {
+export interface OnRenderThumbnailProps<F> {
   /** The file to render into a thumbnail. */
-  file: File;
+  file: F;
   /** The index of this file within the file organizer. */
   index: number;
   /** Is this file being dragged currently. */
@@ -103,7 +101,7 @@ export interface OnRenderThumbnailProps {
   isShownOnLoad: boolean;
 }
 
-export const FileOrganizer: FC<FileOrganizerProps> = ({
+export function FileOrganizer<F extends ObjectWithId>({
   files,
   onMove,
   onDragChange,
@@ -118,7 +116,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   onClick,
   onKeyDown,
   ...divProps
-}) => {
+}: FileOrganizerProps<F>) {
   const fileOrganizerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<Grid>(null);
 
@@ -149,7 +147,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   }, [isVirtualized]);
 
   const handleItemKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>, index: number, _file: File, draggableRef: RefObject<HTMLDivElement>) => {
+    (event: KeyboardEvent<HTMLDivElement>, index: number, _file: F, draggableRef: RefObject<HTMLDivElement>) => {
       if (preventArrowsToMove || disableMove || editingId !== undefined || !onMove) return;
       if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
 
@@ -180,7 +178,7 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
   );
 
   const renderItem = useCallback(
-    (file: File | undefined, index: number, style?: CSSProperties) => {
+    (file: F | undefined, index: number, style?: CSSProperties) => {
       if (!file) return <Fragment key={'__null'}>{null}</Fragment>;
       const isEditing = editingId === file.id;
       const otherEditing = editingId !== undefined && editingId === file.id;
@@ -278,4 +276,4 @@ export const FileOrganizer: FC<FileOrganizerProps> = ({
       </div>
     </DndMultiProvider>
   );
-};
+}

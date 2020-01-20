@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { File, FileEventType, MemoizedPromise } from '../data';
+import { FileEventType, FileLike, MemoizedPromise } from '../data';
 import { DEFAULT_THROTTLE_TIMEOUT } from '../utils';
 
 export interface UseFileSubscribeOptions {
@@ -16,9 +16,9 @@ export interface UseFileSubscribeOptions {
  * @param getCurrentValue Function to extract the current value from the file.
  * @param eventType The event type to subscribe. Won't subscribe if not given.
  */
-export function useFileSubscribe<T>(
-  file: File,
-  getCurrentValue: (file: File) => T | MemoizedPromise<T>,
+export function useFileSubscribe<F extends FileLike, T>(
+  file: F,
+  getCurrentValue: (file: F) => T | MemoizedPromise<T>,
   eventType?: FileEventType,
   options: UseFileSubscribeOptions = {},
 ) {
