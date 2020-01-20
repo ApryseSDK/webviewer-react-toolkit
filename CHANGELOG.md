@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- [core] Dependency update to Storybook and utils (#27) @liamross
+
 ## [0.0.0-beta.6] - 2020-01-13
 
 - [Thumbnail] **BREAKING:** New buttonProps array prop (#23) @liamross

@@ -20,9 +20,9 @@ addDecorator(
     styles: (base: any) => ({
       ...base,
       // The wrapper around info.
-      infoBody: { padding: 40, backgroundColor: 'rgb(51, 51, 51)' },
+      infoBody: { padding: 15, backgroundColor: 'rgb(51, 51, 51)' },
       // The wrapper around the story.
-      infoStory: { padding: 40 },
+      infoStory: { padding: 15 },
       // Hide prop table header.
       propTableHead: { display: 'none' },
     }),
@@ -34,6 +34,8 @@ addDecorator(withA11y);
 /* --- Add global parameters. --- */
 
 addParameters({
+  // TODO: Required cause they broke types...
+  info: {},
   // TODO: Move `options` to `manager.js` once it's supported more.
   options: { panelPosition: 'right', theme },
   backgrounds: [
