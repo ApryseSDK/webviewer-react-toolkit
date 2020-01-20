@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.9] - 2020-01-20
+
 - [types] All components that deal with File made generic (#30) @liamross
 
 ## [0.0.0-beta.8] - 2020-01-20
