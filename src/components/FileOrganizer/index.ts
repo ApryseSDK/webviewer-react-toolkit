@@ -1,1 +1,1 @@
-export { FileOrganizer as default, FileOrganizerProps, OnRenderThumbnailProps } from './FileOrganizer';
+export * from './FileOrganizer';

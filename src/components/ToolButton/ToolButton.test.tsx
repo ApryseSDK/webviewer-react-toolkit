@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import ToolButton from '../ToolButton';
+import { ToolButton } from '../ToolButton';
 
 describe('ToolButton component', () => {
   it('renders its contents', () => {

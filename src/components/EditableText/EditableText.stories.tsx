@@ -1,12 +1,12 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
-import EditableText from '../EditableText';
+import { EditableText } from '../EditableText';
 import docs from './README.md';
 
 export default { title: 'EditableText', component: EditableText, parameters: { info: docs } };
 
-export const basic = () => (
+export const Basic = () => (
   <EditableText
     centerText={boolean('centerText', false)}
     bordered={boolean('bordered', true)}
@@ -19,7 +19,7 @@ export const basic = () => (
   />
 );
 
-export const withOnRenderText = () => (
+export const WithOnRenderText = () => (
   <EditableText
     onRenderText={value => (value ? `${value}.pdf` : '')}
     centerText={boolean('centerText', false)}
@@ -33,7 +33,7 @@ export const withOnRenderText = () => (
   />
 );
 
-export const controlledValue = () => (
+export const ControlledValue = () => (
   <EditableText
     value={text('value', '')}
     centerText={boolean('centerText', false)}
@@ -47,7 +47,7 @@ export const controlledValue = () => (
   />
 );
 
-export const controlledEditMode = () => (
+export const ControlledEditMode = () => (
   <EditableText
     editMode={boolean('editMode', false)}
     centerText={boolean('centerText', false)}
@@ -61,7 +61,7 @@ export const controlledEditMode = () => (
   />
 );
 
-export const fullyControlled = () => (
+export const FullyControlled = () => (
   <EditableText
     value={text('value', '')}
     editMode={boolean('editMode', false)}

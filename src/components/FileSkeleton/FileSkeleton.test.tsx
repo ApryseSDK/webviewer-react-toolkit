@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import FileSkeleton from '../FileSkeleton';
+import { FileSkeleton } from '../FileSkeleton';
 
 describe('FileSkeleton component', () => {
   it('renders its contents', () => {

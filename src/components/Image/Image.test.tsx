@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import Image from '../Image';
+import { Image } from '../Image';
 
 describe('Image component', () => {
   it('renders its contents', () => {

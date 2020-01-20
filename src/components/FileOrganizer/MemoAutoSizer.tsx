@@ -6,7 +6,7 @@ import { getItemIndex, ObjectWithId, THUMBNAIL_WIDTH } from '../../utils';
 interface VirtualizedProps {
   files: ObjectWithId[];
   onColumnCountChange: (newColumnCount: number) => void;
-  renderItem: (file: any, index: number, style: React.CSSProperties | undefined) => JSX.Element;
+  renderItem: (file: any, index: number, style: React.CSSProperties | undefined) => JSX.Element; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 const MemoGridItem = memo<GridChildComponentProps>(({ columnIndex, rowIndex, style, data }) => {

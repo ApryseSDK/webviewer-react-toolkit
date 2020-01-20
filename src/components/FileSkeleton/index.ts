@@ -1,1 +1,1 @@
-export { FileSkeleton as default, FileSkeletonProps } from './FileSkeleton';
+export * from './FileSkeleton';

@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import ThumbnailDragLayer from '../ThumbnailDragLayer';
+import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
 
 describe('ThumbnailDragLayer component', () => {
   it('renders its contents', () => {

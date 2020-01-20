@@ -2,11 +2,11 @@ import classnames from 'classnames';
 import React, { MouseEvent, ReactNode, useEffect, useRef } from 'react';
 import { FileLike } from '../../data';
 import { useFile, useFocus } from '../../hooks';
-import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
-import EditableText from '../EditableText';
-import FileSkeleton from '../FileSkeleton';
-import Image from '../Image';
-import ToolButton from '../ToolButton';
+import { ClickableDiv, ClickableDivProps } from '../ClickableDiv';
+import { EditableText } from '../EditableText';
+import { FileSkeleton } from '../FileSkeleton';
+import { Image } from '../Image';
+import { ToolButton } from '../ToolButton';
 
 export interface ThumbnailButtonProps<F> {
   onClick: (event: MouseEvent<HTMLButtonElement>, file: F) => void;

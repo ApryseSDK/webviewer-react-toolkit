@@ -17,9 +17,9 @@ import React, {
 import { FixedSizeGrid as Grid } from 'react-window';
 import { useCurrentRef } from '../../hooks';
 import { getRowAndColumnIndex, getSibling, isScrolledIntoView, ObjectWithId, THUMBNAIL_WIDTH } from '../../utils';
-import DndMultiProvider from '../DndMultiProvider';
-import Draggable from '../Draggable';
-import DragLayer, { DragLayerProps } from '../DragLayer';
+import { DndMultiProvider } from '../DndMultiProvider';
+import { Draggable } from '../Draggable';
+import { DragLayer, DragLayerProps } from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
 
 /* eslint-disable jsx-a11y/interactive-supports-focus */

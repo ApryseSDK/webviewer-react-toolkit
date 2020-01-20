@@ -8,6 +8,7 @@
     "url": "https://github.com/XodoDocs/component-library.git"
   },
   "scripts": {
+    "peers": "node scripts/install_peers",
     "start": "start-storybook -s public -p 6006",
     "make": "ts-node scripts/make",
     "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
@@ -19,7 +20,9 @@
     "beta-release": "yarn build && yarn publish --tag beta"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
+    "classnames": "^2.2.6"
+  },
+  "peerDependencies": {
     "react": "^16.12.0",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
@@ -92,6 +95,7 @@
     "pretty-quick": "^2.0.1",
     "react-docgen-typescript-loader": "^3.6.0",
     "sass-loader": "^8.0.0",
+    "shelljs": "^0.8.3",
     "sinon": "^8.1.0",
     "style-loader": "^1.0.1",
     "ts-jest": "^24.2.0",

@@ -1,1 +1,1 @@
-export { DndMultiProvider as default } from './DndMultiProvider';
+export * from './DndMultiProvider';

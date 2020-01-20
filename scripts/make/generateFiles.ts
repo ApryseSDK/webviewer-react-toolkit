@@ -114,12 +114,8 @@ export const generateFiles = ({ isRef, componentName }: MakeOptions) => {
   );
 
   // Add the new component import into the root index file.
-  updateImportFile(
-    pathify(componentCommonDir, componentIndexFile),
-    `export { default as ${componentName} } from './${componentName}';`,
-    error => {
-      if (error) timeErr('index', 'Could not add import to TypeScript index file');
-      else timeLog('index', 'Added import to TypeScript index file');
-    },
-  );
+  updateImportFile(pathify(componentCommonDir, componentIndexFile), `export * from './${componentName}';`, error => {
+    if (error) timeErr('index', 'Could not add import to TypeScript index file');
+    else timeLog('index', 'Added import to TypeScript index file');
+  });
 };

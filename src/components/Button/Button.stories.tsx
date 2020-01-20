@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import Button from '../Button';
+import { Button } from '../Button';
 import docs from './README.md';
 
 export default { title: 'Button', component: Button, parameters: { info: docs } };

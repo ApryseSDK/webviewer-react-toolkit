@@ -29,8 +29,11 @@ font, but if you want to include Lato as the base font, you can do it like this:
 
 ```sh
 yarn       # 1. To install dependencies (or `npm i`)
-yarn start # 2. To start the Storybook environment (or `npm start`)
+yarn peers # 2. To install peer dependencies (or `npm run peers`)
+yarn start # 3. To start the Storybook environment (or `npm start`)
 ```
+
+> [You must install peers separately](https://github.com/yarnpkg/yarn/issues/1503)
 
 ### To test:
 

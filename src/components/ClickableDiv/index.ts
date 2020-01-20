@@ -1,1 +1,1 @@
-export { ClickableDiv as default, ClickableDivProps } from './ClickableDiv';
+export * from './ClickableDiv';

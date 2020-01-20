@@ -1,1 +1,1 @@
-export { Draggable as default, DraggableProps } from './Draggable';
+export * from './Draggable';

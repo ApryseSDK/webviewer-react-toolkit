@@ -1,1 +1,1 @@
-export { EditableText as default, EditableTextProps } from './EditableText';
+export * from './EditableText';

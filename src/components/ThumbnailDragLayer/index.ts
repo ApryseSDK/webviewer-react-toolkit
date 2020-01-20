@@ -1,1 +1,1 @@
-export { ThumbnailDragLayer as default, ThumbnailDragLayerProps } from './ThumbnailDragLayer';
+export * from './ThumbnailDragLayer';

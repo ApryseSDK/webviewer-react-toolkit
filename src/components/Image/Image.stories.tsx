@@ -1,7 +1,7 @@
 import { boolean } from '@storybook/addon-knobs';
 import React, { CSSProperties } from 'react';
-import Image from '../Image';
-import Spinner from '../Spinner';
+import { Image } from '../Image';
+import { Spinner } from '../Spinner';
 import docs from './README.md';
 
 export default { title: 'Image', component: Image, parameters: { info: docs } };
@@ -15,7 +15,7 @@ const style: CSSProperties = {
   backgroundColor: 'lightgray',
 };
 
-export const basic = () => (
+export const Basic = () => (
   <div style={style}>
     <Image
       src={
@@ -27,7 +27,7 @@ export const basic = () => (
   </div>
 );
 
-export const withPromiseSrc = () => (
+export const WithPromiseSrc = () => (
   <div style={style}>
     <Image
       src={

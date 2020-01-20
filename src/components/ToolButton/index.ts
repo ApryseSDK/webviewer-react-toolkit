@@ -1,1 +1,1 @@
-export { ToolButton as default, ToolButtonProps } from './ToolButton';
+export * from './ToolButton';

@@ -1,8 +1,8 @@
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 import React, { CSSProperties } from 'react';
-import DndMultiProvider from '../DndMultiProvider';
-import Draggable from '../Draggable';
+import { DndMultiProvider } from '../DndMultiProvider';
+import { Draggable } from '../Draggable';
 import docs from './README.md';
 
 export default { title: 'Draggable', component: Draggable, parameters: { info: docs } };
@@ -15,7 +15,7 @@ const commonStyle: CSSProperties = {
   textAlign: 'center',
 };
 
-export const basic = () => (
+export const Basic = () => (
   <DndMultiProvider>
     <Draggable
       index={0}
@@ -29,7 +29,7 @@ export const basic = () => (
   </DndMultiProvider>
 );
 
-export const withOnRenderChildren = () => (
+export const WithOnRenderChildren = () => (
   <DndMultiProvider>
     <Draggable
       index={0}

@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- [core] Export all components and types to root (#31) @liamross
+- [core] Moved dependencies to peer-dependencies (#31) @liamross
+
 ## [0.0.0-beta.9] - 2020-01-20
 
 - [types] All components that deal with File made generic (#30) @liamross

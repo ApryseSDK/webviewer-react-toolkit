@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
-import DndMultiProvider from '../DndMultiProvider';
-import Draggable from '../Draggable';
-import DragLayer from '../DragLayer';
+import { DndMultiProvider } from '../DndMultiProvider';
+import { Draggable } from '../Draggable';
+import { DragLayer } from '../DragLayer';
 import docs from './README.md';
 
 export default { title: 'DragLayer', component: DragLayer, parameters: { info: docs } };
@@ -17,7 +17,7 @@ const commonStyle: CSSProperties = {
   textAlign: 'center',
 };
 
-export const basic = () => (
+export const Basic = () => (
   <DndMultiProvider>
     <Draggable index={0} hideDragPreview={true}>
       <div style={{ ...commonStyle, border: '1px solid red' }}>This div is draggable!</div>
@@ -28,7 +28,7 @@ export const basic = () => (
   </DndMultiProvider>
 );
 
-export const withCustomTranslate = () => (
+export const WithCustomTranslate = () => (
   <DndMultiProvider>
     <Draggable index={0} hideDragPreview={true}>
       <div style={{ ...commonStyle, border: '1px solid red' }}>This div is draggable!</div>

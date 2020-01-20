@@ -1,1 +1,1 @@
-export { DragLayer as default, DragLayerProps } from './DragLayer';
+export * from './DragLayer';

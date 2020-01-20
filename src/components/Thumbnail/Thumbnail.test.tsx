@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
 import { createFile } from '../../storybook-helpers/data/files';
-import Thumbnail from '../Thumbnail';
+import { Thumbnail } from '../Thumbnail';
 
 const testFile = createFile(0, { pending: true });
 

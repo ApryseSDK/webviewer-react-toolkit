@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import EditableText from '../EditableText';
+import { EditableText } from '../EditableText';
 
 describe('EditableText component', () => {
   it('renders its contents', () => {

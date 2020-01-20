@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import Button from '../Button';
+import { Button } from '../Button';
 
 describe('Button component', () => {
   it('renders its contents', () => {

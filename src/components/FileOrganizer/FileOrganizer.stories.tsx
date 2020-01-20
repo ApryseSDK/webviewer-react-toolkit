@@ -4,9 +4,9 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useManagedFiles } from '../../hooks';
 import { createFile, FakeFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
-import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';
-import Thumbnail from '../Thumbnail';
-import ThumbnailDragLayer from '../ThumbnailDragLayer';
+import { FileOrganizer, FileOrganizerProps } from '../FileOrganizer';
+import { Thumbnail } from '../Thumbnail';
+import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
 import docs from './README.md';
 
 export default { title: 'FileOrganizer', component: FileOrganizer, parameters: { info: { docs, disable: true } } };

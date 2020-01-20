@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import ClickableDiv from '../ClickableDiv';
+import { ClickableDiv } from '../ClickableDiv';
 
 describe('ClickableDiv component', () => {
   it('renders its contents', () => {
