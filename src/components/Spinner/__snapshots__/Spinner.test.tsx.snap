@@ -2,7 +2,7 @@
 
 exports[`Spinner component snapshot renders default spinner 1`] = `
 <div
-  className="ui__base ui__spinner ui__spinner--style-default ui__spinner--size-default"
+  className="ui__base ui__spinner ui__spinner--size-default"
 >
   <div
     className="ui__spinner__animated"

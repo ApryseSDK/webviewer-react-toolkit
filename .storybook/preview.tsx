@@ -22,7 +22,7 @@ addDecorator(
       // The wrapper around info.
       infoBody: { padding: 15, backgroundColor: 'rgb(51, 51, 51)' },
       // The wrapper around the story.
-      infoStory: { padding: 15 },
+      infoStory: { padding: 40 },
       // Hide prop table header.
       propTableHead: { display: 'none' },
     }),

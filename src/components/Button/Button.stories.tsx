@@ -1,16 +1,15 @@
 import { action } from '@storybook/addon-actions';
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { enumSelect } from '../../storybook-helpers/knobs/enumSelect';
-import Button, { ButtonSize, ButtonStyle } from '../Button';
+import Button from '../Button';
 import docs from './README.md';
 
 export default { title: 'Button', component: Button, parameters: { info: docs } };
 
 export const Basic = () => (
   <Button
-    buttonStyle={enumSelect('buttonStyle', { ButtonStyle }, ButtonStyle.Default)}
-    buttonSize={enumSelect('buttonSize', { ButtonSize }, ButtonSize.Default)}
+    buttonStyle={select('buttonStyle', ['default', 'borderless', 'outline'], 'default')}
+    buttonSize={select('buttonSize', ['small', 'default', 'large'], 'default')}
     disabled={boolean('disabled', false)}
     onClick={action('onClick')}
   >

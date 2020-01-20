@@ -1,13 +1,10 @@
+import { select } from '@storybook/addon-knobs';
 import React from 'react';
-import { enumSelect } from '../../storybook-helpers/knobs/enumSelect';
-import Spinner, { SpinnerSize, SpinnerStyle } from '../Spinner';
+import Spinner from '../Spinner';
 import docs from './README.md';
 
 export default { title: 'Spinner', component: Spinner, parameters: { info: docs } };
 
 export const basic = () => (
-  <Spinner
-    spinnerStyle={enumSelect('spinnerStyle', { SpinnerStyle }, SpinnerStyle.Default)}
-    spinnerSize={enumSelect('spinnerSize', { SpinnerSize }, SpinnerSize.Default)}
-  />
+  <Spinner spinnerSize={select('spinnerSize', ['tiny', 'small', 'default', 'large'], 'default')} />
 );

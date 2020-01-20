@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { File } from '../data/file';
-import { FileEventType } from '../data/fileEvent';
 import useFileSubscribe from './useFileSubscribe';
 
 /** The output of this hook is an object representing a file. */
@@ -30,10 +29,10 @@ interface FileHook {
  * @param throttle The timeout if unfetched memo promise.
  */
 export default function useFile(file: File, throttle?: number): FileHook {
-  const [name] = useFileSubscribe(file, f => f.name, FileEventType.NameChange, { throttle });
-  const [thumbnail] = useFileSubscribe(file, f => f.thumbnail, FileEventType.ThumbnailChange, { throttle });
-  const [fileObj] = useFileSubscribe(file, f => f.fileObj, FileEventType.FileObjChange, { throttle });
-  const [documentObj] = useFileSubscribe(file, f => f.documentObj, FileEventType.DocumentObjChange, { throttle });
+  const [name] = useFileSubscribe(file, f => f.name, 'onnamechange', { throttle });
+  const [thumbnail] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', { throttle });
+  const [fileObj] = useFileSubscribe(file, f => f.fileObj, 'onfileobjchange', { throttle });
+  const [documentObj] = useFileSubscribe(file, f => f.documentObj, 'ondocumentobjchange', { throttle });
 
   const fileValue = useMemo<FileHook>(
     () => ({

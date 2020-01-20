@@ -1,1 +1,1 @@
-export { Spinner as default, SpinnerProps, SpinnerSize, SpinnerStyle } from './Spinner';
+export { Spinner as default, SpinnerProps } from './Spinner';

@@ -66,7 +66,7 @@ export class File {
     return this._name;
   }
   set name(name: string) {
-    this.dispatchEvent(FileEventType.NameChange, () => {
+    this.dispatchEvent('onnamechange', () => {
       this._name = name;
     });
   }
@@ -101,12 +101,14 @@ export class File {
     return this._documentObj;
   }
 
+  /* --- Memoized promise value setters. --- */
+
   /**
    * Set the thumbnail or give a futurable or getter.
    * @param thumbnail The thumbnail, promise, or getter for the thumbnail.
    */
   setThumbnail(thumbnail?: FuturableOrLazy<string>) {
-    this.dispatchEvent(FileEventType.ThumbnailChange, () => {
+    this.dispatchEvent('onthumbnailchange', () => {
       this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
     });
   }
@@ -116,7 +118,7 @@ export class File {
    * @param fileObj The fileObj, promise, or getter for the fileObj.
    */
   setFileObj(fileObj?: FuturableOrLazy<Blob>) {
-    this.dispatchEvent(FileEventType.FileObjChange, () => {
+    this.dispatchEvent('onfileobjchange', () => {
       this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
       // Only update documentObj if fileObj was given, not generated.
       if (fileObj) this.setDocumentObj();
@@ -129,7 +131,7 @@ export class File {
    * @param stopPropagation Prevent updates to _fileObj and thumbnail.
    */
   setDocumentObj(documentObj?: FuturableOrLazy<CoreControls.Document>) {
-    this.dispatchEvent(FileEventType.DocumentObjChange, () => {
+    this.dispatchEvent('ondocumentobjchange', () => {
       this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
       // Only update fileObj if documentObj was given, not generated.
       if (documentObj) this.setFileObj();
@@ -137,15 +139,19 @@ export class File {
     });
   }
 
+  /* --- File utility functions. --- */
+
   /**
    * Rotate 90 degrees clockwise unless `counterclockwise` is true.
    * @param counterclockwise Rotate 90 degrees counterclockwise.
    */
   rotate(counterclockwise?: boolean) {
-    this.dispatchEvent(FileEventType.Rotate, () => {
+    this.dispatchEvent('onrotate', () => {
       this.setDocumentObj(getRotatedDocument(this.documentObj.get(), counterclockwise));
     });
   }
+
+  /* --- Events. --- */
 
   /**
    * Appends an event listener for events whose type attribute value is type.
@@ -155,8 +161,7 @@ export class File {
    * @param listener The listener function that will be invoked.
    */
   addEventListener(type: FileEventType, listener: FileEventListener) {
-    const eventListeners = this._eventListeners[type] ?? (this._eventListeners[type] = []);
-    if (!eventListeners.includes(listener)) eventListeners.push(listener);
+    (this._eventListeners[type] ?? (this._eventListeners[type] = [])).push(listener);
   }
 
   /**
@@ -166,10 +171,7 @@ export class File {
    * @param listener The listener to remove.
    */
   removeEventListener(type: FileEventType, listener: FileEventListener) {
-    const eventListeners = this._eventListeners[type];
-    if (!eventListeners) return;
-    const index = eventListeners.indexOf(listener);
-    if (index > -1) eventListeners.splice(index, 1);
+    this._eventListeners[type] = this._eventListeners[type]?.filter(l => l !== listener);
   }
 
   /**
@@ -194,6 +196,8 @@ export class File {
   dispatchEvent(type: FileEventType, eventDefault?: Function) {
     new FileEvent(type, this, { eventDefault, listeners: this._eventListeners });
   }
+
+  /* --- Private helpers. --- */
 
   /** Generate a thumbnail from document object. */
   private _generateThumbnail() {

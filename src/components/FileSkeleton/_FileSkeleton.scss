@@ -1,8 +1,8 @@
 .ui__fileSkeleton {
   background-color: $white-1;
   padding: 10px;
-  height: 172px;
-  width: 133px;
+  height: 162px;
+  width: 125px;
 
   &__block {
     @include skeleton;
@@ -16,32 +16,30 @@
     &--line-sm {
       margin-left: 50px;
       margin-top: 10px;
-      width: 60px;
       height: 6px;
     }
 
     &--line-xs {
       margin-left: 50px;
       margin-top: 10px;
-      width: 60px;
+      width: 40px;
       height: 6px;
     }
 
     &--line-df {
       margin-top: 20px;
-      width: 95px;
+      width: 90px;
       height: 6px;
     }
 
     &--line-lg {
       margin-top: 10px;
-      width: 95px;
+      width: 90px;
       height: 6px;
     }
 
     &--line-lgx {
       margin-top: 10px;
-      width: 105px;
       height: 6px;
     }
   }

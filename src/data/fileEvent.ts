@@ -11,20 +11,19 @@ export interface FileEventInit {
   eventDefault?: Function;
 }
 
-export enum FileEventType {
+export type FileEventType =
   /** Triggered when the documentObj is updated. */
-  Rotate = 'onrotate',
+  | 'onrotate'
   /** Triggered when the documentObj is updated. */
-  DocumentObjChange = 'ondocumentobjchange',
+  | 'ondocumentobjchange'
   /** Triggered when the fileObj is updated. */
-  FileObjChange = 'onfileobjchange',
+  | 'onfileobjchange'
   /** Triggered when the thumbnail is updated. */
-  ThumbnailChange = 'onthumbnailchange',
+  | 'onthumbnailchange'
   /** Triggered when the name is updated. */
-  NameChange = 'onnamechange',
+  | 'onnamechange'
   /** Change is always fired after every other event, unless stopPropagation was called. */
-  Change = 'onchange',
-}
+  | 'onchange';
 
 export type FileEventListener = (event: FileEvent) => void;
 
@@ -143,7 +142,7 @@ export class FileEvent {
 
     // Call default if event is already onchange, or if propagation has been
     // stopped.
-    if (propagationStopped || this.type === FileEventType.Change) {
+    if (propagationStopped || this.type === 'onchange') {
       return this._eventDefault?.();
     }
 
@@ -157,7 +156,7 @@ export class FileEvent {
         eventDefault: this._eventDefault,
         listeners: this._listeners,
       };
-      new FileEvent(FileEventType.Change, this.target, fileEventInit, this.originalType);
+      new FileEvent('onchange', this.target, fileEventInit, this.originalType);
     }
   }
 }

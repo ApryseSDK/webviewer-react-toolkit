@@ -44,9 +44,12 @@
   }
 
   &:focus:not(.ui__thumbnail--disabled) {
-    .ui__thumbnail__image img {
-      @include focus;
-      border-color: $focus-shadow;
+    .ui__thumbnail__image {
+      img,
+      .ui__thumbnail__image__skeleton {
+        @include focus;
+        border-color: $focus-shadow;
+      }
     }
   }
 
@@ -67,8 +70,10 @@
     height: 0;
     flex: 1 1 auto;
 
-    img {
+    img,
+    .ui__thumbnail__image__skeleton {
       border: 1px solid $blue-gray-1;
+      transition: $focus-transition;
     }
   }
 

@@ -133,7 +133,11 @@ export const Thumbnail = forwardRef<HTMLDivElement, ThumbnailProps>(
         onBlur={handleOnBlur}
       >
         <div className="ui__thumbnail__image">
-          <Image src={file.thumbnail} alt={file.name} onRenderLoading={() => <FileSkeleton />} />
+          <Image
+            src={file.thumbnail}
+            alt={file.name}
+            onRenderLoading={() => <FileSkeleton className="ui__thumbnail__image__skeleton" />}
+          />
         </div>
         <div className="ui__thumbnail__controls">
           {buttonProps?.map(buttonPropObject => (

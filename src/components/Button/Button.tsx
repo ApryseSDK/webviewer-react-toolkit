@@ -2,29 +2,17 @@ import classnames from 'classnames';
 import React, { ButtonHTMLAttributes, forwardRef } from 'react';
 import useAccessibleFocus from '../../hooks/useAccessibleFocus';
 
-export enum ButtonStyle {
-  Default = 'default',
-  Borderless = 'borderless',
-  Outline = 'outline',
-}
-
-export enum ButtonSize {
-  Small = 'small',
-  Default = 'default',
-  Large = 'large',
-}
-
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Sets the visual appearance of the button.
-   * @default ButtonStyle.Default
+   * @default "default"
    */
-  buttonStyle?: ButtonStyle;
+  buttonStyle?: 'default' | 'borderless' | 'outline';
   /**
    * Sets the size of the button.
-   * @default ButtonSize.Default
+   * @default "default"
    */
-  buttonSize?: ButtonSize;
+  buttonSize?: 'small' | 'default' | 'large';
   /**
    * Defaults to 'button' instead of 'submit' to prevent accidental submissions.
    * @default "button"
@@ -33,10 +21,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { buttonStyle = ButtonStyle.Default, buttonSize = ButtonSize.Default, type = 'button', className, ...buttonProps },
-    ref,
-  ) => {
+  ({ buttonStyle = 'default', buttonSize = 'default', type = 'button', className, ...buttonProps }, ref) => {
     const isUserTabbing = useAccessibleFocus();
 
     const buttonClass = classnames(

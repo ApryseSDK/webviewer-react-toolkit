@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+- [core] **BREAKING:** Removed enums in favor of string literals (#28) @liamross
+  - This effects `Button`, `Spinner`, and the `FileEvent` class
+- [Spinner] **BREAKING:** Removed unused on-gray style (#28) @liamross
+- [Thumbnail] Added focus style to loading skeleton (#28) @liamross
+- [FileSkeleton] Updated size and style (#28) @liamross
 - [core] Dependency update to Storybook and utils (#27) @liamross
 
 ## [0.0.0-beta.6] - 2020-01-13
