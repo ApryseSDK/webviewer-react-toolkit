@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.7] - 2020-01-20
+
 - [core] **BREAKING:** Removed enums in favor of string literals (#28) @liamross
   - This effects `Button`, `Spinner`, and the `FileEvent` class
 - [Spinner] **BREAKING:** Removed unused on-gray style (#28) @liamross
