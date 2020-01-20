@@ -13,8 +13,8 @@ import React, {
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Motion, PlainStyle, spring, SpringHelperConfig } from 'react-motion';
-import useCurrentRef from '../../hooks/useCurrentRef';
-import { getSibling } from '../../utils/domUtils';
+import { useCurrentRef } from '../../hooks';
+import { getSibling } from '../../utils';
 
 const ItemTypes = { Draggable: 'draggable' };
 

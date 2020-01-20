@@ -1,8 +1,7 @@
 import classnames from 'classnames';
 import React, { forwardRef, MouseEvent, ReactNode, useEffect, useImperativeHandle, useRef } from 'react';
-import { File } from '../../data/file';
-import useFile from '../../hooks/useFile';
-import useFocus from '../../hooks/useFocus';
+import { File } from '../../data';
+import { useFile, useFocus } from '../../hooks';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 import EditableText from '../EditableText';
 import FileSkeleton from '../FileSkeleton';

@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- [core] Export all items to root and inline SVG icons (#29) @liamross
+
 ## [0.0.0-beta.7] - 2020-01-20
 
 - [core] **BREAKING:** Removed enums in favor of string literals (#28) @liamross

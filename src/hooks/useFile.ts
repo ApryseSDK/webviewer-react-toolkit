@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { File } from '../data/file';
-import useFileSubscribe from './useFileSubscribe';
+import { File } from '../data';
+import { useFileSubscribe } from './useFileSubscribe';
 
 /** The output of this hook is an object representing a file. */
 interface FileHook {
@@ -28,7 +28,7 @@ interface FileHook {
  * @param file The file to convert to react observable values.
  * @param throttle The timeout if unfetched memo promise.
  */
-export default function useFile(file: File, throttle?: number): FileHook {
+export function useFile(file: File, throttle?: number): FileHook {
   const [name] = useFileSubscribe(file, f => f.name, 'onnamechange', { throttle });
   const [thumbnail] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', { throttle });
   const [fileObj] = useFileSubscribe(file, f => f.fileObj, 'onfileobjchange', { throttle });

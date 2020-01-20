@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-import { File } from '../data/file';
-import { FileEventType } from '../data/fileEvent';
-import { MemoizedPromise } from '../data/memoizedPromise';
-import { DEFAULT_THROTTLE_TIMEOUT } from '../utils/constantUtils';
+import { File, FileEventType, MemoizedPromise } from '../data';
+import { DEFAULT_THROTTLE_TIMEOUT } from '../utils';
 
 export interface UseFileSubscribeOptions {
   /** The timeout to throttle by if unfetched memo promise. Default: 500ms. */
@@ -18,7 +16,7 @@ export interface UseFileSubscribeOptions {
  * @param getCurrentValue Function to extract the current value from the file.
  * @param eventType The event type to subscribe. Won't subscribe if not given.
  */
-export default function useFileSubscribe<T>(
+export function useFileSubscribe<T>(
   file: File,
   getCurrentValue: (file: File) => T | MemoizedPromise<T>,
   eventType?: FileEventType,

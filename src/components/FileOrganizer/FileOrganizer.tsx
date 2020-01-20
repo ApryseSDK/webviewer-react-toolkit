@@ -16,11 +16,9 @@ import React, {
   useState,
 } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
-import { File } from '../../data/file';
-import useCurrentRef from '../../hooks/useCurrentRef';
-import { THUMBNAIL_WIDTH } from '../../utils/constantUtils';
-import { getSibling, isScrolledIntoView } from '../../utils/domUtils';
-import { getRowAndColumnIndex } from '../../utils/gridUtils';
+import { File } from '../../data';
+import { useCurrentRef } from '../../hooks';
+import { getRowAndColumnIndex, getSibling, isScrolledIntoView, THUMBNAIL_WIDTH } from '../../utils';
 import DndMultiProvider from '../DndMultiProvider';
 import Draggable from '../Draggable';
 import DragLayer, { DragLayerProps } from '../DragLayer';

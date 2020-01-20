@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import useAccessibleFocus from '../../hooks/useAccessibleFocus';
+import { useAccessibleFocus } from '../../hooks';
 import ClickableDiv, { ClickableDivProps } from '../ClickableDiv';
 
 export interface EditableTextProps extends ClickableDivProps {

@@ -1,22 +1,23 @@
 import { Dispatch, MouseEvent, SetStateAction, useCallback, useMemo, useState } from 'react';
-import { File } from '../data/file';
-import { moveMultiFromIndexToIndex, separateItemsWithTarget } from '../utils/arrayUtils';
+import { moveMultiFromIndexToIndex, separateItemsWithTarget } from '../utils';
 
-export interface UseManagedFilesOptions {
-  initialFiles?: File[];
+export interface UseManagedFilesOptions<F> {
+  initialFiles?: F[];
   preventMultiDrag?: boolean;
 }
 
-interface UseManagedFilesOutput {
-  files: File[];
-  setFiles: Dispatch<SetStateAction<File[]>>;
+interface UseManagedFilesOutput<F> {
+  files: F[];
+  setFiles: Dispatch<SetStateAction<F[]>>;
+  addFile: (file: F, index?: number | undefined) => void;
+  removeFile: (file: F) => void;
   moveFile: (fromIndex: number, toIndex: number) => void;
   selectedIds: string[];
   toggleSelectedId: (id: string, event: MouseEvent<HTMLElement>) => void;
   unselectAll: () => void;
   selectAll: () => void;
   onDragChange: (id?: string | undefined) => void;
-  draggingFiles: File[] | undefined;
+  draggingFiles: F[] | undefined;
 }
 
 /**
@@ -24,10 +25,26 @@ interface UseManagedFilesOutput {
  * `FileOrganizer` component.
  * @param options Options for managing files.
  */
-export default function useManagedFiles(options: UseManagedFilesOptions = {}) {
+export function useManagedFiles<F extends { id: string }>(options: UseManagedFilesOptions<F> = {}) {
   const { initialFiles, preventMultiDrag } = options;
 
   const [files, setFiles] = useState(initialFiles ?? []);
+
+  const addFile = useCallback((file: F, index?: number) => {
+    setFiles(prev => {
+      if (prev.includes(file)) return prev;
+      if (index === undefined) return [...prev, file];
+      return [...prev.slice(0, index), file, ...prev.slice(index)];
+    });
+  }, []);
+
+  const removeFile = useCallback((file: F) => {
+    setFiles(prev => {
+      const index = prev.indexOf(file);
+      if (index === -1) return prev;
+      return [...prev.slice(0, index), ...prev.slice(index + 1)];
+    });
+  }, []);
 
   /* --- Selection. --- */
 
@@ -56,7 +73,7 @@ export default function useManagedFiles(options: UseManagedFilesOptions = {}) {
 
   /* --- Multiple drag items. --- */
 
-  const [dragging, setDragging] = useState<{ files: File[]; target: File }>();
+  const [dragging, setDragging] = useState<{ files: F[]; target: F }>();
   const onDragChange = useCallback(
     (id?: string) => {
       // When drag ends, if dragging was set, insert dragging items back into
@@ -126,9 +143,11 @@ export default function useManagedFiles(options: UseManagedFilesOptions = {}) {
     [dragging, files, preventMultiDrag, selectedIds],
   );
 
-  const managedFiles = useMemo<UseManagedFilesOutput>(
+  const managedFiles = useMemo<UseManagedFilesOutput<F>>(
     () => ({
       files,
+      addFile,
+      removeFile,
       setFiles,
       moveFile,
       selectedIds,
@@ -138,7 +157,18 @@ export default function useManagedFiles(options: UseManagedFilesOptions = {}) {
       onDragChange,
       draggingFiles: dragging?.files,
     }),
-    [files, moveFile, onDragChange, selectAll, selectedIds, toggleSelectedId, unselectAll, dragging],
+    [
+      addFile,
+      dragging,
+      files,
+      moveFile,
+      onDragChange,
+      removeFile,
+      selectAll,
+      selectedIds,
+      toggleSelectedId,
+      unselectAll,
+    ],
   );
 
   return managedFiles;

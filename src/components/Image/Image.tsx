@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { forwardRef, ImgHTMLAttributes, ReactNode, useCallback, useEffect, useState } from 'react';
-import { FuturableOrLazy, futureableOrLazyToFuturable } from '../../data/futurable';
+import { FuturableOrLazy, futureableOrLazyToFuturable } from '../../data';
 
 export interface ImageProps extends Remove<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   /**

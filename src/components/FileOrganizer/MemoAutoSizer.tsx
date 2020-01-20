@@ -1,9 +1,8 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo } from 'react';
 import AutoSizer, { Size } from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid, GridChildComponentProps } from 'react-window';
-import { File } from '../../data/file';
-import { THUMBNAIL_WIDTH } from '../../utils/constantUtils';
-import { getItemIndex } from '../../utils/gridUtils';
+import { File } from '../../data';
+import { getItemIndex, THUMBNAIL_WIDTH } from '../../utils';
 
 interface VirtualizedProps {
   files: File[];

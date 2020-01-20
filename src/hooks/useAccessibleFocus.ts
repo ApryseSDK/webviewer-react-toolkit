@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
  * Will return a boolean is true if the user is using keyboard navigation. It
  * will become false if they use their mouse.
  */
-export default function useAccessibleFocus() {
+export function useAccessibleFocus() {
   const [isUserTabbing, setIsUserTabbing] = useState(observable.isUserTabbing);
 
   useEffect(() => {

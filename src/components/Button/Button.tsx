@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { ButtonHTMLAttributes, forwardRef } from 'react';
-import useAccessibleFocus from '../../hooks/useAccessibleFocus';
+import { useAccessibleFocus } from '../../hooks';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**

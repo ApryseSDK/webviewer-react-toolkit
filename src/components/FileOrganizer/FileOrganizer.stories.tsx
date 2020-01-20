@@ -1,8 +1,8 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { File } from '../../data/file';
-import useManagedFiles from '../../hooks/useManagedFiles';
+import { File } from '../../data';
+import { useManagedFiles } from '../../hooks';
 import { createFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 import FileOrganizer, { FileOrganizerProps } from '../FileOrganizer';

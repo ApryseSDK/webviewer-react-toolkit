@@ -1,7 +1,6 @@
 import classnames from 'classnames';
 import React, { ButtonHTMLAttributes, forwardRef } from 'react';
-import useAccessibleFocus from '../../hooks/useAccessibleFocus';
-import useOnClick from '../../hooks/useOnClick';
+import { useAccessibleFocus, useOnClick } from '../../hooks';
 
 export interface ToolButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 

@@ -1,9 +1,4 @@
-import { getExtension } from '../utils/fileUtils';
-import { getStringId } from '../utils/idUtils';
-import blobToDocument from '../webviewer/blobToDocument';
-import documentToBlob from '../webviewer/documentToBlob';
-import getRotatedDocument from '../webviewer/getRotatedDocument';
-import getThumbnail from '../webviewer/getThumbnail';
+import { blobToDocument, documentToBlob, getExtension, getRotatedDocument, getStringId, getThumbnail } from '../utils';
 import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
 import { FuturableOrLazy } from './futurable';
 import { MemoizedPromise } from './memoizedPromise';

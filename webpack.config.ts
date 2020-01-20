@@ -94,15 +94,6 @@ const config: webpack.Configuration = {
           { loader: require.resolve('sass-loader') },
         ],
       },
-      {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: require.resolve('file-loader'),
-            options: { name: '[name].[ext]', outputPath: `${LIBRARY_PATH}/icons/` },
-          },
-        ],
-      },
     ],
   },
 };
