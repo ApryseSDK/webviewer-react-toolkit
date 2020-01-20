@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.10] - 2020-01-20
+
 - [core] Export all components and types to root (#31) @liamross
 - [core] Moved dependencies to peer-dependencies (#31) @liamross
 
