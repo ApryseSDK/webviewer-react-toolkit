@@ -59,10 +59,12 @@ export function useFileSubscribe<F extends FileLike, T>(
 
     subscribe();
 
-    if (eventType) file.addEventListener(eventType, subscribe);
+    let unsubscribe: Function | undefined;
+
+    if (eventType) unsubscribe = file.subscribe(eventType, subscribe);
 
     return () => {
-      if (eventType) file.removeEventListener(eventType, subscribe);
+      unsubscribe?.();
       cancelled = true;
       clearTimeout(timeout);
     };

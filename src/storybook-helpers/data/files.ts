@@ -43,7 +43,7 @@ export class FakeFile implements FileLike {
     return new MemoizedPromise(internals as FuturableOrLazy<T>);
   }
 
-  rotate() {}
-  addEventListener() {}
-  removeEventListener() {}
+  subscribe() {
+    return () => {};
+  }
 }

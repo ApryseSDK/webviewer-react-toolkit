@@ -1,5 +1,4 @@
 import { blobToDocument, documentToBlob, getExtension, getRotatedDocument, getStringId, getThumbnail } from '../utils';
-import { FileEvent, FileEventListener, FileEventListenersObj, FileEventType } from './fileEvent';
 import { FuturableOrLazy } from './futurable';
 import { MemoizedPromise } from './memoizedPromise';
 
@@ -26,9 +25,26 @@ export interface FileLike {
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
-  addEventListener: Function;
-  removeEventListener: Function;
+  subscribe: (...args: any) => Function; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
+
+export type FileEventType =
+  /** Triggered when the documentObj is updated. */
+  | 'onrotate'
+  /** Triggered when the documentObj is updated. */
+  | 'ondocumentobjchange'
+  /** Triggered when the fileObj is updated. */
+  | 'onfileobjchange'
+  /** Triggered when the thumbnail is updated. */
+  | 'onthumbnailchange'
+  /** Triggered when the name is updated. */
+  | 'onnamechange'
+  /** Change is always fired after every other event, unless stopPropagation was called. */
+  | 'onchange';
+
+export type FileEventListener = () => void;
+
+export type FileEventListenersObj = Partial<{ [type in FileEventType]: FileEventListener[] }>;
 
 /** A representation of the data within a file. */
 export class File implements FileLike {
@@ -39,7 +55,7 @@ export class File implements FileLike {
   private _fileObj: MemoizedPromise<Blob>;
   private _documentObj: MemoizedPromise<CoreControls.Document>;
   private _thumbnail: MemoizedPromise<string>;
-  private _eventListeners: FileEventListenersObj;
+  private _subscribers: FileEventListenersObj;
 
   /**
    * Initialize the `File`.
@@ -62,17 +78,7 @@ export class File implements FileLike {
     this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
     this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
 
-    this._eventListeners = {};
-  }
-
-  /** The name of the file. */
-  get name() {
-    return this._name;
-  }
-  set name(name: string) {
-    this.dispatchEvent('onnamechange', () => {
-      this._name = name;
-    });
+    this._subscribers = {};
   }
 
   /** A unique ID generated for the file. */
@@ -105,6 +111,15 @@ export class File implements FileLike {
     return this._documentObj;
   }
 
+  /** The name of the file. */
+  get name() {
+    return this._name;
+  }
+  set name(name: string) {
+    this._name = name;
+    this.dispatchEvent('onnamechange');
+  }
+
   /* --- Memoized promise value setters. --- */
 
   /**
@@ -112,9 +127,8 @@ export class File implements FileLike {
    * @param thumbnail The thumbnail, promise, or getter for the thumbnail.
    */
   setThumbnail(thumbnail?: FuturableOrLazy<string>) {
-    this.dispatchEvent('onthumbnailchange', () => {
-      this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
-    });
+    this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
+    this.dispatchEvent('onthumbnailchange');
   }
 
   /**
@@ -122,11 +136,10 @@ export class File implements FileLike {
    * @param fileObj The fileObj, promise, or getter for the fileObj.
    */
   setFileObj(fileObj?: FuturableOrLazy<Blob>) {
-    this.dispatchEvent('onfileobjchange', () => {
-      this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
-      // Only update documentObj if fileObj was given, not generated.
-      if (fileObj) this.setDocumentObj();
-    });
+    this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
+    // Only update documentObj if fileObj was given, not generated.
+    if (fileObj) this.setDocumentObj();
+    this.dispatchEvent('onfileobjchange');
   }
 
   /**
@@ -135,12 +148,11 @@ export class File implements FileLike {
    * @param stopPropagation Prevent updates to _fileObj and thumbnail.
    */
   setDocumentObj(documentObj?: FuturableOrLazy<CoreControls.Document>) {
-    this.dispatchEvent('ondocumentobjchange', () => {
-      this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
-      // Only update fileObj if documentObj was given, not generated.
-      if (documentObj) this.setFileObj();
-      this.setThumbnail();
-    });
+    this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
+    // Only update fileObj if documentObj was given, not generated.
+    if (documentObj) this.setFileObj();
+    this.setThumbnail();
+    this.dispatchEvent('ondocumentobjchange');
   }
 
   /* --- File utility functions. --- */
@@ -149,46 +161,24 @@ export class File implements FileLike {
    * Rotate 90 degrees clockwise unless `counterclockwise` is true.
    * @param counterclockwise Rotate 90 degrees counterclockwise.
    */
-  rotate(counterclockwise?: boolean) {
-    this.dispatchEvent('onrotate', () => {
-      this.setDocumentObj(getRotatedDocument(this.documentObj.get(), counterclockwise));
-    });
+  async rotate(counterclockwise?: boolean) {
+    const rotated = await getRotatedDocument(this.documentObj.get(), counterclockwise);
+    this.setDocumentObj(rotated);
+    this.dispatchEvent('onrotate');
   }
 
   /* --- Events. --- */
 
   /**
-   * Appends an event listener for events whose type attribute value is type.
+   * Appends an subscriber for events whose type attribute value is type.
    * The callback argument sets the callback that will be invoked when the event
    * is dispatched.
    * @param type The event type that will invoke the listener.
-   * @param listener The listener function that will be invoked.
+   * @param subscriber The listener function that will be invoked.
    */
-  addEventListener(type: FileEventType, listener: FileEventListener) {
-    (this._eventListeners[type] ?? (this._eventListeners[type] = [])).push(listener);
-  }
-
-  /**
-   * Removes the event listener in target's event listener list with the same
-   * type and callback.
-   * @param type The event type that the listener is registered for.
-   * @param listener The listener to remove.
-   */
-  removeEventListener(type: FileEventType, listener: FileEventListener) {
-    this._eventListeners[type] = this._eventListeners[type]?.filter(l => l !== listener);
-  }
-
-  /**
-   * Removes all event listeners for a given type, or if no type is given, will
-   * remove all event listeners across every type.
-   * @param type Optional. The event type to remove all listeners from.
-   */
-  removeAllEventListeners(type?: FileEventType) {
-    if (typeof type === 'string') {
-      delete this._eventListeners[type];
-    } else if (type === undefined) {
-      this._eventListeners = {};
-    }
+  subscribe(type: FileEventType, subscriber: FileEventListener) {
+    (this._subscribers[type] ?? (this._subscribers[type] = [])).push(subscriber);
+    return this._unsubscribe(type, subscriber);
   }
 
   /**
@@ -197,8 +187,18 @@ export class File implements FileLike {
    * @param type The file event type to dispatch.
    * @param eventDefault The default action once all event listeners are called.
    */
-  dispatchEvent(type: FileEventType, eventDefault?: Function) {
-    new FileEvent(type, this, { eventDefault, listeners: this._eventListeners });
+  dispatchEvent(type: FileEventType) {
+    this._subscribers[type]?.forEach(subscriber => subscriber());
+  }
+
+  /**
+   * Removes the event listener in target's event listener list with the same
+   * type and callback.
+   * @param type The event type that the listener is registered for.
+   * @param subscriber The listener to remove.
+   */
+  private _unsubscribe(type: FileEventType, subscriber: FileEventListener) {
+    return () => (this._subscribers[type] = this._subscribers[type]?.filter(l => l !== subscriber));
   }
 
   /* --- Private helpers. --- */
