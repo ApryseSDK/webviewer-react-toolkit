@@ -23,6 +23,26 @@ font, but if you want to include Lato as the base font, you can do it like this:
 </style>
 ```
 
+There are also various peer dependencies that will be required to run parts of
+the kit. You should use the latest of each package:
+
+```sh
+# Required for the package in general
+react
+react-dom
+
+# Required for `Draggable`, `DragLayer` and `DndMultiProvider`
+react-dnd
+react-motion
+react-dnd-html5-backend
+react-dnd-multi-backend
+react-dnd-touch-backend
+
+# Required for `FileOrganizer`
+react-virtualized-auto-sizer
+react-window
+```
+
 ## Cloning this repo:
 
 ### To spin this up:
