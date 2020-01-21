@@ -99,17 +99,6 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  // Remove selected items if the file is removed.
-  useEffect(() => {
-    setSelectedIds(prev => {
-      const toRemove = new Set(prev);
-      files.forEach(file => {
-        if (toRemove.has(file.id)) toRemove.delete(file.id);
-      });
-      return prev.filter(id => !toRemove.has(id));
-    });
-  }, [files]);
-
   const toggleSelectedId = useCallback(
     (id: string, event?: MouseEvent<HTMLElement>) => {
       const canToggle = options.selectWithoutShift || (event ? event.shiftKey : true);
@@ -156,11 +145,15 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       if (selectedIds.length === 0) return;
 
       // Select dragging item if drag begins on unselected.
-      if (!selectedIds.includes(id)) return setSelectedIds([id]);
+      if (!selectedIds.includes(id)) {
+        return setSelectedIds([id]);
+      }
 
       // If multidrag is disabled and more than one item is selected, reduce to
       // only dragged item.
-      if (preventMultiDrag && selectedIds.length > 1) return setSelectedIds([id]);
+      if (preventMultiDrag && selectedIds.length > 1) {
+        return setSelectedIds([id]);
+      }
 
       // If drag begins on selected item and there are multiple, remove files
       // from DOM, and add to dragging list for placement when drag ends.
@@ -205,6 +198,19 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
     },
     [dragging, files, preventMultiDrag, selectedIds],
   );
+
+  // Remove selected items if the file is removed.
+  useEffect(() => {
+    // Do nothing if dragging.
+    if (dragging !== undefined) return;
+    setSelectedIds(prev => {
+      const toRemove = new Set(prev);
+      files.forEach(file => {
+        if (toRemove.has(file.id)) toRemove.delete(file.id);
+      });
+      return prev.filter(id => !toRemove.has(id));
+    });
+  }, [files, dragging]);
 
   const managedFiles = useMemo<UseManagedFilesOutput<F>>(
     () => ({
