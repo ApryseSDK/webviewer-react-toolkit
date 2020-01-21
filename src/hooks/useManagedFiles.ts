@@ -16,30 +16,39 @@ interface UseManagedFilesOutput<F> {
    */
   selectedIds: string[];
   /**
+   * Toggle whether an ID is selected or not.
+   * @param id The ID of the selected item to toggle.
+   * @param event If provided, will only allow multi-select when shiftKey is true.
+   */
+  toggleSelectedId(id: string, event?: MouseEvent<HTMLElement>): void;
+  /**
    * The number if files being dragged. Can be used to render a drag layer.
    */
-  draggingFiles: F[] | undefined;
+  draggingFiles?: F[];
   /**
    * Do any state manipulation on the files array.
    */
   setFiles: Dispatch<SetStateAction<F[]>>;
   /**
    * Simply add a file at the index, or to the end if not provided.
+   * @param file The file to add.
+   * @param index The index to add at.
    */
-  addFile: (file: F, index?: number | undefined) => void;
+  addFile(file: F, index?: number): void;
   /**
    * Remove the provided file from the files array.
+   * @param file The file to remove.
    */
-  removeFile: (file: F) => void;
+  removeFile(file: F): void;
   /**
    * You can spread these directly to `FileOrganizer`.
    */
   fileOrganizerProps: {
     files: F[];
-    onMove: (fromIndex: number, toIndex: number) => void;
-    onDragChange: (id?: string | undefined) => void;
-    onCancelSelect: () => void;
-    onSelectAll: () => void;
+    onMove(fromIndex: number, toIndex: number): void;
+    onDragChange(id?: string): void;
+    onCancelSelect(): void;
+    onSelectAll(): void;
   };
   /**
    * You can spread the result of this function directly to `Thumbnail`. It has
@@ -76,16 +85,16 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const toggleSelectedId = useCallback((id: string, event: MouseEvent<HTMLElement>) => {
-    const shiftKeyPressed = event.shiftKey;
+  const toggleSelectedId = useCallback((id: string, event?: MouseEvent<HTMLElement>) => {
+    const canToggle = event ? event.shiftKey : true;
     setSelectedIds(prev => {
       const toggleIndex = prev.indexOf(id);
       if (toggleIndex === -1) {
-        if (shiftKeyPressed) return [...prev, id];
+        if (canToggle) return [...prev, id];
         return [id];
       }
       if (toggleIndex !== -1) {
-        if (shiftKeyPressed) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
+        if (canToggle) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
         if (prev.length > 1) return [id];
         return [];
       }
@@ -184,6 +193,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       }),
       files,
       selectedIds,
+      toggleSelectedId,
       addFile,
       removeFile,
       setFiles,
