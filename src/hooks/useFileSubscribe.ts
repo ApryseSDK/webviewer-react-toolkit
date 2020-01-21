@@ -3,7 +3,7 @@ import { FileEventType, FileLike, MemoizedPromise } from '../data';
 import { DEFAULT_THROTTLE_TIMEOUT } from '../utils';
 
 export interface UseFileSubscribeOptions {
-  /** The timeout to throttle by if unfetched memo promise. Default: 500ms. */
+  /** The timeout to throttle initial fetch of value. Default: 500ms. */
   throttle?: number;
   /** Fired when async promise fails. */
   onFailed?: (error: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -43,12 +43,12 @@ export function useFileSubscribe<F extends FileLike, T>(
       }
     };
 
-    const subscribe = () => {
+    const subscribe = (delay?: boolean) => {
       const val = getCurrentValue(file);
       if (!(val instanceof MemoizedPromise)) {
         // Non-memoized-promise, can set directly.
         setValue(val);
-      } else if (val.done || options.throttle === 0) {
+      } else if (!delay || val.done || options.throttle === 0) {
         setMemoValue(val);
       } else {
         timeout = window.setTimeout(() => {
@@ -57,7 +57,7 @@ export function useFileSubscribe<F extends FileLike, T>(
       }
     };
 
-    subscribe();
+    subscribe(true);
 
     let unsubscribe: Function | undefined;
 
