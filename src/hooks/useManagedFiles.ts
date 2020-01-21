@@ -8,22 +8,13 @@ export interface UseManagedFilesOptions<F> {
 
 interface UseManagedFilesOutput<F> {
   /**
-   * You can spread these directly to `FileOrganizer`.
+   * An array of files.
    */
-  fileOrganizerProps: {
-    files: F[];
-    onMove: (fromIndex: number, toIndex: number) => void;
-    onDragChange: (id?: string | undefined) => void;
-    onCancelSelect: () => void;
-    onSelectAll: () => void;
-  };
+  files: F[];
   /**
-   * You can spread the result of this function directly to `Thumbnail`. It has
-   * a boolean for whether the `Thumbnail` is selected, as well as an `onClick`
-   * function to select it.
-   * @param id The `File` id for the thumbnail.
+   * An array of every selected ID.
    */
-  getThumbnailSelectionProps(id: string): { selected: boolean; onClick: (event: MouseEvent<HTMLElement>) => void };
+  selectedIds: string[];
   /**
    * The number if files being dragged. Can be used to render a drag layer.
    */
@@ -40,6 +31,23 @@ interface UseManagedFilesOutput<F> {
    * Remove the provided file from the files array.
    */
   removeFile: (file: F) => void;
+  /**
+   * You can spread these directly to `FileOrganizer`.
+   */
+  fileOrganizerProps: {
+    files: F[];
+    onMove: (fromIndex: number, toIndex: number) => void;
+    onDragChange: (id?: string | undefined) => void;
+    onCancelSelect: () => void;
+    onSelectAll: () => void;
+  };
+  /**
+   * You can spread the result of this function directly to `Thumbnail`. It has
+   * a boolean for whether the `Thumbnail` is selected, as well as an `onClick`
+   * function to select it.
+   * @param id The `File` id for the thumbnail.
+   */
+  getThumbnailSelectionProps(id: string): { selected: boolean; onClick: (event: MouseEvent<HTMLElement>) => void };
 }
 
 /**
@@ -174,6 +182,8 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
         selected: selectedIds.includes(id),
         onClick: (event: MouseEvent<HTMLElement>) => toggleSelectedId(id, event),
       }),
+      files,
+      selectedIds,
       addFile,
       removeFile,
       setFiles,
