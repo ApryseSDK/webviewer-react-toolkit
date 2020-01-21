@@ -52,14 +52,11 @@ const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }
       disableMove={boolean('disableMove', false)}
       onDragChange={action('onDragChange')}
       onRenderDragLayer={onRenderDragLayer ? () => <ThumbnailDragLayer /> : undefined}
-      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
+      onRenderThumbnail={({ onRenderThumbnailProps, index }) => (
         <Thumbnail
-          file={file}
-          dragging={isDragging}
-          otherDragging={otherDragging}
+          {...onRenderThumbnailProps}
           onClick={action(`file_${index + 1} onClick`)}
           onRename={action(`file_${index + 1} onRename`)}
-          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
         />
       )}
     />
@@ -98,15 +95,7 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThre
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
       virtualizeThreshold={virtualizeThreshold ?? undefined}
-      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, isShownOnLoad }) => (
-        <Thumbnail
-          file={file}
-          dragging={isDragging}
-          otherDragging={otherDragging}
-          onEditingChange={onEditingChange}
-          throttle={isShownOnLoad ? 0 : undefined}
-        />
-      )}
+      onRenderThumbnail={({ onRenderThumbnailProps }) => <Thumbnail {...onRenderThumbnailProps} />}
     />
   );
 };
@@ -121,40 +110,19 @@ export const BasicToVirtualized = () => (
 /* --- With useManagedHook. --- */
 
 const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
-  const {
-    files,
-    moveFile,
-    selectedIds,
-    toggleSelectedId,
-    onDragChange,
-    unselectAll,
-    selectAll,
-    draggingFiles,
-  } = useManagedFiles({
+  const { fileOrganizerProps, getThumbnailSelectionProps, draggingFiles } = useManagedFiles({
     initialFiles: Array.from({ length: virtualized ? 100 : 25 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('useManagedFiles.options preventMultiDrag', false),
   });
 
   return (
     <FileOrganizer
-      files={files}
-      onMove={moveFile}
-      onDragChange={onDragChange}
-      onCancelSelect={unselectAll}
-      onSelectAll={selectAll}
+      {...fileOrganizerProps}
       onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
-      onRenderThumbnail={({ file, isDragging, otherDragging, onEditingChange, index }) => (
-        <Thumbnail
-          file={file}
-          dragging={isDragging}
-          otherDragging={otherDragging}
-          selected={selectedIds.includes(file.id)}
-          onClick={event => toggleSelectedId(file.id, event)}
-          onRename={action(`file_${index + 1} onRename`)}
-          onEditingChange={forwardAction(`file_${index + 1} onEditingChange`, onEditingChange)}
-        />
+      onRenderThumbnail={({ id, onRenderThumbnailProps }) => (
+        <Thumbnail {...getThumbnailSelectionProps(id)} {...onRenderThumbnailProps} />
       )}
     />
   );

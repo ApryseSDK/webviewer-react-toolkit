@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { MouseEvent, ReactNode, useEffect, useRef } from 'react';
+import React, { MouseEvent, ReactNode, ReactText, useEffect, useRef } from 'react';
 import { FileLike } from '../../data';
 import { useFile, useFocus } from '../../hooks';
 import { ClickableDiv, ClickableDivProps } from '../ClickableDiv';
@@ -9,6 +9,7 @@ import { Image } from '../Image';
 import { ToolButton } from '../ToolButton';
 
 export interface ThumbnailButtonProps<F> {
+  key: ReactText;
   onClick: (event: MouseEvent<HTMLButtonElement>, file: F) => void;
   children: ReactNode;
 }
@@ -40,9 +41,19 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
    */
   otherDragging?: boolean;
   /**
-   * Provide an array of button props to add tool buttons on thumbnail.
+   * Provide an array of button props to add tool buttons on thumbnail. Each
+   * must have a unique ID.
    */
   buttonProps?: ThumbnailButtonProps<F>[];
+  /**
+   * Default 500ms. Set to 0 to prevent all throttling. Set the delay for
+   * fetching any lazy async items from file.
+   */
+  throttle?: number;
+  /**
+   * If true, will prevent throttling.
+   */
+  isShownOnLoad?: boolean;
   /**
    * Callback fired when the name is edited and saved.
    */
@@ -51,10 +62,6 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
    * Callback fired whenever edit mode changes.
    */
   onEditingChange?: (isEditing: boolean, file: F) => void;
-  /**
-   * If provided, can set the delay for fetching any lazy async items from file.
-   */
-  throttle?: number;
 }
 
 export function Thumbnail<F extends FileLike>({
@@ -68,6 +75,7 @@ export function Thumbnail<F extends FileLike>({
   onRename,
   onEditingChange,
   throttle,
+  isShownOnLoad,
   className,
   disabled,
   onFocus,
@@ -84,7 +92,7 @@ export function Thumbnail<F extends FileLike>({
     }
   }, [focused, selected]);
 
-  const file = useFile(_file, throttle);
+  const file = useFile(_file, isShownOnLoad ? 0 : throttle);
 
   const handleOnSave = (newName: string) => {
     onRename?.(newName, file.file);

@@ -7,17 +7,39 @@ export interface UseManagedFilesOptions<F> {
 }
 
 interface UseManagedFilesOutput<F> {
-  files: F[];
-  setFiles: Dispatch<SetStateAction<F[]>>;
-  addFile: (file: F, index?: number | undefined) => void;
-  removeFile: (file: F) => void;
-  moveFile: (fromIndex: number, toIndex: number) => void;
-  selectedIds: string[];
-  toggleSelectedId: (id: string, event: MouseEvent<HTMLElement>) => void;
-  unselectAll: () => void;
-  selectAll: () => void;
-  onDragChange: (id?: string | undefined) => void;
+  /**
+   * You can spread these directly to `FileOrganizer`.
+   */
+  fileOrganizerProps: {
+    files: F[];
+    onMove: (fromIndex: number, toIndex: number) => void;
+    onDragChange: (id?: string | undefined) => void;
+    onCancelSelect: () => void;
+    onSelectAll: () => void;
+  };
+  /**
+   * You can spread the result of this function directly to `Thumbnail`. It has
+   * a boolean for whether the `Thumbnail` is selected, as well as an `onClick`
+   * function to select it.
+   * @param id The `File` id for the thumbnail.
+   */
+  getThumbnailSelectionProps(id: string): { selected: boolean; onClick: (event: MouseEvent<HTMLElement>) => void };
+  /**
+   * The number if files being dragged. Can be used to render a drag layer.
+   */
   draggingFiles: F[] | undefined;
+  /**
+   * Do any state manipulation on the files array.
+   */
+  setFiles: Dispatch<SetStateAction<F[]>>;
+  /**
+   * Simply add a file at the index, or to the end if not provided.
+   */
+  addFile: (file: F, index?: number | undefined) => void;
+  /**
+   * Remove the provided file from the files array.
+   */
+  removeFile: (file: F) => void;
 }
 
 /**
@@ -39,11 +61,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
   }, []);
 
   const removeFile = useCallback((file: F) => {
-    setFiles(prev => {
-      const index = prev.indexOf(file);
-      if (index === -1) return prev;
-      return [...prev.slice(0, index), ...prev.slice(index + 1)];
-    });
+    setFiles(prev => prev.filter(f => f !== file));
   }, []);
 
   /* --- Selection. --- */
@@ -67,9 +85,9 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
     });
   }, []);
 
-  const unselectAll = useCallback(() => setSelectedIds([]), []);
+  const onCancelSelect = useCallback(() => setSelectedIds([]), []);
 
-  const selectAll = useCallback(() => setSelectedIds(files.map(file => file.id)), [files]);
+  const onSelectAll = useCallback(() => setSelectedIds(files.map(file => file.id)), [files]);
 
   /* --- Multiple drag items. --- */
 
@@ -112,7 +130,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   /* --- Moving items. --- */
 
-  const moveFile = useCallback(
+  const onMove = useCallback(
     (fromIndex: number, toIndex: number) => {
       const fromFile = files[fromIndex];
       if (!fromFile) return;
@@ -145,29 +163,33 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   const managedFiles = useMemo<UseManagedFilesOutput<F>>(
     () => ({
-      files,
+      fileOrganizerProps: {
+        files,
+        onMove,
+        onDragChange,
+        onCancelSelect,
+        onSelectAll,
+      },
+      getThumbnailSelectionProps: (id: string) => ({
+        selected: selectedIds.includes(id),
+        onClick: (event: MouseEvent<HTMLElement>) => toggleSelectedId(id, event),
+      }),
       addFile,
       removeFile,
       setFiles,
-      moveFile,
-      selectedIds,
-      toggleSelectedId,
-      unselectAll,
-      selectAll,
-      onDragChange,
       draggingFiles: dragging?.files,
     }),
     [
       addFile,
       dragging,
       files,
-      moveFile,
+      onMove,
       onDragChange,
       removeFile,
-      selectAll,
+      onSelectAll,
       selectedIds,
       toggleSelectedId,
-      unselectAll,
+      onCancelSelect,
     ],
   );
 

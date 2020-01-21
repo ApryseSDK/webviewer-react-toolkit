@@ -83,22 +83,25 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
 }
 
 export interface OnRenderThumbnailProps<F> {
-  /** The file to render into a thumbnail. */
-  file: F;
+  /**
+   * This can be spread directly to the `Thumbnail`.
+   */
+  onRenderThumbnailProps: {
+    /** The file to render into a thumbnail. */
+    file: F;
+    /** Is this file being dragged currently. */
+    dragging: boolean;
+    /** Are other files being dragged other than this one. */
+    otherDragging: boolean;
+    /** Callback for setting whether the thumbnail is in editing mode. */
+    onEditingChange: (isEditing: boolean) => void;
+    /** Is this thumbnail shown on initial load. Use to turn off throttling. */
+    isShownOnLoad: boolean;
+  };
+  /** ID of the file. */
+  id: string;
   /** The index of this file within the file organizer. */
   index: number;
-  /** Is this file being dragged currently. */
-  isDragging: boolean;
-  /** Are other files being dragged other than this one. */
-  otherDragging: boolean;
-  /** Is this thumbnail being edited (dependent on you setting `setEditing`). */
-  isEditing: boolean;
-  /** Are other files being edited other than this one. */
-  otherEditing: boolean;
-  /** Callback for setting whether the thumbnail is in editing mode. */
-  onEditingChange: (isEditing: boolean) => void;
-  /** Is this thumbnail shown on initial load. Use to turn off throttling. */
-  isShownOnLoad: boolean;
 }
 
 export function FileOrganizer<F extends ObjectWithId>({
@@ -181,7 +184,6 @@ export function FileOrganizer<F extends ObjectWithId>({
     (file: F | undefined, index: number, style?: CSSProperties) => {
       if (!file) return <Fragment key={'__null'}>{null}</Fragment>;
       const isEditing = editingId === file.id;
-      const otherEditing = editingId !== undefined && editingId === file.id;
       const otherDragging = draggingId !== undefined && draggingId === file.id;
       const draggableRef = createRef<HTMLDivElement>();
       return (
@@ -198,14 +200,15 @@ export function FileOrganizer<F extends ObjectWithId>({
           onKeyDown={e => handleItemKeyDown(e, index, file, draggableRef)}
           onRenderChildren={isDragging => {
             return onRenderThumbnail({
+              onRenderThumbnailProps: {
+                file,
+                dragging: isDragging,
+                otherDragging,
+                onEditingChange: editing => setEditingId(editing ? file.id : undefined),
+                isShownOnLoad: !initialShownIds || initialShownIds.includes(file.id),
+              },
+              id: file.id,
               index,
-              file,
-              isDragging,
-              otherDragging,
-              isEditing,
-              otherEditing,
-              isShownOnLoad: !initialShownIds || initialShownIds.includes(file.id),
-              onEditingChange: isEditing => setEditingId(isEditing ? file.id : undefined),
             });
           }}
         />

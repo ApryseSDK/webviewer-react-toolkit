@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+- [useManagedFile] **BREAKING:** Updated emitted values (#32) @liamross
+  - Has `fileOrganizerProps` which can be spread directly to `FileOrganizer`
+  - Has `getThumbnailSelectionProps` function to get selection props to spread in `Thumbnail`
+- [FileOrganizer] **BREAKING:** Updated thumbnail onRender props (#32) @liamross
+  - Has `onRenderThumbnailProps` which can be spread directly to `Thumbnail`
+- [Thumbnail] Thumbnail button props now takes a key (#32) @liamross
+- [Thumbnail] New isShownOnLoad prop to prevent throttling (#32) @liamross
+
 ## [0.0.0-beta.10] - 2020-01-20
 
 - [core] Export all components and types to root (#31) @liamross
