@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.18] - 2020-01-21
+
 - [useManagedFile] **BREAKING:** Updated emitted values (#32) @liamross
   - Has `fileOrganizerProps` which can be spread directly to `FileOrganizer`
   - Has `getThumbnailSelectionProps` function to get selection props to spread in `Thumbnail`
