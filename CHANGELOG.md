@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.21] - 2020-01-21
+
 - [Thumbnail] New prop selectedIcon for adding node to top-left (#34) @liamross
 - [useManagedFiles] Exposes setSelectedIds (#34) @liamross
 - [EditableText] Ellipses on any overflowing values (#33) @liamross
