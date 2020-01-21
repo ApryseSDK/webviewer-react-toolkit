@@ -46,6 +46,10 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
    */
   buttonProps?: ThumbnailButtonProps<F>[];
   /**
+   * A node to render on the top-left of the thumbnail.
+   */
+  selectedIcon?: ReactNode;
+  /**
    * Default 500ms. Set to 0 to prevent all throttling. Set the delay for
    * fetching any lazy async items from file.
    */
@@ -72,6 +76,7 @@ export function Thumbnail<F extends FileLike>({
   dragging,
   otherDragging,
   buttonProps,
+  selectedIcon,
   onRename,
   onEditingChange,
   throttle,
@@ -152,6 +157,7 @@ export function Thumbnail<F extends FileLike>({
           </ToolButton>
         ))}
       </div>
+      {selectedIcon ? <div className="ui__thumbnail__selectedIcon">{selectedIcon}</div> : null}
       <EditableText
         className="ui__thumbnail__label"
         value={label ?? file.name}

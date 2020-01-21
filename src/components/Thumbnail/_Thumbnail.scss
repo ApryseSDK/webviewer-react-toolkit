@@ -63,6 +63,12 @@
     border-radius: $border-radius-small;
   }
 
+  &__selectedIcon {
+    position: absolute;
+    top: $padding-tiny;
+    left: $padding-tiny;
+  }
+
   &__image {
     @include flex-center;
     flex-direction: column;

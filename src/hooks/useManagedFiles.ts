@@ -12,9 +12,17 @@ interface UseManagedFilesOutput<F> {
    */
   files: F[];
   /**
+   * Do any state manipulation on the files array.
+   */
+  setFiles: Dispatch<SetStateAction<F[]>>;
+  /**
    * An array of every selected ID.
    */
   selectedIds: string[];
+  /**
+   * Do any state manipulation on the selected IDs array.
+   */
+  setSelectedIds: Dispatch<SetStateAction<string[]>>;
   /**
    * Toggle whether an ID is selected or not.
    * @param id The ID of the selected item to toggle.
@@ -25,10 +33,6 @@ interface UseManagedFilesOutput<F> {
    * The number if files being dragged. Can be used to render a drag layer.
    */
   draggingFiles?: F[];
-  /**
-   * Do any state manipulation on the files array.
-   */
-  setFiles: Dispatch<SetStateAction<F[]>>;
   /**
    * Simply add a file at the index, or to the end if not provided.
    * @param file The file to add.
@@ -192,11 +196,12 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
         onClick: (event: MouseEvent<HTMLElement>) => toggleSelectedId(id, event),
       }),
       files,
+      setFiles,
       selectedIds,
+      setSelectedIds,
       toggleSelectedId,
       addFile,
       removeFile,
-      setFiles,
       draggingFiles: dragging?.files,
     }),
     [

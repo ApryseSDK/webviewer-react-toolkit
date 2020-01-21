@@ -36,6 +36,13 @@ export const WithToolButtons = () => <Thumbnail {...defaultProps(undefined, unde
 
 export const WithLabel = () => <Thumbnail label={text('label', 'some_label')} {...defaultProps()} />;
 
+export const WithSelectedIcon = () => (
+  <Thumbnail
+    {...defaultProps()}
+    selectedIcon={<div style={{ color: 'red', fontSize: 20 }}>{text('selectedIcon', 'Selected Icon')}</div>}
+  />
+);
+
 export const Rotated = () => <Thumbnail {...defaultProps(undefined, 1)} />;
 
 export const RotatedThrottled = () => <Thumbnail {...defaultProps({ lazy: true }, 1)} />;

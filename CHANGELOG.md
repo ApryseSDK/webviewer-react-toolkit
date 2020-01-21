@@ -1,10 +1,12 @@
 ## [Unreleased]
 
+- [Thumbnail] New prop selectedIcon for adding node to top-left (#34) @liamross
+- [useManagedFiles] Exposes setSelectedIds (#34) @liamross
 - [EditableText] Ellipses on any overflowing values (#33) @liamross
 
 ## [0.0.0-beta.18] - 2020-01-21
 
-- [useManagedFile] **BREAKING:** Updated emitted values (#32) @liamross
+- [useManagedFiles] **BREAKING:** Updated emitted values (#32) @liamross
   - Has `fileOrganizerProps` which can be spread directly to `FileOrganizer`
   - Has `getThumbnailSelectionProps` function to get selection props to spread in `Thumbnail`
 - [FileOrganizer] **BREAKING:** Updated thumbnail onRender props (#32) @liamross
@@ -55,7 +57,7 @@
 ## [0.0.0-beta.3] - 2020-01-08
 
 - [style] Only show focus rings when using keyboard navigation (#15) @liamross
-- [useManagedFile] Select any moved files (#14) @liamross
+- [useManagedFiles] Select any moved files (#14) @liamross
 - [FileOrganizer] removed file argument from onMove callback (#14) @liamross
 - [core] Updated type files for WebViewer API (#14) @liamross
 - [FileOrganizer] Centered custom drag layer on mouse (#13) @liamross
