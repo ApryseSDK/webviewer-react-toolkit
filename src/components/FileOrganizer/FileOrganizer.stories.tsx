@@ -112,15 +112,16 @@ export const BasicToVirtualized = () => (
 const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
   const { fileOrganizerProps, getThumbnailSelectionProps, draggingFiles } = useManagedFiles({
     initialFiles: Array.from({ length: virtualized ? 100 : 25 }, (_, index) => createFile(index)),
-    preventMultiDrag: boolean('useManagedFiles.options preventMultiDrag', false),
+    preventMultiDrag: boolean('preventMultiDrag', false, 'useManagedFiles options'),
+    selectWithoutShift: boolean('selectWithoutShift', false, 'useManagedFiles options'),
   });
 
   return (
     <FileOrganizer
       {...fileOrganizerProps}
       onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
-      preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      disableMove={boolean('disableMove', false)}
+      preventArrowsToMove={boolean('preventArrowsToMove', false, 'FileOrganizer')}
+      disableMove={boolean('disableMove', false, 'FileOrganizer')}
       onRenderThumbnail={({ id, onRenderThumbnailProps }) => (
         <Thumbnail {...getThumbnailSelectionProps(id)} {...onRenderThumbnailProps} />
       )}

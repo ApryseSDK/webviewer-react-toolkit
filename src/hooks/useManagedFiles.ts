@@ -2,8 +2,18 @@ import { Dispatch, MouseEvent, SetStateAction, useCallback, useEffect, useMemo, 
 import { moveMultiFromIndexToIndex, ObjectWithId, separateItemsWithTarget } from '../utils';
 
 export interface UseManagedFilesOptions<F> {
+  /**
+   * The initial files for managing.
+   */
   initialFiles?: F[];
+  /**
+   * Prevent multiple items from being dragged.
+   */
   preventMultiDrag?: boolean;
+  /**
+   * Allows multi-select without pressing the shift key.
+   */
+  selectWithoutShift?: boolean;
 }
 
 interface UseManagedFilesOutput<F> {
@@ -100,22 +110,25 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
     });
   }, [files]);
 
-  const toggleSelectedId = useCallback((id: string, event?: MouseEvent<HTMLElement>) => {
-    const canToggle = event ? event.shiftKey : true;
-    setSelectedIds(prev => {
-      const toggleIndex = prev.indexOf(id);
-      if (toggleIndex === -1) {
-        if (canToggle) return [...prev, id];
-        return [id];
-      }
-      if (toggleIndex !== -1) {
-        if (canToggle) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
-        if (prev.length > 1) return [id];
-        return [];
-      }
-      return prev;
-    });
-  }, []);
+  const toggleSelectedId = useCallback(
+    (id: string, event?: MouseEvent<HTMLElement>) => {
+      const canToggle = options.selectWithoutShift || (event ? event.shiftKey : true);
+      setSelectedIds(prev => {
+        const toggleIndex = prev.indexOf(id);
+        if (toggleIndex === -1) {
+          if (canToggle) return [...prev, id];
+          return [id];
+        }
+        if (toggleIndex !== -1) {
+          if (canToggle) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
+          if (prev.length > 1) return [id];
+          return [];
+        }
+        return prev;
+      });
+    },
+    [options.selectWithoutShift],
+  );
 
   const onCancelSelect = useCallback(() => setSelectedIds([]), []);
 
