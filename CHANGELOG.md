@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.22] - 2020-01-21
+
 - [useManagedFiles] Option to allow multi select without shift key (#36) @liamross
 - [useManagedFiles] Remove selected items if files deleted (#35) @liamross
 
