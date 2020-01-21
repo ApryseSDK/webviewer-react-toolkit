@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- [EditableText] Ellipses on any overflowing values (#33) @liamross
+
 ## [0.0.0-beta.18] - 2020-01-21
 
 - [useManagedFile] **BREAKING:** Updated emitted values (#32) @liamross

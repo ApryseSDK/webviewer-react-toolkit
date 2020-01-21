@@ -190,7 +190,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
             ref={buttonRef}
             usePointer
           >
-            {valueToDisplay}
+            <span>{valueToDisplay}</span>
           </ClickableDiv>
         )}
       </div>

@@ -8,6 +8,8 @@ exports[`EditableText component snapshot renders default editableText 1`] = `
     className="ui__editableText__button"
     onClick={[Function]}
     usePointer={true}
-  />
+  >
+    <span />
+  </ForwardRef>
 </div>
 `;

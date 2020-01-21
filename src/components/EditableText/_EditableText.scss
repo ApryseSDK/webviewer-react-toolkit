@@ -52,6 +52,12 @@
     transition: $focus-transition;
     line-height: 1.15; // FIX: match the normalize.css for input.
 
+    > span {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
     &--noFocusTransition {
       // Prevents focus ring "stutter". Remove if transition is removed from focus.
       transition: none;
