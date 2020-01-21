@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- [useManagedFiles] Remove selected items if files deleted (#35) @liamross
+
 ## [0.0.0-beta.21] - 2020-01-21
 
 - [Thumbnail] New prop selectedIcon for adding node to top-left (#34) @liamross

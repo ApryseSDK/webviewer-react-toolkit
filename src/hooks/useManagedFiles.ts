@@ -1,4 +1,4 @@
-import { Dispatch, MouseEvent, SetStateAction, useCallback, useMemo, useState } from 'react';
+import { Dispatch, MouseEvent, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { moveMultiFromIndexToIndex, ObjectWithId, separateItemsWithTarget } from '../utils';
 
 export interface UseManagedFilesOptions<F> {
@@ -88,6 +88,17 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
   /* --- Selection. --- */
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  // Remove selected items if the file is removed.
+  useEffect(() => {
+    setSelectedIds(prev => {
+      const toRemove = new Set(prev);
+      files.forEach(file => {
+        if (toRemove.has(file.id)) toRemove.delete(file.id);
+      });
+      return prev.filter(id => !toRemove.has(id));
+    });
+  }, [files]);
 
   const toggleSelectedId = useCallback((id: string, event?: MouseEvent<HTMLElement>) => {
     const canToggle = event ? event.shiftKey : true;
