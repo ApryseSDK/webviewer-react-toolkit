@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- [memoizedPromise] Fixed scoping issue with get function (#37) @liamross
+- [useManagedFiles] Fix bug with multi drag on virtualized (#37) @liamross
+
 ## [0.0.0-beta.22] - 2020-01-21
 
 - [useManagedFiles] Option to allow multi select without shift key (#36) @liamross

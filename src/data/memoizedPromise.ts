@@ -37,10 +37,10 @@ export class MemoizedPromise<T> {
   }
 
   /** Resolves with a promise for the value. */
-  async get() {
+  get = async () => {
     if (this._done) return this._result as Futurable<T>;
     this._result = futureableOrLazyToFuturable(this._futurableOrLazy);
     this._done = true;
     return this._result;
-  }
+  };
 }

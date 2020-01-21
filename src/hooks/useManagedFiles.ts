@@ -160,7 +160,8 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       if (!preventMultiDrag && selectedIds.length > 1) {
         const [newDraggingFiles, newFiles, target] = separateItemsWithTarget(files, selectedIds, id);
         setDragging({ files: newDraggingFiles, target: target! });
-        setFiles(newFiles);
+        // FIX: prevents multi-drag errors on virtualized lists.
+        requestAnimationFrame(() => setFiles(newFiles));
       }
     },
     [preventMultiDrag, dragging, files, selectedIds],
@@ -214,13 +215,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   const managedFiles = useMemo<UseManagedFilesOutput<F>>(
     () => ({
-      fileOrganizerProps: {
-        files,
-        onMove,
-        onDragChange,
-        onCancelSelect,
-        onSelectAll,
-      },
+      fileOrganizerProps: { files, onMove, onDragChange, onCancelSelect, onSelectAll },
       getThumbnailSelectionProps: (id: string) => ({
         selected: selectedIds.includes(id),
         onClick: (event: MouseEvent<HTMLElement>) => toggleSelectedId(id, event),
