@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.0.0-beta.24] - 2020-01-22
+
 - [FileOrganizer] Added prop to prevent deselect on click away (#38) @liamross
 - [useManagedFiles] Added options for controlling selection (#38) @liamross
 - [memoizedPromise] Fixed scoping issue with get function (#37) @liamross
