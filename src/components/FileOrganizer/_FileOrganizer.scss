@@ -5,4 +5,9 @@
   position: relative;
   height: 100%;
   overflow: auto;
+
+  &__draglayer {
+    overflow: visible;
+    @include flex-center;
+  }
 }

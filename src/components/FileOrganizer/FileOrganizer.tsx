@@ -280,7 +280,11 @@ export function FileOrganizer<F extends ObjectWithId>({
           files.map((file, index) => renderItem(file, index))
         )}
         {onRenderDragLayer ? (
-          <DragLayer customTranslate={customDragLayerTranslate}>{onRenderDragLayer()}</DragLayer>
+          <DragLayer customTranslate={customDragLayerTranslate}>
+            <div className="ui__fileOrganizer__draglayer" style={{ height: THUMBNAIL_WIDTH, width: THUMBNAIL_WIDTH }}>
+              {onRenderDragLayer()}
+            </div>
+          </DragLayer>
         ) : null}
       </div>
     </DndMultiProvider>
