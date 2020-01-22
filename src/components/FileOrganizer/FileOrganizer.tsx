@@ -52,6 +52,11 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    */
   virtualizeThreshold?: number;
   /**
+   * Prevents clicking on background to deselect all items. Can still use
+   * `escape` key.
+   */
+  preventClickAwayDeselect?: boolean;
+  /**
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
    */
@@ -71,10 +76,10 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    */
   onDragChange?: (id?: string) => void;
   /**
-   * Called whenever escape key is pressed while focusing the file organizer, or
-   * if background of organizer is clicked.
+   * Called whenever `escape` key is pressed while focusing the file organizer,
+   * or if background of organizer is clicked.
    */
-  onCancelSelect?: () => void;
+  onDeselectAll?: () => void;
   /**
    * Called whenever all items are selected at once (usually `ctrl` or `command`
    * + `A`).
@@ -108,13 +113,14 @@ export function FileOrganizer<F extends ObjectWithId>({
   files,
   onMove,
   onDragChange,
-  onCancelSelect,
+  onDeselectAll,
   onSelectAll,
   onRenderThumbnail,
   onRenderDragLayer,
   disableMove,
   preventArrowsToMove,
   virtualizeThreshold = 50,
+  preventClickAwayDeselect,
   className,
   onClick,
   onKeyDown,
@@ -229,21 +235,21 @@ export function FileOrganizer<F extends ObjectWithId>({
   const handleOnClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     event => {
       onClick?.(event);
-      if (event.target === fileOrganizerRef.current) onCancelSelect?.();
+      if (!preventClickAwayDeselect && event.target === fileOrganizerRef.current) onDeselectAll?.();
     },
-    [onCancelSelect, onClick],
+    [onDeselectAll, onClick, preventClickAwayDeselect],
   );
 
   const handleOnKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(
     event => {
       onKeyDown?.(event);
-      if (event.key === 'Escape') return onCancelSelect?.();
+      if (event.key === 'Escape') return onDeselectAll?.();
       if (event.key === 'a' && event.metaKey) {
         onSelectAll?.();
         event.preventDefault();
       }
     },
-    [onCancelSelect, onSelectAll, onKeyDown],
+    [onDeselectAll, onSelectAll, onKeyDown],
   );
 
   const customDragLayerTranslate = useCallback<NonNullable<DragLayerProps['customTranslate']>>(({ mousePosition }) => {

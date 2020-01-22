@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- [FileOrganizer] Added prop to prevent deselect on click away (#38) @liamross
+- [useManagedFiles] Added options for controlling selection (#38) @liamross
 - [memoizedPromise] Fixed scoping issue with get function (#37) @liamross
 - [useManagedFiles] Fix bug with multi drag on virtualized (#37) @liamross
 

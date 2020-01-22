@@ -14,6 +14,14 @@ export interface UseManagedFilesOptions<F> {
    * Allows multi-select without pressing the shift key.
    */
   selectWithoutShift?: boolean;
+  /**
+   * Prevent selecting the item you are currently dragging.
+   */
+  preventSelectOnDrag?: boolean;
+  /**
+   * Prevent deselecting all selected items when you drag an unselected item.
+   */
+  preventDeselectOnDragOther?: boolean;
 }
 
 interface UseManagedFilesOutput<F> {
@@ -61,7 +69,7 @@ interface UseManagedFilesOutput<F> {
     files: F[];
     onMove(fromIndex: number, toIndex: number): void;
     onDragChange(id?: string): void;
-    onCancelSelect(): void;
+    onDeselectAll(): void;
     onSelectAll(): void;
   };
   /**
@@ -79,7 +87,13 @@ interface UseManagedFilesOutput<F> {
  * @param options Options for managing files.
  */
 export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFilesOptions<F> = {}) {
-  const { initialFiles, preventMultiDrag } = options;
+  const {
+    initialFiles,
+    preventMultiDrag,
+    preventDeselectOnDragOther,
+    preventSelectOnDrag,
+    selectWithoutShift,
+  } = options;
 
   const [files, setFiles] = useState(initialFiles ?? []);
 
@@ -91,9 +105,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
     });
   }, []);
 
-  const removeFile = useCallback((file: F) => {
-    setFiles(prev => prev.filter(f => f !== file));
-  }, []);
+  const removeFile = useCallback((file: F) => setFiles(prev => prev.filter(f => f !== file)), []);
 
   /* --- Selection. --- */
 
@@ -101,7 +113,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   const toggleSelectedId = useCallback(
     (id: string, event?: MouseEvent<HTMLElement>) => {
-      const canToggle = options.selectWithoutShift || (event ? event.shiftKey : true);
+      const canToggle = selectWithoutShift || (event ? event.shiftKey : true);
       setSelectedIds(prev => {
         const toggleIndex = prev.indexOf(id);
         if (toggleIndex === -1) {
@@ -116,12 +128,23 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
         return prev;
       });
     },
-    [options.selectWithoutShift],
+    [selectWithoutShift],
   );
 
-  const onCancelSelect = useCallback(() => setSelectedIds([]), []);
+  const onDeselectAll = useCallback(() => setSelectedIds([]), []);
 
   const onSelectAll = useCallback(() => setSelectedIds(files.map(file => file.id)), [files]);
+
+  const _setMovingSelectedId = useCallback(
+    (id: string) => {
+      setSelectedIds(prev => {
+        if (prev.includes(id)) return prev;
+        if (preventDeselectOnDragOther) return preventSelectOnDrag ? prev : [...prev, id];
+        return preventSelectOnDrag ? [] : [id];
+      });
+    },
+    [preventDeselectOnDragOther, preventSelectOnDrag],
+  );
 
   /* --- Multiple drag items. --- */
 
@@ -144,27 +167,20 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       // Do nothing if no selected items.
       if (selectedIds.length === 0) return;
 
-      // Select dragging item if drag begins on unselected.
-      if (!selectedIds.includes(id)) {
-        return setSelectedIds([id]);
-      }
-
-      // If multidrag is disabled and more than one item is selected, reduce to
-      // only dragged item.
-      if (preventMultiDrag && selectedIds.length > 1) {
-        return setSelectedIds([id]);
-      }
+      // Update selections.
+      _setMovingSelectedId(id);
 
       // If drag begins on selected item and there are multiple, remove files
       // from DOM, and add to dragging list for placement when drag ends.
       if (!preventMultiDrag && selectedIds.length > 1) {
-        const [newDraggingFiles, newFiles, target] = separateItemsWithTarget(files, selectedIds, id);
+        const toDragIds = selectedIds.includes(id) ? selectedIds : [id];
+        const [newDraggingFiles, newFiles, target] = separateItemsWithTarget(files, toDragIds, id);
         setDragging({ files: newDraggingFiles, target: target! });
         // FIX: prevents multi-drag errors on virtualized lists.
         requestAnimationFrame(() => setFiles(newFiles));
       }
     },
-    [preventMultiDrag, dragging, files, selectedIds],
+    [selectedIds, _setMovingSelectedId, preventMultiDrag, dragging, files],
   );
 
   /* --- Moving items. --- */
@@ -174,10 +190,8 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       const fromFile = files[fromIndex];
       if (!fromFile) return;
 
-      // Select only moved file if previously unselected, or if multi drag is off.
-      if (!selectedIds.includes(fromFile.id) || (preventMultiDrag && selectedIds.length > 1)) {
-        setSelectedIds([fromFile.id]);
-      }
+      // Update selections.
+      _setMovingSelectedId(fromFile.id);
 
       setFiles(prev => {
         // If multi drag is permitted, and multiple items are selected, and
@@ -197,7 +211,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
         return clone;
       });
     },
-    [dragging, files, preventMultiDrag, selectedIds],
+    [_setMovingSelectedId, dragging, files, preventMultiDrag, selectedIds],
   );
 
   // Remove selected items if the file is removed.
@@ -215,7 +229,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   const managedFiles = useMemo<UseManagedFilesOutput<F>>(
     () => ({
-      fileOrganizerProps: { files, onMove, onDragChange, onCancelSelect, onSelectAll },
+      fileOrganizerProps: { files, onMove, onDragChange, onDeselectAll, onSelectAll },
       getThumbnailSelectionProps: (id: string) => ({
         selected: selectedIds.includes(id),
         onClick: (event: MouseEvent<HTMLElement>) => toggleSelectedId(id, event),
@@ -239,7 +253,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       onSelectAll,
       selectedIds,
       toggleSelectedId,
-      onCancelSelect,
+      onDeselectAll,
     ],
   );
 
