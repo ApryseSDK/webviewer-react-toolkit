@@ -182,13 +182,13 @@ export class File implements FileLike {
   }
 
   /**
-   * Dispatch an event for this file. The event will complete by calling the
-   * event default once it has finished propagating through all the listeners.
+   * Dispatch an event for this file. Dispatch will complete by calling onchange
+   * event listeners.
    * @param type The file event type to dispatch.
-   * @param eventDefault The default action once all event listeners are called.
    */
   dispatchEvent(type: FileEventType) {
     this._subscribers[type]?.forEach(subscriber => subscriber());
+    if (type !== 'onchange') this.dispatchEvent('onchange');
   }
 
   /**
