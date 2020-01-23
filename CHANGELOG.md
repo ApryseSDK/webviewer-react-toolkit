@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+- [useManagedFiles] **BREAKING:** No longer removes groups of files (#39) @liamross
+  - New `draggingIds` prop replaces `draggingFiles`
+  - New `dragGroupIds` ID passed through `fileOrganizerProps`
+
 ## [0.0.0-beta.24] - 2020-01-22
 
 - [FileOrganizer] Added prop to prevent deselect on click away (#38) @liamross

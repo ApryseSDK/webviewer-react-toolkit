@@ -3,13 +3,14 @@ import React, { FC, HTMLAttributes, useEffect } from 'react';
 
 export interface ThumbnailDragLayerProps extends HTMLAttributes<HTMLDivElement> {
   /**
-   * Must be a positive integer (1, 2, 3...).
+   * Must be a positive integer (1, 2, 3...) or falsy to default.
    * @default 1
    */
   numFiles?: number;
 }
 
 export const ThumbnailDragLayer: FC<ThumbnailDragLayerProps> = ({ numFiles = 1, className, ...divProps }) => {
+  numFiles = numFiles || 1;
   useEffect(() => {
     if (!Number.isInteger(numFiles)) throw new RangeError('numFiles must be an integer');
     if (!Number.isFinite(numFiles)) throw new RangeError('numFiles must not be infinite');

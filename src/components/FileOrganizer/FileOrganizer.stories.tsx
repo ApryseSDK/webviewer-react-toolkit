@@ -24,6 +24,7 @@ const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }
       clone.splice(toIndex, 0, item);
       return clone;
     });
+    return true;
   }, []);
 
   // This is just a helper for adding or removing files.
@@ -85,6 +86,7 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThre
       clone.splice(toIndex, 0, item);
       return clone;
     });
+    return true;
   }, []);
 
   return (
@@ -110,7 +112,7 @@ export const BasicToVirtualized = () => (
 /* --- With useManagedHook. --- */
 
 const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
-  const { fileOrganizerProps, getThumbnailSelectionProps, draggingFiles } = useManagedFiles({
+  const { fileOrganizerProps, getThumbnailSelectionProps, draggingIds } = useManagedFiles({
     initialFiles: Array.from({ length: virtualized ? 100 : 25 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('preventMultiDrag', false, 'useManagedFiles options'),
     selectWithoutShift: boolean('selectWithoutShift', false, 'useManagedFiles options'),
@@ -121,7 +123,7 @@ const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized
   return (
     <FileOrganizer
       {...fileOrganizerProps}
-      onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingFiles?.length} />}
+      onRenderDragLayer={() => <ThumbnailDragLayer numFiles={draggingIds.length} />}
       preventArrowsToMove={boolean('preventArrowsToMove', false, 'FileOrganizer')}
       preventClickAwayDeselect={boolean('preventClickAwayDeselect', false, 'FileOrganizer')}
       disableMove={boolean('disableMove', false, 'FileOrganizer')}

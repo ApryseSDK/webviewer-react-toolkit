@@ -15,7 +15,6 @@ import React, {
   useState,
 } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
-import { useCurrentRef } from '../../hooks';
 import { getRowAndColumnIndex, getSibling, isScrolledIntoView, ObjectWithId, THUMBNAIL_WIDTH } from '../../utils';
 import { DndMultiProvider } from '../DndMultiProvider';
 import { Draggable } from '../Draggable';
@@ -57,6 +56,12 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    */
   preventClickAwayDeselect?: boolean;
   /**
+   * The IDs of any files that are being moved along with the primary drag
+   * target. Prevents the move-to-location animation of any files with matching
+   * IDs, and passes true for `dragging` to the `OnRenderThumbnailProps`.
+   */
+  dragGroupIds?: string[];
+  /**
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
    */
@@ -67,9 +72,10 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    */
   onRenderDragLayer?: () => ReactNode;
   /**
-   * Callback fired when a file is moved within the page organizer.
+   * Callback fired when a file is moved within the page organizer. Returns
+   * whether the move was successful.
    */
-  onMove?: (fromIndex: number, toIndex: number) => void;
+  onMove?: (fromIndex: number, toIndex: number) => boolean;
   /**
    * Called whenever dragging begins or ends. If drag ends, the id will be
    * undefined.
@@ -121,6 +127,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   preventArrowsToMove,
   virtualizeThreshold = 50,
   preventClickAwayDeselect,
+  dragGroupIds,
   className,
   onClick,
   onKeyDown,
@@ -134,12 +141,16 @@ export function FileOrganizer<F extends ObjectWithId>({
   const [columnCount, setColumnCount] = useState(0);
 
   const [editingId, setEditingId] = useState<string>();
+
   const [draggingId, setDraggingId] = useState<string>();
 
-  const onDragChangeRef = useCurrentRef(onDragChange);
-  useEffect(() => {
-    onDragChangeRef.current?.(draggingId);
-  }, [draggingId, onDragChangeRef]);
+  const handleOnDragChange = useCallback(
+    (id?: string) => {
+      onDragChange?.(id);
+      setDraggingId(id);
+    },
+    [onDragChange],
+  );
 
   // Detect all shown items and set as array of IDs to notify onRenderThumbnail.
   // Set to null if all IDs are shown (no virtualization).
@@ -190,8 +201,12 @@ export function FileOrganizer<F extends ObjectWithId>({
     (file: F | undefined, index: number, style?: CSSProperties) => {
       if (!file) return <Fragment key={'__null'}>{null}</Fragment>;
       const isEditing = editingId === file.id;
-      const otherDragging = draggingId !== undefined && draggingId === file.id;
+      const otherDragging = !!(
+        (draggingId && draggingId !== file.id) ||
+        (dragGroupIds && dragGroupIds.length && !dragGroupIds.includes(file.id))
+      );
       const draggableRef = createRef<HTMLDivElement>();
+      const isInDragGroup = dragGroupIds?.includes(file.id) ?? false;
       return (
         <Draggable
           key={file.id}
@@ -200,7 +215,8 @@ export function FileOrganizer<F extends ObjectWithId>({
           style={style}
           ref={draggableRef}
           hideDragPreview={!!onRenderDragLayer}
-          onDragChange={isDragging => setDraggingId(isDragging ? file.id : undefined)}
+          preventAnimation={isInDragGroup}
+          onDragChange={isDragging => handleOnDragChange(isDragging ? file.id : undefined)}
           disableDrag={isEditing || disableMove}
           onMove={onMove}
           onKeyDown={e => handleItemKeyDown(e, index, file, draggableRef)}
@@ -208,7 +224,7 @@ export function FileOrganizer<F extends ObjectWithId>({
             return onRenderThumbnail({
               onRenderThumbnailProps: {
                 file,
-                dragging: isDragging,
+                dragging: isDragging || isInDragGroup,
                 otherDragging,
                 onEditingChange: editing => setEditingId(editing ? file.id : undefined),
                 isShownOnLoad: !initialShownIds || initialShownIds.includes(file.id),
@@ -221,12 +237,14 @@ export function FileOrganizer<F extends ObjectWithId>({
       );
     },
     [
-      disableMove,
-      draggingId,
       editingId,
-      handleItemKeyDown,
-      onMove,
+      draggingId,
+      dragGroupIds,
       onRenderDragLayer,
+      disableMove,
+      onMove,
+      handleOnDragChange,
+      handleItemKeyDown,
       onRenderThumbnail,
       initialShownIds,
     ],

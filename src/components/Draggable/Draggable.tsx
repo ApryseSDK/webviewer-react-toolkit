@@ -34,14 +34,19 @@ export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
    */
   hideDragPreview?: boolean;
   /**
+   * Prevent the move-to-location animation of this draggable.
+   */
+  preventAnimation?: boolean;
+  /**
    * Call instead of providing children if you wish to use the `isDragging`
    * prop.
    */
   onRenderChildren?: (isDragging: boolean) => ReactNode;
   /**
-   * If given, will be called any time the draggable wrapper is moved.
+   * If given, will be called any time the draggable wrapper is moved. Returns
+   * whether the move was successful.
    */
-  onMove?: (fromIndex: number, toIndex: number) => void;
+  onMove?: (fromIndex: number, toIndex: number) => boolean;
   /**
    * Called whenever the dnd property `isDragging` changes.
    */
@@ -57,7 +62,18 @@ const SPRING: SpringHelperConfig = { stiffness: 300, damping: 30 };
 
 export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
   (
-    { index, disableDrag, hideDragPreview, onRenderChildren, onMove, onDragChange, children, className, ...divProps },
+    {
+      index,
+      disableDrag,
+      hideDragPreview,
+      preventAnimation,
+      onRenderChildren,
+      onMove,
+      onDragChange,
+      children,
+      className,
+      ...divProps
+    },
     ref,
   ) => {
     const draggableRef = useRef<HTMLDivElement>(null);
@@ -78,10 +94,10 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
         if (fromIndex === toIndex) return;
 
         // Call onMove when index changes.
-        onMove?.(fromIndex, toIndex);
+        const success = onMove?.(fromIndex, toIndex);
 
         // Set the item index to be the new index.
-        dragItem.index = toIndex;
+        if (success) dragItem.index = toIndex;
       },
     });
 
@@ -145,10 +161,10 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
     // the animation looks like it's moving from it's previous location.
     const motionStyle = useMemo(
       () => ({
-        x: coords.x === 0 && !isDragging ? spring(coords.x, SPRING) : coords.x,
-        y: coords.y === 0 && !isDragging ? spring(coords.y, SPRING) : coords.y,
+        x: coords.x === 0 && !preventAnimation ? spring(coords.x, SPRING) : coords.x,
+        y: coords.y === 0 && !preventAnimation ? spring(coords.y, SPRING) : coords.y,
       }),
-      [coords.x, coords.y, isDragging],
+      [coords.x, coords.y, preventAnimation],
     );
 
     const draggableClass = classnames('ui__base ui__draggable', className);

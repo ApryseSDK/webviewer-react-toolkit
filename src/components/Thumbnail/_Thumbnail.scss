@@ -1,3 +1,5 @@
+$thumbnail-border-size: 2px;
+
 .ui__thumbnail {
   padding: $padding;
   position: relative;
@@ -13,13 +15,23 @@
   }
 
   &--dragging {
-    border: 2px dashed $focus-shadow;
+    border: $thumbnail-border-size dashed $theme-primary;
+    z-index: $z-index-dragging;
+
+    margin: -($thumbnail-border-size / 2);
+
+    width: $thumbnail-border-size + $thumbnail-dimensions;
+    height: $thumbnail-border-size + $thumbnail-dimensions;
 
     .ui__thumbnail__controls,
     .ui__thumbnail__image,
     .ui__thumbnail__label {
       visibility: hidden;
     }
+  }
+
+  &--otherDragging {
+    pointer-events: none;
   }
 
   &:hover,

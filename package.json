@@ -8,13 +8,13 @@
     "url": "https://github.com/XodoDocs/component-library.git"
   },
   "scripts": {
-    "peers": "node scripts/install_peers",
     "start": "start-storybook -s public -p 6006",
     "make": "ts-node scripts/make",
     "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
     "build": "yarn clean && webpack --config webpack.config.ts && tsc -p ./configs/tsbuild.json",
     "clean": "rm -rf dist & rm -rf lib",
     "test": "jest ./src --config ./jest.config.js",
+    "postinstall": "node scripts/install_peers",
     "build-storybook": "build-storybook -s public",
     "deploy-storybook": "storybook-to-ghpages --out=.out",
     "beta-release": "yarn build && yarn publish --tag beta"

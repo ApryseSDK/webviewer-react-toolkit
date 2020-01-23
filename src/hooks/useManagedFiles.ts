@@ -1,5 +1,5 @@
 import { Dispatch, MouseEvent, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
-import { moveMultiFromIndexToIndex, ObjectWithId, separateItemsWithTarget } from '../utils';
+import { moveMultiFromIndexToIndex, ObjectWithId } from '../utils';
 
 export interface UseManagedFilesOptions<F> {
   /**
@@ -50,7 +50,7 @@ interface UseManagedFilesOutput<F> {
   /**
    * The number if files being dragged. Can be used to render a drag layer.
    */
-  draggingFiles?: F[];
+  draggingIds: string[];
   /**
    * Simply add a file at the index, or to the end if not provided.
    * @param file The file to add.
@@ -67,10 +67,11 @@ interface UseManagedFilesOutput<F> {
    */
   fileOrganizerProps: {
     files: F[];
-    onMove(fromIndex: number, toIndex: number): void;
+    onMove(fromIndex: number, toIndex: number): boolean;
     onDragChange(id?: string): void;
     onDeselectAll(): void;
     onSelectAll(): void;
+    dragGroupIds: string[];
   };
   /**
    * You can spread the result of this function directly to `Thumbnail`. It has
@@ -148,39 +149,23 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   /* --- Multiple drag items. --- */
 
-  const [dragging, setDragging] = useState<{ files: F[]; target: F }>();
+  const [draggingIds, setDraggingIds] = useState<string[]>([]);
   const onDragChange = useCallback(
     (id?: string) => {
-      // When drag ends, if dragging was set, insert dragging items back into
-      // files array, replacing target.
-      if (!id) {
-        if (dragging) {
-          setFiles(prev => {
-            const newIndex = prev.indexOf(dragging.target);
-            return [...prev.slice(0, newIndex), ...dragging.files, ...prev.slice(newIndex + 1)];
-          });
-          setDragging(undefined);
-        }
-        return;
-      }
+      if (!id) return setDraggingIds([]);
 
-      // Do nothing if no selected items.
       if (selectedIds.length === 0) return;
 
-      // Update selections.
       _setMovingSelectedId(id);
 
-      // If drag begins on selected item and there are multiple, remove files
-      // from DOM, and add to dragging list for placement when drag ends.
-      if (!preventMultiDrag && selectedIds.length > 1) {
+      if (!preventMultiDrag) {
         const toDragIds = selectedIds.includes(id) ? selectedIds : [id];
-        const [newDraggingFiles, newFiles, target] = separateItemsWithTarget(files, toDragIds, id);
-        setDragging({ files: newDraggingFiles, target: target! });
-        // FIX: prevents multi-drag errors on virtualized lists.
-        requestAnimationFrame(() => setFiles(newFiles));
+        setDraggingIds(toDragIds);
+      } else {
+        setDraggingIds([id]);
       }
     },
-    [selectedIds, _setMovingSelectedId, preventMultiDrag, dragging, files],
+    [selectedIds, _setMovingSelectedId, preventMultiDrag],
   );
 
   /* --- Moving items. --- */
@@ -188,36 +173,36 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
   const onMove = useCallback(
     (fromIndex: number, toIndex: number) => {
       const fromFile = files[fromIndex];
-      if (!fromFile) return;
+      if (!fromFile) return false;
 
       // Update selections.
       _setMovingSelectedId(fromFile.id);
 
-      setFiles(prev => {
-        // If multi drag is permitted, and multiple items are selected, and
-        // there are no items being dragged, do a multi move. This will be a
-        // keyboard-specific operation, as multi dragging is managed by the
-        // dragging handlers.
-        if (!preventMultiDrag && selectedIds.includes(fromFile.id) && selectedIds.length > 1 && !dragging) {
-          return moveMultiFromIndexToIndex(prev, selectedIds, fromIndex, toIndex);
-        }
+      // If multi drag is permitted, and multiple items are selected, and
+      // there are no items being dragged, do a multi move. This will be a
+      // keyboard-specific operation, as multi dragging is managed by the
+      // dragging handlers.
+      if (!preventMultiDrag && selectedIds.includes(fromFile.id) && selectedIds.length > 1) {
+        const next = moveMultiFromIndexToIndex(files, selectedIds, fromIndex, toIndex);
+        if (next === files) return false;
+        setFiles(next);
+        return true;
+      }
 
-        // Don't allow "wrapping".
-        if (toIndex < 0 || toIndex >= prev.length) return prev;
+      // Don't allow "wrapping".
+      if (toIndex < 0 || toIndex >= files.length) return false;
 
-        const clone = prev.slice();
-        const item = clone.splice(fromIndex, 1)[0];
-        clone.splice(toIndex, 0, item);
-        return clone;
-      });
+      const clone = files.slice();
+      const item = clone.splice(fromIndex, 1)[0];
+      clone.splice(toIndex, 0, item);
+      setFiles(clone);
+      return true;
     },
-    [_setMovingSelectedId, dragging, files, preventMultiDrag, selectedIds],
+    [_setMovingSelectedId, files, preventMultiDrag, selectedIds],
   );
 
   // Remove selected items if the file is removed.
   useEffect(() => {
-    // Do nothing if dragging.
-    if (dragging !== undefined) return;
     setSelectedIds(prev => {
       const toRemove = new Set(prev);
       files.forEach(file => {
@@ -225,11 +210,18 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       });
       return prev.filter(id => !toRemove.has(id));
     });
-  }, [files, dragging]);
+  }, [files]);
 
   const managedFiles = useMemo<UseManagedFilesOutput<F>>(
     () => ({
-      fileOrganizerProps: { files, onMove, onDragChange, onDeselectAll, onSelectAll },
+      fileOrganizerProps: {
+        files,
+        onMove,
+        onDragChange,
+        onDeselectAll,
+        onSelectAll,
+        dragGroupIds: draggingIds,
+      },
       getThumbnailSelectionProps: (id: string) => ({
         selected: selectedIds.includes(id),
         onClick: (event: MouseEvent<HTMLElement>) => toggleSelectedId(id, event),
@@ -241,11 +233,11 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
       toggleSelectedId,
       addFile,
       removeFile,
-      draggingFiles: dragging?.files,
+      draggingIds,
     }),
     [
       addFile,
-      dragging,
+      draggingIds,
       files,
       onMove,
       onDragChange,

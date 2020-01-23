@@ -65,8 +65,8 @@ export function moveMultiFromIndexToIndex<I extends ObjectWithId>(
   // We place the separated so that target lines up with index.
   const insertionIndex = toIndex - targetIndex;
 
-  if (insertionIndex > remaining.length) return prev;
-  if (insertionIndex < 0) return prev;
+  if (insertionIndex > remaining.length) return [...remaining, ...separated];
+  if (insertionIndex < 0) return [...separated, ...remaining];
 
   return [...remaining.slice(0, insertionIndex), ...separated, ...remaining.slice(insertionIndex)];
 }
