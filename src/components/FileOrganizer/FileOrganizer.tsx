@@ -60,7 +60,7 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    * target. Prevents the move-to-location animation of any files with matching
    * IDs, and passes true for `dragging` to the `OnRenderThumbnailProps`.
    */
-  dragGroupIds?: string[];
+  draggingIds?: string[];
   /**
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
@@ -127,7 +127,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   preventArrowsToMove,
   virtualizeThreshold = 50,
   preventClickAwayDeselect,
-  dragGroupIds,
+  draggingIds,
   className,
   onClick,
   onKeyDown,
@@ -203,10 +203,10 @@ export function FileOrganizer<F extends ObjectWithId>({
       const isEditing = editingId === file.id;
       const otherDragging = !!(
         (draggingId && draggingId !== file.id) ||
-        (dragGroupIds && dragGroupIds.length && !dragGroupIds.includes(file.id))
+        (draggingIds && draggingIds.length && !draggingIds.includes(file.id))
       );
       const draggableRef = createRef<HTMLDivElement>();
-      const isInDragGroup = dragGroupIds?.includes(file.id) ?? false;
+      const isInDragGroup = draggingIds?.includes(file.id) ?? false;
       return (
         <Draggable
           key={file.id}
@@ -239,7 +239,7 @@ export function FileOrganizer<F extends ObjectWithId>({
     [
       editingId,
       draggingId,
-      dragGroupIds,
+      draggingIds,
       onRenderDragLayer,
       disableMove,
       onMove,

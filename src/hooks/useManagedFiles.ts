@@ -71,7 +71,7 @@ interface UseManagedFilesOutput<F> {
     onDragChange(id?: string): void;
     onDeselectAll(): void;
     onSelectAll(): void;
-    dragGroupIds: string[];
+    draggingIds: string[];
   };
   /**
    * You can spread the result of this function directly to `Thumbnail`. It has
@@ -220,7 +220,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
         onDragChange,
         onDeselectAll,
         onSelectAll,
-        dragGroupIds: draggingIds,
+        draggingIds: draggingIds,
       },
       getThumbnailSelectionProps: (id: string) => ({
         selected: selectedIds.includes(id),
