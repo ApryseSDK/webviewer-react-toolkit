@@ -1,8 +1,12 @@
 import { Futurable, FuturableOrLazy, futureableOrLazyToFuturable, memoizedPromiseToFuturableOrLazy } from './futurable';
 
-export type MemoizeOptions = {
+export interface MemoizeOptions {
+  /**
+   * If true, will immediately process the input, even if it's a lazy promise (
+   * a function to retrieve a promise).
+   */
   preprocess?: boolean;
-};
+}
 
 /**
  * This class is responsible for wrapping tasks in a promise that won't be

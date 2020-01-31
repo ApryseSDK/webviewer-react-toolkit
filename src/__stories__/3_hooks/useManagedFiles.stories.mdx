@@ -1,0 +1,49 @@
+import { options, output } from './useManagedFilesHelpers';
+import { Meta, Props, Title, Story, Preview } from '@storybook/addon-docs/blocks';
+import { LinkTo, Redirect } from '../../storybook-helpers/mdx';
+
+<Redirect />
+
+<Meta title="Hooks/useManagedFiles" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+<Title />
+
+A hook that provides complex managing behavior for files. It is designed for use with `FileOrganizer`, but can be used anywhere you need to manage an array of files. The basic functionality it provides is:
+
+1. File selection
+1. File movement
+1. Moving multiple selected files
+
+```tsx
+const { fileOrganizerProps, getThumbnailSelectionProps } = useManagedFiles({ /* UseManagedFilesOptions */ });
+
+return (
+  <FileOrganizer
+    {...fileOrganizerProps}
+    onRenderThumbnail={({ id, onRenderThumbnailProps }) => (
+      <Thumbnail
+        {...getThumbnailSelectionProps(id)}
+        {...onRenderThumbnailProps}
+      />
+    )}
+  />
+);
+```
+
+## `UseManagedFilesOptions`
+
+<Props of={options} />
+
+## `UseManagedFilesOutput` (return value)
+
+<Props of={output} />
+
+## Example
+
+Here's the hook in action:
+
+> Note: See <LinkTo title="Components/FileOrganizer" story="'Use Managed Files Hook">FileOrganizer</LinkTo> for more demos
+
+<Preview>
+  <Story inline={false} height="550px" id="components-fileorganizer--use-managed-files-hook-virtualized" />
+</Preview>

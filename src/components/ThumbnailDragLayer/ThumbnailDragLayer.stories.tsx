@@ -1,10 +1,8 @@
-import { number } from '@storybook/addon-knobs';
 import React from 'react';
+import { integer } from '../../storybook-helpers/knobs/integer';
 import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
-import docs from './README.md';
+import info from './README.md';
 
-export default { title: 'ThumbnailDragLayer', component: ThumbnailDragLayer, parameters: { info: docs } };
+export default { title: 'Components/ThumbnailDragLayer', component: ThumbnailDragLayer, parameters: { info } };
 
-export const Basic = () => (
-  <ThumbnailDragLayer numFiles={number('numFiles', 1, { min: 1, max: 100, range: true, step: 1 })} />
-);
+export const Basic = () => <ThumbnailDragLayer numFiles={integer('numFiles', 1)} />;

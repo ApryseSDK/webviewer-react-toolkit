@@ -3,17 +3,33 @@ import { FuturableOrLazy } from './futurable';
 import { MemoizedPromise } from './memoizedPromise';
 
 export interface FileDetails {
-  /** File name. */
+  /**
+   * The name of the file.
+   */
   name: string;
-  /** The original name of the file */
+  /**
+   * The original name of the file.
+   * @default name
+   */
   originalName?: string;
-  /** File extension. For example, `'pdf'`. */
+  /**
+   * File extension. For example, `'pdf'`. If not provided, will be parsed from
+   * `name`.
+   */
   extension?: string;
-  /** File object, or function to get it. One of `fileObj` or `documentObj` must be given. */
+  /**
+   * File object, or function to get it. One of `fileObj` or `documentObj` must
+   * be given.
+   */
   fileObj?: MemoizedPromise<Blob> | FuturableOrLazy<Blob>;
-  /** Document object, or function to get it. One of `fileObj` or `documentObj` must be given. */
+  /**
+   * Document object, or function to get it. One of `fileObj` or `documentObj`
+   * must be given.
+   */
   documentObj?: MemoizedPromise<CoreControls.Document> | FuturableOrLazy<CoreControls.Document>;
-  /** Thumbnail data URL string, or function to get it. */
+  /**
+   * Thumbnail data URL string, or function to get it.
+   */
   thumbnail?: MemoizedPromise<string> | FuturableOrLazy<string>;
 }
 
@@ -145,7 +161,6 @@ export class File implements FileLike {
   /**
    * Set the documentObj or give a futurable or getter.
    * @param documentObj The documentObj, promise, or getter for the documentObj.
-   * @param stopPropagation Prevent updates to _fileObj and thumbnail.
    */
   setDocumentObj(documentObj?: FuturableOrLazy<CoreControls.Document>) {
     this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
@@ -182,8 +197,8 @@ export class File implements FileLike {
   }
 
   /**
-   * Dispatch an event for this file. Dispatch will complete by calling onchange
-   * event listeners.
+   * Dispatch an event for this file. Once all subscribers have been called for
+   * the dispatched type, it will complete by calling all onchange subscribers.
    * @param type The file event type to dispatch.
    */
   dispatchEvent(type: FileEventType) {

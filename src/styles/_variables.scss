@@ -1,110 +1,64 @@
-/* --- Theme colors. --- */
-
-/*
-white 1     - For cards, header and primary toolbar on mobile
-white 2     - For general UI and panel backgrounds
-blue gray 1 - For toolbar and tabs background
-blue gray 2 - For unselected icons
-blue gray 3 - For hint text
-blue gray 4 - For selected icons, text
-blue gray 5 - For buttons and sliders to indicate that they are interactive.
-*/
-
-// Light theme.
-:root {
-  --theme-primary:     #00a3e3;
-  --theme-secondary:   #131416;
-  --font-primary:      #292922;
-  --font-secondary:    #424242;
-  --background-canvas: #eff5f5;
-  --gray-1:            #eee;
-  --gray-2:            #ddd;
-  --focus-shadow:      rgba(20, 110, 170, 0.4);
-
-  --blue-gray-1:       #dfe2ed;
-  --blue-gray-2:       #c3c6d4;
-  --blue-gray-3:       #abb0c4;
-  --blue-gray-4:       #8b92ab;
-  --blue-gray-5:       #767f9b;
-  --blue-gray-6:       #6077bf;
-  --blue-gray-7:       #415797;
-  --white-1:           #fff;
-  --white-2:           #fafafa;
-  --white-3:           #f0f0f0;
-}
-
-// Dark theme (TBD).
-[data-theme="dark"] {
-  --theme-primary:     #9A97F3;
-  --theme-secondary:   #818cab;
-  --font-primary:      #e1e1ff;
-  --font-secondary:    #818cab;
-  --background-canvas: #161625;
-  --gray-1:            #333;
-  --gray-2:            #444;
-  --focus-shadow:      rgba(31, 154, 241, 0.7);
-}
+/* --- Colors. --- */
 
 // Use these in your sass rather than using var in line.
-$theme-primary:     var(--theme-primary);
-$theme-secondary:   var(--theme-secondary);
-$font-primary:      var(--font-primary);
-$font-secondary:    var(--font-secondary);
-$background-canvas: var(--background-canvas);
-$gray-1:            var(--gray-1);
-$gray-2:            var(--gray-2);
-$focus-shadow:      var(--focus-shadow);
+$color-theme-primary: var(--color-theme-primary);
+$color-theme-secondary: var(--color-theme-secondary);
+$color-font-primary: var(--color-font-primary);
+$color-font-secondary: var(--color-font-secondary);
+$color-background-canvas: var(--color-background-canvas);
+$color-gray-1: var(--color-gray-1);
+$color-gray-2: var(--color-gray-2);
+$color-focus-shadow: var(--color-focus-shadow);
 
-$blue-gray-1:       var(--blue-gray-1);
-$blue-gray-2:       var(--blue-gray-2);
-$blue-gray-3:       var(--blue-gray-3);
-$blue-gray-4:       var(--blue-gray-4);
-$blue-gray-5:       var(--blue-gray-5);
-$blue-gray-6:       var(--blue-gray-6);
-$blue-gray-7:       var(--blue-gray-7);
-$white-1:           var(--white-1);
-$white-2:           var(--white-2);
-$white-3:           var(--white-3);
+$color-blue-gray-1: var(--color-blue-gray-1);
+$color-blue-gray-2: var(--color-blue-gray-2);
+$color-blue-gray-3: var(--color-blue-gray-3);
+$color-blue-gray-4: var(--color-blue-gray-4);
+$color-blue-gray-5: var(--color-blue-gray-5);
+$color-blue-gray-6: var(--color-blue-gray-6);
+$color-blue-gray-7: var(--color-blue-gray-7);
+$color-white-1: var(--color-white-1);
+$color-white-2: var(--color-white-2);
+$color-white-3: var(--color-white-3);
 
-// Focus transition
-$focus-transition: box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
+/* --- Focus. --- */
+
+$focus-transition: var(--focus-transition);
 
 /* --- Font sizing. --- */
 
-$font-size-tiny:    9px;
-$font-size-small:   11px;
-$font-size-default: 13px;
-$font-size-medium:  16px;
-$font-size-large:   18px;
-$font-size-huge:    24px;
-
+$font-size-tiny: var(--font-size-tiny);
+$font-size-small: var(--font-size-small);
+$font-size-default: var(--font-size-default);
+$font-size-medium: var(--font-size-medium);
+$font-size-large: var(--font-size-large);
+$font-size-huge: var(--font-size-huge);
 
 /* --- Font weights. --- */
 
-$font-weight-normal: 400;
-$font-weight-bold:   700;
+$font-weight-normal: var(--font-weight-normal);
+$font-weight-bold: var(--font-weight-bold);
 
 /* --- Layout --- */
 
-$border-radius-small: 2px;
-$border-radius:       4px;
-$border-radius-large: 8px;
+$border-radius-small: var(--border-radius-small);
+$border-radius: var(--border-radius);
+$border-radius-large: var(--border-radius-large);
 
 /* --- Padding. --- */
 
-$padding-tiny:  4px;
-$padding-small: 12px;
-$padding:       16px;
-$padding-large: 24px;
+$padding-tiny: var(--padding-tiny);
+$padding-small: var(--padding-small);
+$padding: var(--padding);
+$padding-large: var(--padding-large);
 
 /* --- Breakpoints (use mixins for setting media queries). --- */
 
-$tablet-lower-boundary:  768px;
-$desktop-lower-boundary: 1024px;
-
+$tablet-lower-boundary: var(--tablet-lower-boundary);
+$desktop-lower-boundary: var(--desktop-lower-boundary);
 
 /* --- Z-Index values. --- */
 
-$z-index-local:    0;
-$z-index-raised:   1;
-$z-index-dragging: 2;
+$z-index-local: var(--z-index-local);
+$z-index-raised: var(--z-index-raised);
+$z-index-dragging: var(--z-index-dragging);

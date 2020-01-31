@@ -1,70 +1,37 @@
-# 🚧 PDFTron Component Library 🚧
+# WebViewer React Toolkit
 
-> This library is under heavy construction. We will update the information on
-> here once it is ready to be used. In the meantime, we advise against using it
-> in your project. Documentation will be out of date or absent -- changes are
-> happening quickly and documentation will be updated once we are closer to
-> releasing.
+The WebViewer React Toolkit is a React component library contains various
+components that integrate with the
+[PDFTron WebViewer API](https://www.pdftron.com/documentation/web/).
 
-[View the components here!](https://xododocs.github.io/component-library)
+Check out the [documentation](https://pdftron.github.io/webviewer-react-toolkit)
+to get started with the toolkit!
 
-This component library will contain various React components that integrate with
-the PDFTron WebViewer API.
+## Using the toolkit
 
-## Using the toolkit:
+Check the
+[introduction](https://pdftron.github.io/webviewer-react-toolkit/?path=/docs/basics-introduction--page)
+for information on using the toolkit.
 
-We have designed these components to look good with the
-[Lato](https://fonts.google.com/specimen/Lato) font. It should work with any
-font, but if you want to include Lato as the base font, you can do it like this:
+## Contributing
 
-```html
-<style>
-  @import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i&display=swap');
-</style>
-```
+### To start up Storybook
 
-There are also various peer dependencies that will be required to run parts of
-the kit. You should use the latest of each package:
-
-```sh
-# Required for the package in general
-react
-react-dom
-
-# Required for `Draggable`, `DragLayer` and `DndMultiProvider`
-react-dnd
-react-motion
-react-dnd-html5-backend
-react-dnd-multi-backend
-react-dnd-touch-backend
-
-# Required for `FileOrganizer`
-react-virtualized-auto-sizer
-react-window
-```
-
-## Cloning this repo:
-
-### To spin this up:
-
-```sh
+```bash
 yarn       # 1. To install dependencies (or `npm i`)
-yarn peers # 2. To install peer dependencies (or `npm run peers`)
-yarn start # 3. To start the Storybook environment (or `npm start`)
+yarn start # 2. To start the Storybook environment (or `npm start`)
 ```
 
-> [You must install peers separately](https://github.com/yarnpkg/yarn/issues/1503)
+### To test
 
-### To test:
-
-```sh
+```bash
 yarn test         # Single test run (or `npm test`)
 yarn test --watch # Watch for changes (or `npm test -- --watch`)
 ```
 
-### To lint:
+### To lint
 
-```sh
+```bash
 yarn lint # Lint for errors (or `npm lint`)
 ```
 
@@ -72,30 +39,3 @@ yarn lint # Lint for errors (or `npm lint`)
 
 To create a set of highly customizable components that take WebViewer documents
 (and other objects), and wrap them in specific functionality.
-
-One example might be a `<Thumbnail />` component, which takes a WebViewer
-document as a prop and displays a thumbnail.
-
-## Possible components
-
-- `<Thumbnail />`
-- `<FileOrganizer />`
-
-## Tech stack
-
-- Typescript
-- React
-
-## Tech requirements
-
-- Components interact nicely with each other when required.
-- Components are strongly typed
-- IE11 and all major browser support
-- Use modern tech (React hooks, etc)
-
-## Considerations
-
-- Different versions of WebViewer may have different APIs. We need to be able to
-  account for these differences.
-- UX > UI. The focus of this library should be functionality, not UI. Leave UI
-  to the people using the components.

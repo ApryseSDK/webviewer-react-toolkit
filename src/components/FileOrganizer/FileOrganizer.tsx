@@ -62,35 +62,45 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    */
   draggingIds?: string[];
   /**
+   * Use this instead of CSS or `style` to set the outside padding. This is
+   * because the virtualization process requires exact padding values to
+   * ensure that the elements are positioned properly.
+   */
+  padding?: number;
+  /**
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
+   * @param onRenderProps An object to use in rendering the thumbnail.
    */
-  onRenderThumbnail: (onRenderProps: OnRenderThumbnailProps<F>) => ReactNode;
+  onRenderThumbnail(onRenderProps: OnRenderThumbnailProps<F>): ReactNode;
   /**
    * If provided, will call to render a custom drag layer while a thumbnail is
    * being dragged. Otherwise will show a preview of the thumbnail.
    */
-  onRenderDragLayer?: () => ReactNode;
+  onRenderDragLayer?(): ReactNode;
   /**
    * Callback fired when a file is moved within the page organizer. Returns
    * whether the move was successful.
+   * @param fromIndex The previous index of the item.
+   * @param toIndex The next index of the item.
    */
-  onMove?: (fromIndex: number, toIndex: number) => boolean;
+  onMove?(fromIndex: number, toIndex: number): boolean;
   /**
    * Called whenever dragging begins or ends. If drag ends, the id will be
    * undefined.
+   * @param id The ID of the dragging item.
    */
-  onDragChange?: (id?: string) => void;
+  onDragChange?(id?: string): void;
   /**
    * Called whenever `escape` key is pressed while focusing the file organizer,
    * or if background of organizer is clicked.
    */
-  onDeselectAll?: () => void;
+  onDeselectAll?(): void;
   /**
-   * Called whenever all items are selected at once (usually `ctrl` or `command`
-   * + `A`).
+   * Called whenever all items are selected at once (usually `ctrl` or
+   * `command` + `A`).
    */
-  onSelectAll?: () => void;
+  onSelectAll?(): void;
 }
 
 export interface OnRenderThumbnailProps<F> {
@@ -128,9 +138,11 @@ export function FileOrganizer<F extends ObjectWithId>({
   virtualizeThreshold = 50,
   preventClickAwayDeselect,
   draggingIds,
+  padding,
   className,
   onClick,
   onKeyDown,
+  style,
   ...divProps
 }: FileOrganizerProps<F>) {
   const fileOrganizerRef = useRef<HTMLDivElement>(null);
@@ -197,6 +209,8 @@ export function FileOrganizer<F extends ObjectWithId>({
     [editingId, disableMove, onMove, preventArrowsToMove, isVirtualized, columnCount],
   );
 
+  const pad = Math.max(1, padding || 0);
+
   const renderItem = useCallback(
     (file: F | undefined, index: number, style?: CSSProperties) => {
       if (!file) return <Fragment key={'__null'}>{null}</Fragment>;
@@ -212,7 +226,13 @@ export function FileOrganizer<F extends ObjectWithId>({
           key={file.id}
           id={file.id}
           index={index}
-          style={style}
+          style={
+            style && {
+              ...style,
+              top: typeof style.top === 'number' ? style.top + pad : style.top,
+              left: typeof style.left === 'number' ? style.left + pad : style.left,
+            }
+          }
           ref={draggableRef}
           hideDragPreview={!!onRenderDragLayer}
           preventAnimation={isInDragGroup}
@@ -243,6 +263,7 @@ export function FileOrganizer<F extends ObjectWithId>({
       onRenderDragLayer,
       disableMove,
       onMove,
+      pad,
       handleOnDragChange,
       handleItemKeyDown,
       onRenderThumbnail,
@@ -253,7 +274,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   const handleOnClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     event => {
       onClick?.(event);
-      if (!preventClickAwayDeselect && event.target === fileOrganizerRef.current) onDeselectAll?.();
+      if (!preventClickAwayDeselect) onDeselectAll?.();
     },
     [onDeselectAll, onClick, preventClickAwayDeselect],
   );
@@ -276,11 +297,7 @@ export function FileOrganizer<F extends ObjectWithId>({
     return { x, y };
   }, []);
 
-  const fileOrganizerClass = classnames(
-    'ui__base ui__fileOrganizer',
-    { 'ui__fileOrganizer--virtualized': isVirtualized },
-    className,
-  );
+  const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
   return (
     <DndMultiProvider>
@@ -290,10 +307,17 @@ export function FileOrganizer<F extends ObjectWithId>({
         ref={fileOrganizerRef}
         onClick={handleOnClick}
         onKeyDown={handleOnKeyDown}
+        style={{ ...style, padding: isVirtualized ? 0 : pad }}
         role="grid"
       >
         {isVirtualized ? (
-          <MemoAutoSizer ref={gridRef} files={files} renderItem={renderItem} onColumnCountChange={setColumnCount} />
+          <MemoAutoSizer
+            ref={gridRef}
+            files={files}
+            padding={pad}
+            renderItem={renderItem}
+            onColumnCountChange={setColumnCount}
+          />
         ) : (
           files.map((file, index) => renderItem(file, index))
         )}

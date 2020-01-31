@@ -1,0 +1,28 @@
+import { options, output } from './fileHelpers';
+import { Meta, Props, Title, Story, Preview } from '@storybook/addon-docs/blocks';
+import { LinkTo, Redirect } from '../../storybook-helpers/mdx';
+
+<Redirect />
+
+<Meta title="Data/File" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+<Title />
+
+The `File` class is a utility that encapsulates useful functionality from the
+WebViewer API. It exposes various properties and methods for manipulating the
+`File`.
+
+```ts
+const file = new File({ /* FileDetails */ });
+
+await file.rotate();
+setThumbnail(file.thumbnail.get());
+```
+
+## `FileDetails`
+
+<Props of={options} />
+
+## `File` (class)
+
+<Props of={output} />

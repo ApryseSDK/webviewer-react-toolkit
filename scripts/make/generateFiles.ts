@@ -108,8 +108,8 @@ export const generateFiles = ({ isRef, componentName }: MakeOptions) => {
     pathify(rootDir, styleIndexFile),
     `@import './components/${pathify(componentName, componentName)}';`,
     error => {
-      if (error) timeErr('index', 'Could not add import to SASS index file');
-      else timeLog('index', 'Added import to SASS index file');
+      if (error) timeErr('index', 'Could not add import to Sass index file');
+      else timeLog('index', 'Added import to Sass index file');
     },
   );
 

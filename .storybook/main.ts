@@ -1,17 +1,25 @@
 const path = require('path');
 
 module.exports = {
-  stories: ['../src/components/**/*.stories.tsx'],
+  stories: ['../src/**/*.stories.*'],
   addons: [
     '@storybook/addon-docs',
-    '@storybook/addon-knobs/register',
-    '@storybook/addon-actions/register',
-    '@storybook/addon-viewport/register',
+    '@storybook/addon-knobs',
+    '@storybook/addon-actions',
+    '@storybook/addon-viewport',
     '@storybook/addon-a11y',
-    '@storybook/addon-backgrounds',
+    '@storybook/addon-links',
   ],
+  webpackFinal: async (config: any) => {
+    // Sass support with post-css for vendor prefixes.
+    config.module.rules.push({
+      test: /\.scss$/,
+      use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+      include: path.resolve(__dirname, '../'),
+    });
+    return config;
+  },
   presets: [
-    '@storybook/preset-scss',
     {
       name: '@storybook/preset-typescript',
       options: {

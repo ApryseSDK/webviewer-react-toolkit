@@ -11,11 +11,11 @@ $thumbnail-border-size: 2px;
   flex-direction: column;
 
   &--selected:not(.ui__thumbnail--dragging) {
-    background-color: $blue-gray-1;
+    background-color: $color-blue-gray-1;
   }
 
   &--dragging {
-    border: $thumbnail-border-size dashed $theme-primary;
+    border: $thumbnail-border-size dashed $color-theme-primary;
     z-index: $z-index-dragging;
 
     margin: -($thumbnail-border-size / 2);
@@ -49,7 +49,7 @@ $thumbnail-border-size: 2px;
     // Do not style for hover or focus if anything is dragging
     &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging) {
       &:not(.ui__thumbnail--selected) {
-        background-color: $gray-1;
+        background-color: $color-gray-1;
       }
     }
   }
@@ -59,7 +59,7 @@ $thumbnail-border-size: 2px;
       img,
       .ui__thumbnail__image__skeleton {
         @include focus;
-        border-color: $focus-shadow;
+        border-color: $color-focus-shadow;
       }
     }
   }
@@ -89,7 +89,7 @@ $thumbnail-border-size: 2px;
 
     img,
     .ui__thumbnail__image__skeleton {
-      border: 1px solid $blue-gray-1;
+      border: 1px solid $color-blue-gray-1;
       transition: $focus-transition;
     }
   }

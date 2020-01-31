@@ -7,9 +7,14 @@ import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 import { FileOrganizer, FileOrganizerProps } from '../FileOrganizer';
 import { Thumbnail } from '../Thumbnail';
 import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
-import docs from './README.md';
+import info from './README.md';
+import { integer } from '../../storybook-helpers/knobs/integer';
 
-export default { title: 'FileOrganizer', component: FileOrganizer, parameters: { info: { docs, disable: true } } };
+export default {
+  title: 'Components/FileOrganizer',
+  component: FileOrganizer,
+  parameters: { info: { info, disable: true } },
+};
 
 /* --- Basic. --- */
 
@@ -52,6 +57,7 @@ const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
       onDragChange={action('onDragChange')}
+      padding={integer('padding', 0)}
       onRenderDragLayer={onRenderDragLayer ? () => <ThumbnailDragLayer /> : undefined}
       onRenderThumbnail={({ onRenderThumbnailProps, index }) => (
         <Thumbnail
@@ -94,6 +100,7 @@ const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThre
       files={files}
       onMove={forwardAction('onMove', handleOnMove)}
       onDragChange={action('onDragChange')}
+      padding={integer('padding', 0)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
       disableMove={boolean('disableMove', false)}
       virtualizeThreshold={virtualizeThreshold ?? undefined}
@@ -127,6 +134,7 @@ const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized
       preventArrowsToMove={boolean('preventArrowsToMove', false, 'FileOrganizer')}
       preventClickAwayDeselect={boolean('preventClickAwayDeselect', false, 'FileOrganizer')}
       disableMove={boolean('disableMove', false, 'FileOrganizer')}
+      padding={integer('padding', 0, 'FileOrganizer')}
       onRenderThumbnail={({ id, onRenderThumbnailProps }) => (
         <Thumbnail {...getThumbnailSelectionProps(id)} {...onRenderThumbnailProps} />
       )}

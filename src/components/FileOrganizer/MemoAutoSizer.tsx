@@ -5,6 +5,7 @@ import { getItemIndex, ObjectWithId, THUMBNAIL_WIDTH } from '../../utils';
 
 interface VirtualizedProps {
   files: ObjectWithId[];
+  padding: number;
   onColumnCountChange: (newColumnCount: number) => void;
   renderItem: (file: any, index: number, style: React.CSSProperties | undefined) => JSX.Element; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
@@ -17,43 +18,50 @@ const MemoGridItem = memo<GridChildComponentProps>(({ columnIndex, rowIndex, sty
 });
 
 const MemoGrid = memo(
-  forwardRef<Grid, Size & VirtualizedProps>(({ width, height, files, renderItem, onColumnCountChange }, ref) => {
-    const data = useMemo(() => {
-      let columnCount = Math.floor(width / THUMBNAIL_WIDTH);
-      if (columnCount > files.length) columnCount = files.length;
-      return { files, renderItem, columnCount };
-    }, [files, renderItem, width]);
+  forwardRef<Grid, Size & VirtualizedProps>(
+    ({ width, height, files, padding, renderItem, onColumnCountChange }, ref) => {
+      const modifiedHeight = height - 2 * padding;
+      const modifiedWidth = width - 2 * padding;
 
-    useEffect(() => {
-      onColumnCountChange(data.columnCount);
-    }, [onColumnCountChange, data.columnCount]);
+      const data = useMemo(() => {
+        let columnCount = Math.floor(modifiedWidth / THUMBNAIL_WIDTH);
+        if (columnCount > files.length) columnCount = files.length;
+        return { files, renderItem, columnCount };
+      }, [files, renderItem, modifiedWidth]);
 
-    return (
-      <Grid
-        ref={ref}
-        columnWidth={THUMBNAIL_WIDTH}
-        rowHeight={THUMBNAIL_WIDTH}
-        height={height}
-        width={width}
-        columnCount={data.columnCount}
-        rowCount={Math.ceil(files.length / data.columnCount)}
-        itemData={data}
-        itemKey={({ columnIndex, rowIndex }) => {
-          const index = getItemIndex(rowIndex, columnIndex, data.columnCount);
-          return files[index]?.id ?? index;
-        }}
-      >
-        {MemoGridItem}
-      </Grid>
-    );
-  }),
+      useEffect(() => {
+        onColumnCountChange(data.columnCount);
+      }, [onColumnCountChange, data.columnCount]);
+
+      return (
+        <Grid
+          ref={ref}
+          columnWidth={THUMBNAIL_WIDTH}
+          rowHeight={THUMBNAIL_WIDTH}
+          height={modifiedHeight}
+          width={modifiedWidth}
+          style={{ padding, height, width }}
+          columnCount={data.columnCount}
+          rowCount={Math.ceil(files.length / data.columnCount)}
+          itemData={data}
+          itemKey={({ columnIndex, rowIndex }) => {
+            const index = getItemIndex(rowIndex, columnIndex, data.columnCount);
+            return files[index]?.id ?? index;
+          }}
+        >
+          {MemoGridItem}
+        </Grid>
+      );
+    },
+  ),
 );
 
 export const MemoAutoSizer = memo(
-  forwardRef<Grid, VirtualizedProps>(({ files, renderItem, onColumnCountChange }, ref) => {
+  forwardRef<Grid, VirtualizedProps>(({ files, padding, renderItem, onColumnCountChange }, ref) => {
     const onRenderGrid = useCallback(
       ({ width, height }: Size) => (
         <MemoGrid
+          padding={padding}
           ref={ref}
           width={width}
           height={height}
@@ -62,7 +70,7 @@ export const MemoAutoSizer = memo(
           onColumnCountChange={onColumnCountChange}
         />
       ),
-      [files, renderItem, ref, onColumnCountChange],
+      [files, padding, renderItem, ref, onColumnCountChange],
     );
 
     return <AutoSizer>{onRenderGrid}</AutoSizer>;

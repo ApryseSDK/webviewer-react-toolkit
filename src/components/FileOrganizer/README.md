@@ -15,5 +15,3 @@ many default props that integrate well with the `FileOrganizer`.
 
 It is recommended that you use the `useManagedFiles` hook, as it exposes many
 valuable tools to save you effort when managing a list of files.
-
-> Note: Multi-drag is currently broken on virtualized lists.

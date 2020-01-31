@@ -40,17 +40,21 @@ export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * Call instead of providing children if you wish to use the `isDragging`
    * prop.
+   * @param isDragging Is the child dragging.
    */
-  onRenderChildren?: (isDragging: boolean) => ReactNode;
+  onRenderChildren?(isDragging: boolean): ReactNode;
   /**
    * If given, will be called any time the draggable wrapper is moved. Returns
    * whether the move was successful.
+   * @param fromIndex The previous index of the item.
+   * @param toIndex The next index of the item.
    */
-  onMove?: (fromIndex: number, toIndex: number) => boolean;
+  onMove?(fromIndex: number, toIndex: number): boolean;
   /**
    * Called whenever the dnd property `isDragging` changes.
+   * @param isDragging Is the child dragging.
    */
-  onDragChange?: (isDragging: boolean) => void;
+  onDragChange?(isDragging: boolean): void;
 }
 
 interface DragItem extends DragObjectWithType {
@@ -161,10 +165,10 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
     // the animation looks like it's moving from it's previous location.
     const motionStyle = useMemo(
       () => ({
-        x: coords.x === 0 && !preventAnimation ? spring(coords.x, SPRING) : coords.x,
-        y: coords.y === 0 && !preventAnimation ? spring(coords.y, SPRING) : coords.y,
+        x: coords.x === 0 && !isDragging && !preventAnimation ? spring(coords.x, SPRING) : coords.x,
+        y: coords.y === 0 && !isDragging && !preventAnimation ? spring(coords.y, SPRING) : coords.y,
       }),
-      [coords.x, coords.y, preventAnimation],
+      [coords.x, coords.y, preventAnimation, isDragging],
     );
 
     const draggableClass = classnames('ui__base ui__draggable', className);

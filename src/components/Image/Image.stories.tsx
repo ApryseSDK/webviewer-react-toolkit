@@ -2,9 +2,9 @@ import { boolean } from '@storybook/addon-knobs';
 import React, { CSSProperties } from 'react';
 import { Image } from '../Image';
 import { Spinner } from '../Spinner';
-import docs from './README.md';
+import info from './README.md';
 
-export default { title: 'Image', component: Image, parameters: { info: docs } };
+export default { title: 'Components/Image', component: Image, parameters: { info } };
 
 const style: CSSProperties = {
   height: 250,

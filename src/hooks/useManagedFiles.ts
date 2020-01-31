@@ -24,7 +24,7 @@ export interface UseManagedFilesOptions<F> {
   preventDeselectOnDragOther?: boolean;
 }
 
-interface UseManagedFilesOutput<F> {
+export interface UseManagedFilesOutput<F> {
   /**
    * An array of files.
    */

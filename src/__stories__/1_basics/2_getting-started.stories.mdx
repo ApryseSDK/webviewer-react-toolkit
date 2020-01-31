@@ -1,0 +1,95 @@
+import { Meta, Title } from '@storybook/addon-docs/blocks';
+import { LinkTo, Redirect } from '../../storybook-helpers/mdx';
+
+<Redirect />
+
+<Meta title="Basics/Getting Started" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+<Title />
+
+In order to get started using the toolkit, there are some quick and easy
+installation steps you will need to go through.
+
+## Installation
+
+You can install the toolkit from npm using your preferred package manager:
+
+```bash
+# Yarn
+yarn add @pdftron/webviewer-react-toolkit
+
+# npm
+npm install @pdftron/webviewer-react-toolkit
+```
+
+## Style
+
+In order for your components to be styled, you will need to import the toolkit's
+CSS file. Also included are
+[CSS Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+to include in your project if you wish. If you use
+[Sass](https://sass-lang.com/), you can also include the provided Sass
+variables and mixins by including the files as shown below. For more information
+on the Sass and CSS variables provided, check out
+the <LinkTo title="Style/Colors">Style section</LinkTo>.
+
+### CSS
+
+```css
+/* Most loaders will allow this: */
+@import "@pdftron/webviewer-react-toolkit";
+
+/* If that doesn't work: */
+@import "~@pdftron/webviewer-react-toolkit/lib/style.css";
+```
+
+### Sass
+
+> Note that since the mixins use the variables, you will need to import both if
+> you are using mixins.
+
+```scss
+@import "~@pdftron/webviewer-react-toolkit/lib/_variables.scss";
+@import "~@pdftron/webviewer-react-toolkit/lib/_mixins.scss";
+```
+
+## Peer Dependencies
+
+Since the toolkit is a React component library, `react` and `react-dom` should
+be installed. While any version above `v16.8.0` is supported (the release of
+Hooks), it is encouraged that you use the most up-to-date version you can.
+
+## Fonts (optional)
+
+We have designed these components to look good with the
+[Lato](https://fonts.google.com/specimen/Lato) font. It should work with any
+font, but if you want to include Lato as the base font, you can do it like this:
+
+```html
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i&display=swap');
+</style>
+```
+
+The toolkit only uses font-weights `400` and `700`, but you can install more if you
+wish to use them in your code.
+
+## Use It
+
+You should now be able to import and use the toolkit in your project!
+
+```jsx
+import React from 'react';
+import { Button } from '@pdftron/webviewer-react-toolkit';
+
+export function Component({ message, onClick }) {
+  return (
+    <>
+      <div>{message}</div>
+      <Button buttonStyle="borderless" onClick={onClick}>
+        Click here!
+      </Button>
+    </>
+  );
+}
+```

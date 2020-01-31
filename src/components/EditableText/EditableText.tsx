@@ -15,19 +15,6 @@ export interface EditableTextProps extends ClickableDivProps {
    */
   editMode?: boolean;
   /**
-   * Callback fired whenever the component wishes to enter edit mode.
-   */
-  onEdit?: () => void;
-  /**
-   * Callback fired whenever the component wishes to update the value.
-   */
-  onSave?: (newValue: string) => void;
-  /**
-   * Callback fired whenever the component wishes to cancel edit mode without
-   * saving the new value.
-   */
-  onCancel?: (originalValue: string) => void;
-  /**
    * Classname for outermost div.
    */
   className?: string;
@@ -36,10 +23,6 @@ export interface EditableTextProps extends ClickableDivProps {
    * opacity.
    */
   locked?: boolean;
-  /**
-   * Render out a custom string to display when not in edit mode.
-   */
-  onRenderText?: (value: string) => string;
   /**
    * A placeholder to display if there's no value. This will also account for
    * `onRenderText`, so if you want to display this then `onRenderText` must
@@ -54,6 +37,26 @@ export interface EditableTextProps extends ClickableDivProps {
    * Always show a border, and highlight on hover.
    */
   bordered?: boolean;
+  /**
+   * Callback fired whenever the component wishes to enter edit mode.
+   */
+  onEdit?(): void;
+  /**
+   * Callback fired whenever the component wishes to update the value.
+   * @param newValue The new value to save.
+   */
+  onSave?(newValue: string): void;
+  /**
+   * Callback fired whenever the component wishes to cancel edit mode without
+   * saving the new value.
+   * @param originalValue The original value to revert to.
+   */
+  onCancel?(originalValue: string): void;
+  /**
+   * Render out a custom string to display when not in edit mode.
+   * @param value The value of the editable text.
+   */
+  onRenderText?(value: string): string;
 }
 
 export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(

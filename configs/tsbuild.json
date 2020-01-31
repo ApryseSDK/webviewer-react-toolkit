@@ -5,6 +5,7 @@
     "../node_modules",
     "../src/**/*.test.*",
     "../src/**/*.stories.*",
-    "../src/storybook-helpers"
+    "../src/storybook-helpers",
+    "../src/**/__stories__"
   ]
 }

@@ -21,7 +21,7 @@ export interface ImageProps extends Remove<ImgHTMLAttributes<HTMLImageElement>, 
   /**
    * Render out an element to be shown while src is loading.
    */
-  onRenderLoading?: () => ReactNode;
+  onRenderLoading?(): ReactNode;
 }
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(

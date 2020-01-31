@@ -1,51 +1,78 @@
 {
   "name": "@pdftron/webviewer-react-toolkit",
-  "version": "0.0.0-beta.28",
+  "version": "0.1.0-beta.0",
   "description": "A React component library for integrating with PDFTron WebViewer API.",
-  "license": "See LICENSE file.",
+  "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
     "url": "https://github.com/XodoDocs/component-library.git"
   },
+  "bugs": "https://github.com/XodoDocs/component-library/issues",
+  "homepage": "https://pdftron.github.io/webviewer-react-toolkit",
   "scripts": {
     "start": "start-storybook -s public -p 6006",
     "make": "ts-node scripts/make",
+    "parse-scss": "node scripts/parse_scss",
     "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
     "build": "yarn clean && webpack --config webpack.config.ts && tsc -p ./configs/tsbuild.json",
     "clean": "rm -rf dist & rm -rf lib",
     "test": "jest ./src --config ./jest.config.js",
-    "peers": "node scripts/install_peers",
     "build-storybook": "build-storybook -s public",
     "deploy-storybook": "storybook-to-ghpages --out=.out",
-    "beta-release": "yarn build && yarn publish --tag beta"
+    "commit": "commit",
+    "release": "yarn build && standard-version && git push && git push --tags && npm publish",
+    "release-dry": "yarn build && standard-version --dry-run",
+    "release-next": "yarn build && standard-version --prerelease beta && git push && git push --tags && npm publish --tag next",
+    "release-next-dry": "yarn build && standard-version --prerelease beta --dry-run"
   },
+  "keywords": [
+    "pdftron",
+    "webviewer",
+    "react",
+    "component",
+    "library",
+    "front-end"
+  ],
+  "main": "lib/index.js",
+  "style": "lib/style.css",
+  "types": "lib/index.d.ts",
+  "unpkg": "dist/component_library.bundle.js",
+  "sideEffects": false,
+  "files": [
+    "README.md",
+    "LICENSE",
+    "lib/",
+    "dist/"
+  ],
   "dependencies": {
-    "classnames": "^2.2.6"
-  },
-  "peerDependencies": {
-    "react": "^16.12.0",
+    "classnames": "^2.2.6",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-dnd-multi-backend": "^5.0.0",
     "react-dnd-touch-backend": "^10.0.2",
-    "react-dom": "^16.12.0",
     "react-motion": "^0.5.2",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5"
   },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.7.4",
-    "@storybook/addon-a11y": "^5.3.7",
-    "@storybook/addon-actions": "^5.3.7",
-    "@storybook/addon-backgrounds": "^5.3.7",
-    "@storybook/addon-docs": "^5.3.7",
-    "@storybook/addon-info": "^5.3.7",
-    "@storybook/addon-knobs": "^5.3.7",
-    "@storybook/addon-viewport": "^5.3.7",
-    "@storybook/addons": "^5.3.7",
-    "@storybook/preset-scss": "^1.0.2",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@commitlint/prompt-cli": "^8.3.5",
+    "@storybook/addon-a11y": "^6.0.0-alpha.2",
+    "@storybook/addon-actions": "^6.0.0-alpha.2",
+    "@storybook/addon-docs": "^6.0.0-alpha.2",
+    "@storybook/addon-info": "^6.0.0-alpha.2",
+    "@storybook/addon-knobs": "^6.0.0-alpha.2",
+    "@storybook/addon-links": "^6.0.0-alpha.2",
+    "@storybook/addon-viewport": "^6.0.0-alpha.2",
+    "@storybook/addons": "^6.0.0-alpha.2",
     "@storybook/preset-typescript": "^1.2.0",
-    "@storybook/react": "^5.3.7",
+    "@storybook/react": "^6.0.0-alpha.2",
     "@storybook/storybook-deployer": "^2.8.1",
     "@types/classnames": "^2.2.9",
     "@types/copy-webpack-plugin": "^5.0.0",
@@ -91,12 +118,16 @@
     "normalize.css": "^8.0.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
+    "postcss-scss": "^2.0.0",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
+    "react": "^16.12.0",
     "react-docgen-typescript-loader": "^3.6.0",
+    "react-dom": "^16.12.0",
     "sass-loader": "^8.0.0",
     "shelljs": "^0.8.3",
     "sinon": "^8.1.0",
+    "standard-version": "^7.1.0",
     "style-loader": "^1.0.1",
     "ts-jest": "^24.2.0",
     "ts-loader": "^6.2.1",
@@ -106,26 +137,5 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-node-externals": "^1.7.2"
-  },
-  "keywords": [
-    "pdftron",
-    "webviewer",
-    "react",
-    "component",
-    "library"
-  ],
-  "engines": {
-    "node": ">=10.x"
-  },
-  "main": "lib/index.js",
-  "style": "lib/style.css",
-  "types": "lib/index.d.ts",
-  "unpkg": "dist/component_library.bundle.js",
-  "sideEffects": false,
-  "files": [
-    "README.md",
-    "LICENSE",
-    "lib/",
-    "dist/"
-  ]
+  }
 }

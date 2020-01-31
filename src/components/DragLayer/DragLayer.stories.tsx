@@ -2,9 +2,9 @@ import React, { CSSProperties } from 'react';
 import { DndMultiProvider } from '../DndMultiProvider';
 import { Draggable } from '../Draggable';
 import { DragLayer } from '../DragLayer';
-import docs from './README.md';
+import info from './README.md';
 
-export default { title: 'DragLayer', component: DragLayer, parameters: { info: docs } };
+export default { title: 'Components/DragLayer', component: DragLayer, parameters: { info } };
 
 const WIDTH = 200;
 const HEIGHT = 50;

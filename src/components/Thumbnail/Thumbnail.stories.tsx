@@ -5,9 +5,9 @@ import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
 import { createFile, CreateFileOptions, FakeFile } from '../../storybook-helpers/data/files';
 import { Thumbnail, ThumbnailProps } from '../Thumbnail';
-import docs from './README.md';
+import info from './README.md';
 
-export default { title: 'Thumbnail', component: Thumbnail, parameters: { info: docs } };
+export default { title: 'Components/Thumbnail', component: Thumbnail, parameters: { info } };
 
 const defaultProps = (options?: CreateFileOptions, index = 0, withToolButtons?: boolean): ThumbnailProps<FakeFile> => ({
   file: createFile(index, options),
@@ -20,8 +20,8 @@ const defaultProps = (options?: CreateFileOptions, index = 0, withToolButtons?: 
   onRename: boolean('has onRename', true) ? action('onRename') : undefined,
   buttonProps: withToolButtons
     ? [
-        { children: <img src={rotate} alt={'rotate'} />, onClick: action('rotate onClick') },
-        { children: <img src={close} alt={'close'} />, onClick: action('close onClick') },
+        { children: <img src={rotate} alt={'rotate'} />, onClick: action('rotate onClick'), key: 0 },
+        { children: <img src={close} alt={'close'} />, onClick: action('close onClick'), key: 1 },
       ]
     : undefined,
 });

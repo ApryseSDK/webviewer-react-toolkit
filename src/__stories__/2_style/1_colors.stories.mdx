@@ -1,0 +1,52 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Theme, Group } from './styleComponents'
+import { Redirect } from '../../storybook-helpers/mdx';
+
+<Redirect />
+
+<Meta title="Style/Colors" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+# Colors
+
+In order to get you started, we ship the toolkit with some basic theme colors
+that are used on our visual components. These are configurable, but provide a
+good starting point to speed up development.
+
+> The WebViewer React Toolkit css stylesheet contains
+> [CSS Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties).
+> It also includes a file of Sass variables that might be helpful for development
+> if you use Sass.
+
+## Using
+
+To use these in your own project, you can include the colors in your code in
+order to match the theme of the toolkit:
+
+```scss
+div {
+  /* If you are using CSS: */
+  font-color: var(--color-font-primary);
+  /* If you are using Sass: */
+  font-color: $color-font-primary;
+}
+```
+## Overriding
+
+These can be overridden by setting the variables yourself in the root. Since the
+Sass variables also use the CSS variables, it will allow you to control the
+colors used across the toolkit. Here's an example of overriding the theme colors:
+
+```css
+/* your_custom_theme.css */
+:root {
+  --color-font-primary: red;
+  --color-font-secondary: orange;
+}
+```
+
+## CSS and Sass Variables
+
+Below are the CSS and Sass variables. You can click any of these to copy the
+value to your clipboard.
+
+<Theme />

@@ -60,12 +60,16 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
   isShownOnLoad?: boolean;
   /**
    * Callback fired when the name is edited and saved.
+   * @param newName The new name to set on the file.
+   * @param file The target file.
    */
-  onRename?: (newName: string, file: F) => void;
+  onRename?(newName: string, file: F): void;
   /**
    * Callback fired whenever edit mode changes.
+   * @param isEditing Is the target currently editing.
+   * @param file The target file.
    */
-  onEditingChange?: (isEditing: boolean, file: F) => void;
+  onEditingChange?(isEditing: boolean, file: F): void;
 }
 
 export function Thumbnail<F extends FileLike>({

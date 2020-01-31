@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Theme, Groups } from './styleComponents'
+import { Redirect } from '../../storybook-helpers/mdx';
+
+<Redirect />
+
+<Meta title="Style/Variables" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+# Variables
+
+To allow consistency over our variables, we centralize the style by using
+a number of variables to control everything from font size to breakpoints. These
+are all configurable, and doing so will change the appearance of the toolkit.
+
+> The WebViewer React Toolkit css stylesheet contains
+> [CSS Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties).
+> It also includes a file of Sass variables that might be helpful for development
+> if you use Sass.
+
+## Using
+
+To use these in your own project, you can include the variables in your code to
+match the visual structure outlined in the toolkit:
+
+```scss
+div {
+  /* If you are using CSS: */
+  border-radius: var(--border-radius);
+  /* If you are using Sass: */
+  border-radius: $border-radius;
+}
+```
+
+## Overriding
+
+Since each value is a variable, and all Sass variables just point to the CSS
+variables, you can easily the appearance of the toolkit. Here's an example of
+overriding the border radius:
+
+```css
+/* your_custom_theme.css */
+:root {
+  --border-radius-small: 1px;
+  --border-radius: 6px;
+  --border-radius-large: 12px;
+}
+```
+
+## CSS and Sass Variables
+
+Below are the CSS and Sass variables. You can click any of these to copy the
+value to your clipboard.
+
+<Groups />

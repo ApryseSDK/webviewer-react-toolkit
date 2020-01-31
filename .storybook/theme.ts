@@ -1,4 +1,5 @@
 import { create } from '@storybook/theming';
+import font from '../src/storybook-helpers/theme/font';
 
 export default create({
   // Theme base
@@ -15,8 +16,8 @@ export default create({
   appBorderRadius: 4,
 
   // Typography
-  // fontBase: 'monospace',
-  // fontCode: 'monospace',
+  fontBase: font.fontBase,
+  fontCode: font.fontCode,
 
   // // Text colors
   textColor: 'rgba(240, 240, 255, 0.9)',

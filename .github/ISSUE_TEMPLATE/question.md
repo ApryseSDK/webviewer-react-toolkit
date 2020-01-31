@@ -9,4 +9,4 @@ assignees: ''
 
 ### My question is
 
-<!-- Ask anything about the kit! -->
+<!-- Ask anything about the toolkit! -->

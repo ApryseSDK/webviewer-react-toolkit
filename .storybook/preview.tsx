@@ -16,6 +16,7 @@ addDecorator(
   withInfo({
     inline: true,
     header: false,
+    maxPropArrayLength: 1,
     TableComponent: () => null,
     styles: (base: any) => ({
       ...base,
@@ -34,18 +35,18 @@ addDecorator(withA11y);
 /* --- Add global parameters. --- */
 
 addParameters({
-  // TODO: Required cause they broke types...
-  info: {},
   // TODO: Move `options` to `manager.js` once it's supported more.
-  options: { panelPosition: 'right', theme },
-  backgrounds: [
-    { name: 'canvas', value: '#eff5f5', default: true },
-    { name: 'dark-canvas', value: '#161625' },
-  ],
-  grid: { cellSize: 8 },
+  options: {
+    theme,
+    /**
+     * display the top-level grouping as a "root" in the sidebar
+     * @type {Boolean}
+     */
+    showRoots: true,
+  },
+  // Default to show Docs page whenever anyone switches components.
+  viewMode: 'docs',
   docs: {
-    // Remove primary and stories until they allow props and show correct
-    // code previews.
     page: () => (
       <>
         <Title />
@@ -53,25 +54,18 @@ addParameters({
         <Description />
         {/* <Primary /> */}
         <Props />
-        {/* <Stories /> */}
       </>
     ),
 
     // Since we do not add component description in code (instead inserting it
     // into a .md file) we extract it using the following.
-    extractComponentDescription: (_c: unknown, { info }: { info: string | { docs?: string; text?: string } }) => {
+    extractComponentDescription: (_c: unknown, { info }: { info: string | { info?: string; text?: string } }) => {
       if (typeof info === 'string') return info;
-      if (info.docs) return info.docs;
+      if (info.info) return info.info;
       if (info.text) return info.text;
       return null;
     },
 
-    // Use this if showing inline stories in docs. Will limit the height of the
-    // container to prevent expanding too big.
-    // prepareForInline: Story => (
-    //   <div style={{ maxHeight: 500, height: '100%' }}>
-    //     <Story />
-    //   </div>
-    // ),
+    // prepareForInline: (s: StoryFn) => <div>{s}</div>,
   },
 });

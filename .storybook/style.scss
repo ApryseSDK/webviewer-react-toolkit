@@ -1,35 +1,49 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i,700,700i&display=swap');
 
 html,
 body {
-  height: 100%;
-  padding: 0;
-  margin: 0;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-$background-canvas: #eff5f5;
+$color-background-canvas: #eff5f5;
 
-// Change background colors of all inline stories within docs.
+.sb-show-main > #root {
+  background-color: $color-background-canvas;
+}
+
+// Change appearance of inserted stories.
 #docs-root {
   .sbdocs-content {
     .sbdocs-preview {
-      > div:nth-child(1) {
-        > div:nth-child(1):not([data-simplebar]) {
-          background-color: $background-canvas;
-        }
-
-        > div:nth-child(2) {
-          background-color: transparent;
-        }
+      // Remove `Show code` button for inserted stories.
+      > div:nth-child(1) > div:nth-child(2) {
+        display: none;
       }
 
-      > div:nth-child(2) {
-        > div:nth-child(1) {
-          background-color: $background-canvas;
-        }
+      // Make inline story background canvas.
+      div[id^='story--'] {
+        background-color: $color-background-canvas;
+      }
 
-        > div:nth-child(2) {
-          background-color: transparent;
+      // Remove `Show code` button for primary stories.
+      > div:nth-child(2) > div:nth-child(2) {
+        display: none;
+      }
+
+      // Remove code preview.
+      #story-root + div {
+        display: none;
+      }
+
+      // Remove internal spacing.
+      > div > div {
+        padding: 0;
+
+        > div {
+          margin: 0;
         }
       }
     }

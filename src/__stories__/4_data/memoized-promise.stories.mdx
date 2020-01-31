@@ -1,0 +1,34 @@
+import { options, output } from './memoizedPromiseHelpers';
+import { Meta, Props, Title, Story, Preview } from '@storybook/addon-docs/blocks';
+import { LinkTo, Redirect } from '../../storybook-helpers/mdx';
+
+<Redirect />
+
+<Meta title="Data/MemoizedPromise" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+<Title />
+
+The `MemoizedPromise` class is a utility that allows for caching of lazy
+promises. This is used internally in <LinkTo title="Data/File">File</LinkTo> in
+order to allow for lazy retrieval of potentially expensive properties. It allows
+for throttling, for example
+in <LinkTo title="Components/FileOrganizer" story="'Use Managed Files Hook">FileOrganizer</LinkTo> when
+lazy `Thumbnails` are not fetched until 500ms after entering view.
+
+```ts
+const memoizedPromise = new MemoizedPromise(value, { /* MemoizeOptions */ });
+
+if (memoizedPromise.done) {
+  setValue(memoizedPromise.get());
+} else {
+  throttle(() => setValue(memoizedPromise.get()));
+}
+```
+
+## `MemoizeOptions`
+
+<Props of={options} />
+
+## `MemoizedPromise` (class)
+
+<Props of={output} />
