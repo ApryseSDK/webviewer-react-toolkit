@@ -36,6 +36,6 @@ export default create({
 
   // Branding
   brandTitle: `${require('../package.json').version}`,
-  brandUrl: 'https://github.com/XodoDocs/component-library',
+  brandUrl: 'https://github.com/PDFTron/webviewer-react-toolkit',
   brandImage: 'https://www.pdftron.com/brand-assets/pdftron-logo-blue.png',
 });
