@@ -44,8 +44,8 @@ addParameters({
      */
     showRoots: true,
   },
-  // Default to show Docs page whenever anyone switches components.
-  viewMode: 'docs',
+  // Default to show "story" vs "docs" whenever story switches.
+  viewMode: 'story',
   docs: {
     page: () => (
       <>
