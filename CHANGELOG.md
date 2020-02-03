@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.1...v0.1.0-beta.2) (2020-02-03)
+
+### Bug Fixes
+
+- **docs:** fixed uneven titles across docs ([caf01ce](https://github.com/PDFTron/webviewer-react-toolkit/commit/caf01ce6e8edf17c011ee65544124511a90c7000))
+
 ## 0.1.0-beta.1 (2020-02-01)
 
 ### Features
