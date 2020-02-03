@@ -1615,6 +1615,17 @@
     vue-docgen-api "^4.1.0"
     vue-docgen-loader "^1.3.0-beta.0"
 
+"@storybook/addon-google-analytics@6.0.0-alpha.3":
+  version "6.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-google-analytics/-/addon-google-analytics-6.0.0-alpha.3.tgz#31e449a96d13724b08c5d7b6dcb730a9fcb0f5bc"
+  integrity sha512-js+IF0FIOVrt2Ly2adI7TwFt956ICRDIC/QNvqZpKhArSJmaxUKCbLePKgqyP+7qWQYGxbck4qJ+1Ywudh4Juw==
+  dependencies:
+    "@storybook/addons" "6.0.0-alpha.3"
+    "@storybook/core-events" "6.0.0-alpha.3"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    react-ga "^2.5.7"
+
 "@storybook/addon-info@6.0.0-alpha.2":
   version "6.0.0-alpha.2"
   resolved "https://registry.yarnpkg.com/@storybook/addon-info/-/addon-info-6.0.0-alpha.2.tgz#2ee4e45f0692996afeeaa199ded5d6f3c3176383"
@@ -12563,6 +12574,11 @@ react-focus-lock@^2.1.0:
     react-clientside-effect "^1.2.2"
     use-callback-ref "^1.2.1"
     use-sidecar "^1.0.1"
+
+react-ga@^2.5.7:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
+  integrity sha512-AjC7UOZMvygrWTc2hKxTDvlMXEtbmA0IgJjmkhgmQQ3RkXrWR11xEagLGFGaNyaPnmg24oaIiaNPnEoftUhfXA==
 
 react-helmet-async@^1.0.2:
   version "1.0.4"

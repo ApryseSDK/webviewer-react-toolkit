@@ -9,6 +9,7 @@ module.exports = {
     '@storybook/addon-viewport',
     '@storybook/addon-a11y',
     '@storybook/addon-links',
+    '@storybook/addon-google-analytics',
   ],
   webpackFinal: async (config: any) => {
     // Sass support with post-css for vendor prefixes.

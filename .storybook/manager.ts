@@ -1,5 +1,9 @@
 import { addons } from '@storybook/addons';
 
+// Google Analytics ID
+// @ts-ignore
+window.STORYBOOK_GA_ID = 'UA-6566170-4';
+
 addons.setConfig({
   /**
    * show story component as full screen

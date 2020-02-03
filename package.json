@@ -66,6 +66,7 @@
     "@storybook/addon-a11y": "6.0.0-alpha.3",
     "@storybook/addon-actions": "6.0.0-alpha.3",
     "@storybook/addon-docs": "6.0.0-alpha.3",
+    "@storybook/addon-google-analytics": "6.0.0-alpha.3",
     "@storybook/addon-info": "6.0.0-alpha.2",
     "@storybook/addon-knobs": "6.0.0-alpha.3",
     "@storybook/addon-links": "6.0.0-alpha.3",
