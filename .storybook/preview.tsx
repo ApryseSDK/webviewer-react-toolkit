@@ -1,4 +1,3 @@
-import { withA11y } from '@storybook/addon-a11y';
 import { Description, Props, Subtitle, Title } from '@storybook/addon-docs/dist/blocks';
 import { withInfo } from '@storybook/addon-info';
 import { withKnobs } from '@storybook/addon-knobs';
@@ -30,7 +29,6 @@ addDecorator(
   }),
 );
 addDecorator(withKnobs);
-addDecorator(withA11y);
 
 /* --- Add global parameters. --- */
 

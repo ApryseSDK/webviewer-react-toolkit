@@ -55,7 +55,7 @@ addons.setConfig({
 
   previewTabs: {
     // the order of the tabs is configured by the order here
-    'storybook/docs/panel': { title: 'Info' },
     canvas: { title: 'Playground' },
+    'storybook/docs/panel': { title: 'Info' },
   },
 });
