@@ -247,8 +247,10 @@ export function Theme() {
 
   return (
     <>
-      <div id="playground-theme-button" className="playground-theme-button__docs" onClick={() => setDarkTheme(t => !t)}>
-        {darkTheme ? '☀️' : '🌙'}
+      <div className="colors__theme">
+        <div className="colors__theme__button" onClick={() => setDarkTheme(t => !t)}>
+          {darkTheme ? '☀️' : '🌙'}
+        </div>
       </div>
       <div
         style={{

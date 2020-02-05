@@ -22,13 +22,27 @@ body {
   @include flex-center;
   cursor: pointer;
   user-select: none;
+}
 
-  &.playground-theme-button__docs {
-    top: 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    border-top-left-radius: 4px;
-    position: fixed;
-  }
+.colors__theme {
+  z-index: $z-index-dragging;
+  position: sticky;
+  top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -38px;
+}
+
+.colors__theme__button {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgb(51, 51, 51);
+  border-radius: 4px 0 0 4px;
+  width: 90px;
+  height: 28px;
+  @include flex-center;
+  cursor: pointer;
+  user-select: none;
 }
 
 .sb-show-main > #root {
