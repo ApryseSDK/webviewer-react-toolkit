@@ -1,4 +1,5 @@
 import React, { CSSProperties, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
+import { isDarkThemeStored, ThemeChangeButton } from '../../../.storybook/withTheme';
 import font from '../../storybook-helpers/theme/font';
 import { Remove } from '../../utils';
 import mixins from './mixins';
@@ -179,7 +180,7 @@ export function Theme() {
 
   const groups: ReactElement[] = [];
 
-  const [darkTheme, setDarkTheme] = useState(false);
+  const [darkTheme, setDarkTheme] = useState(isDarkThemeStored);
 
   const [lightCanvas, darkCanvas, lightFont, darkFont] = useMemo(() => {
     const canvas = styleVariables.colors.other.find(c => c.scss === '$color-background-canvas');
@@ -220,7 +221,7 @@ export function Theme() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 border: `1px solid ${darkTheme ? lightCanvas : darkCanvas}`,
-                borderRadius: 8,
+                borderRadius: 4,
                 backgroundColor: darkTheme ? dark : value,
                 height: 110,
                 width: 210,
@@ -248,9 +249,7 @@ export function Theme() {
   return (
     <>
       <div className="colors__theme">
-        <div className="colors__theme__button" onClick={() => setDarkTheme(t => !t)}>
-          {darkTheme ? '☀️' : '🌙'}
-        </div>
+        <ThemeChangeButton className="colors__theme__button" onClick={() => setDarkTheme(t => !t)} />
       </div>
       <div
         style={{
