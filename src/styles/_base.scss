@@ -10,6 +10,10 @@
   color: $color-font-primary;
   font-weight: $font-weight-normal;
   font-family: 'Lato', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-overflow-scrolling: touch;
 
   *,
   *:before,

@@ -16,7 +16,9 @@
     font-size: $font-size-default;
 
     &__wrapper {
-      margin: -($padding-small);
+      position: relative;
+      top: -10px;
+      right: -10px;
       padding: $padding-tiny;
       border-radius: $border-radius-large;
       background-color: $color-blue-gray-3;

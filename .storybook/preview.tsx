@@ -3,9 +3,9 @@ import { withInfo } from '@storybook/addon-info';
 import { withKnobs } from '@storybook/addon-knobs';
 import { addDecorator, addParameters } from '@storybook/react';
 import React from 'react';
-import '../src/index.scss';
 import './style.scss';
 import theme from './theme';
+import { withTheme } from './withTheme';
 
 /* --- Add global decorators. --- */
 
@@ -29,6 +29,7 @@ addDecorator(
   }),
 );
 addDecorator(withKnobs);
+addDecorator(withTheme);
 
 /* --- Add global parameters. --- */
 

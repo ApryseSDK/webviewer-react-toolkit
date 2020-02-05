@@ -10,6 +10,7 @@ export default { title: 'Components/Draggable', component: Draggable, parameters
 const commonStyle: CSSProperties = {
   padding: 16,
   background: 'lightgray',
+  color: 'black',
   width: 200,
   height: 50,
   textAlign: 'center',

@@ -9,6 +9,9 @@ The WebViewer React Toolkit ships with some Sass mixins that wrap common
 patterns. These can only be used in Sass files, but the code is provided below
 so that you can implement them in CSS if you wish.
 
+> Note: These mixins rely on Sass variables. If you wish to use these, you must
+> also include the variables file.
+>
 > For more on Sass mixins, check out the
 > [Sass documentation](https://sass-lang.com/documentation/at-rules/mixin).
 
@@ -28,8 +31,9 @@ div {
 
 ## Mixins
 
-The following mixins show the  sdinfpwionfipwenpfinYou can click any of these to copy the
-value to your clipboard.
+The following mixins show the value you can include in your code, as well as the
+raw values in case you wish to modify them in your own code. You can click any
+of these to copy the value to your clipboard.
 
 <!-- Below here is auto-generated. DO NOT EDIT. -->
 <!-- GENERATE_ENTRY -->
@@ -129,12 +133,7 @@ value to your clipboard.
 // This provides the animation for skeleton loading.
 @mixin skeleton {
   animation: timeline 2s linear infinite;
-  background: linear-gradient(
-    to right,
-    $color-gray-1 0%,
-    $color-gray-2 10%,
-    $color-gray-1 20%
-  );
+  background: linear-gradient(to right, #eee 0%, #ddd 10%, #eee 20%);
   background-size: 600px auto;
 }
 
