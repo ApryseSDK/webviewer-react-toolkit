@@ -297,7 +297,11 @@ export function FileOrganizer<F extends ObjectWithId>({
     return { x, y };
   }, []);
 
-  const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
+  const fileOrganizerClass = classnames(
+    'ui__base ui__fileOrganizer',
+    { 'ui__fileOrganizer--virtualized': isVirtualized },
+    className,
+  );
 
   return (
     <DndMultiProvider>
