@@ -24,7 +24,7 @@
     &-default {
       border: 1px solid $color-blue-gray-6;
       background-color: $color-blue-gray-6;
-      color: $color-white-1;
+      color: $color-contrast-1;
 
       &:active {
         border-color: $color-blue-gray-7;
@@ -51,7 +51,7 @@
       &:focus,
       &:hover {
         background-color: $color-blue-gray-6;
-        color: $color-white-1;
+        color: $color-contrast-1;
       }
 
       &:active {

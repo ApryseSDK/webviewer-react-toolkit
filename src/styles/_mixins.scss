@@ -56,12 +56,7 @@
 // This provides the animation for skeleton loading.
 @mixin skeleton {
   animation: timeline 2s linear infinite;
-  background: linear-gradient(
-    to right,
-    $color-gray-1 0%,
-    $color-gray-2 10%,
-    $color-gray-1 20%
-  );
+  background: linear-gradient(to right, #eee 0%, #ddd 10%, #eee 20%);
   background-size: 600px auto;
 }
 

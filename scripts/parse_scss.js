@@ -3,21 +3,48 @@ const scss = require('postcss-scss');
 
 /* --- Helpers. --- */
 
+/**
+ * Get the Sass AST from a given file.
+ * @param {string} path Path to a Sass file.
+ */
 function getAST(path) {
   const contents = fs.readFileSync(path);
   return scss.parse(contents.toString());
 }
 
-function propMap(cssVariables) {
+/**
+ * Returns a function which can be used to map any prop/value nodes from a Sass
+ * AST.
+ */
+function propMap() {
+  const themeAst = getAST('src/styles/_theme.scss');
+  const themeNodes = themeAst.nodes;
+
+  const cssVariables = themeNodes
+    .find(n => n.selector === ':root')
+    .nodes.filter(n => n.prop && n.value)
+    .map(d => ({ prop: `var(${d.prop})`, value: d.value }));
+
+  const darkCssVariables = themeNodes
+    .find(n => n.selector === "html[data-theme='dark']")
+    .nodes.filter(n => n.prop && n.value)
+    .map(d => ({ prop: `var(${d.prop})`, value: d.value }));
+
   return declaration => {
     const { p, v } = { p: declaration.prop, v: declaration.value };
     const scss = p;
     const css = v;
     const value = cssVariables.find(c => c.prop === v).value;
-    return { scss, css, value };
+    const dark = (darkCssVariables.find(c => c.prop === v) || {}).value;
+    return { scss, css, value, dark };
   };
 }
 
+/**
+ * Creates a JS or TS file which default exports the AST.
+ * @param {string} path Path to the file.
+ * @param {Object} ast The AST object to convert to JS or TS.
+ */
 function printFile(path, ast) {
   fs.writeFileSync(path, `export default ${JSON.stringify(ast, null, 2)}`);
 }
@@ -102,16 +129,11 @@ function main() {
   mixins();
 
   const ast = getAST('src/styles/_variables.scss');
-  const themeAst = getAST('src/styles/_theme.scss');
-
   const nodes = ast.nodes;
-  const themeNodes = themeAst.nodes;
 
-  const cssVariables = themeNodes
-    .find(n => n.selector === ':root')
-    .nodes.map(d => ({ prop: `var(${d.prop})`, value: d.value }));
+  const mapper = propMap();
 
-  const mapper = propMap(cssVariables);
+  /* --- Generate variables and colors. --- */
 
   const declarations = (() => {
     const color = [];
@@ -147,7 +169,7 @@ function main() {
     };
   })();
 
-  /* --- Generate theme variables and colors. --- */
+  /* --- Map colors and sort by type. --- */
 
   const allColors = declarations.color.map(mapper);
 
@@ -156,7 +178,7 @@ function main() {
     const font = [];
     const gray = [];
     const blueGray = [];
-    const white = [];
+    const contrast = [];
     const other = [];
 
     allColors.forEach(c => {
@@ -164,14 +186,14 @@ function main() {
       if (c.scss.startsWith('$color-font')) return font.push(c);
       if (c.scss.startsWith('$color-gray')) return gray.push(c);
       if (c.scss.startsWith('$color-blue-gray')) return blueGray.push(c);
-      if (c.scss.startsWith('$color-white')) return white.push(c);
+      if (c.scss.startsWith('$color-contrast')) return contrast.push(c);
       other.push(c);
     });
 
-    return { theme, font, gray, blueGray, white, other };
+    return { theme, font, gray, blueGray, contrast, other };
   })();
 
-  /* --- Generate others. --- */
+  /* --- Map variables. --- */
 
   const fontSize = declarations.fontSize.map(mapper);
   const fontWeight = declarations.fontWeight.map(mapper);

@@ -1,25 +1,17 @@
 /* --- Theme colors. --- */
 
-/*
-white 1     - For cards, header and primary toolbar on mobile
-white 2     - For general UI and panel backgrounds
-blue gray 1 - For toolbar and tabs background
-blue gray 2 - For unselected icons
-blue gray 3 - For hint text
-blue gray 4 - For selected icons, text
-blue gray 5 - For buttons and sliders to indicate that they are interactive.
-*/
-
-// Light theme.
+// Light theme + variables.
 :root {
+  /* --- Colors. --- */
+
   --color-theme-primary: #00a3e3;
   --color-theme-secondary: #131416;
+
   --color-font-primary: #292922;
   --color-font-secondary: #424242;
-  --color-background-canvas: #eff5f5;
+
   --color-gray-1: #eee;
   --color-gray-2: #ddd;
-  --color-focus-shadow: rgba(20, 110, 170, 0.4);
 
   --color-blue-gray-1: #dfe2ed;
   --color-blue-gray-2: #c3c6d4;
@@ -28,11 +20,15 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --color-blue-gray-5: #767f9b;
   --color-blue-gray-6: #6077bf;
   --color-blue-gray-7: #415797;
-  --color-white-1: #fff;
-  --color-white-2: #fafafa;
-  --color-white-3: #f0f0f0;
 
-  --focus-transition: box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
+  --color-contrast-1: #fff;
+  --color-contrast-2: #fafafa;
+  --color-contrast-3: #f0f0f0;
+
+  --color-background-canvas: #eff5f5;
+  --color-focus-shadow: rgba(20, 110, 170, 0.4);
+
+  /* --- Variables. --- */
 
   --font-size-tiny: 9px;
   --font-size-small: 11px;
@@ -44,14 +40,14 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --font-weight-normal: 400;
   --font-weight-bold: 700;
 
-  --border-radius-small: 2px;
-  --border-radius: 4px;
-  --border-radius-large: 8px;
-
   --padding-tiny: 4px;
   --padding-small: 12px;
   --padding: 16px;
   --padding-large: 24px;
+
+  --border-radius-small: 2px;
+  --border-radius: 4px;
+  --border-radius-large: 8px;
 
   --tablet-lower-boundary: 768px;
   --desktop-lower-boundary: 1024px;
@@ -59,16 +55,35 @@ blue gray 5 - For buttons and sliders to indicate that they are interactive.
   --z-index-local: 0;
   --z-index-raised: 1;
   --z-index-dragging: 2;
+
+  --focus-transition: box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
 }
 
-// Dark theme (TBD).
-[data-theme='dark'] {
+// Dark theme.
+html[data-theme='dark'] {
+  /* --- Colors. --- */
+
   --color-theme-primary: #9a97f3;
   --color-theme-secondary: #818cab;
-  --color-font-primary: #e1e1ff;
-  --color-font-secondary: #818cab;
-  --color-background-canvas: #161625;
+
+  --color-font-primary: #ebebeb;
+  --color-font-secondary: #989ba3;
+
   --color-gray-1: #333;
   --color-gray-2: #444;
-  --color-focus-shadow: rgba(31, 154, 241, 0.7);
+
+  --color-blue-gray-1: #46506d;
+  --color-blue-gray-2: #525e80;
+  --color-blue-gray-3: #6d7485;
+  --color-blue-gray-4: #7d83a1;
+  --color-blue-gray-5: #9098b3;
+  --color-blue-gray-6: #aab1cf;
+  --color-blue-gray-7: #c6ceec;
+
+  --color-contrast-1: #111;
+  --color-contrast-2: #191919;
+  --color-contrast-3: #222;
+
+  --color-background-canvas: #333;
+  --color-focus-shadow: rgba(32, 162, 255, 0.4);
 }

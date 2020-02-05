@@ -1,4 +1,4 @@
-import React, { CSSProperties, MouseEvent, ReactElement, useEffect, useState } from 'react';
+import React, { CSSProperties, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
 import font from '../../storybook-helpers/theme/font';
 import { Remove } from '../../utils';
 import mixins from './mixins';
@@ -179,9 +179,21 @@ export function Theme() {
 
   const groups: ReactElement[] = [];
 
+  const [darkTheme, setDarkTheme] = useState(false);
+
+  const [lightCanvas, darkCanvas, lightFont, darkFont] = useMemo(() => {
+    const canvas = styleVariables.colors.other.find(c => c.scss === '$color-background-canvas');
+    const font = styleVariables.colors.font.find(c => c.scss === '$color-font-primary');
+    const light = canvas?.value;
+    const dark = canvas?.dark;
+    const lightFont = font?.value;
+    const darkFont = font?.dark;
+    return [light, dark, lightFont, darkFont];
+  }, []);
+
   keys.forEach(k => {
     groups.push(
-      <h2 key={k} style={{ ...titleStyle, gridColumn: '1 / last-line' }}>
+      <h2 key={k} style={{ ...titleStyle, gridColumn: '1 / last-line', color: darkTheme ? darkFont : lightFont }}>
         {getTitle(k)}
       </h2>,
     );
@@ -197,7 +209,7 @@ export function Theme() {
           gridTemplateColumns: 'repeat( auto-fit, 236px )',
         }}
       >
-        {colors.map(({ scss, css, value }) => (
+        {colors.map(({ scss, css, value, dark }) => (
           <div key={css} style={{ fontSize: 11, fontFamily: font.fontCode }}>
             <div
               style={{
@@ -207,16 +219,16 @@ export function Theme() {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                border: '4px solid white',
+                border: `1px solid ${darkTheme ? lightCanvas : darkCanvas}`,
                 borderRadius: 8,
-                backgroundColor: value,
+                backgroundColor: darkTheme ? dark : value,
                 height: 110,
                 width: 210,
                 flexShrink: 1,
               }}
             >
               <div style={{ ...colorButtonStyle, position: 'absolute', top: 8, left: 8 }} onClick={copy(value)}>
-                {value}
+                {darkTheme ? dark : value}
               </div>
               <div style={{ position: 'absolute', bottom: 8, left: 8, right: 8 }}>
                 <div style={{ ...colorButtonStyle, marginBottom: 4 }} onClick={copy(scss)}>
@@ -233,7 +245,24 @@ export function Theme() {
     );
   });
 
-  return <div>{groups}</div>;
+  return (
+    <>
+      <div id="playground-theme-button" className="playground-theme-button__docs" onClick={() => setDarkTheme(t => !t)}>
+        {darkTheme ? '☀️' : '🌙'}
+      </div>
+      <div
+        style={{
+          borderRadius: 4,
+          padding: 20,
+          border: '1px solid rgba(255,255,255,.1)',
+          boxShadow: 'rgba(0,0,0,0.20) 0 2px 5px 0',
+          backgroundColor: darkTheme ? darkCanvas : lightCanvas,
+        }}
+      >
+        {groups}
+      </div>
+    </>
+  );
 }
 
 /* --- Mixins. --- */

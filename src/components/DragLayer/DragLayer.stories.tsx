@@ -12,6 +12,7 @@ const HEIGHT = 50;
 const commonStyle: CSSProperties = {
   padding: 16,
   background: 'lightgray',
+  color: 'black',
   width: WIDTH,
   height: HEIGHT,
   textAlign: 'center',
@@ -23,7 +24,9 @@ export const Basic = () => (
       <div style={{ ...commonStyle, border: '1px solid red' }}>This div is draggable!</div>
     </Draggable>
     <DragLayer>
-      <div style={{ ...commonStyle, border: '1px solid blue', opacity: 0.9 }}>Custom preview!</div>
+      <div style={{ ...commonStyle, border: '1px solid blue', opacity: 0.9, boxShadow: '0 0 26px 0 rgba(0,0,0,0.2)' }}>
+        Custom preview!
+      </div>
     </DragLayer>
   </DndMultiProvider>
 );
@@ -40,7 +43,9 @@ export const WithCustomTranslate = () => (
         return { x, y };
       }}
     >
-      <div style={{ ...commonStyle, border: '1px solid blue', opacity: 0.9 }}>Custom preview!</div>
+      <div style={{ ...commonStyle, border: '1px solid blue', opacity: 0.9, boxShadow: '0 0 26px 0 rgba(0,0,0,0.2)' }}>
+        Custom preview!
+      </div>
     </DragLayer>
   </DndMultiProvider>
 );

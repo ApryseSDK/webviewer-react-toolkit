@@ -1,8 +1,8 @@
 .ui__fileSkeleton {
-  background-color: $color-white-1;
+  background-color: white;
   padding: 10px;
-  height: 162px;
-  width: 125px;
+  height: 164px;
+  width: 128px;
 
   &__block {
     @include skeleton;

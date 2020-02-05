@@ -27,6 +27,30 @@ div {
   font-color: $color-font-primary;
 }
 ```
+
+## Themes
+
+You may have noticed the theme button on the top right, which can also be found
+on any of the Components. The toolkit ships with a default light and dark theme,
+and you can switch between them using this button! To see what the colors would
+be for each theme, scroll down to the
+[CSS and Sass Variables](#css-and-sass-variables) section and click the theme
+button.
+
+To set the theme, you need to set the `data-theme` attribute of your `html` to
+`'dark'`. This can be done right in the HTML if you want to permanently enable
+dark theme:
+
+```html
+<html data-theme="dark">
+```
+
+Or programmatically in JavaScript (this will allow switching themes dynamically):
+
+```js
+document.documentElement.setAttribute('data-theme', 'dark');
+```
+
 ## Overriding
 
 These can be overridden by setting the variables yourself in the root. Since the
@@ -35,9 +59,17 @@ colors used across the toolkit. Here's an example of overriding the theme colors
 
 ```css
 /* your_custom_theme.css */
+
+/* Overriding light theme. */
 :root {
   --color-font-primary: red;
   --color-font-secondary: orange;
+}
+
+/* Overriding dark theme. */
+html[data-theme='dark'] {
+  --color-font-primary: green;
+  --color-font-secondary: blue;
 }
 ```
 

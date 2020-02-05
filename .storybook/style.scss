@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i&display=swap');
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i,700,700i&display=swap');
+@import '../src/index.scss';
 
 html,
 body {
@@ -8,7 +9,27 @@ body {
   margin: 0 !important;
 }
 
-$color-background-canvas: #eff5f5;
+#playground-theme-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: $z-index-dragging;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgb(51, 51, 51);
+  border-bottom-left-radius: 4px;
+  width: 90px;
+  @include flex-center;
+  cursor: pointer;
+  user-select: none;
+
+  &.playground-theme-button__docs {
+    top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top-left-radius: 4px;
+    position: fixed;
+  }
+}
 
 .sb-show-main > #root {
   background-color: $color-background-canvas;
@@ -56,18 +77,18 @@ $color-background-canvas: #eff5f5;
   display: flex;
   flex-direction: column;
 
-  // Story root or div with class should be auto flexed.
-  > #story-root,
-  > div[class] {
+  // Story root should be auto flexed.
+  > #story-root {
     flex: 1 1 auto;
     overflow: auto;
   }
 
   // Non story root without class is the code preview.
-  > div:not(#story-root):not([class]) {
+  > div:not(#story-root):not(#playground-theme-button):not([class]) {
     flex-shrink: 0;
     max-height: 40%;
     overflow: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 
     > div > *:not(div) {
       display: none;
