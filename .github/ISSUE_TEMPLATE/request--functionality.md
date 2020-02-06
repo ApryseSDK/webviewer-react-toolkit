@@ -11,6 +11,6 @@ assignees: ''
 
 <!-- Describe the feature here -->
 
-### Designs / more information
+### Additional context
 
-<!-- Post any links to UXPin or attach any applicable material + more info -->
+<!-- Post any links to designs or add more information -->

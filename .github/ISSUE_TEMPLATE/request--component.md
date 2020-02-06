@@ -11,15 +11,6 @@ assignees: ''
 
 <!-- Describe the component here -->
 
-### What kind of component is it
+### Additional context
 
-<!-- Uncomment one of the below: -->
-
-<!-- Custom: Doesn't use Material-UI in any way -->
-<!-- Re-themed: Re-theme a Material-UI component without changing it -->
-<!-- Extend: Uses a Material-UI component, and alters functionality -->
-<!-- N/A -->
-
-### Designs / more information
-
-<!-- Post any links to UXPin or attach any applicable material + more info -->
+<!-- Post any links to designs or add more information -->
