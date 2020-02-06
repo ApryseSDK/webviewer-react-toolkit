@@ -8,19 +8,17 @@ import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
 const BASE_URL = 'src';
-const MINIFIED_PATH = 'dist';
+const MINIFIED_PATH = 'dist/umd';
 const LIBRARY_PATH = 'lib';
-const LIBRARY_NAME = 'component_library';
+const LIBRARY_NAME = 'webviewer-react-toolkit';
 
 const config: webpack.Configuration = {
   mode: 'production',
-  target: 'node',
   entry: [`./${BASE_URL}/index.ts`, `./${BASE_URL}/index.scss`],
   output: {
     path: path.resolve(__dirname),
-    filename: `${MINIFIED_PATH}/${LIBRARY_NAME}.bundle.js`,
+    filename: `${MINIFIED_PATH}/${LIBRARY_NAME}.min.js`,
   },
-  devtool: 'source-map',
   externals: [nodeExternals()],
   // externals: [/node_modules/, 'react', 'react-dom'],
   plugins: [

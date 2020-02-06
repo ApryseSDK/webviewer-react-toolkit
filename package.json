@@ -14,7 +14,7 @@
     "make": "ts-node scripts/make",
     "parse-scss": "node scripts/parse_scss",
     "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
-    "build": "yarn clean && webpack --config webpack.config.ts && tsc -p ./configs/tsbuild.json",
+    "build": "yarn clean && webpack --config webpack.config.ts && scripts/build_package.sh",
     "clean": "rm -rf dist & rm -rf lib",
     "test": "jest ./src --config ./jest.config.js",
     "build-storybook": "build-storybook -s public",
@@ -33,14 +33,16 @@
     "library",
     "front-end"
   ],
-  "main": "lib/index.js",
-  "style": "lib/style.css",
-  "types": "lib/index.d.ts",
-  "unpkg": "dist/component_library.bundle.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "unpkg": "./dist/umd/webviewer-react-toolkit.min.js",
+  "types": "./lib/index.d.ts",
+  "style": "./lib/style.css",
   "sideEffects": false,
   "files": [
     "README.md",
     "LICENSE",
+    "CHANGELOG.md",
     "lib/",
     "dist/"
   ],
@@ -52,7 +54,8 @@
     "react-dnd-touch-backend": "^10.0.2",
     "react-motion": "^0.5.2",
     "react-virtualized-auto-sizer": "^1.0.2",
-    "react-window": "^1.8.5"
+    "react-window": "^1.8.5",
+    "tslib": "^1.10.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
