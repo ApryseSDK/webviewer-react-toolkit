@@ -20,10 +20,10 @@
     "build-storybook": "build-storybook -s public",
     "deploy-storybook": "storybook-to-ghpages --out=.out",
     "commit": "commit",
-    "release": "yarn build && standard-version && git push && git push --tags",
-    "postrelease": "npm publish",
-    "release-next": "yarn build && standard-version --prerelease beta && git push && git push --tags",
-    "postrelease-next": "npm publish --tag next"
+    "release": "yarn build && standard-version && git push && git push --tags && yarn publish",
+    "postrelease": "conventional-github-releaser --draft",
+    "release-next": "yarn build && standard-version --prerelease beta && git push && git push --tags && yarn publish --tag next",
+    "postrelease-next": "conventional-github-releaser --draft"
   },
   "keywords": [
     "pdftron",
