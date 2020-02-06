@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2020-02-06)
+
+### ⚠ BREAKING CHANGES
+
+- sass and css are now in /dist/scss and /dist/css respectively (moved from /lib/)
+
+### build
+
+- building sass and css into dist directory ([3a32dfc](https://github.com/PDFTron/webviewer-react-toolkit/commit/3a32dfc625ef2a9eb7b34612ae688b79553f3ff9))
+
 ## [0.1.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2020-02-05)
 
 ### ⚠ BREAKING CHANGES
