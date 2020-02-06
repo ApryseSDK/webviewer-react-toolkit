@@ -8,31 +8,29 @@ import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
 const BASE_URL = 'src';
-const MINIFIED_PATH = 'dist';
-const LIBRARY_PATH = 'lib';
-const LIBRARY_NAME = 'component_library';
+const MINIFIED_PATH = 'dist/umd';
+const SASS_PATH = 'dist/sass';
+const CSS_PATH = 'dist/css';
+const LIBRARY_NAME = 'webviewer-react-toolkit';
 
 const config: webpack.Configuration = {
   mode: 'production',
-  target: 'node',
   entry: [`./${BASE_URL}/index.ts`, `./${BASE_URL}/index.scss`],
   output: {
     path: path.resolve(__dirname),
-    filename: `${MINIFIED_PATH}/${LIBRARY_NAME}.bundle.js`,
+    filename: `${MINIFIED_PATH}/${LIBRARY_NAME}.min.js`,
   },
-  devtool: 'source-map',
   externals: [nodeExternals()],
-  // externals: [/node_modules/, 'react', 'react-dom'],
   plugins: [
-    new MiniCssExtractPlugin({ filename: `${LIBRARY_PATH}/style.css` }),
+    new MiniCssExtractPlugin({ filename: `${CSS_PATH}/style.css` }),
     new CopyPlugin([
       {
         from: `${BASE_URL}/styles/_variables.scss`,
-        to: `${LIBRARY_PATH}/_variables.scss`,
+        to: `${SASS_PATH}/_variables.scss`,
       },
       {
         from: `${BASE_URL}/styles/_mixins.scss`,
-        to: `${LIBRARY_PATH}/_mixins.scss`,
+        to: `${SASS_PATH}/_mixins.scss`,
       },
     ]),
   ],
@@ -64,12 +62,6 @@ const config: webpack.Configuration = {
   },
   module: {
     rules: [
-      {
-        enforce: 'pre',
-        test: /\.(jsx?|tsx?)$/,
-        exclude: /node_modules/,
-        use: [{ loader: require.resolve('eslint-loader') }],
-      },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
