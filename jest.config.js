@@ -3,10 +3,7 @@ module.exports = {
   // collectCoverage: true,
   // coverageDirectory: './coverage/',
 
-  testMatch: [
-    // Match any typescript file ending with ComponentName.test.(ts|tsx).
-    '**/?(*.)test.(ts|tsx)',
-  ],
+  testMatch: ['**/?(*.)test.(ts|tsx)'],
 
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
