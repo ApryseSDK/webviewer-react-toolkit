@@ -59,8 +59,8 @@ function generateOverlayLayer() {
     };
   };
 
-  return (({ children, ...props }) => {
-    useEffect(() => add(props), [props]);
+  return (({ children, allowClickThrough, className, darkOverlay }) => {
+    useEffect(() => add({ allowClickThrough, className, darkOverlay }), [allowClickThrough, className, darkOverlay]);
     return createPortal(children, overlayRoot);
   }) as FC<OverlayProps>;
 }
