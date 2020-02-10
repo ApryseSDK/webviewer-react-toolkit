@@ -1,8 +1,8 @@
 import { prompt } from 'enquirer';
-import { clearTerminal, log, redErr } from '../utils/logUtils';
 import { generateFiles } from './generateFiles';
 import { optionPicker } from './optionPicker';
 import { summaryLog } from './summaryLog';
+import { clearTerminal, log, redErr } from './utils/logUtils';
 
 (async () => {
   clearTerminal();

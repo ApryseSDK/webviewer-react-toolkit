@@ -30,7 +30,6 @@
 
 # SCRIPT(Make): Make script and utilities.
 /scripts/make/            @liamross
-/scripts/utils/           @liamross
 
 # SCRIPT(Sass): Sass AST parser and docs generator.
 /scripts/parse_scss.js    @liamross

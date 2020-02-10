@@ -5,7 +5,7 @@ export const componentTest = (componentName: string) =>
   `import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import ${componentName} from '../${componentName}';
+import { ${componentName} } from '../${componentName}';
 
 describe('${componentName} component', () => {
   it('renders its contents', () => {

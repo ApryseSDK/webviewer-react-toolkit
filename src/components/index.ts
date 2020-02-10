@@ -12,6 +12,7 @@ export * from './EditableText';
 export * from './FileOrganizer';
 export * from './FileSkeleton';
 export * from './Image';
+export * from './Overlay';
 export * from './Spinner';
 export * from './Thumbnail';
 export * from './ThumbnailDragLayer';

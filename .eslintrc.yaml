@@ -1,4 +1,6 @@
 parser: '@typescript-eslint/parser'
+parserOptions:
+  project: './tsconfig.lint.json'
 plugins:
   - 'jsx-a11y'
   - 'jest'
@@ -29,6 +31,7 @@ rules:
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: error
   '@typescript-eslint/no-unused-vars': error
+  '@typescript-eslint/unbound-method': error
 
   react/prop-types: off
   react/display-name: off

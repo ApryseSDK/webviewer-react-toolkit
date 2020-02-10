@@ -1,0 +1,16 @@
+.ui__overlay {
+  @include absolute-fill;
+  z-index: $z-index-overlay;
+
+  &--clickthrough {
+    pointer-events: none;
+  }
+
+  &--dark {
+    background-color: $color-overlay-canvas;
+  }
+
+  > * {
+    pointer-events: all;
+  }
+}

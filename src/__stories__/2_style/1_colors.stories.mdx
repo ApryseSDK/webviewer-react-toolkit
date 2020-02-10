@@ -44,7 +44,14 @@ you want to permanently enable dark theme:
 Or programmatically in JavaScript (this will allow switching themes dynamically):
 
 ```js
-document.documentElement.setAttribute('data-theme', 'dark');
+// Get the root element (<html>):
+const root = document.documentElement;
+
+// Set to dark:
+root.setAttribute('data-theme', 'dark');
+
+// Revert back to light:
+root.removeAttribute('data-theme');
 ```
 
 ## Overriding

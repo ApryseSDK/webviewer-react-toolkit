@@ -1,30 +1,30 @@
-/* --- Focus shadows (make sure you also do transition: $focus-transition on element. --- */
+/* --- Focus shadows (for smooth, put transition: $focus-transition on element. --- */
 
 @mixin focus {
-  box-shadow: 0 0 0 2px $color-focus-shadow;
+  box-shadow: 0 0 0 2px var(--color-focus-shadow);
 }
 
 @mixin focus-inset {
-  box-shadow: inset 0 0 0 2px $color-focus-shadow;
+  box-shadow: inset 0 0 0 2px var(--color-focus-shadow);
 }
 
 /* --- Media query mixins. --- */
 
 // Try not to use this, as it breaks "mobile first" principles.
 @mixin for-phone-only {
-  @media (max-width: $tablet-lower-boundary - 1) {
+  @media (max-width: var(--breakpoint-tablet) - 1) {
     @content;
   }
 }
 
 @mixin for-tablet-up {
-  @media (min-width: $tablet-lower-boundary) {
+  @media (min-width: var(--breakpoint-tablet)) {
     @content;
   }
 }
 
 @mixin for-desktop-up {
-  @media (min-width: $desktop-lower-boundary) {
+  @media (min-width: var(--breakpoint-desktop)) {
     @content;
   }
 }
