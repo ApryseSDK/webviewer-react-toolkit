@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.5...v0.1.0-beta.6) (2020-02-10)
+
+### Refactors
+
+- **Overlay:** correct memoization of props to avoid rerenders ([6e2879c](https://github.com/PDFTron/webviewer-react-toolkit/commit/6e2879cf82f4832e332c5d24fb487e28bce612ce))
+
 ## [0.1.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2020-02-10)
 
 ### ⚠ BREAKING CHANGES
