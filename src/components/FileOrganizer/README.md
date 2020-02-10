@@ -5,13 +5,13 @@ to fire `onMove`. The `FileOrganizer` will automatically virtualize in order to
 prevent stuttering at 50 items. You can adjust this using the
 `virtualizeThreshold` prop.
 
-## Rendering files
+## Rendering Files
 
 The easiest way to get started would be to use the `Thumbnail` element as the
 item that is rendered in the `FileOrganizer`. The `Thumbnail` component includes
 many default props that integrate well with the `FileOrganizer`.
 
-## Managing files
+## Managing Files
 
 It is recommended that you use the `useManagedFiles` hook, as it exposes many
 valuable tools to save you effort when managing a list of files.
