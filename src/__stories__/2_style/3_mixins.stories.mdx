@@ -61,7 +61,7 @@ of these to copy the value to your clipboard.
 ```scss
 // Try not to use this, as it breaks "mobile first" principles.
 @mixin for-phone-only {
-  @media (max-width: $tablet-lower-boundary - 1) {
+  @media (max-width: $breakpoint-tablet - 1) {
     @content;
   }
 }
@@ -72,7 +72,7 @@ of these to copy the value to your clipboard.
 
 ```scss
 @mixin for-tablet-up {
-  @media (min-width: $tablet-lower-boundary) {
+  @media (min-width: $breakpoint-tablet) {
     @content;
   }
 }
@@ -83,7 +83,7 @@ of these to copy the value to your clipboard.
 
 ```scss
 @mixin for-desktop-up {
-  @media (min-width: $desktop-lower-boundary) {
+  @media (min-width: $breakpoint-desktop) {
     @content;
   }
 }

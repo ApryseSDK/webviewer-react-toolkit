@@ -1,6 +1,6 @@
 import c from 'ansi-colors';
 import { MakeOptions } from './types';
-import { log, SUCCESS_SYMBOL, ERROR_SYMBOL } from '../utils/logUtils';
+import { ERROR_SYMBOL, log, SUCCESS_SYMBOL } from './utils/logUtils';
 
 const checkOrCross = (bool: boolean, ifTrue: string, ifFalse: string) => {
   const symbol = bool ? c.green(SUCCESS_SYMBOL) : c.red(ERROR_SYMBOL);

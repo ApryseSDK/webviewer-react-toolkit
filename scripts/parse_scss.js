@@ -13,6 +13,16 @@ function getAST(path) {
 }
 
 /**
+ * Camel case to Pascal with spaces.
+ * @param {string} group Group string.
+ */
+function getTitle(group) {
+  let words = group.split(/(?=[A-Z])/);
+  words = words.map(w => w.charAt(0).toUpperCase() + w.slice(1));
+  return words.join(' ');
+}
+
+/**
  * Returns a function which can be used to map any prop/value nodes from a Sass
  * AST.
  */
@@ -20,22 +30,18 @@ function propMap() {
   const themeAst = getAST('src/styles/_theme.scss');
   const themeNodes = themeAst.nodes;
 
-  const cssVariables = themeNodes
-    .find(n => n.selector === ':root')
-    .nodes.filter(n => n.prop && n.value)
-    .map(d => ({ prop: `var(${d.prop})`, value: d.value }));
-
   const darkCssVariables = themeNodes
     .find(n => n.selector === "html[data-theme='dark']")
     .nodes.filter(n => n.prop && n.value)
-    .map(d => ({ prop: `var(${d.prop})`, value: d.value }));
+    .map(({ prop, value }) => ({ prop, value }));
 
   return declaration => {
     const { p, v } = { p: declaration.prop, v: declaration.value };
-    const scss = p;
-    const css = v;
-    const value = cssVariables.find(c => c.prop === v).value;
-    const dark = (darkCssVariables.find(c => c.prop === v) || {}).value;
+    const scss = `$${p.slice(2)}`;
+    const css = `var(${p})`;
+    const value = v;
+    const dark =
+      (darkCssVariables.find(c => c.prop === p) || {}).value || value;
     return { scss, css, value, dark };
   };
 }
@@ -47,6 +53,35 @@ function propMap() {
  */
 function printFile(path, ast) {
   fs.writeFileSync(path, `export default ${JSON.stringify(ast, null, 2)}`);
+}
+
+function getSassVariablesGroup(value) {
+  return value.map(v => `${v.scss}: ${v.css};`).join('\n');
+}
+
+function mapSassVariableObject(ast, sub = false) {
+  const entries = Object.entries(ast);
+
+  return entries
+    .map(([key, value]) => {
+      const title = getTitle(key);
+      const comment = sub ? `// ${title}.\n` : `/* --- ${title}. --- */\n\n`;
+      let body = '';
+      if (Array.isArray(value)) {
+        body = getSassVariablesGroup(value);
+      } else {
+        body = mapSassVariableObject(value, true);
+      }
+      return comment + body;
+    })
+    .join('\n\n');
+}
+
+async function createSassVariablesFile(ast) {
+  const fileContent =
+    '// File is auto-generated from _theme. DO NOT EDIT.\n\n' +
+    mapSassVariableObject(ast);
+  fs.writeFileSync(`src/styles/_variables.scss`, fileContent);
 }
 
 /**
@@ -128,8 +163,8 @@ function main() {
 
   mixins();
 
-  const ast = getAST('src/styles/_variables.scss');
-  const nodes = ast.nodes;
+  const ast = getAST('src/styles/_theme.scss');
+  const nodes = ast.nodes.find(n => n.selector === ':root').nodes;
 
   const mapper = propMap();
 
@@ -147,13 +182,13 @@ function main() {
 
     nodes.forEach(n => {
       if (n.type !== 'decl') return;
-      if (n.prop.startsWith('$color')) return color.push(n);
-      if (n.prop.startsWith('$z-index')) return zIndex.push(n);
-      if (n.prop.startsWith('$padding')) return padding.push(n);
-      if (n.prop.endsWith('boundary')) return breakpoint.push(n);
-      if (n.prop.startsWith('$font-size')) return fontSize.push(n);
-      if (n.prop.startsWith('$font-weight')) return fontWeight.push(n);
-      if (n.prop.startsWith('$border-radius')) return borderRadius.push(n);
+      if (n.prop.startsWith('--color')) return color.push(n);
+      if (n.prop.startsWith('--z-index')) return zIndex.push(n);
+      if (n.prop.startsWith('--padding')) return padding.push(n);
+      if (n.prop.startsWith('--breakpoint')) return breakpoint.push(n);
+      if (n.prop.startsWith('--font-size')) return fontSize.push(n);
+      if (n.prop.startsWith('--font-weight')) return fontWeight.push(n);
+      if (n.prop.startsWith('--border-radius')) return borderRadius.push(n);
       other.push(n);
     });
 
@@ -203,7 +238,7 @@ function main() {
   const zIndex = declarations.zIndex.map(mapper);
   const other = declarations.other.map(mapper);
 
-  printFile('src/__stories__/2_style/styleVariables.ts', {
+  const variableObject = {
     colors,
     fontSize,
     fontWeight,
@@ -212,7 +247,10 @@ function main() {
     breakpoint,
     zIndex,
     other,
-  });
+  };
+
+  createSassVariablesFile(variableObject);
+  printFile('src/__stories__/2_style/styleVariables.ts', variableObject);
 }
 
 main();
