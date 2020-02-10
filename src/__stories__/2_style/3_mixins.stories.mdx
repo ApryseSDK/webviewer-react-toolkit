@@ -9,9 +9,6 @@ The WebViewer React Toolkit ships with some Sass mixins that wrap common
 patterns. These can only be used in Sass files, but the code is provided below
 so that you can implement them in CSS if you wish.
 
-> Note: These mixins rely on Sass variables. If you wish to use these, you must
-> also include the variables file.
->
 > For more on Sass mixins, check out the
 > [Sass documentation](https://sass-lang.com/documentation/at-rules/mixin).
 
@@ -29,11 +26,26 @@ div {
 }
 ```
 
+Or copy the code into your CSS files:
+
+```css
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  @media (min-width: var(--breakpoint-tablet)) {
+    background-color: blue;
+  }
+}
+```
+
 ## Mixins
 
 The following mixins show the value you can include in your code, as well as the
-raw values in case you wish to modify them in your own code. You can click any
-of these to copy the value to your clipboard.
+raw values in case you wish to copy them to css code. You can click any of these
+to copy the value to your clipboard.
 
 <!-- Below here is auto-generated. DO NOT EDIT. -->
 <!-- GENERATE_ENTRY -->
@@ -42,7 +54,7 @@ of these to copy the value to your clipboard.
 
 ```scss
 @mixin focus {
-  box-shadow: 0 0 0 2px $color-focus-shadow;
+  box-shadow: 0 0 0 2px var(--color-focus-shadow);
 }
 ```
 
@@ -51,7 +63,7 @@ of these to copy the value to your clipboard.
 
 ```scss
 @mixin focus-inset {
-  box-shadow: inset 0 0 0 2px $color-focus-shadow;
+  box-shadow: inset 0 0 0 2px var(--color-focus-shadow);
 }
 ```
 
@@ -61,7 +73,7 @@ of these to copy the value to your clipboard.
 ```scss
 // Try not to use this, as it breaks "mobile first" principles.
 @mixin for-phone-only {
-  @media (max-width: $breakpoint-tablet - 1) {
+  @media (max-width: var(--breakpoint-tablet) - 1) {
     @content;
   }
 }
@@ -72,7 +84,7 @@ of these to copy the value to your clipboard.
 
 ```scss
 @mixin for-tablet-up {
-  @media (min-width: $breakpoint-tablet) {
+  @media (min-width: var(--breakpoint-tablet)) {
     @content;
   }
 }
@@ -83,7 +95,7 @@ of these to copy the value to your clipboard.
 
 ```scss
 @mixin for-desktop-up {
-  @media (min-width: $breakpoint-desktop) {
+  @media (min-width: var(--breakpoint-desktop)) {
     @content;
   }
 }

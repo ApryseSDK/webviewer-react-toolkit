@@ -80,7 +80,8 @@ function mapSassVariableObject(ast, sub = false) {
 async function createSassVariablesFile(ast) {
   const fileContent =
     '// File is auto-generated from _theme. DO NOT EDIT.\n\n' +
-    mapSassVariableObject(ast);
+    mapSassVariableObject(ast) +
+    '\n';
   fs.writeFileSync(`src/styles/_variables.scss`, fileContent);
 }
 
