@@ -4,16 +4,16 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useManagedFiles } from '../../hooks';
 import { createFile, FakeFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
+import { integer } from '../../storybook-helpers/knobs/integer';
 import { FileOrganizer, FileOrganizerProps } from '../FileOrganizer';
 import { Thumbnail } from '../Thumbnail';
 import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
-import info from './README.md';
-import { integer } from '../../storybook-helpers/knobs/integer';
+import readme from './README.md';
 
 export default {
   title: 'Components/FileOrganizer',
   component: FileOrganizer,
-  parameters: { info: { info, disable: true } },
+  parameters: { readme, info: { disable: true } },
 };
 
 /* --- Basic. --- */

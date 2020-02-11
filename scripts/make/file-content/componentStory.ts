@@ -3,9 +3,9 @@ export const componentStory = (componentName: string) =>
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { ${componentName} } from '../${componentName}';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/${componentName}', component: ${componentName}, parameters: { info } };
+export default { title: 'Components/${componentName}', component: ${componentName}, parameters: { readme } };
 
 export const Basic = () => (
   <${componentName}

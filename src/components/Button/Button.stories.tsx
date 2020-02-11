@@ -2,9 +2,9 @@ import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { Button } from '../Button';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/Button', component: Button, parameters: { info } };
+export default { title: 'Components/Button', component: Button, parameters: { readme } };
 
 export const Basic = () => (
   <Button

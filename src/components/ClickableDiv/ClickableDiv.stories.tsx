@@ -2,9 +2,9 @@ import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { ClickableDiv } from '../ClickableDiv';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/ClickableDiv', component: ClickableDiv, parameters: { info } };
+export default { title: 'Components/ClickableDiv', component: ClickableDiv, parameters: { readme } };
 
 export const Basic = () => (
   <ClickableDiv

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileSkeleton } from '../FileSkeleton';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/FileSkeleton', component: FileSkeleton, parameters: { info } };
+export default { title: 'Components/FileSkeleton', component: FileSkeleton, parameters: { readme } };
 
 export const Basic = () => <FileSkeleton />;

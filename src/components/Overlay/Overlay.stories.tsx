@@ -1,9 +1,9 @@
 import { boolean } from '@storybook/addon-knobs';
 import React, { CSSProperties } from 'react';
 import { Overlay } from '../Overlay';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/Overlay', component: Overlay, parameters: { info } };
+export default { title: 'Components/Overlay', component: Overlay, parameters: { readme } };
 
 const style: CSSProperties = {
   backgroundColor: 'lightblue',

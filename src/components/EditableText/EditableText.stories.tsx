@@ -2,9 +2,9 @@ import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { EditableText } from '../EditableText';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/EditableText', component: EditableText, parameters: { info } };
+export default { title: 'Components/EditableText', component: EditableText, parameters: { readme } };
 
 export const Basic = () => (
   <EditableText

@@ -58,10 +58,8 @@ addParameters({
 
     // Since we do not add component description in code (instead inserting it
     // into a .md file) we extract it using the following.
-    extractComponentDescription: (_c: unknown, { info }: { info: string | { info?: string; text?: string } }) => {
-      if (typeof info === 'string') return info;
-      if (info.info) return info.info;
-      if (info.text) return info.text;
+    extractComponentDescription: (_c: unknown, { readme }: { readme: string }) => {
+      if (readme) return readme;
       return null;
     },
 

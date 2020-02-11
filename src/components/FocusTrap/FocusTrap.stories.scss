@@ -1,0 +1,19 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+
+  &__lockzone {
+    border: 1px solid gray;
+    background-color: lightgray;
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  &__lockzone--locked {
+    background-color: lightblue;
+  }
+
+  input {
+    margin-right: 8px;
+  }
+}
