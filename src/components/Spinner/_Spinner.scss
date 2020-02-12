@@ -2,9 +2,9 @@
   display: inline-block;
 
   &__animated {
+    @include spinner;
     width: 100%;
     height: 100%;
-    animation: spin 1.2s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite;
     border-radius: 50%;
     border: solid;
     border-color: $color-blue-gray-5 $color-blue-gray-1 $color-blue-gray-1;
