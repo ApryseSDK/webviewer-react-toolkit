@@ -1,105 +1,33 @@
-import React, { CSSProperties, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { CSSProperties, ReactElement, useEffect, useMemo, useState } from 'react';
 import { isDarkThemeStored, ThemeChangeButton } from '../../../.storybook/withTheme';
 import font from '../../storybook-helpers/theme/font';
 import { Remove } from '../../utils';
-import mixins from './mixins';
-import styleVariables from './styleVariables';
+import mixins from './generated/mixins';
+import styleVariables from './generated/styleVariables';
+import { dividerStyle, prefixStyle, style, titleStyle } from './styles';
+import { copy, getTitle } from './utils';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 
-/* --- Utils. --- */
-
-function fallbackCopyTextToClipboard(text: string) {
-  const textArea = document.createElement('textarea');
-  textArea.value = text;
-  textArea.style.position = 'fixed'; //avoid scrolling to bottom
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-
-  try {
-    const successful = document.execCommand('copy');
-    if (!successful) throw new Error();
-    alert(`Copied value: ${text}`);
-  } catch (err) {
-    console.error('Could not copy text: ', err);
-  }
-
-  document.body.removeChild(textArea);
-}
-
-function copy(text: string) {
-  return (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!navigator.clipboard) {
-      return fallbackCopyTextToClipboard(text);
-    }
-    navigator.clipboard.writeText(text).then(
-      () => alert(`Copied value: ${text}`),
-      err => console.error('Could not copy text: ', err),
-    );
-  };
-}
-
-/* --- Styles. --- */
-
-const style: CSSProperties = {
-  userSelect: 'none',
-  padding: 8,
-  backgroundColor: 'rgba(255, 255, 255, 0.7)',
-  borderRadius: 4,
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  fontFamily: font.fontCode,
-  fontSize: 12,
-  overflow: 'hidden',
-};
-const dividerStyle: CSSProperties = {
-  ...style,
-  cursor: 'default',
-  backgroundColor: 'transparent',
-  color: style.backgroundColor,
-  fontFamily: font.fontBase,
-  justifyContent: 'center',
-};
-const prefixStyle: CSSProperties = {
-  ...dividerStyle,
-  paddingLeft: 0,
-  paddingRight: 0,
-  marginRight: -8,
-  justifyContent: 'flex-end',
-};
-const titleStyle: CSSProperties = {
-  fontFamily: font.fontBase,
-  margin: '20px 0 8px',
-  padding: 0,
-  position: 'relative',
-  color: 'rgba(240,240,255,0.9)',
-  fontSize: 20,
-};
-
 /* --- Variables. --- */
 
-function getTitle(group: string) {
-  let words = group.split(/(?=[A-Z])/);
-  words = words.map(w => w.charAt(0).toUpperCase() + w.slice(1));
-  return words.join(' ');
-}
+const colorFocusShadow = styleVariables.colors.other.find(c => c.scss === '$color-focus-shadow')?.dark;
 
 export function Groups() {
   const keys = Object.keys(styleVariables).filter(k => k !== 'colors');
 
   const [tick, setTick] = useState(false);
   useEffect(() => {
-    setTimeout(() => setTick(!tick), 2000);
+    setTimeout(() => setTick(!tick), 500);
   }, [tick]);
 
   let groups: ReactElement[] = [];
 
   keys.forEach(k => {
-    const group = styleVariables[k as keyof Remove<typeof styleVariables, 'colors'>];
+    const group: { scss: string; css: string; value: string; dark: string }[] =
+      styleVariables[k as keyof Remove<typeof styleVariables, 'colors'>];
+    if (!group.length) return;
+
     groups.push(
       <h2 key={k} style={{ ...titleStyle, gridColumn: '1 / last-line' }}>
         {getTitle(k)}
@@ -108,6 +36,7 @@ export function Groups() {
     groups = [
       ...groups,
       ...group.map(({ scss, css, value }) => {
+        const transition = scss === '$focus-transition' ? value : undefined;
         const valueStyle: CSSProperties = {
           ...style,
           ...(['fontSize', 'fontWeight', 'padding', 'borderRadius'].includes(k) ? { [k]: value } : undefined),
@@ -115,9 +44,11 @@ export function Groups() {
             k === 'padding'
               ? `inset 0px 0px 0px ${value} rgba(0,50,0,0.1)`
               : scss === '$focus-transition' && tick
-              ? `0 0 0 2px rgba(20, 110, 170, 0.4)`
+              ? colorFocusShadow && `0 0 0 2px ${colorFocusShadow}`
+              : k === 'boxShadow'
+              ? value
               : undefined,
-          transition: 'box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9)',
+          transition,
         };
         const truncate: CSSProperties = {
           overflow: 'hidden',
@@ -193,13 +124,16 @@ export function Theme() {
   }, []);
 
   keys.forEach(k => {
+    const colors: { scss: string; css: string; value: string; dark: string }[] =
+      styleVariables.colors[k as keyof typeof styleVariables['colors']];
+    if (!colors.length) return;
+
     groups.push(
       <h2 key={k} style={{ ...titleStyle, gridColumn: '1 / last-line', color: darkTheme ? darkFont : lightFont }}>
         {getTitle(k)}
       </h2>,
     );
 
-    const colors = styleVariables.colors[k as keyof typeof styleVariables['colors']];
     groups.push(
       <div
         key={k + 'colors'}

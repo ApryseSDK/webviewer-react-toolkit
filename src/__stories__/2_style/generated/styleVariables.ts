@@ -10,7 +10,7 @@ export default {
       {
         scss: '$color-theme-secondary',
         css: 'var(--color-theme-secondary)',
-        value: '#131416',
+        value: '#242933',
         dark: '#818cab',
       },
     ],
@@ -18,7 +18,7 @@ export default {
       {
         scss: '$color-font-primary',
         css: 'var(--color-font-primary)',
-        value: '#292922',
+        value: '#232229',
         dark: '#ebebeb',
       },
       {
@@ -32,13 +32,13 @@ export default {
       {
         scss: '$color-gray-1',
         css: 'var(--color-gray-1)',
-        value: '#eee',
-        dark: '#333',
+        value: '#d5d4dd',
+        dark: '#222',
       },
       {
         scss: '$color-gray-2',
         css: 'var(--color-gray-2)',
-        value: '#ddd',
+        value: '#f8faff',
         dark: '#444',
       },
     ],
@@ -104,6 +104,32 @@ export default {
         css: 'var(--color-contrast-3)',
         value: '#f0f0f0',
         dark: '#222',
+      },
+    ],
+    message: [
+      {
+        scss: '$color-message-info',
+        css: 'var(--color-message-info)',
+        value: '#2980b9',
+        dark: '#2980b9',
+      },
+      {
+        scss: '$color-message-success',
+        css: 'var(--color-message-success)',
+        value: '#27ae60',
+        dark: '#27ae60',
+      },
+      {
+        scss: '$color-message-warning',
+        css: 'var(--color-message-warning)',
+        value: '#e67e22',
+        dark: '#e67e22',
+      },
+      {
+        scss: '$color-message-error',
+        css: 'var(--color-message-error)',
+        value: '#e74c3c',
+        dark: '#e74c3c',
       },
     ],
     other: [
@@ -187,6 +213,12 @@ export default {
       dark: '4px',
     },
     {
+      scss: '$padding-half',
+      css: 'var(--padding-half)',
+      value: '8px',
+      dark: '8px',
+    },
+    {
       scss: '$padding-small',
       css: 'var(--padding-small)',
       value: '12px',
@@ -203,6 +235,12 @@ export default {
       css: 'var(--padding-large)',
       value: '24px',
       dark: '24px',
+    },
+    {
+      scss: '$padding-huge',
+      css: 'var(--padding-huge)',
+      value: '32px',
+      dark: '32px',
     },
   ],
   borderRadius: [
@@ -225,18 +263,32 @@ export default {
       dark: '8px',
     },
   ],
-  breakpoint: [
+  boxShadow: [
     {
-      scss: '$breakpoint-tablet',
-      css: 'var(--breakpoint-tablet)',
-      value: '768px',
-      dark: '768px',
+      scss: '$box-shadow-1',
+      css: 'var(--box-shadow-1)',
+      value: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
+      dark: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
     },
     {
-      scss: '$breakpoint-desktop',
-      css: 'var(--breakpoint-desktop)',
-      value: '1024px',
-      dark: '1024px',
+      scss: '$box-shadow-2',
+      css: 'var(--box-shadow-2)',
+      value: '0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)',
+      dark: '0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)',
+    },
+    {
+      scss: '$box-shadow-3',
+      css: 'var(--box-shadow-3)',
+      value: '0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)',
+      dark: '0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)',
+    },
+  ],
+  focus: [
+    {
+      scss: '$focus-transition',
+      css: 'var(--focus-transition)',
+      value: 'box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9)',
+      dark: 'box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9)',
     },
   ],
   zIndex: [
@@ -265,12 +317,5 @@ export default {
       dark: '300',
     },
   ],
-  other: [
-    {
-      scss: '$focus-transition',
-      css: 'var(--focus-transition)',
-      value: 'box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9)',
-      dark: 'box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9)',
-    },
-  ],
+  other: [],
 };

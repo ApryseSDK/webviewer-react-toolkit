@@ -28,6 +28,12 @@ $color-contrast-1: var(--color-contrast-1);
 $color-contrast-2: var(--color-contrast-2);
 $color-contrast-3: var(--color-contrast-3);
 
+// Message.
+$color-message-info: var(--color-message-info);
+$color-message-success: var(--color-message-success);
+$color-message-warning: var(--color-message-warning);
+$color-message-error: var(--color-message-error);
+
 // Other.
 $color-background-canvas: var(--color-background-canvas);
 $color-focus-shadow: var(--color-focus-shadow);
@@ -50,9 +56,11 @@ $font-weight-bold: var(--font-weight-bold);
 /* --- Padding. --- */
 
 $padding-tiny: var(--padding-tiny);
+$padding-half: var(--padding-half);
 $padding-small: var(--padding-small);
 $padding: var(--padding);
 $padding-large: var(--padding-large);
+$padding-huge: var(--padding-huge);
 
 /* --- Border Radius. --- */
 
@@ -60,10 +68,15 @@ $border-radius-small: var(--border-radius-small);
 $border-radius: var(--border-radius);
 $border-radius-large: var(--border-radius-large);
 
-/* --- Breakpoint. --- */
+/* --- Box Shadow. --- */
 
-$breakpoint-tablet: var(--breakpoint-tablet);
-$breakpoint-desktop: var(--breakpoint-desktop);
+$box-shadow-1: var(--box-shadow-1);
+$box-shadow-2: var(--box-shadow-2);
+$box-shadow-3: var(--box-shadow-3);
+
+/* --- Focus. --- */
+
+$focus-transition: var(--focus-transition);
 
 /* --- Z Index. --- */
 
@@ -73,5 +86,3 @@ $z-index-dragging: var(--z-index-dragging);
 $z-index-overlay: var(--z-index-overlay);
 
 /* --- Other. --- */
-
-$focus-transition: var(--focus-transition);

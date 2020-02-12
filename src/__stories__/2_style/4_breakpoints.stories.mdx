@@ -1,0 +1,79 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Mixins, Breakpoints } from './styleBreakpoints'
+
+<Meta title="Style/Breakpoints" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+# Breakpoints
+
+Unfortunately,
+[CSS variables do not work in media queries](https://stackoverflow.com/a/40723269),
+and so breakpoints are not customizable. However, we provide our breakpoints for
+you to use, either as Sass mixins, or just hard-coded pixel values.
+
+## Using
+
+To use these in your own project, you can include the mixins in your code:
+
+```scss
+div {
+  @include for-tablet-up {
+    background-color: blue;
+  };
+}
+```
+
+Or copy the code into your CSS files:
+
+```css
+div {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+```
+
+If you are using Sass, make sure you import the Sass breakpoints file:
+
+```scss
+@import "~@pdftron/webviewer-react-toolkit/dist/scss/_breakpoints.scss";
+```
+
+## Breakpoint Visualizer
+
+You can change the size of your browser window to see the breakpoints in effect.
+
+<Breakpoints />
+
+## Mixins
+
+The following mixins show the value you can include in your code, as well as the
+raw values in case you wish to copy them to CSS code. You can click any of these
+to copy the value to your clipboard.
+
+<!-- Below here is auto-generated. DO NOT EDIT. -->
+<!-- GENERATE_ENTRY -->
+
+<Mixins index={0} />
+
+```scss
+// Try not to use this, as it breaks "mobile first" principles.
+@media (max-width: 767px) {
+  /* Content */
+}
+```
+
+<Mixins index={1} />
+
+```scss
+@media (min-width: 768px) {
+  /* Content */
+}
+```
+
+<Mixins index={2} />
+
+```scss
+@media (min-width: 1024px) {
+  /* Content */
+}
+```
