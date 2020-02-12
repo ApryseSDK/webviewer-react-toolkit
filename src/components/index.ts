@@ -17,5 +17,6 @@ export * from './Overlay';
 export * from './Spinner';
 export * from './Thumbnail';
 export * from './ThumbnailDragLayer';
+export * from './Toast';
 export * from './ToolButton';
 // <import-end>

@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Toast component snapshot renders default toast 1`] = `
+<div
+  className="ui__toast__wrapper"
+>
+  <div
+    className="ui__base ui__toast ui__toast--type-info"
+  >
+    <div
+      className="ui__toast__border"
+    />
+    <div
+      className="ui__toast__icon"
+    >
+      <Info />
+    </div>
+    <div
+      className="ui__toast__copy"
+    >
+      <div
+        className="ui__toast__copy__heading"
+      />
+      <div
+        className="ui__toast__copy__body"
+      />
+    </div>
+  </div>
+</div>
+`;
