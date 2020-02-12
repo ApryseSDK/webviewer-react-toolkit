@@ -3,11 +3,14 @@ import { createPortal } from 'react-dom';
 
 export interface OverlayProps {
   /**
-   * Allow user to click on things through the overlay.
+   * Prevent clicks from going through the overlay. This is useful for blocking
+   * modals or panels.
    */
-  allowClickThrough?: boolean;
+  blockClicks?: boolean;
   /**
-   * Make the overlay dark when open.
+   * Make the overlay dark when open. This can be used in combination with
+   * `blockClicks` to visually indicate that you are unable to click through the
+   * overlay.
    */
   darkOverlay?: boolean;
   /**
@@ -46,7 +49,7 @@ function generateOverlayLayer() {
     const id = currentId++;
     const classList = [
       props.className || '',
-      props.allowClickThrough ? 'ui__overlay--clickthrough' : '',
+      props.blockClicks ? 'ui__overlay--blocking' : '',
       props.darkOverlay ? 'ui__overlay--dark' : '',
     ].filter(Boolean);
 
@@ -59,8 +62,8 @@ function generateOverlayLayer() {
     };
   };
 
-  return (({ children, allowClickThrough, className, darkOverlay }) => {
-    useEffect(() => add({ allowClickThrough, className, darkOverlay }), [allowClickThrough, className, darkOverlay]);
+  return (({ children, blockClicks, className, darkOverlay }) => {
+    useEffect(() => add({ blockClicks, className, darkOverlay }), [blockClicks, className, darkOverlay]);
     return createPortal(children, overlayRoot);
   }) as FC<OverlayProps>;
 }

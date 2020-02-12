@@ -1,9 +1,10 @@
 .ui__overlay {
   @include absolute-fill;
   z-index: $z-index-overlay;
+  pointer-events: none;
 
-  &--clickthrough {
-    pointer-events: none;
+  &--blocking {
+    pointer-events: all;
   }
 
   &--dark {
