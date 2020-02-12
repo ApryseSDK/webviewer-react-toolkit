@@ -213,14 +213,14 @@ export default {
       dark: '4px',
     },
     {
-      scss: '$padding-half',
-      css: 'var(--padding-half)',
+      scss: '$padding-small',
+      css: 'var(--padding-small)',
       value: '8px',
       dark: '8px',
     },
     {
-      scss: '$padding-small',
-      css: 'var(--padding-small)',
+      scss: '$padding-medium',
+      css: 'var(--padding-medium)',
       value: '12px',
       dark: '12px',
     },
