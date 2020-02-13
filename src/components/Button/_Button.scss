@@ -3,6 +3,7 @@
   outline: none;
   user-select: none;
   transition: $focus-transition;
+  @include flex-center;
 
   &--disabled {
     cursor: default;
@@ -25,6 +26,7 @@
       border: 1px solid $color-blue-gray-6;
       background-color: $color-blue-gray-6;
       color: $color-contrast-1;
+      fill: $color-contrast-1;
 
       &:active {
         border-color: $color-blue-gray-7;
@@ -36,9 +38,11 @@
       border: 1px solid transparent;
       background-color: transparent;
       color: $color-blue-gray-6;
+      fill: $color-blue-gray-6;
 
       &:active {
         color: $color-blue-gray-7;
+        fill: $color-blue-gray-7;
       }
     }
 
@@ -46,12 +50,14 @@
       border: 1px solid $color-blue-gray-6;
       background-color: transparent;
       color: $color-blue-gray-6;
+      fill: $color-blue-gray-6;
       transition: background-color 75ms ease-in-out, color 75ms ease-in-out;
 
       &:focus,
       &:hover {
         background-color: $color-blue-gray-6;
         color: $color-contrast-1;
+        fill: $color-contrast-1;
       }
 
       &:active {
@@ -73,7 +79,7 @@
 
     &-default {
       border-radius: $border-radius;
-      padding: $padding-tiny $padding-small;
+      padding: $padding-tiny $padding-medium;
       min-width: 88px;
       min-height: 32px;
     }

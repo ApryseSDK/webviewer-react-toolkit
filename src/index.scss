@@ -7,8 +7,8 @@
 // Mixins.
 @import './styles/mixins';
 
-// Animations.
-@import './styles/animations';
+// Mixins.
+@import './styles/breakpoints';
 
 // Base style.
 @import './styles/base';
@@ -28,10 +28,13 @@
 @import './components/EditableText/EditableText';
 @import './components/FileOrganizer/FileOrganizer';
 @import './components/FileSkeleton/FileSkeleton';
+@import './components/FocusTrap/FocusTrap';
 @import './components/Image/Image';
 @import './components/Overlay/Overlay';
 @import './components/Spinner/Spinner';
 @import './components/Thumbnail/Thumbnail';
 @import './components/ThumbnailDragLayer/ThumbnailDragLayer';
+@import './components/Toast/Toast';
+@import './components/ToastProvider/ToastProvider';
 @import './components/ToolButton/ToolButton';
 // <import-end>

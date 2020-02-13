@@ -1,0 +1,17 @@
+.ui__toastProvider {
+  opacity: 1;
+  transition: opacity 0.25s;
+
+  &--closing {
+    opacity: 0;
+  }
+
+  &__toast {
+    display: flex;
+    justify-content: flex-end;
+    padding: $padding;
+
+    transform: translateY(-100%);
+    @include slide-in;
+  }
+}

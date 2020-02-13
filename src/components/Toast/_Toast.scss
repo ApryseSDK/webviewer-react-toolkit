@@ -1,0 +1,109 @@
+.ui__toast {
+  display: grid;
+  display: flex;
+  background-color: $color-gray-2;
+  border-radius: $border-radius;
+  overflow: hidden;
+  box-shadow: $box-shadow-3;
+  padding-right: $padding-tiny;
+
+  @include for-phone-only {
+    width: 100%;
+  }
+
+  @include for-tablet-up {
+    max-width: 500px;
+  }
+
+  &--type {
+    &-info {
+      .ui__toast__border {
+        background-color: $color-message-info;
+      }
+      .ui__toast__icon,
+      .ui__toast__close__button {
+        fill: $color-message-info;
+      }
+    }
+
+    &-warning {
+      .ui__toast__border {
+        background-color: $color-message-warning;
+      }
+      .ui__toast__icon,
+      .ui__toast__close__button {
+        fill: $color-message-warning;
+      }
+    }
+
+    &-error {
+      .ui__toast__border {
+        background-color: $color-message-error;
+      }
+      .ui__toast__icon,
+      .ui__toast__close__button {
+        fill: $color-message-error;
+      }
+    }
+
+    &-success {
+      .ui__toast__border {
+        background-color: $color-message-success;
+      }
+      .ui__toast__icon,
+      .ui__toast__close__button {
+        fill: $color-message-success;
+      }
+    }
+  }
+
+  &__border {
+    width: 4px;
+    flex-shrink: 0;
+  }
+
+  &__icon {
+    margin: 0 $padding-medium;
+    @include flex-center;
+    flex-shrink: 0;
+  }
+
+  &__copy {
+    padding: $padding-small $padding $padding-small 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1 1 auto;
+
+    &__heading {
+      flex-shrink: 0;
+      color: $color-font-primary;
+      font-weight: $font-weight-bold;
+      padding: 2px 0;
+    }
+
+    &__body {
+      flex-shrink: 0;
+      color: $color-font-secondary;
+      padding: 2px 0;
+    }
+  }
+
+  &__action {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: $padding-tiny;
+    flex-grow: 0;
+  }
+
+  &__button {
+    width: auto;
+    min-width: auto;
+    padding: 0 $padding-tiny;
+
+    &--nopad {
+      padding: 0;
+    }
+  }
+}

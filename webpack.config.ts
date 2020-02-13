@@ -32,6 +32,10 @@ const config: webpack.Configuration = {
         from: `${BASE_URL}/styles/_mixins.scss`,
         to: `${SASS_PATH}/_mixins.scss`,
       },
+      {
+        from: `${BASE_URL}/styles/_breakpoints.scss`,
+        to: `${SASS_PATH}/_breakpoints.scss`,
+      },
     ]),
   ],
   optimization: {

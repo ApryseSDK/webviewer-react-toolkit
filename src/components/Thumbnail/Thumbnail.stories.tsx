@@ -5,9 +5,9 @@ import close from '../../icons/close-24px.svg';
 import rotate from '../../icons/rotate_right-24px.svg';
 import { createFile, CreateFileOptions, FakeFile } from '../../storybook-helpers/data/files';
 import { Thumbnail, ThumbnailProps } from '../Thumbnail';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/Thumbnail', component: Thumbnail, parameters: { info } };
+export default { title: 'Components/Thumbnail', component: Thumbnail, parameters: { readme } };
 
 const defaultProps = (options?: CreateFileOptions, index = 0, withToolButtons?: boolean): ThumbnailProps<FakeFile> => ({
   file: createFile(index, options),

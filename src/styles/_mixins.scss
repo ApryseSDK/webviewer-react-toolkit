@@ -8,27 +8,6 @@
   box-shadow: inset 0 0 0 2px var(--color-focus-shadow);
 }
 
-/* --- Media query mixins. --- */
-
-// Try not to use this, as it breaks "mobile first" principles.
-@mixin for-phone-only {
-  @media (max-width: var(--breakpoint-tablet) - 1) {
-    @content;
-  }
-}
-
-@mixin for-tablet-up {
-  @media (min-width: var(--breakpoint-tablet)) {
-    @content;
-  }
-}
-
-@mixin for-desktop-up {
-  @media (min-width: var(--breakpoint-desktop)) {
-    @content;
-  }
-}
-
 /* --- Positional. --- */
 
 @mixin absolute-fill {
@@ -53,6 +32,8 @@
   align-items: center;
 }
 
+/* --- Animations. --- */
+
 // This provides the animation for skeleton loading.
 @mixin skeleton {
   animation: timeline 2s linear infinite;
@@ -66,5 +47,30 @@
   }
   100% {
     background-position: 200px 0;
+  }
+}
+
+// This provides the animation for spinning loaders.
+@mixin spinner {
+  animation: spin 1.2s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// This provides the animation for sliding in toasts from the top.
+@mixin slide-in {
+  animation: slide 0.25s forwards;
+}
+
+@keyframes slide {
+  100% {
+    transform: translateY(0%);
   }
 }
