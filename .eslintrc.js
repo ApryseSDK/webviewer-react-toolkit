@@ -30,7 +30,10 @@ module.exports = {
     'prefer-const': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { ignoreRestSiblings: true, argsIgnorePattern: '^_' },
+    ],
     '@typescript-eslint/unbound-method': 'error',
 
     // Turn off rules.
