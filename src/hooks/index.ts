@@ -7,3 +7,4 @@ export * from './useFocusTrap';
 export * from './useKeyForClick';
 export * from './useManagedFiles';
 export * from './useOnClick';
+export * from './useToast';
