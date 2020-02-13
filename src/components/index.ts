@@ -18,5 +18,6 @@ export * from './Spinner';
 export * from './Thumbnail';
 export * from './ThumbnailDragLayer';
 export * from './Toast';
+export * from './ToastProvider';
 export * from './ToolButton';
 // <import-end>

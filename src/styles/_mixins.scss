@@ -32,6 +32,8 @@
   align-items: center;
 }
 
+/* --- Animations. --- */
+
 // This provides the animation for skeleton loading.
 @mixin skeleton {
   animation: timeline 2s linear infinite;
@@ -59,5 +61,16 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+// This provides the animation for sliding in toasts from the top.
+@mixin slide-in {
+  animation: slide 0.25s forwards;
+}
+
+@keyframes slide {
+  100% {
+    transform: translateY(0%);
   }
 }

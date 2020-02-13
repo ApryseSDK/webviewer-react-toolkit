@@ -2,29 +2,18 @@
 
 exports[`Toast component snapshot renders default toast 1`] = `
 <div
-  className="ui__toast__wrapper"
+  className="ui__base ui__toast ui__toast--type-info"
 >
   <div
-    className="ui__base ui__toast ui__toast--type-info"
+    className="ui__toast__border"
+  />
+  <div
+    className="ui__toast__icon"
   >
-    <div
-      className="ui__toast__border"
-    />
-    <div
-      className="ui__toast__icon"
-    >
-      <Info />
-    </div>
-    <div
-      className="ui__toast__copy"
-    >
-      <div
-        className="ui__toast__copy__heading"
-      />
-      <div
-        className="ui__toast__copy__body"
-      />
-    </div>
+    <Info />
   </div>
+  <div
+    className="ui__toast__copy"
+  />
 </div>
 `;

@@ -1,36 +1,13 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, MouseEventHandler, ReactNode, useMemo } from 'react';
+import React, { FC, HTMLAttributes, MouseEventHandler, useMemo } from 'react';
+import { CommonToastProps } from '../../hooks';
 import { Button } from '../Button';
 
-export interface ToastProps extends HTMLAttributes<HTMLDivElement> {
-  /**
-   * The heading to display on the toast. Use this for a brief overview of the
-   * reason for the toast.
-   */
-  heading?: ReactNode;
-  /**
-   * The body of the toast. This is where you can elaborate with more
-   * information about the toast.
-   */
-  children?: ReactNode;
-  /**
-   * The type of message the toast is displaying. Will change the color and
-   * icon of the toast.
-   * @default "info"
-   */
-  toastType?: 'info' | 'success' | 'warning' | 'error';
+export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElement> {
   /**
    * If provided, toast will have a close button.
    */
   onClose?: MouseEventHandler<HTMLButtonElement>;
-  /**
-   * Adds an action button to the toast. Will position to the left of the close
-   * button if `onClose` was provided.
-   */
-  action?: {
-    text: ReactNode;
-    onClick: MouseEventHandler<HTMLButtonElement>;
-  };
 }
 
 export const Toast: FC<ToastProps> = ({
@@ -58,31 +35,29 @@ export const Toast: FC<ToastProps> = ({
   }, [toastType]);
 
   return (
-    <div className="ui__toast__wrapper">
-      <div {...props} className={toastClass}>
-        <div className="ui__toast__border" />
-        <div className="ui__toast__icon">
-          <Icon />
-        </div>
-        <div className="ui__toast__copy">
-          <div className="ui__toast__copy__heading">{heading}</div>
-          <div className="ui__toast__copy__body">{children}</div>
-        </div>
-        {action ? (
-          <div className="ui__toast__action">
-            <Button className="ui__toast__button" onClick={action.onClick} buttonStyle="borderless">
-              {action.text}
-            </Button>
-          </div>
-        ) : null}
-        {onClose ? (
-          <div className="ui__toast__action">
-            <Button className="ui__toast__button ui__toast__button--nopad" onClick={onClose} buttonStyle="borderless">
-              <Close />
-            </Button>
-          </div>
-        ) : null}
+    <div {...props} className={toastClass}>
+      <div className="ui__toast__border" />
+      <div className="ui__toast__icon">
+        <Icon />
       </div>
+      <div className="ui__toast__copy">
+        {heading ? <div className="ui__toast__copy__heading">{heading}</div> : null}
+        {children ? <div className="ui__toast__copy__body">{children}</div> : null}
+      </div>
+      {action ? (
+        <div className="ui__toast__action">
+          <Button className="ui__toast__button" onClick={action.onClick} buttonStyle="borderless">
+            {action.text}
+          </Button>
+        </div>
+      ) : null}
+      {onClose ? (
+        <div className="ui__toast__action">
+          <Button className="ui__toast__button ui__toast__button--nopad" onClick={onClose} buttonStyle="borderless">
+            <Close />
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 };
