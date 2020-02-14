@@ -23,46 +23,46 @@
 
   &--style {
     &-default {
-      border: 1px solid $color-blue-gray-6;
-      background-color: $color-blue-gray-6;
+      border: 1px solid $color-blue-gray-5;
+      background-color: $color-blue-gray-5;
       color: $color-contrast-1;
       fill: $color-contrast-1;
 
       &:active {
-        border-color: $color-blue-gray-7;
-        background-color: $color-blue-gray-7;
+        border-color: $color-blue-gray-6;
+        background-color: $color-blue-gray-6;
       }
     }
 
     &-borderless {
       border: 1px solid transparent;
       background-color: transparent;
-      color: $color-blue-gray-6;
-      fill: $color-blue-gray-6;
+      color: $color-blue-gray-5;
+      fill: $color-blue-gray-5;
 
       &:active {
-        color: $color-blue-gray-7;
-        fill: $color-blue-gray-7;
+        color: $color-blue-gray-6;
+        fill: $color-blue-gray-6;
       }
     }
 
     &-outline {
-      border: 1px solid $color-blue-gray-6;
+      border: 1px solid $color-blue-gray-5;
       background-color: transparent;
-      color: $color-blue-gray-6;
-      fill: $color-blue-gray-6;
+      color: $color-blue-gray-5;
+      fill: $color-blue-gray-5;
       transition: background-color 75ms ease-in-out, color 75ms ease-in-out;
 
-      &:focus,
+      &:focus.ui__button--tabbing,
       &:hover {
-        background-color: $color-blue-gray-6;
+        background-color: $color-blue-gray-5;
         color: $color-contrast-1;
         fill: $color-contrast-1;
       }
 
       &:active {
-        border-color: $color-blue-gray-7;
-        background-color: $color-blue-gray-7;
+        border-color: $color-blue-gray-6;
+        background-color: $color-blue-gray-6;
       }
     }
   }

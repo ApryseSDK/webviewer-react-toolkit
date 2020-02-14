@@ -124,18 +124,15 @@ export function useFocusTrap<T extends HTMLElement>(locked = false, options: Use
     let lastFocusedElement: HTMLElement;
 
     if (locked) {
-      if (document.activeElement && focusRef.current && !focusRef.current.contains(document.activeElement)) {
+      if (focusLastOnUnlockRef.current && !focusRef.current?.contains(document.activeElement)) {
         lastFocusedElement = document.activeElement as HTMLElement;
+        lockFocus();
+        return () => lastFocusedElement.focus();
       }
 
       lockFocus();
     }
-
-    return () => {
-      if (focusLastOnUnlockRef.current && locked && lastFocusedElement) {
-        lastFocusedElement.focus();
-      }
-    };
+    return;
   }, [lockFocus, locked]);
 
   return focusRef;
