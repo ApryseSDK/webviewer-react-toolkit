@@ -6,4 +6,5 @@ export default [
   '@include flex-center;',
   '@include skeleton;',
   '@include spinner;',
+  '@include slide-in;',
 ];

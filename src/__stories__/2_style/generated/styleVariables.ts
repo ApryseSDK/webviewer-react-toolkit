@@ -32,13 +32,13 @@ export default {
       {
         scss: '$color-gray-1',
         css: 'var(--color-gray-1)',
-        value: '#d5d4dd',
-        dark: '#222',
+        value: '#dadada',
+        dark: '#2a2a2a',
       },
       {
         scss: '$color-gray-2',
         css: 'var(--color-gray-2)',
-        value: '#f8faff',
+        value: '#fff',
         dark: '#444',
       },
     ],
@@ -64,26 +64,20 @@ export default {
       {
         scss: '$color-blue-gray-4',
         css: 'var(--color-blue-gray-4)',
-        value: '#8b92ab',
-        dark: '#7d83a1',
-      },
-      {
-        scss: '$color-blue-gray-5',
-        css: 'var(--color-blue-gray-5)',
         value: '#767f9b',
         dark: '#9098b3',
       },
       {
-        scss: '$color-blue-gray-6',
-        css: 'var(--color-blue-gray-6)',
+        scss: '$color-blue-gray-5',
+        css: 'var(--color-blue-gray-5)',
         value: '#6077bf',
         dark: '#aab1cf',
       },
       {
-        scss: '$color-blue-gray-7',
-        css: 'var(--color-blue-gray-7)',
+        scss: '$color-blue-gray-6',
+        css: 'var(--color-blue-gray-6)',
         value: '#415797',
-        dark: '#c6ceec',
+        dark: '#9098b3',
       },
     ],
     contrast: [
@@ -136,7 +130,7 @@ export default {
       {
         scss: '$color-background-canvas',
         css: 'var(--color-background-canvas)',
-        value: '#eff5f5',
+        value: '#eee',
         dark: '#333',
       },
       {

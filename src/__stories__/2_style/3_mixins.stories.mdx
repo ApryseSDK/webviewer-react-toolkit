@@ -120,3 +120,16 @@ animation: spin 1.2s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite;
   }
 }
 ```
+
+<Mixins index={7} />
+
+```scss
+// This provides the animation for sliding in toasts from the top.
+animation: slide 0.25s forwards;
+
+@keyframes slide {
+  100% {
+    transform: translateY(0%);
+  }
+}
+```
