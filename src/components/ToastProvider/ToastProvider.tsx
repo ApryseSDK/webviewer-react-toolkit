@@ -37,16 +37,17 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, children
   const { toastId, closable, timeout, ...toastProps }: ToastQueueItem = toasts[0] || {};
 
   useEffect(() => {
-    let timeoutId: number;
+    const timeoutValue = timeout ?? defaultTimeout;
 
-    if (!hovered && toastId && (defaultTimeout || timeout)) {
-      timeoutId = window.setTimeout(() => {
+    if (!hovered && toastId && timeoutValue) {
+      const timeoutId = window.setTimeout(() => {
         _pop();
-      }, timeout || defaultTimeout);
+      }, timeoutValue);
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
     }
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
+    return;
   }, [_pop, defaultTimeout, hovered, timeout, toastId]);
 
   const add = useCallback<ToastContextValue['add']>(toast => {

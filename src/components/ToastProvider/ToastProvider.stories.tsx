@@ -14,7 +14,8 @@ const DemoButtons = () => {
   const children = text('children', '', 'ToastContext.add');
   const hasAction = boolean('has action', false, 'ToastContext.add');
   const closable = boolean('closable', true, 'ToastContext.add');
-  const timeout = integer('timeout', 0, 'ToastContext.add');
+  const hasTimeout = boolean('has timeout', false, 'ToastContext.add');
+  const timeout = hasTimeout ? integer('timeout', 0, 'ToastContext.add') : undefined;
 
   const pushToast = (toastType: ToastProps['toastType']) => {
     toast.add({
@@ -41,7 +42,7 @@ const DemoButtons = () => {
 };
 
 export const Basic = () => (
-  <ToastProvider defaultTimeout={integer('defaultTimeout', 0, 'ToastProvider')}>
+  <ToastProvider defaultTimeout={integer('defaultTimeout', 3000, 'ToastProvider')}>
     <DemoButtons />
   </ToastProvider>
 );
