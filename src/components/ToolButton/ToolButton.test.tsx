@@ -6,7 +6,7 @@ import { ToolButton } from '../ToolButton';
 describe('ToolButton component', () => {
   it('renders its contents', () => {
     const toolButton = shallow(<ToolButton />);
-    expect(toolButton.find('.ui__toolButton').length).toEqual(1);
+    expect(toolButton.find('.ui__toolButton')).toHaveLength(1);
   });
 
   it('snapshot renders default toolButton', () => {

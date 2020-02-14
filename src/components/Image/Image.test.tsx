@@ -5,7 +5,7 @@ import { Image } from '../Image';
 describe('Image component', () => {
   it('renders its contents', () => {
     const image = shallow(<Image />);
-    expect(image.find('.ui__image').length).toEqual(1);
+    expect(image.find('.ui__image')).toHaveLength(1);
   });
 
   it('snapshot renders default image', () => {

@@ -6,7 +6,7 @@ import { ClickableDiv } from '../ClickableDiv';
 describe('ClickableDiv component', () => {
   it('renders its contents', () => {
     const clickableDiv = shallow(<ClickableDiv />);
-    expect(clickableDiv.find('.ui__clickableDiv').length).toEqual(1);
+    expect(clickableDiv.find('.ui__clickableDiv')).toHaveLength(1);
   });
 
   it('snapshot renders default clickableDiv', () => {

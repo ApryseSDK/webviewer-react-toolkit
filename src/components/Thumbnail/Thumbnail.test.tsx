@@ -9,7 +9,7 @@ const testFile = createFile(0, { pending: true });
 describe('Thumbnail component', () => {
   it('renders its contents', () => {
     const thumbnail = shallow(<Thumbnail file={testFile} />);
-    expect(thumbnail.find('.ui__thumbnail').length).toEqual(1);
+    expect(thumbnail.find('.ui__thumbnail')).toHaveLength(1);
   });
 
   it('snapshot renders default thumbnail', () => {

@@ -5,6 +5,7 @@ module.exports = {
   extends: [
     'plugin:jsx-a11y/recommended',
     'plugin:jest/recommended',
+    'plugin:jest/style',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
@@ -30,10 +31,7 @@ module.exports = {
     'prefer-const': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      { ignoreRestSiblings: true, argsIgnorePattern: '^_' },
-    ],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/unbound-method': 'error',
 
     // Turn off rules.

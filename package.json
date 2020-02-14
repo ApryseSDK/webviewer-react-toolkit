@@ -13,15 +13,16 @@
     "start": "start-storybook -s public -p 6006",
     "make": "ts-node scripts/make",
     "parse-scss": "node scripts/parse_scss",
-    "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
-    "build": "yarn clean && webpack --config webpack.config.ts && scripts/build_package.sh",
     "clean": "rm -rf dist & rm -rf lib",
+    "build": "yarn clean && webpack --config webpack.config.ts && scripts/build_package.sh",
+    "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
     "test": "jest ./src --config ./jest.config.js",
+    "ci": "yarn lint && yarn test",
     "build-storybook": "build-storybook -s public",
     "deploy-storybook": "storybook-to-ghpages --out=.out",
     "commit": "commit",
-    "release": "yarn build && standard-version && git push && git push --tags && yarn publish --non-interactive",
-    "release-next": "yarn build && standard-version --prerelease beta && git push && git push --tags && yarn publish --non-interactive --tag next"
+    "release": "yarn ci && yarn build && standard-version && git push --follow-tags && yarn publish --non-interactive && yarn deploy-storybook",
+    "release-next": "yarn ci && yarn build && standard-version --prerelease beta && git push --follow-tags && yarn publish --non-interactive --tag next && yarn deploy-storybook"
   },
   "keywords": [
     "pdftron",
