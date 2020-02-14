@@ -14,15 +14,15 @@ export interface ${componentName}Props extends ButtonHTMLAttributes<HTMLButtonEl
   someProp?: string;
 }
 
-export const ${componentName}: FC<${componentName}Props> = ({ someProp = 'Default value', className, ...buttonProps }) => {
+export const ${componentName}: FC<${componentName}Props> = ({ someProp = 'Default value', className, ...props }) => {
   const ${pascalToCamel(componentName)}Class = classnames(
     '${STYLE_PREFIX}__base ${STYLE_PREFIX}__${pascalToCamel(componentName)}',
-    { '${STYLE_PREFIX}__${pascalToCamel(componentName)}--disabled': buttonProps.disabled },
+    { '${STYLE_PREFIX}__${pascalToCamel(componentName)}--disabled': props.disabled },
     className,
   );
 
   return (
-    <button {...buttonProps} className={${pascalToCamel(componentName)}Class}>
+    <button {...props} className={${pascalToCamel(componentName)}Class}>
       {someProp}
     </button>
   );
