@@ -3,14 +3,6 @@
   z-index: $z-index-overlay;
   pointer-events: none;
 
-  &--blocking {
-    pointer-events: all;
-  }
-
-  &--dark {
-    background-color: $color-overlay-canvas;
-  }
-
   > * {
     pointer-events: all;
   }

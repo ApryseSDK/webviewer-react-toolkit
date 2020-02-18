@@ -15,12 +15,10 @@ const style: CSSProperties = {
 
 export const Basic = () => {
   const mounted = boolean('mounted', true);
-  const darkOverlay = boolean('darkOverlay', false);
-  const blockClicks = boolean('blockClicks', false);
   return (
     <>
       {mounted && (
-        <Overlay darkOverlay={darkOverlay} blockClicks={blockClicks}>
+        <Overlay>
           <div style={style}>Overlay #1</div>
         </Overlay>
       )}
@@ -30,25 +28,21 @@ export const Basic = () => {
 
 export const Multiple = () => {
   const mounted1 = boolean('#1 mounted', true);
-  const darkOverlay1 = boolean('#1 darkOverlay', false);
-  const blockClicks1 = boolean('#1 blockClicks', false);
 
   const mounted2 = boolean('#2 mounted', true);
-  const darkOverlay2 = boolean('#2 darkOverlay', false);
-  const blockClicks2 = boolean('#2 blockClicks', false);
 
   return (
     <>
-      {mounted1 && (
-        <Overlay darkOverlay={darkOverlay1} blockClicks={blockClicks1}>
+      {mounted1 ? (
+        <Overlay>
           <div style={style}>Overlay #1</div>
         </Overlay>
-      )}
-      {mounted2 && (
-        <Overlay darkOverlay={darkOverlay2} blockClicks={blockClicks2}>
+      ) : null}
+      {mounted2 ? (
+        <Overlay>
           <div style={style}>Overlay #2</div>
         </Overlay>
-      )}
+      ) : null}
     </>
   );
 };
