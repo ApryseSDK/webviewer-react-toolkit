@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IconButton component snapshot renders default iconButton 1`] = `
+<ForwardRef
+  buttonStyle="borderless"
+  className="ui__base ui__iconButton"
+/>
+`;
