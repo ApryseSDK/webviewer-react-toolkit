@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, useEffect } from 'react';
+import React, { HTMLAttributes, useEffect } from 'react';
 import { MultiPage, SinglePage } from '../../icons';
 
 export interface ThumbnailDragLayerProps extends HTMLAttributes<HTMLDivElement> {
@@ -10,7 +10,7 @@ export interface ThumbnailDragLayerProps extends HTMLAttributes<HTMLDivElement> 
   numFiles?: number;
 }
 
-export const ThumbnailDragLayer: FC<ThumbnailDragLayerProps> = ({ numFiles = 1, className, ...divProps }) => {
+export const ThumbnailDragLayer = ({ numFiles = 1, className, ...divProps }: ThumbnailDragLayerProps) => {
   numFiles = numFiles || 1;
   useEffect(() => {
     if (!Number.isInteger(numFiles)) throw new RangeError('numFiles must be an integer');

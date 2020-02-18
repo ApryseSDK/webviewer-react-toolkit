@@ -7,7 +7,9 @@ exports[`ThumbnailDragLayer component snapshot renders default thumbnailDragLaye
   <div
     className="ui__thumbnailDragLayer__wrapper"
   >
-    <SinglePage />
+    <SinglePage
+      className="ui__thumbnailDragLayer__icon"
+    />
   </div>
 </div>
 `;

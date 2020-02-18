@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { FC } from 'react';
+import React from 'react';
 
 export interface SpinnerProps {
   /**
@@ -13,7 +13,7 @@ export interface SpinnerProps {
   className?: string;
 }
 
-export const Spinner: FC<SpinnerProps> = ({ spinnerSize = 'default', className }) => {
+export const Spinner = ({ spinnerSize = 'default', className }: SpinnerProps) => {
   const spinnerClass = classnames('ui__base ui__spinner', `ui__spinner--size-${spinnerSize}`, className);
 
   return (
