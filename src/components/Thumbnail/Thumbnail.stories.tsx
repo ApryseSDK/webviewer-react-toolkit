@@ -1,11 +1,11 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
-import close from '../../icons/close-24px.svg';
-import rotate from '../../icons/rotate_right-24px.svg';
 import { createFile, CreateFileOptions, FakeFile } from '../../storybook-helpers/data/files';
 import { Thumbnail, ThumbnailProps } from '../Thumbnail';
+import close from './close-24px.svg';
 import readme from './README.md';
+import rotate from './rotate_right-24px.svg';
 
 export default { title: 'Components/Thumbnail', component: Thumbnail, parameters: { readme } };
 
