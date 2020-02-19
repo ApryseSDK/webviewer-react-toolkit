@@ -27,7 +27,6 @@
 
   &__top {
     display: flex;
-    align-items: flex-start;
 
     &__heading {
       font-size: $font-size-large;
@@ -36,9 +35,9 @@
     }
 
     &__close.ui__button {
-      flex-grow: 0;
-      flex-shrink: 0;
-      margin: calc(-1 * #{$padding-tiny});
+      // margin: $padding-tiny;
+      padding: 0 calc(#{$padding} - 2px);
+      margin: 2px;
     }
   }
 

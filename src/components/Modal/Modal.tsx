@@ -3,6 +3,7 @@ import React, { FC, HTMLAttributes, MouseEvent, ReactNode, useEffect } from 'rea
 import { useUnmountDelay } from '../../hooks';
 import { Close } from '../../icons';
 import { ButtonGroup } from '../ButtonGroup';
+import { FocusTrap } from '../FocusTrap';
 import { IconButton } from '../IconButton';
 import { Overlay } from '../Overlay';
 
@@ -90,20 +91,22 @@ export const Modal: FC<ModalProps> = ({
         onClick={backgroundIsButton ? onClose : undefined}
       >
         {mounted ? (
-          <div {...props} className={modalClass}>
-            <div className="ui__modal__top">
-              <div className="ui__modal__top__heading">{heading}</div>
-              {onClose ? (
-                <IconButton className="ui__modal__top__close" onClick={onClose}>
-                  <Close />
-                </IconButton>
-              ) : (
-                undefined
-              )}
+          <FocusTrap focusLastOnUnlock locked>
+            <div {...props} className={modalClass}>
+              <div className="ui__modal__top">
+                <div className="ui__modal__top__heading">{heading}</div>
+                {onClose ? (
+                  <IconButton className="ui__modal__top__close" onClick={onClose}>
+                    <Close />
+                  </IconButton>
+                ) : (
+                  undefined
+                )}
+              </div>
+              <div className={bodyClass}>{children}</div>
+              {buttonGroup ? <ButtonGroup className="ui__modal__buttonGroup">{buttonGroup}</ButtonGroup> : undefined}
             </div>
-            <div className={bodyClass}>{children}</div>
-            {buttonGroup ? <ButtonGroup className="ui__modal__buttonGroup">{buttonGroup}</ButtonGroup> : undefined}
-          </div>
+          </FocusTrap>
         ) : (
           undefined
         )}
