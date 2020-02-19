@@ -1,6 +1,5 @@
 import c from 'ansi-colors';
 import fs from 'fs';
-import { err, timeErr, timeLog } from '../utils/logUtils';
 import { component } from './file-content/component';
 import { componentIndex } from './file-content/componentIndex';
 import { componentReadme } from './file-content/componentReadme';
@@ -10,6 +9,7 @@ import { componentStyle } from './file-content/componentStyle';
 import { componentTest } from './file-content/componentTest';
 import { MakeOptions } from './types';
 import { updateImportFile } from './utils/fileUtils';
+import { err, timeErr, timeLog } from './utils/logUtils';
 import { getPaths, pathify } from './utils/pathUtils';
 
 /**

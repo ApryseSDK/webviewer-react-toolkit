@@ -1,0 +1,39 @@
+import { options, output } from './useFocusTrapHelpers';
+import { Meta, Props } from '@storybook/addon-docs/blocks';
+import { LinkTo } from '../../storybook-helpers/mdx';
+
+<Meta title="Hooks/useFocusTrap" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+# useFocusTrap
+
+A hook that allows you to conditionally lock focus within an element. This is
+valuable for trapping focus inside modals, or any other use case which requires
+you to prevent the user from tabbing out of a context.
+
+The first argument is `locked`, a boolean determining whether focus is locked
+within the element you pass the ref to.
+
+This functionality is wrapped by the
+component <LinkTo title="Components/FocusTrap" story="Basic">FocusTrap</LinkTo> if you prefer
+to use a component rather than a hook.
+
+```tsx
+const focusRef = useFocusTrap(locked, { /* UseFocusTrapOptions */ });
+
+return (
+  <div ref={focusRef}>
+    <input />
+    <button>Some button</button>
+  </div>
+);
+```
+
+## `UseFocusTrapOptions`
+
+<Props of={options} />
+
+## Returns
+
+```tsx
+RefObject<HTMLElement>
+```

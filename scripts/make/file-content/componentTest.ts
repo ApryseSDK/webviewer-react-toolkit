@@ -1,16 +1,16 @@
-import { pascalToCamel } from '../utils/stringUtils';
 import { STYLE_PREFIX } from '../constants';
+import { pascalToCamel } from '../utils/stringUtils';
 
 export const componentTest = (componentName: string) =>
   `import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import ${componentName} from '../${componentName}';
+import { ${componentName} } from '../${componentName}';
 
 describe('${componentName} component', () => {
   it('renders its contents', () => {
     const ${pascalToCamel(componentName)} = shallow(<${componentName} />);
-    expect(${pascalToCamel(componentName)}.find('.${STYLE_PREFIX}__${pascalToCamel(componentName)}').length).toEqual(1);
+    expect(${pascalToCamel(componentName)}.find('.${STYLE_PREFIX}__${pascalToCamel(componentName)}')).toHaveLength(1);
   });
 
   it('snapshot renders default ${pascalToCamel(componentName)}', () => {

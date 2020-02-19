@@ -43,12 +43,13 @@ the <LinkTo title="Style/Colors">Style section</LinkTo>.
 
 ### Sass
 
-> Note that since the mixins use the variables, you will need to import both if
-> you are using mixins.
+> Only include these files if you use Sass, and care about the mixins or
+> variables. Each file works independently, so only include the ones you need.
 
 ```scss
 @import "~@pdftron/webviewer-react-toolkit/dist/scss/_variables.scss";
 @import "~@pdftron/webviewer-react-toolkit/dist/scss/_mixins.scss";
+@import "~@pdftron/webviewer-react-toolkit/dist/scss/_breakpoints.scss";
 ```
 
 ## Fonts (optional)

@@ -6,7 +6,7 @@ import { Button } from '../Button';
 describe('Button component', () => {
   it('renders its contents', () => {
     const button = shallow(<Button />);
-    expect(button.find('.ui__button').length).toEqual(1);
+    expect(button.find('.ui__button')).toHaveLength(1);
   });
 
   it('snapshot renders default button', () => {

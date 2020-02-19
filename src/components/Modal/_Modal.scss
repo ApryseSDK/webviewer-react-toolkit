@@ -1,0 +1,58 @@
+.ui__modal__wrapper {
+  padding: $padding;
+  @include absolute-fill;
+  @include flex-center;
+  @include opacity-transition;
+  opacity: 1;
+  background-color: $color-overlay-canvas;
+
+  &--closed {
+    opacity: 0;
+    pointer-events: none !important;
+  }
+}
+
+.ui__modal {
+  background-color: $color-gray-2;
+  border-radius: $border-radius;
+  overflow: hidden;
+
+  @include for-phone-only {
+    width: 100%;
+  }
+
+  @include for-tablet-up {
+    max-width: 500px;
+  }
+
+  &__top {
+    display: flex;
+
+    &__heading {
+      font-size: $font-size-large;
+      flex: 1 1 auto;
+      padding: $padding-medium $padding;
+    }
+
+    &__close.ui__button {
+      // margin: $padding-tiny;
+      padding: 0 calc(#{$padding} - 2px);
+      margin: 2px;
+    }
+  }
+
+  &__body {
+    padding: $padding-medium $padding;
+    background-color: $color-gray-1;
+    border-top: 1px solid $color-gray-3;
+    border-bottom: 1px solid $color-gray-3;
+
+    &--noButton {
+      border-bottom: none;
+    }
+  }
+
+  &__buttonGroup {
+    padding: $padding-medium $padding;
+  }
+}

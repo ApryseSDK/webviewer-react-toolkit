@@ -118,7 +118,11 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
     // Call onDragChange whenever isDragging changes.
     const onDragChangeRef = useCurrentRef(onDragChange);
     useEffect(() => {
-      onDragChangeRef.current?.(isDragging);
+      if (isDragging && onDragChangeRef.current) {
+        onDragChangeRef.current?.(true);
+        return () => onDragChangeRef.current?.(false); // eslint-disable-line react-hooks/exhaustive-deps
+      }
+      return;
     }, [isDragging, onDragChangeRef]);
 
     drag(drop(draggableRef));

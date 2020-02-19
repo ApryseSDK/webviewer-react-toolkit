@@ -49,7 +49,7 @@ $thumbnail-border-size: 2px;
     // Do not style for hover or focus if anything is dragging
     &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging) {
       &:not(.ui__thumbnail--selected) {
-        background-color: $color-gray-1;
+        background-color: $color-gray-3;
       }
     }
   }

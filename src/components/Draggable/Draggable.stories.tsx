@@ -3,9 +3,9 @@ import { boolean } from '@storybook/addon-knobs';
 import React, { CSSProperties } from 'react';
 import { DndMultiProvider } from '../DndMultiProvider';
 import { Draggable } from '../Draggable';
-import info from './README.md';
+import readme from './README.md';
 
-export default { title: 'Components/Draggable', component: Draggable, parameters: { info } };
+export default { title: 'Components/Draggable', component: Draggable, parameters: { readme } };
 
 const commonStyle: CSSProperties = {
   padding: 16,

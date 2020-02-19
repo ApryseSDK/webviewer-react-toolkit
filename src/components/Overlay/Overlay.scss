@@ -1,0 +1,9 @@
+.ui__overlay {
+  @include absolute-fill;
+  z-index: $z-index-overlay;
+  pointer-events: none;
+
+  > * {
+    pointer-events: all;
+  }
+}

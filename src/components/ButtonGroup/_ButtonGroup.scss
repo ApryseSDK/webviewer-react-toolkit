@@ -1,0 +1,35 @@
+.ui__buttonGroup {
+  margin: calc(-1 * #{$padding-tiny});
+  display: flex;
+  flex-wrap: wrap;
+
+  > button {
+    margin: $padding-tiny;
+  }
+
+  &--reverse {
+    flex-wrap: wrap-reverse;
+  }
+
+  &--position {
+    &-left {
+      justify-content: flex-start;
+    }
+
+    &-center {
+      justify-content: center;
+    }
+
+    &-right {
+      justify-content: flex-end;
+    }
+
+    &-space-between {
+      justify-content: space-between;
+    }
+
+    &-space-around {
+      justify-content: space-around;
+    }
+  }
+}

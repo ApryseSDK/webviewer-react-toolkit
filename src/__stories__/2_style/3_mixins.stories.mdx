@@ -3,15 +3,12 @@ import { Mixins } from './styleComponents'
 
 <Meta title="Style/Mixins" parameters={{previewTabs: {canvas: {hidden: true}}}} />
 
-# Sass Mixins
+# Mixins
 
 The WebViewer React Toolkit ships with some Sass mixins that wrap common
 patterns. These can only be used in Sass files, but the code is provided below
 so that you can implement them in CSS if you wish.
 
-> Note: These mixins rely on Sass variables. If you wish to use these, you must
-> also include the variables file.
->
 > For more on Sass mixins, check out the
 > [Sass documentation](https://sass-lang.com/documentation/at-rules/mixin).
 
@@ -22,18 +19,30 @@ To use these in your own project, you can include the mixins in your code:
 ```scss
 div {
   @include flex-center;
-
-  @include for-tablet-up {
-    background-color: blue;
-  }
 }
+```
+
+Or copy the code into your CSS files:
+
+```css
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+If you are using Sass, make sure you import the Sass mixins file:
+
+```scss
+@import "~@pdftron/webviewer-react-toolkit/dist/scss/_mixins.scss";
 ```
 
 ## Mixins
 
 The following mixins show the value you can include in your code, as well as the
-raw values in case you wish to modify them in your own code. You can click any
-of these to copy the value to your clipboard.
+raw values in case you wish to copy them to CSS code. You can click any of these
+to copy the value to your clipboard.
 
 <!-- Below here is auto-generated. DO NOT EDIT. -->
 <!-- GENERATE_ENTRY -->
@@ -41,101 +50,50 @@ of these to copy the value to your clipboard.
 <Mixins index={0} />
 
 ```scss
-@mixin focus {
-  box-shadow: 0 0 0 2px $color-focus-shadow;
-}
+box-shadow: 0 0 0 2px var(--color-focus-shadow);
 ```
-
 
 <Mixins index={1} />
 
 ```scss
-@mixin focus-inset {
-  box-shadow: inset 0 0 0 2px $color-focus-shadow;
-}
+box-shadow: inset 0 0 0 2px var(--color-focus-shadow);
 ```
-
 
 <Mixins index={2} />
 
 ```scss
-// Try not to use this, as it breaks "mobile first" principles.
-@mixin for-phone-only {
-  @media (max-width: $tablet-lower-boundary - 1) {
-    @content;
-  }
-}
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
 ```
-
 
 <Mixins index={3} />
 
 ```scss
-@mixin for-tablet-up {
-  @media (min-width: $tablet-lower-boundary) {
-    @content;
-  }
-}
+position: fixed;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
 ```
-
 
 <Mixins index={4} />
 
 ```scss
-@mixin for-desktop-up {
-  @media (min-width: $desktop-lower-boundary) {
-    @content;
-  }
-}
+display: flex;
+justify-content: center;
+align-items: center;
 ```
-
 
 <Mixins index={5} />
 
 ```scss
-@mixin absolute-fill {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-```
-
-
-<Mixins index={6} />
-
-```scss
-@mixin fixed-fill {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-```
-
-
-<Mixins index={7} />
-
-```scss
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-```
-
-
-<Mixins index={8} />
-
-```scss
 // This provides the animation for skeleton loading.
-@mixin skeleton {
-  animation: timeline 2s linear infinite;
-  background: linear-gradient(to right, #eee 0%, #ddd 10%, #eee 20%);
-  background-size: 600px auto;
-}
+animation: timeline 2s linear infinite;
+background: linear-gradient(to right, #eee 0%, #ddd 10%, #eee 20%);
+background-size: 600px auto;
 
 @keyframes timeline {
   0% {
@@ -145,4 +103,39 @@ of these to copy the value to your clipboard.
     background-position: 200px 0;
   }
 }
+```
+
+<Mixins index={6} />
+
+```scss
+// This provides the animation for spinning loaders.
+animation: spin 1.2s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite;
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+```
+
+<Mixins index={7} />
+
+```scss
+// This provides the animation for sliding in toasts from the top.
+animation: slide 0.25s forwards;
+
+@keyframes slide {
+  100% {
+    transform: translateY(0%);
+  }
+}
+```
+
+<Mixins index={8} />
+
+```scss
+transition: opacity 0.25s;
 ```

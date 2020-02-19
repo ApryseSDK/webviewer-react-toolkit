@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { FC } from 'react';
+import React from 'react';
 
 export interface FileSkeletonProps {
   /**
@@ -8,7 +8,7 @@ export interface FileSkeletonProps {
   className?: string;
 }
 
-export const FileSkeleton: FC<FileSkeletonProps> = ({ className }) => {
+export const FileSkeleton = ({ className }: FileSkeletonProps) => {
   const fileSkeletonClass = classnames('ui__base ui__fileSkeleton', className);
 
   return (

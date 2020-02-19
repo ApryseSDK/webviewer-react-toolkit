@@ -1,0 +1,45 @@
+import { options, output } from './useToastHelpers';
+import { Meta, Props, Story, Preview } from '@storybook/addon-docs/blocks';
+import { LinkTo } from '../../storybook-helpers/mdx';
+
+<Meta title="Hooks/useToast" parameters={{previewTabs: {canvas: {hidden: true}}}} />
+
+# useToast
+
+A hook that provides the context value
+of <LinkTo title="Components/ToastProvider" story="Basic">ToastProvider</LinkTo> in
+order to add or remove Toast notifications. Make sure that you have a
+`ToastProvider` somewhere further up in your React project, or this will not
+work.
+
+```ts
+const { add, remove } = useToast();
+
+const toastId = add({
+  heading: 'You are not able to do that',
+  children: 'The action you are attempting to do is not possible.',
+  toastType: 'warning',
+  action: { text: 'Try Again', onClick: tryAgain },
+  closable: true,
+  timeout: 4000,
+});
+
+// Later, if you want to remove:
+remove(toastId);
+```
+
+## `ToastContextValue` (return value)
+
+<Props of={output} />
+
+## `AddToast`
+
+<Props of={options} />
+
+## Example
+
+Here's the hook in action:
+
+<Preview>
+  <Story inline={false} height="550px" id="components-toastprovider--basic" />
+</Preview>

@@ -1,31 +1,44 @@
+// File is auto-generated from _theme. DO NOT EDIT.
+
 /* --- Colors. --- */
 
-// Use these in your sass rather than using var in line.
+// Theme.
 $color-theme-primary: var(--color-theme-primary);
 $color-theme-secondary: var(--color-theme-secondary);
+
+// Font.
 $color-font-primary: var(--color-font-primary);
 $color-font-secondary: var(--color-font-secondary);
-$color-background-canvas: var(--color-background-canvas);
+
+// Gray.
 $color-gray-1: var(--color-gray-1);
 $color-gray-2: var(--color-gray-2);
-$color-focus-shadow: var(--color-focus-shadow);
+$color-gray-3: var(--color-gray-3);
 
+// Blue Gray.
 $color-blue-gray-1: var(--color-blue-gray-1);
 $color-blue-gray-2: var(--color-blue-gray-2);
 $color-blue-gray-3: var(--color-blue-gray-3);
 $color-blue-gray-4: var(--color-blue-gray-4);
 $color-blue-gray-5: var(--color-blue-gray-5);
 $color-blue-gray-6: var(--color-blue-gray-6);
-$color-blue-gray-7: var(--color-blue-gray-7);
+
+// Contrast.
 $color-contrast-1: var(--color-contrast-1);
 $color-contrast-2: var(--color-contrast-2);
-$color-contrast-3: var(--color-contrast-3);
 
-/* --- Focus. --- */
+// Message.
+$color-message-info: var(--color-message-info);
+$color-message-success: var(--color-message-success);
+$color-message-warning: var(--color-message-warning);
+$color-message-error: var(--color-message-error);
 
-$focus-transition: var(--focus-transition);
+// Other.
+$color-background-canvas: var(--color-background-canvas);
+$color-focus-shadow: var(--color-focus-shadow);
+$color-overlay-canvas: var(--color-overlay-canvas);
 
-/* --- Font sizing. --- */
+/* --- Font Size. --- */
 
 $font-size-tiny: var(--font-size-tiny);
 $font-size-small: var(--font-size-small);
@@ -34,31 +47,41 @@ $font-size-medium: var(--font-size-medium);
 $font-size-large: var(--font-size-large);
 $font-size-huge: var(--font-size-huge);
 
-/* --- Font weights. --- */
+/* --- Font Weight. --- */
 
 $font-weight-normal: var(--font-weight-normal);
 $font-weight-bold: var(--font-weight-bold);
-
-/* --- Layout --- */
-
-$border-radius-small: var(--border-radius-small);
-$border-radius: var(--border-radius);
-$border-radius-large: var(--border-radius-large);
 
 /* --- Padding. --- */
 
 $padding-tiny: var(--padding-tiny);
 $padding-small: var(--padding-small);
+$padding-medium: var(--padding-medium);
 $padding: var(--padding);
 $padding-large: var(--padding-large);
+$padding-huge: var(--padding-huge);
 
-/* --- Breakpoints (use mixins for setting media queries). --- */
+/* --- Border Radius. --- */
 
-$tablet-lower-boundary: var(--tablet-lower-boundary);
-$desktop-lower-boundary: var(--desktop-lower-boundary);
+$border-radius-small: var(--border-radius-small);
+$border-radius: var(--border-radius);
+$border-radius-large: var(--border-radius-large);
 
-/* --- Z-Index values. --- */
+/* --- Box Shadow. --- */
+
+$box-shadow-1: var(--box-shadow-1);
+$box-shadow-2: var(--box-shadow-2);
+$box-shadow-3: var(--box-shadow-3);
+
+/* --- Focus. --- */
+
+$focus-transition: var(--focus-transition);
+
+/* --- Z Index. --- */
 
 $z-index-local: var(--z-index-local);
 $z-index-raised: var(--z-index-raised);
 $z-index-dragging: var(--z-index-dragging);
+$z-index-overlay: var(--z-index-overlay);
+
+/* --- Other. --- */

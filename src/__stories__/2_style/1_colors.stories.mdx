@@ -28,6 +28,12 @@ div {
 }
 ```
 
+If you are using Sass, make sure you import the Sass variables file:
+
+```scss
+@import "~@pdftron/webviewer-react-toolkit/dist/scss/_variables.scss";
+```
+
 ## Themes
 
 The toolkit ships with a default light and dark theme To see what the colors
@@ -44,7 +50,14 @@ you want to permanently enable dark theme:
 Or programmatically in JavaScript (this will allow switching themes dynamically):
 
 ```js
-document.documentElement.setAttribute('data-theme', 'dark');
+// Get the root element (<html>):
+const root = document.documentElement;
+
+// Set to dark:
+root.setAttribute('data-theme', 'dark');
+
+// Revert back to light:
+root.removeAttribute('data-theme');
 ```
 
 ## Overriding
