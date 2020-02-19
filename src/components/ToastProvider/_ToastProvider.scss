@@ -1,6 +1,6 @@
 .ui__toastProvider {
   opacity: 1;
-  transition: opacity 0.25s;
+  @include opacity-transition;
 
   &--closing {
     opacity: 0;
