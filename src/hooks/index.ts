@@ -8,3 +8,4 @@ export * from './useKeyForClick';
 export * from './useManagedFiles';
 export * from './useOnClick';
 export * from './useToast';
+export * from './useUnmountDelay';
