@@ -43,8 +43,8 @@ export const Toast: FC<ToastProps> = ({
         <Icon />
       </div>
       <div className="ui__toast__copy">
-        {heading ? <div className="ui__toast__copy__heading">{heading}</div> : null}
-        {children ? <div className="ui__toast__copy__body">{children}</div> : null}
+        {heading ? <div className="ui__toast__copy__heading">{heading}</div> : undefined}
+        {children ? <div className="ui__toast__copy__body">{children}</div> : undefined}
       </div>
       {action ? (
         <div className="ui__toast__action">
@@ -52,14 +52,18 @@ export const Toast: FC<ToastProps> = ({
             {action.text}
           </Button>
         </div>
-      ) : null}
+      ) : (
+        undefined
+      )}
       {onClose ? (
         <div className="ui__toast__action">
           <IconButton onClick={onClose}>
             <Close />
           </IconButton>
         </div>
-      ) : null}
+      ) : (
+        undefined
+      )}
     </div>
   );
 };

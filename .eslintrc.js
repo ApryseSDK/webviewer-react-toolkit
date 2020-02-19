@@ -17,7 +17,9 @@ module.exports = {
     'prettier/@typescript-eslint',
   ],
   settings: {
-    react: { version: '16.8' },
+    react: {
+      version: 'detect',
+    },
   },
   env: {
     browser: true,
@@ -27,14 +29,7 @@ module.exports = {
     jest: true,
   },
   rules: {
-    // Turn on or modify rules.
-    'prefer-const': 'error',
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'error',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/unbound-method': 'error',
-
-    // Turn off rules.
+    // Off
     'react/prop-types': 'off',
     'react/display-name': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -45,5 +40,12 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
+
+    // On.
+    'prefer-const': 'error',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/unbound-method': 'error',
   },
 };

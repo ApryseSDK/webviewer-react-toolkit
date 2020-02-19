@@ -1,7 +1,9 @@
 .ui__editableText {
   &--disabled {
     .ui__editableText__button {
-      color: $color-blue-gray-2;
+      > span {
+        opacity: 0.7;
+      }
     }
   }
 

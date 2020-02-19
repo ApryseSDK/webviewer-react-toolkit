@@ -331,7 +331,9 @@ export function FileOrganizer<F extends ObjectWithId>({
               {onRenderDragLayer()}
             </div>
           </DragLayer>
-        ) : null}
+        ) : (
+          undefined
+        )}
       </div>
     </DndMultiProvider>
   );

@@ -7,4 +7,5 @@ export default [
   '@include skeleton;',
   '@include spinner;',
   '@include slide-in;',
+  '@include opacity-transition;',
 ];

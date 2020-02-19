@@ -1,6 +1,5 @@
 .ui__buttonGroup {
-  padding: $padding-small;
-  margin: calc(-1 * #{$padding-medium});
+  margin: calc(-1 * #{$padding-tiny});
   display: flex;
   flex-wrap: wrap;
 

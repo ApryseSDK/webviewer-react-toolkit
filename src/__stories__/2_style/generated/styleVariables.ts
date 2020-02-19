@@ -4,14 +4,14 @@ export default {
       {
         scss: '$color-theme-primary',
         css: 'var(--color-theme-primary)',
-        value: '#00a3e3',
-        dark: '#9a97f3',
+        value: '#00a5e4',
+        dark: '#00a5e4',
       },
       {
         scss: '$color-theme-secondary',
         css: 'var(--color-theme-secondary)',
         value: '#242933',
-        dark: '#818cab',
+        dark: '#8fa5c7',
       },
     ],
     font: [
@@ -32,14 +32,20 @@ export default {
       {
         scss: '$color-gray-1',
         css: 'var(--color-gray-1)',
-        value: '#dadada',
-        dark: '#2a2a2a',
+        value: '#fff',
+        dark: '#4a4a4a',
       },
       {
         scss: '$color-gray-2',
         css: 'var(--color-gray-2)',
-        value: '#fff',
+        value: '#f4f4f4',
         dark: '#444',
+      },
+      {
+        scss: '$color-gray-3',
+        css: 'var(--color-gray-3)',
+        value: '#ddd',
+        dark: '#3f3f3f',
       },
     ],
     blueGray: [
@@ -64,7 +70,7 @@ export default {
       {
         scss: '$color-blue-gray-4',
         css: 'var(--color-blue-gray-4)',
-        value: '#767f9b',
+        value: '#8b92ab',
         dark: '#9098b3',
       },
       {
@@ -84,20 +90,14 @@ export default {
       {
         scss: '$color-contrast-1',
         css: 'var(--color-contrast-1)',
-        value: '#fff',
-        dark: '#111',
+        value: '#fafafa',
+        dark: '#101010',
       },
       {
         scss: '$color-contrast-2',
         css: 'var(--color-contrast-2)',
-        value: '#fafafa',
-        dark: '#191919',
-      },
-      {
-        scss: '$color-contrast-3',
-        css: 'var(--color-contrast-3)',
         value: '#f0f0f0',
-        dark: '#222',
+        dark: '#1a1a1a',
       },
     ],
     message: [

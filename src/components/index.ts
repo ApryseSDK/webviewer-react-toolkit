@@ -15,6 +15,7 @@ export * from './FileSkeleton';
 export * from './FocusTrap';
 export * from './IconButton';
 export * from './Image';
+export * from './Modal';
 export * from './Overlay';
 export * from './Spinner';
 export * from './Thumbnail';

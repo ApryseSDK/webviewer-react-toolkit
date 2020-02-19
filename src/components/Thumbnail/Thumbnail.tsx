@@ -161,7 +161,7 @@ export function Thumbnail<F extends FileLike>({
           </ToolButton>
         ))}
       </div>
-      {selectedIcon ? <div className="ui__thumbnail__selectedIcon">{selectedIcon}</div> : null}
+      {selectedIcon ? <div className="ui__thumbnail__selectedIcon">{selectedIcon}</div> : undefined}
       <EditableText
         className="ui__thumbnail__label"
         value={label ?? file.name}
