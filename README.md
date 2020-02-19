@@ -21,9 +21,8 @@ npm install @pdftron/webviewer-react-toolkit
 
 ## Using the toolkit
 
-Check the
-[introduction](https://pdftron.github.io/webviewer-react-toolkit/?path=/docs/basics-introduction--page)
-for information on using the toolkit.
+Check the [introduction](https://pdftron.github.io/webviewer-react-toolkit) for
+information on using the toolkit.
 
 ## Contributing
 
