@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.8...v0.1.0) (2020-02-19)
+
+### Refactors
+
+- **Draggable:** prevent unnecessary onDragChange calls ([5ec004a](https://github.com/PDFTron/webviewer-react-toolkit/commit/5ec004ae62b3cc17f28f8b2b423331d4284f9bb5))
+
 ## [0.1.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2020-02-19)
 
 ### ⚠ BREAKING CHANGES
