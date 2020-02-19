@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2020-02-19)
+
+### ⚠ BREAKING CHANGES
+
+- **Overlay:** removed blockClicks and darkOverlay from Overlay, will be moved into components that require these properties
+- **colors:** since color-blue-gray-4 was unused, shifted every color-blue-gray over so there is no longer a color-blue-gray-7, and every color above color-blue-gray-3 has been updated
+
+### Features
+
+- **ButtonGroup:** added button group for easy button layout ([9457c44](https://github.com/PDFTron/webviewer-react-toolkit/commit/9457c44242e6b8a92426cf3fbccd5ae3daa194a0))
+- **IconButton:** added icon button ([6fa450b](https://github.com/PDFTron/webviewer-react-toolkit/commit/6fa450be8d9242d8ce4656495bd930dec6382d7b))
+- **icons:** exposed single and multi page icons ([a45e459](https://github.com/PDFTron/webviewer-react-toolkit/commit/a45e459f542f566bceb747349d3df463740eb174))
+- **icons:** exposed some icons that are used internally ([0a35b58](https://github.com/PDFTron/webviewer-react-toolkit/commit/0a35b586ed437fb35cce32bae4cd479b647323ed))
+- **Modal:** added focus lock to modal to ensure user can't tab out ([7b005a8](https://github.com/PDFTron/webviewer-react-toolkit/commit/7b005a8741fe423e421d5ad32320bca0b574a436))
+- **Modal:** added modal component for displaying confirmations and info ([8a69e44](https://github.com/PDFTron/webviewer-react-toolkit/commit/8a69e44640e86701aeb271b39d4ed64188deefde))
+- **ToastProvider:** if added toast has timeout of 0 will not timeout ([c8c4f3c](https://github.com/PDFTron/webviewer-react-toolkit/commit/c8c4f3cdee1ecf8af5a5af1ba52866117302e00f))
+- **useUnmountDelay:** added hook for delayed unmounts, used in Modal ([1ef4338](https://github.com/PDFTron/webviewer-react-toolkit/commit/1ef433879b1cdac27cfad98ca8bc7602cd31fb94))
+
+### Bug Fixes
+
+- **Overlay:** no longer unmounts when first item removed ([52ae549](https://github.com/PDFTron/webviewer-react-toolkit/commit/52ae549d7b774b3eeea71275a98f3c82c6dc1245))
+
+### Styles
+
+- **colors:** removed unused color-blue-gray-4 ([89a4a5a](https://github.com/PDFTron/webviewer-react-toolkit/commit/89a4a5a65308b476c2c63bddec44523b8063df48))
+- **IconButton:** added padding to make button square given square icon ([39caaca](https://github.com/PDFTron/webviewer-react-toolkit/commit/39caacad795f8794d848ddc60e7cc45fe1b31a82))
+
 ## [0.1.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2020-02-13)
 
 ### ⚠ BREAKING CHANGES
