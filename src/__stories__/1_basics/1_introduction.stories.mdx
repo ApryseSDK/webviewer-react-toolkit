@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { LinkTo } from '../../storybook-helpers/mdx';
-import { Version, Url } from './Version';
+import { Version, Current } from './Version';
 
 <Meta title="Basics/Introduction" parameters={{previewTabs: {canvas: {hidden: true}}}} />
 
@@ -20,7 +20,7 @@ functionality.
 
 - To use or change any of the CSS properties, check the <LinkTo title="Style/Colors">Style section</LinkTo>.
 
-- There are some useful React Hooks provided in the <LinkTo title="Hooks/useManagedFiles">Hooks section</LinkTo>.
+- There are some useful React Hooks provided in the <LinkTo title="Hooks/useFocusTrap">Hooks section</LinkTo>.
 
 - You'll find more information on our File data structure in the <LinkTo title="Data/File">Data section</LinkTo>.
 
@@ -28,13 +28,27 @@ functionality.
 
 ## About the Documentation
 
+This documentation is always kept up to date with the latest release. This may
+be newer than the current stable release, as unstable releases are published
+more frequently. The version of the toolkit that this documentation is for
+is <Current />. This can be viewed at any time by hovering the PDFTron logo on
+the top left.
+
 When viewing <LinkTo title="Components/Button" story="Basic">Components</LinkTo>,
 there will be a `Playground` tab on the top left. This provides a canvas where
 you are able to interact with the component's props and view the generated code.
 
 ## Releases
 
-Latest release: [ <Version /> ](https://github.com/PDFTron/webviewer-react-toolkit/releases/latest).
+You can view all releases on the
+[GitHub releases page](https://github.com/PDFTron/webviewer-react-toolkit/releases)
+or in the [CHANGELOG](https://github.com/PDFTron/webviewer-react-toolkit/blob/next/CHANGELOG.md).
 
-You will be able to see all releases on our
-[GitHub releases page](https://github.com/PDFTron/webviewer-react-toolkit/releases).
+Latest stable release:
+
+- [npm](https://www.npmjs.com/package/@pdftron/webviewer-react-toolkit)
+- [GitHub](https://github.com/PDFTron/webviewer-react-toolkit/releases/latest)
+
+To download the latest **unstable** `@next` release, check out
+the instructions on
+the <LinkTo title="Basics/Getting Started">Getting Started page</LinkTo>.
