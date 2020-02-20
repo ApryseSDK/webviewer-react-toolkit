@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0...v0.2.0-beta.1) (2020-02-20)
+
+### ⚠ BREAKING CHANGES
+
+- **Thumbnail:** removed hideExtension prop, no longer necessary since Thumbnail will not display extension due to it being included in File.name
+
+### Features
+
+- **File:** added clone function to safely duplicate files ([2597af1](https://github.com/PDFTron/webviewer-react-toolkit/commit/2597af1e9ce59e392286c9807e67d45d29c7e14e))
+
+### Bug Fixes
+
+- **Thumbnail:** no longer displays extension, now included in name ([6360abd](https://github.com/PDFTron/webviewer-react-toolkit/commit/6360abd49d9e7a6ccc300f2cbb77ea2aa865fb9b))
+
 ## [0.1.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.1.0-beta.8...v0.1.0) (2020-02-19)
 
 ### Refactors
