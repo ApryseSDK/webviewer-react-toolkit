@@ -170,6 +170,17 @@ export class File implements FileLike {
     this.dispatchEvent('ondocumentobjchange');
   }
 
+  /**
+   * Use this file to make updates to `documentObj` that you want reflected in
+   * `fileObj` and `thumbnail`. Since mutations directly to `documentObj` will
+   * not be detected, using this function tells `File` to trigger an update.
+   */
+  async updateDocumentObj(updater: (documentObj: CoreControls.Document) => Promise<void>) {
+    const documentObj = await this.documentObj.get();
+    await updater(documentObj);
+    this.setDocumentObj(documentObj);
+  }
+
   /* --- File utility functions. --- */
 
   /**
@@ -189,10 +200,10 @@ export class File implements FileLike {
    */
   clone() {
     return new File({
-      name: this._name,
-      originalName: this._originalName,
-      extension: this._extension,
-      documentObj: blobToDocument(documentToBlob(this._documentObj.get()), this._extension),
+      name: this.name,
+      originalName: this.originalName,
+      extension: this.extension,
+      documentObj: blobToDocument(documentToBlob(this.documentObj.get()), this.extension),
     });
   }
 
