@@ -182,6 +182,20 @@ export class File implements FileLike {
     this.dispatchEvent('onrotate');
   }
 
+  /**
+   * Creates a clone of the file with a new `documentObj`. This is the
+   * recommended way of duplicating files, as it will prevent them both
+   * referencing the same documentObj.
+   */
+  clone() {
+    return new File({
+      name: this._name,
+      originalName: this._originalName,
+      extension: this._extension,
+      documentObj: blobToDocument(documentToBlob(this._documentObj.get()), this._extension),
+    });
+  }
+
   /* --- Events. --- */
 
   /**
