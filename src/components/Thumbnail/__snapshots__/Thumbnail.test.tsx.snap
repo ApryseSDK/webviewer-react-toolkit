@@ -11,7 +11,7 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
     className="ui__thumbnail__image"
   >
     <ForwardRef
-      alt="file_1"
+      alt="file_1.pdf"
       onRenderLoading={[Function]}
     />
   </div>
@@ -24,10 +24,9 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
     locked={true}
     onCancel={[Function]}
     onEdit={[Function]}
-    onRenderText={[Function]}
     onSave={[Function]}
     tabIndex={-1}
-    value="file_1"
+    value="file_1.pdf"
   />
 </ForwardRef>
 `;
