@@ -1,4 +1,5 @@
 import { RefObject, useCallback, useEffect, useRef } from 'react';
+import { focusableElementDomString } from '../utils';
 
 export interface UseFocusTrapOptions {
   /**
@@ -6,20 +7,6 @@ export interface UseFocusTrapOptions {
    */
   focusLastOnUnlock?: boolean;
 }
-
-const focusableElementDomString = [
-  'a[href]',
-  'area[href]',
-  'input:not([disabled]):not([type="hidden"]):not([aria-hidden])',
-  'select:not([disabled]):not([aria-hidden])',
-  'textarea:not([disabled]):not([aria-hidden])',
-  'button:not([disabled]):not([aria-hidden])',
-  'iframe',
-  'object',
-  'embed',
-  '[contenteditable]',
-  '[tabindex]:not([tabindex^="-"])',
-].join(',');
 
 function findFocusableIndex(elements: NodeListOf<HTMLElement>, toFind: Element | EventTarget | null) {
   let index = -1;

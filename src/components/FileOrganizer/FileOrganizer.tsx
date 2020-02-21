@@ -15,7 +15,14 @@ import React, {
   useState,
 } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
-import { getRowAndColumnIndex, getSibling, isScrolledIntoView, ObjectWithId, THUMBNAIL_WIDTH } from '../../utils';
+import {
+  getRowAndColumnIndex,
+  getSibling,
+  isScrolledIntoView,
+  ObjectWithId,
+  THUMBNAIL_WIDTH,
+  focusableElementDomString,
+} from '../../utils';
 import { DndMultiProvider } from '../DndMultiProvider';
 import { Draggable } from '../Draggable';
 import { DragLayer, DragLayerProps } from '../DragLayer';
@@ -185,19 +192,59 @@ export function FileOrganizer<F extends ObjectWithId>({
 
   const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, _file: F, draggableRef: RefObject<HTMLDivElement>) => {
-      if (preventArrowsToMove || disableMove || editingId !== undefined || !onMove) return;
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      let indexDiff = 0;
 
-      const indexDiff = event.key === 'ArrowLeft' ? -1 : 1;
+      switch (event.key) {
+        case 'ArrowLeft':
+          indexDiff = -1;
+          break;
+        case 'ArrowRight':
+          indexDiff = 1;
+          break;
+        case 'ArrowUp':
+          indexDiff = -1 * columnCount;
+          break;
+        case 'ArrowDown':
+          indexDiff = columnCount;
+          break;
+        default:
+          return; // Return if not one of above keys
+      }
 
-      onMove(index, index + indexDiff);
       event.preventDefault();
+
+      let hasMoved = false;
+
+      // If meta key was pressed, move to new location.
+      if (
+        !preventArrowsToMove &&
+        (event.metaKey || event.ctrlKey) &&
+        !disableMove &&
+        editingId === undefined &&
+        onMove
+      ) {
+        hasMoved = true;
+        onMove(index, index + indexDiff);
+      }
 
       if (!gridRef.current) return;
 
-      const newLocation = getSibling(draggableRef.current, indexDiff);
-      const { isVisible } = isScrolledIntoView(newLocation, fileOrganizerRef.current);
+      const siblingAtLocation = getSibling(draggableRef.current, indexDiff);
 
+      // If no meta key was pressed, focus item in direction of keys.
+      if (siblingAtLocation && !(event.metaKey || event.ctrlKey)) {
+        const focusable = siblingAtLocation.querySelector<HTMLElement>(focusableElementDomString);
+        if (focusable) {
+          hasMoved = true;
+          requestAnimationFrame(() => {
+            focusable.focus();
+          });
+        }
+      }
+
+      if (!hasMoved) return;
+
+      const { isVisible } = isScrolledIntoView(siblingAtLocation, fileOrganizerRef.current);
       if (isVisible) return;
 
       // Use react-window scrollToItem api for virtualized items.
@@ -281,7 +328,7 @@ export function FileOrganizer<F extends ObjectWithId>({
     event => {
       onKeyDown?.(event);
       if (event.key === 'Escape') return onDeselectAll?.();
-      if (event.key === 'a' && event.metaKey) {
+      if (event.key === 'a' && (event.metaKey || event.ctrlKey)) {
         onSelectAll?.();
         event.preventDefault();
       }
