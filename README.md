@@ -7,6 +7,10 @@ components that integrate with the
 Check out the [documentation](https://pdftron.github.io/webviewer-react-toolkit)
 to get started with the toolkit!
 
+For a demo showcasing some of the functionality, along with step-by-step
+instructions on how to build it, check out the
+[demo repository](https://github.com/PDFTron/webviewer-react-toolkit-demo).
+
 ## Installation
 
 You can install the toolkit from npm using your preferred package manager:
