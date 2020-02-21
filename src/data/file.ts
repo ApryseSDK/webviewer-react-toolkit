@@ -197,13 +197,18 @@ export class File implements FileLike {
    * Creates a clone of the file with a new `documentObj`. This is the
    * recommended way of duplicating files, as it will prevent them both
    * referencing the same documentObj.
+   * @param overrides Override any of the `FileDetails` that initialize `File`.
+   * Note that `fileObj` will be overridden by the `documentObj` in overrides,
+   * or cloned from this file.
    */
-  clone() {
+  clone(overrides?: Partial<FileDetails>) {
+    const { documentObj, ...rest } = overrides || {};
     return new File({
       name: this.name,
       originalName: this.originalName,
       extension: this.extension,
-      documentObj: blobToDocument(documentToBlob(this.documentObj.get()), this.extension),
+      ...rest,
+      documentObj: documentObj || blobToDocument(documentToBlob(this.documentObj.get()), this.extension),
     });
   }
 
