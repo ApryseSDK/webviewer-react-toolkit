@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.3...v0.2.0-beta.4) (2020-02-21)
+
+### ⚠ BREAKING CHANGES
+
+- **FileOrganizer:** removed virtualizeThreshold prop since the organizer is always virtualized
+
+### Features
+
+- **ButtonGroup:** added prop to center buttons on mobile widths ([a3e10be](https://github.com/PDFTron/webviewer-react-toolkit/commit/a3e10becc8a8167da3da9544083a469a3495e7ca))
+- **FileOrganizer:** is now always virtualized and full height ([96aa70e](https://github.com/PDFTron/webviewer-react-toolkit/commit/96aa70ea12c8e2bd82e91ec339d7d6eee10641a8)), closes [#9](https://github.com/PDFTron/webviewer-react-toolkit/issues/9)
+
+### Bug Fixes
+
+- **Draggable:** prevent flicker when dragging items ([d0740ad](https://github.com/PDFTron/webviewer-react-toolkit/commit/d0740ad55914ddcbb2ab8ce289555e1148943936)), closes [#6](https://github.com/PDFTron/webviewer-react-toolkit/issues/6)
+
 ## [0.2.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.2...v0.2.0-beta.3) (2020-02-21)
 
 ### Features
