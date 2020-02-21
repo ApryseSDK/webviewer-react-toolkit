@@ -132,11 +132,15 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
     const [coords, setCoords] = useState({ x: 0, y: 0 });
     const prevIndex = useRef(index);
 
+    const noAnimation = useCurrentRef(isDragging || preventAnimation);
+
     // Find the difference in position between new index and previous index. Then,
     // get the difference in position and set that as the starting point for the
     // animation.
     useEffect(() => {
-      if (!draggableRef.current) return;
+      // Return early if no animation, since we do not want to compute the
+      // previous location.
+      if (!draggableRef.current || noAnimation.current) return;
 
       // Get sibling that occupies previous spot to find params.
       const indexDiff = prevIndex.current - index;
@@ -157,7 +161,7 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
 
       // Store index for next swap.
       prevIndex.current = index;
-    }, [index]);
+    }, [index, noAnimation]);
 
     // Whenever coords change, revert back to zero.
     useEffect(() => {
@@ -165,15 +169,15 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
       requestAnimationFrame(() => setCoords({ x: 0, y: 0 }));
     }, [coords]);
 
-    // Only animate if returning back to 0. Otherwise, snap to translate so that
-    // the animation looks like it's moving from it's previous location.
-    const motionStyle = useMemo(
-      () => ({
-        x: coords.x === 0 && !isDragging && !preventAnimation ? spring(coords.x, SPRING) : coords.x,
-        y: coords.y === 0 && !isDragging && !preventAnimation ? spring(coords.y, SPRING) : coords.y,
-      }),
-      [coords.x, coords.y, preventAnimation, isDragging],
-    );
+    const motionStyle = useMemo(() => {
+      if (noAnimation.current) return { x: 0, y: 0 };
+      // Only spring when returning to zero. This lets it "snap" to the previous
+      // location, then "spring" back to the new location.
+      return {
+        x: coords.x === 0 ? spring(coords.x, SPRING) : coords.x,
+        y: coords.y === 0 ? spring(coords.y, SPRING) : coords.y,
+      };
+    }, [coords, noAnimation]);
 
     const draggableClass = classnames('ui__base ui__draggable', className);
 
