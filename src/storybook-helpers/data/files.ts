@@ -24,7 +24,7 @@ export class FakeFile implements FileLike {
 
   constructor(index: number, options: CreateFileOptions = {}) {
     this.id = `file_${index + 1}`;
-    this.name = `file_${index + 1}`;
+    this.name = `file_${index + 1}.pdf`;
     this.originalName = `file_${index + 1}`;
     this.extension = 'pdf';
     this.thumbnail = this._getParameter(index % 2 ? testPdfThumbnailRotated : testPdfThumbnail, options);

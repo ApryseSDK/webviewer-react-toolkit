@@ -1,9 +1,9 @@
 The file organizer allows you to view multiple page files and use drag-and-drop
 to re-order them. Unless `preventArrowsToMove` is set to true, you can also use
 the left and right arrows while focusing any part of the file thumbnail in order
-to fire `onMove`. The `FileOrganizer` will automatically virtualize in order to
-prevent stuttering at 50 items. You can adjust this using the
-`virtualizeThreshold` prop.
+to fire `onMove`. The `FileOrganizer` is virtualized, so there will be no
+performance issues even with thousands of thumbnails (see the stress test
+playground).
 
 ## Rendering Files
 

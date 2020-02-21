@@ -24,10 +24,6 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
    */
   label?: string;
   /**
-   * Do not add the file's extension onto the end of the label.
-   */
-  hideExtension?: boolean;
-  /**
    * Display thumbnail with selected props.
    */
   selected?: boolean;
@@ -75,7 +71,6 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
 export function Thumbnail<F extends FileLike>({
   file: _file,
   label,
-  hideExtension,
   selected,
   dragging,
   otherDragging,
@@ -114,11 +109,6 @@ export function Thumbnail<F extends FileLike>({
 
   const handleOnEdit = () => {
     onEditingChange?.(true, file.file);
-  };
-
-  const onRenderText = (value: string) => {
-    if (!value) return '';
-    return `${value}.${file.extension}`;
   };
 
   const thumbnailClass = classnames(
@@ -165,7 +155,6 @@ export function Thumbnail<F extends FileLike>({
       <EditableText
         className="ui__thumbnail__label"
         value={label ?? file.name}
-        onRenderText={hideExtension ? undefined : onRenderText}
         centerText
         disabled={disabled}
         locked={!onRename || otherDragging}

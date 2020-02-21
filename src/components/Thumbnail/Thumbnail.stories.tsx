@@ -12,7 +12,6 @@ export default { title: 'Components/Thumbnail', component: Thumbnail, parameters
 const defaultProps = (options?: CreateFileOptions, index = 0, withToolButtons?: boolean): ThumbnailProps<FakeFile> => ({
   file: createFile(index, options),
   selected: boolean('selected', false),
-  hideExtension: boolean('hideExtension', false),
   disabled: boolean('disabled', false),
   dragging: boolean('dragging', false),
   otherDragging: boolean('otherDragging', false),

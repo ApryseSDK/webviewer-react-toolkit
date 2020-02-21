@@ -16,9 +16,13 @@ export default {
   parameters: { readme, info: { disable: true } },
 };
 
-/* --- Basic. --- */
+interface TemplateProps {
+  onRenderDragLayer?: boolean;
+  numFiles?: number;
+  lazy?: boolean;
+}
 
-const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }) => {
+const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<FakeFile[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
@@ -33,7 +37,6 @@ const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }
   }, []);
 
   // This is just a helper for adding or removing files.
-  const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
   useEffect(() => {
     setFiles(prev => {
       if (prev.length > numFiles) {
@@ -42,85 +45,44 @@ const BasicExample: FC<{ onRenderDragLayer?: boolean }> = ({ onRenderDragLayer }
       if (prev.length < numFiles) {
         const newFiles = [];
         for (let index = prev.length; index < numFiles; index++) {
-          newFiles.push(createFile(index));
+          newFiles.push(createFile(index, { lazy }));
         }
         return [...prev, ...newFiles];
       }
       return prev;
     });
-  }, [numFiles]);
+  }, [numFiles, lazy]);
 
   return (
     <FileOrganizer
       files={files}
-      onMove={forwardAction('onMove', handleOnMove)}
       preventArrowsToMove={boolean('preventArrowsToMove', false)}
+      preventClickAwayDeselect={boolean('preventClickAwayDeselect', false)}
       disableMove={boolean('disableMove', false)}
-      onDragChange={action('onDragChange')}
       padding={integer('padding', 0)}
+      onMove={forwardAction('onMove', handleOnMove)}
+      onDragChange={action('onDragChange')}
+      onDeselectAll={action('onDeselectAll')}
+      onSelectAll={action('onSelectAll')}
       onRenderDragLayer={onRenderDragLayer ? () => <ThumbnailDragLayer /> : undefined}
-      onRenderThumbnail={({ onRenderThumbnailProps, index }) => (
-        <Thumbnail
-          {...onRenderThumbnailProps}
-          onClick={action(`file_${index + 1} onClick`)}
-          onRename={action(`file_${index + 1} onRename`)}
-        />
-      )}
-    />
-  );
-};
-
-export const Basic = () => <BasicExample />;
-export const WithCustomDragLayer = () => <BasicExample onRenderDragLayer />;
-
-/* --- Virtualized. --- */
-
-const VirtualizedExample: FC<{ lazy?: boolean; numFiles?: number; virtualizeThreshold?: number }> = ({
-  lazy,
-  numFiles,
-  virtualizeThreshold,
-}) => {
-  // This is the index organizing function.
-  const [files, setFiles] = useState(() =>
-    Array.from({ length: numFiles ?? 50 }, (_, index) => createFile(index, { lazy })),
-  );
-  const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
-    setFiles(prev => {
-      if (toIndex < 0 || toIndex >= prev.length) return prev;
-      const clone = prev.slice();
-      const item = clone.splice(fromIndex, 1)[0];
-      clone.splice(toIndex, 0, item);
-      return clone;
-    });
-    return true;
-  }, []);
-
-  return (
-    <FileOrganizer
-      files={files}
-      onMove={forwardAction('onMove', handleOnMove)}
-      onDragChange={action('onDragChange')}
-      padding={integer('padding', 0)}
-      preventArrowsToMove={boolean('preventArrowsToMove', false)}
-      disableMove={boolean('disableMove', false)}
-      virtualizeThreshold={virtualizeThreshold ?? undefined}
       onRenderThumbnail={({ onRenderThumbnailProps }) => <Thumbnail {...onRenderThumbnailProps} />}
     />
   );
 };
 
-export const Virtualized = () => <VirtualizedExample />;
-export const VirtualizedLazyThumbnails = () => <VirtualizedExample lazy />;
-export const VirtualizedStressTest = () => <VirtualizedExample lazy numFiles={1000} />;
-export const BasicToVirtualized = () => (
-  <VirtualizedExample lazy virtualizeThreshold={boolean('is virtualized', false) ? 50 : 51} />
-);
+export const Basic = () => {
+  const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
+  return <Template numFiles={numFiles} />;
+};
+export const WithCustomDragLayer = () => {
+  const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
+  return <Template numFiles={numFiles} onRenderDragLayer />;
+};
+export const StressTestWithLazyThumbnails = () => <Template lazy numFiles={1000} />;
 
-/* --- With useManagedHook. --- */
-
-const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized }) => {
+export const UseManagedFilesHook = () => {
   const { fileOrganizerProps, getThumbnailSelectionProps, draggingIds } = useManagedFiles({
-    initialFiles: Array.from({ length: virtualized ? 100 : 25 }, (_, index) => createFile(index)),
+    initialFiles: Array.from({ length: 100 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('preventMultiDrag', false, 'useManagedFiles options'),
     selectWithoutShift: boolean('selectWithoutShift', false, 'useManagedFiles options'),
     preventDeselectOnDragOther: boolean('preventDeselectOnDragOther', false, 'useManagedFiles options'),
@@ -142,5 +104,4 @@ const UseManagedFilesHookExample: FC<{ virtualized?: boolean }> = ({ virtualized
   );
 };
 
-export const UseManagedFilesHook = () => <UseManagedFilesHookExample />;
-export const UseManagedFilesHookVirtualized = () => <UseManagedFilesHookExample virtualized />;
+UseManagedFilesHook.story = { name: 'useManagedFiles Hook' };

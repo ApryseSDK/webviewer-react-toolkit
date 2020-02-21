@@ -170,6 +170,17 @@ export class File implements FileLike {
     this.dispatchEvent('ondocumentobjchange');
   }
 
+  /**
+   * Use this file to make updates to `documentObj` that you want reflected in
+   * `fileObj` and `thumbnail`. Since mutations directly to `documentObj` will
+   * not be detected, using this function tells `File` to trigger an update.
+   */
+  async updateDocumentObj(updater: (documentObj: CoreControls.Document) => Promise<void>) {
+    const documentObj = await this.documentObj.get();
+    await updater(documentObj);
+    this.setDocumentObj(documentObj);
+  }
+
   /* --- File utility functions. --- */
 
   /**
@@ -180,6 +191,25 @@ export class File implements FileLike {
     const rotated = await getRotatedDocument(this.documentObj.get(), counterclockwise);
     this.setDocumentObj(rotated);
     this.dispatchEvent('onrotate');
+  }
+
+  /**
+   * Creates a clone of the file with a new `documentObj`. This is the
+   * recommended way of duplicating files, as it will prevent them both
+   * referencing the same documentObj.
+   * @param overrides Override any of the `FileDetails` that initialize `File`.
+   * Note that `fileObj` will be overridden by the `documentObj` in overrides,
+   * or cloned from this file.
+   */
+  clone(overrides?: Partial<FileDetails>) {
+    const { documentObj, ...rest } = overrides || {};
+    return new File({
+      name: this.name,
+      originalName: this.originalName,
+      extension: this.extension,
+      ...rest,
+      documentObj: documentObj || blobToDocument(documentToBlob(this.documentObj.get()), this.extension),
+    });
   }
 
   /* --- Events. --- */
