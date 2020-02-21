@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.2...v0.2.0-beta.3) (2020-02-21)
+
+### Features
+
+- **File:** clone accepts overrides arg to override any properties ([84a1e6c](https://github.com/PDFTron/webviewer-react-toolkit/commit/84a1e6c5c674f3f9f9afa53559aeae86a527bdd1))
+
 ## [0.2.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.1...v0.2.0-beta.2) (2020-02-20)
 
 ### Features
