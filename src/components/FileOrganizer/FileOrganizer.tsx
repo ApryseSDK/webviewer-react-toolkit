@@ -21,8 +21,6 @@ import { Draggable } from '../Draggable';
 import { DragLayer, DragLayerProps } from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
 
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-
 export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
   /**
    * A list of files to render out within the page organizer.
@@ -42,14 +40,6 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    * call `onMove` if a file is focused.
    */
   preventArrowsToMove?: boolean;
-  /**
-   * If the number of files exceeds this threshold, will virtualize the files
-   * outside of the view in order to prevent jank when rendering out your
-   * thumbnails. This will also allow for lazy loading of thumbnails that are
-   * out of view.
-   * @default 50
-   */
-  virtualizeThreshold?: number;
   /**
    * Prevents clicking on background to deselect all items. Can still use
    * `escape` key.
@@ -135,7 +125,6 @@ export function FileOrganizer<F extends ObjectWithId>({
   onRenderDragLayer,
   disableMove,
   preventArrowsToMove,
-  virtualizeThreshold = 50,
   preventClickAwayDeselect,
   draggingIds,
   padding,
@@ -147,8 +136,6 @@ export function FileOrganizer<F extends ObjectWithId>({
 }: FileOrganizerProps<F>) {
   const fileOrganizerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<Grid>(null);
-
-  const isVirtualized = files.length >= virtualizeThreshold;
 
   const [columnCount, setColumnCount] = useState(0);
 
@@ -166,9 +153,8 @@ export function FileOrganizer<F extends ObjectWithId>({
 
   // Detect all shown items and set as array of IDs to notify onRenderThumbnail.
   // Set to null if all IDs are shown (no virtualization).
-  const [initialShownIds, setInitialShownIds] = useState<string[] | null>([]);
+  const [initialShownIds, setInitialShownIds] = useState<string[]>([]);
   useEffect(() => {
-    if (!isVirtualized) return setInitialShownIds(null);
     requestAnimationFrame(() => {
       if (!fileOrganizerRef.current) return;
       const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
@@ -176,7 +162,7 @@ export function FileOrganizer<F extends ObjectWithId>({
       itemsInView.forEach(draggableItem => ids.push(draggableItem.id));
       setInitialShownIds(ids);
     });
-  }, [isVirtualized]);
+  }, []);
 
   const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, _file: F, draggableRef: RefObject<HTMLDivElement>) => {
@@ -188,25 +174,18 @@ export function FileOrganizer<F extends ObjectWithId>({
       onMove(index, index + indexDiff);
       event.preventDefault();
 
+      if (!gridRef.current) return;
+
       const newLocation = getSibling(draggableRef.current, indexDiff);
-      const { isVisible, isAbove, isBelow } = isScrolledIntoView(newLocation, fileOrganizerRef.current);
+      const { isVisible } = isScrolledIntoView(newLocation, fileOrganizerRef.current);
 
       if (isVisible) return;
-
-      // Use scrollIntoView for non-virtualized items.
-      if (!isVirtualized) {
-        if (isAbove) newLocation?.scrollIntoView(true);
-        if (isBelow) newLocation?.scrollIntoView(false);
-        return;
-      }
-
-      if (!gridRef.current) return;
 
       // Use react-window scrollToItem api for virtualized items.
       const { rowIndex } = getRowAndColumnIndex(index + indexDiff, columnCount);
       gridRef.current.scrollToItem({ align: 'smart', rowIndex });
     },
-    [editingId, disableMove, onMove, preventArrowsToMove, isVirtualized, columnCount],
+    [columnCount, disableMove, editingId, onMove, preventArrowsToMove],
   );
 
   const pad = Math.max(1, padding || 0);
@@ -297,11 +276,7 @@ export function FileOrganizer<F extends ObjectWithId>({
     return { x, y };
   }, []);
 
-  const fileOrganizerClass = classnames(
-    'ui__base ui__fileOrganizer',
-    { 'ui__fileOrganizer--virtualized': isVirtualized },
-    className,
-  );
+  const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
   return (
     <DndMultiProvider>
@@ -311,20 +286,17 @@ export function FileOrganizer<F extends ObjectWithId>({
         ref={fileOrganizerRef}
         onClick={handleOnClick}
         onKeyDown={handleOnKeyDown}
-        style={{ ...style, padding: isVirtualized ? 0 : pad }}
+        style={style}
         role="grid"
+        tabIndex={0}
       >
-        {isVirtualized ? (
-          <MemoAutoSizer
-            ref={gridRef}
-            files={files}
-            padding={pad}
-            renderItem={renderItem}
-            onColumnCountChange={setColumnCount}
-          />
-        ) : (
-          files.map((file, index) => renderItem(file, index))
-        )}
+        <MemoAutoSizer
+          ref={gridRef}
+          files={files}
+          padding={pad}
+          renderItem={renderItem}
+          onColumnCountChange={setColumnCount}
+        />
         {onRenderDragLayer ? (
           <DragLayer customTranslate={customDragLayerTranslate}>
             <div className="ui__fileOrganizer__draglayer" style={{ height: THUMBNAIL_WIDTH, width: THUMBNAIL_WIDTH }}>
