@@ -11,6 +11,12 @@
     flex-wrap: wrap-reverse;
   }
 
+  &--centerMobile.ui__buttonGroup {
+    @include for-phone-only {
+      justify-content: center;
+    }
+  }
+
   &--position {
     &-left {
       justify-content: flex-start;

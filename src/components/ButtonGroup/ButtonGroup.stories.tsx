@@ -14,6 +14,7 @@ export const Basic = () => {
     <ButtonGroup
       position={select('position', ['left', 'center', 'right', 'space-between', 'space-around'], 'right')}
       reverseWrap={boolean('reverseWrap', false)}
+      centerMobile={boolean('centerMobile', false)}
     >
       {Array.from({ length: numButtons }).map((_, index) => {
         if (index === 0) {
@@ -44,6 +45,7 @@ export const WithLargeButtons = () => {
     <ButtonGroup
       position={select('position', ['left', 'center', 'right', 'space-between', 'space-around'], 'right')}
       reverseWrap={boolean('reverseWrap', false)}
+      centerMobile={boolean('centerMobile', false)}
     >
       <Button>Accept</Button>
       <Button buttonStyle="outline">Cancel But With Long Name So You Can See It Wrap</Button>

@@ -12,11 +12,16 @@ export interface ButtonGroupProps extends HTMLAttributes<HTMLDivElement> {
    * have an accept button on the left, but want it on the bottom when wrapped.
    */
   reverseWrap?: boolean;
+  /**
+   * Center the buttons at mobile widths.
+   */
+  centerMobile?: boolean;
 }
 
 export const ButtonGroup: FC<ButtonGroupProps> = ({
   position = 'right',
   reverseWrap,
+  centerMobile,
   children,
   className,
   ...props
@@ -26,6 +31,7 @@ export const ButtonGroup: FC<ButtonGroupProps> = ({
     `ui__buttonGroup--position-${position}`,
     {
       'ui__buttonGroup--reverse': reverseWrap,
+      'ui__buttonGroup--centerMobile': centerMobile,
     },
     className,
   );
