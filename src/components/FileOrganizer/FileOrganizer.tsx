@@ -143,6 +143,20 @@ export function FileOrganizer<F extends ObjectWithId>({
 
   const [draggingId, setDraggingId] = useState<string>();
 
+  // Detect size of first item and use as size throughout.
+  const [size, setSize] = useState({ width: THUMBNAIL_WIDTH, height: THUMBNAIL_WIDTH });
+  const hasFiles = files.length > 0;
+  useEffect(() => {
+    if (!fileOrganizerRef.current) return;
+    const firstItem = fileOrganizerRef.current.querySelector('div[draggable="true"]');
+    if (!firstItem) return;
+    const { width, height } = firstItem.getBoundingClientRect();
+    setSize(prev => {
+      if (prev.width === width && prev.height === height) return prev;
+      return { width, height };
+    });
+  }, [hasFiles]);
+
   const handleOnDragChange = useCallback(
     (id?: string) => {
       onDragChange?.(id);
@@ -151,18 +165,23 @@ export function FileOrganizer<F extends ObjectWithId>({
     [onDragChange],
   );
 
-  // Detect all shown items and set as array of IDs to notify onRenderThumbnail.
-  // Set to null if all IDs are shown (no virtualization).
+  // Whenever files changes, detect which items are in view and prevent
+  // throttling. Set as array of IDs to notify onRenderThumbnail.
   const [initialShownIds, setInitialShownIds] = useState<string[]>([]);
   useEffect(() => {
-    requestAnimationFrame(() => {
-      if (!fileOrganizerRef.current) return;
-      const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
-      const ids: string[] = [];
-      itemsInView.forEach(draggableItem => ids.push(draggableItem.id));
-      setInitialShownIds(ids);
-    });
-  }, []);
+    if (files) {
+      requestAnimationFrame(() => {
+        if (!fileOrganizerRef.current) return;
+        const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
+        const ids: string[] = [];
+        itemsInView.forEach(draggableItem => {
+          const dataFileId = draggableItem.getAttribute('data-file-id');
+          if (dataFileId) ids.push(dataFileId);
+        });
+        setInitialShownIds(ids);
+      });
+    }
+  }, [files]);
 
   const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, _file: F, draggableRef: RefObject<HTMLDivElement>) => {
@@ -202,8 +221,8 @@ export function FileOrganizer<F extends ObjectWithId>({
       const isInDragGroup = draggingIds?.includes(file.id) ?? false;
       return (
         <Draggable
+          data-file-id={file.id}
           key={file.id}
-          id={file.id}
           index={index}
           style={
             style && {
@@ -294,6 +313,7 @@ export function FileOrganizer<F extends ObjectWithId>({
           ref={gridRef}
           files={files}
           padding={pad}
+          size={size}
           renderItem={renderItem}
           onColumnCountChange={setColumnCount}
         />
