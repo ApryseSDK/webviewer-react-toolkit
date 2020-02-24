@@ -1,5 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { Mixins, Breakpoints } from './styleBreakpoints'
+import { Mixins, Breakpoints } from './styleBreakpoints';
+import { ToastProvider } from '../../components';
 
 <Meta title="Style/Breakpoints" parameters={{previewTabs: {canvas: {hidden: true}}}} />
 
@@ -53,6 +54,9 @@ to copy the value to your clipboard.
 <!-- Below here is auto-generated. DO NOT EDIT. -->
 <!-- GENERATE_ENTRY -->
 
+<ToastProvider>
+
+
 <Mixins index={0} />
 
 ```scss
@@ -77,3 +81,5 @@ to copy the value to your clipboard.
   /* Content */
 }
 ```
+
+</ToastProvider>

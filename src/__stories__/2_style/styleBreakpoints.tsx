@@ -3,11 +3,13 @@ import font from '../../storybook-helpers/theme/font';
 import breakpointRange from './generated/breakpointRange';
 import breakpoints from './generated/breakpoints';
 import { style } from './styles';
-import { copy } from './utils';
+import { useCopy } from './utils';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 
 export function Mixins({ index }: { index: number }) {
+  const copy = useCopy();
+
   const mixin = breakpoints[index];
   return (
     <div style={{ ...style, whiteSpace: 'pre', marginBottom: -16 }} onClick={copy(mixin)}>

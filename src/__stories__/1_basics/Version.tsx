@@ -12,7 +12,6 @@ export function Current(props: { text: string }) {
     margin: 0,
     WebkitTapHighlightColor: 'rgba(0,0,0,0)',
     WebkitOverflowScrolling: 'touch',
-    fontSize: 14,
     color: '#00a3e3',
     textDecoration: 'none',
   };

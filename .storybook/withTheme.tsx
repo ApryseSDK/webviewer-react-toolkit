@@ -1,5 +1,5 @@
 import { StoryContext, StoryFn } from '@storybook/addons';
-import React, { MouseEvent, MouseEventHandler, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 
 export function withTheme<StoryFnReturnType>(storyFn: StoryFn<StoryFnReturnType>, context: StoryContext) {
   return (
@@ -12,7 +12,7 @@ export function withTheme<StoryFnReturnType>(storyFn: StoryFn<StoryFnReturnType>
 
 export interface ThemeChangeButtonProps {
   className?: string;
-  onClick?: MouseEventHandler;
+  onClick?: (darkTheme: boolean) => void;
   id?: string;
 }
 
@@ -32,9 +32,11 @@ export function ThemeChangeButton({ className, onClick, id }: ThemeChangeButtonP
     setTimeout(() => localStorage.setItem('data-theme', newTheme));
   }, [darkTheme]);
 
-  const handleOnClick = (event: MouseEvent<HTMLDivElement>) => {
-    setDarkTheme(t => !t);
-    onClick?.(event);
+  const handleOnClick = () => {
+    setDarkTheme(t => {
+      onClick?.(!t);
+      return !t;
+    });
   };
 
   return (

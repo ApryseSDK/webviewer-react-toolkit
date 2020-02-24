@@ -1,5 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { Mixins } from './styleComponents'
+import { Mixins } from './styleComponents';
+import { ToastProvider } from '../../components';
 
 <Meta title="Style/Mixins" parameters={{previewTabs: {canvas: {hidden: true}}}} />
 
@@ -46,6 +47,9 @@ to copy the value to your clipboard.
 
 <!-- Below here is auto-generated. DO NOT EDIT. -->
 <!-- GENERATE_ENTRY -->
+
+<ToastProvider>
+
 
 <Mixins index={0} />
 
@@ -139,3 +143,5 @@ animation: slide 0.25s forwards;
 ```scss
 transition: opacity 0.25s;
 ```
+
+</ToastProvider>

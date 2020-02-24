@@ -64,6 +64,7 @@ function mapSassVariableObject(ast, sub = false) {
 
   return entries
     .map(([key, value]) => {
+      if (Array.isArray(value) && !value.length) return null;
       const title = getTitle(key);
       const comment = sub ? `// ${title}.\n` : `/* --- ${title}. --- */\n\n`;
       let body = '';
@@ -74,6 +75,7 @@ function mapSassVariableObject(ast, sub = false) {
       }
       return comment + body;
     })
+    .filter(Boolean)
     .join('\n\n');
 }
 
@@ -143,6 +145,9 @@ async function generateMixinsFile(input, output, transform, replace = v => v) {
   fs.writeFileSync(
     transform,
     `${pre}
+
+<ToastProvider>
+
 ${data
   .map(
     (d, i) => `
@@ -153,6 +158,8 @@ ${d.code}${d.animation}
 \`\`\``,
   )
   .join('\n')}
+
+</ToastProvider>
 `,
   );
 }

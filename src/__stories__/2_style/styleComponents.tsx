@@ -1,11 +1,12 @@
 import React, { CSSProperties, ReactElement, useEffect, useMemo, useState } from 'react';
 import { isDarkThemeStored, ThemeChangeButton } from '../../../.storybook/withTheme';
+import { ToastProvider } from '../../components';
 import font from '../../storybook-helpers/theme/font';
 import { Remove } from '../../utils';
 import mixins from './generated/mixins';
 import styleVariables from './generated/styleVariables';
 import { dividerStyle, prefixStyle, style, titleStyle } from './styles';
-import { copy, getTitle } from './utils';
+import { getTitle, useCopy } from './utils';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 
@@ -13,7 +14,9 @@ import { copy, getTitle } from './utils';
 
 const colorFocusShadow = styleVariables.colors.other.find(c => c.scss === '$color-focus-shadow')?.dark;
 
-export function Groups() {
+function _Groups() {
+  const copy = useCopy();
+
   const keys = Object.keys(styleVariables).filter(k => k !== 'colors');
 
   const [tick, setTick] = useState(false);
@@ -96,6 +99,12 @@ export function Groups() {
   );
 }
 
+export const Groups = () => (
+  <ToastProvider>
+    <_Groups />
+  </ToastProvider>
+);
+
 /* --- Colors. --- */
 
 const colorButtonStyle = {
@@ -106,7 +115,9 @@ const colorButtonStyle = {
   cursor: 'pointer',
 };
 
-export function Theme() {
+function _Theme() {
+  const copy = useCopy();
+
   const keys = Object.keys(styleVariables.colors);
 
   const groups: ReactElement[] = [];
@@ -162,7 +173,10 @@ export function Theme() {
                 flexShrink: 1,
               }}
             >
-              <div style={{ ...colorButtonStyle, position: 'absolute', top: 8, left: 8 }} onClick={copy(value)}>
+              <div
+                style={{ ...colorButtonStyle, position: 'absolute', top: 8, left: 8 }}
+                onClick={copy(darkTheme ? dark : value)}
+              >
                 {darkTheme ? dark : value}
               </div>
               <div style={{ position: 'absolute', bottom: 8, left: 8, right: 8 }}>
@@ -183,7 +197,7 @@ export function Theme() {
   return (
     <>
       <div className="colors__theme">
-        <ThemeChangeButton className="colors__theme__button" onClick={() => setDarkTheme(t => !t)} />
+        <ThemeChangeButton className="colors__theme__button" onClick={setDarkTheme} />
       </div>
       <div
         style={{
@@ -200,9 +214,17 @@ export function Theme() {
   );
 }
 
+export const Theme = () => (
+  <ToastProvider>
+    <_Theme />
+  </ToastProvider>
+);
+
 /* --- Mixins. --- */
 
 export function Mixins({ index }: { index: number }) {
+  const copy = useCopy();
+
   const mixin = mixins[index];
   return (
     <div style={{ ...style, whiteSpace: 'pre', marginBottom: -16 }} onClick={copy(mixin)}>
