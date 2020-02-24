@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.5...v0.2.0) (2020-02-24)
+
+### Features
+
+- **ToastProvider:** added noTimeout prop to persist specified types ([d783400](https://github.com/PDFTron/webviewer-react-toolkit/commit/d783400a9acb61539dc0e1327f5974b29745bce9))
+
+### Bug Fixes
+
+- **Overlay:** position fixed instead of absolute ([5eb0fe8](https://github.com/PDFTron/webviewer-react-toolkit/commit/5eb0fe8828e6184aaf27f24df69a1dda892d3dc7))
+
+### Build and Dependencies
+
+- updated tslib ([09fb887](https://github.com/PDFTron/webviewer-react-toolkit/commit/09fb887f6433ac7ecc9aea3f27c4e3251e703040))
+
 ## [0.2.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.4...v0.2.0-beta.5) (2020-02-24)
 
 ### Features
