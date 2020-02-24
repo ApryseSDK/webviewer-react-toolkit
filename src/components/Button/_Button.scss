@@ -3,11 +3,18 @@
   outline: none;
   user-select: none;
   transition: $focus-transition;
-  @include flex-center;
+
+  &__internal {
+    @include flex-center;
+  }
 
   &--disabled {
     cursor: default;
     opacity: 0.7;
+
+    > * {
+      opacity: 0.7;
+    }
   }
 
   &:focus.ui__button--tabbing {
