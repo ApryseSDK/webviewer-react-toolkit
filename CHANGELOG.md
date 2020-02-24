@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.4...v0.2.0-beta.5) (2020-02-24)
+
+### Features
+
+- **FileOrganizer:** grid size based on first item, not hard-coded ([30eada0](https://github.com/PDFTron/webviewer-react-toolkit/commit/30eada0f284af9245a3f83045d8ce5845decc4ee))
+- **FileOrganizer:** multi-directional movement and focusing ([a835a48](https://github.com/PDFTron/webviewer-react-toolkit/commit/a835a48879c7e37ec532d750e50f5c6d9cb5a405))
+
 ## [0.2.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.3...v0.2.0-beta.4) (2020-02-21)
 
 ### ⚠ BREAKING CHANGES
