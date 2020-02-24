@@ -1,5 +1,5 @@
 .ui__overlay {
-  @include absolute-fill;
+  @include fixed-fill;
   z-index: $z-index-overlay;
   pointer-events: none;
 

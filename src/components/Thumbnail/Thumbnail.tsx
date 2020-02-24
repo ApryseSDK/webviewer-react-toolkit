@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { MouseEvent, ReactNode, ReactText, useEffect, useRef } from 'react';
+import React, { MouseEvent, ReactNode, ReactText, useRef } from 'react';
 import { FileLike } from '../../data';
 import { useFile, useFocus } from '../../hooks';
 import { ClickableDiv, ClickableDivProps } from '../ClickableDiv';
@@ -90,12 +90,6 @@ export function Thumbnail<F extends FileLike>({
 
   const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
-  useEffect(() => {
-    if (!selected && focused && thumbnailRef.current) {
-      thumbnailRef.current.focus();
-    }
-  }, [focused, selected]);
-
   const file = useFile(_file, isShownOnLoad ? 0 : throttle);
 
   const handleOnSave = (newName: string) => {
@@ -142,11 +136,7 @@ export function Thumbnail<F extends FileLike>({
       </div>
       <div className="ui__thumbnail__controls">
         {buttonProps?.map(buttonPropObject => (
-          <ToolButton
-            disabled={disabled}
-            onClick={e => buttonPropObject.onClick(e, file.file)}
-            tabIndex={selected ? undefined : -1}
-          >
+          <ToolButton disabled={disabled} onClick={e => buttonPropObject.onClick(e, file.file)}>
             {buttonPropObject.children}
           </ToolButton>
         ))}
@@ -161,7 +151,6 @@ export function Thumbnail<F extends FileLike>({
         onSave={handleOnSave}
         onCancel={handleOnCancel}
         onEdit={handleOnEdit}
-        tabIndex={selected ? undefined : -1}
       />
     </ClickableDiv>
   );

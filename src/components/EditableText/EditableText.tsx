@@ -139,8 +139,8 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Escape') {
         handleOnCancel();
-        event.stopPropagation();
       }
+      event.stopPropagation();
     };
 
     const [valueToDisplay, isPlaceholder] = useMemo(() => {

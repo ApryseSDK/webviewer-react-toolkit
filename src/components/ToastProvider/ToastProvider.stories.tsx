@@ -1,6 +1,6 @@
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean, text, select } from '@storybook/addon-knobs';
 import React from 'react';
-import { useToast } from '../../hooks';
+import { useToast, CommonToastProps } from '../../hooks';
 import { integer } from '../../storybook-helpers/knobs/integer';
 import { Button } from '../Button';
 import { ToastProps } from '../Toast';
@@ -42,7 +42,17 @@ const DemoButtons = () => {
 };
 
 export const Basic = () => (
-  <ToastProvider defaultTimeout={integer('defaultTimeout', 3000, 'ToastProvider')}>
+  <ToastProvider
+    defaultTimeout={integer('defaultTimeout', 3000, 'ToastProvider')}
+    noTimeout={
+      (select(
+        'noTimeout',
+        ['', 'info', 'success', 'warning', 'error'],
+        '',
+        'ToastProvider',
+      ) as CommonToastProps['toastType']) || undefined
+    }
+  >
     <DemoButtons />
   </ToastProvider>
 );

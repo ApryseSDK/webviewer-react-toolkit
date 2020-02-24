@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { AddToast, ToastContext, ToastContextValue } from '../../hooks';
+import { AddToast, ToastContext, ToastContextValue, CommonToastProps, useCurrentRef } from '../../hooks';
 import { Overlay } from '../Overlay';
 import { Toast } from '../Toast';
 
@@ -10,6 +10,12 @@ export interface ToastProviderProps {
    * overridden if the `timeout` property is specified for an added toast.
    */
   defaultTimeout?: number;
+  /**
+   * Specify toast types that should have no timeout by default. Provide a toast
+   * type, or array of types. This could be used to persist error toasts until
+   * they are cleared manually.
+   */
+  noTimeout?: CommonToastProps['toastType'] | CommonToastProps['toastType'][];
 }
 
 interface ToastQueueItem extends AddToast {
@@ -18,7 +24,7 @@ interface ToastQueueItem extends AddToast {
 
 let toastIdSequence = 1;
 
-export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, children }) => {
+export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, noTimeout, children }) => {
   const [toasts, setToasts] = useState<ToastQueueItem[]>([]);
   const [closing, setClosing] = useState(false);
 
@@ -34,11 +40,23 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, children
     }, 250);
   }, []);
 
-  const { toastId, closable, timeout, ...toastProps }: ToastQueueItem = toasts[0] || {};
+  const { toastId, closable = true, timeout, ...toastProps }: ToastQueueItem = toasts[0] || {};
+
+  const noTimeoutTypes = useCurrentRef(noTimeout);
+  const timeoutValue = useMemo(() => {
+    const timeoutNum = timeout ?? defaultTimeout;
+    if (!noTimeoutTypes.current) return timeoutNum;
+    if (Array.isArray(noTimeoutTypes.current)) {
+      if (!noTimeoutTypes.current.length) return timeoutNum;
+      if (!noTimeoutTypes.current.includes(toastProps.toastType)) return timeoutNum;
+      return 0;
+    } else {
+      if (noTimeoutTypes.current !== toastProps.toastType) return timeoutNum;
+      return 0;
+    }
+  }, [defaultTimeout, noTimeoutTypes, timeout, toastProps.toastType]);
 
   useEffect(() => {
-    const timeoutValue = timeout ?? defaultTimeout;
-
     if (!hovered && toastId && timeoutValue) {
       const timeoutId = window.setTimeout(() => {
         _pop();
@@ -48,7 +66,7 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, children
       };
     }
     return;
-  }, [_pop, defaultTimeout, hovered, timeout, toastId]);
+  }, [_pop, hovered, timeoutValue, toastId]);
 
   const add = useCallback<ToastContextValue['add']>(toast => {
     const toastId = toastIdSequence++;

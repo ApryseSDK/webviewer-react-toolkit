@@ -25,7 +25,6 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
     onCancel={[Function]}
     onEdit={[Function]}
     onSave={[Function]}
-    tabIndex={-1}
     value="file_1.pdf"
   />
 </ForwardRef>

@@ -9,6 +9,7 @@ import { FileOrganizer, FileOrganizerProps } from '../FileOrganizer';
 import { Thumbnail } from '../Thumbnail';
 import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
 import readme from './README.md';
+import close from '../Thumbnail/close-24px.svg';
 
 export default {
   title: 'Components/FileOrganizer',
@@ -20,9 +21,12 @@ interface TemplateProps {
   onRenderDragLayer?: boolean;
   numFiles?: number;
   lazy?: boolean;
+  editable?: boolean;
 }
 
-const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy }) => {
+/* eslint-disable @typescript-eslint/no-empty-function */
+
+const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy, editable }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<FakeFile[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
@@ -65,7 +69,23 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy }) 
       onDeselectAll={action('onDeselectAll')}
       onSelectAll={action('onSelectAll')}
       onRenderDragLayer={onRenderDragLayer ? () => <ThumbnailDragLayer /> : undefined}
-      onRenderThumbnail={({ onRenderThumbnailProps }) => <Thumbnail {...onRenderThumbnailProps} />}
+      onRenderThumbnail={({ onRenderThumbnailProps }) => (
+        <Thumbnail
+          {...onRenderThumbnailProps}
+          onRename={editable ? () => {} : undefined}
+          buttonProps={
+            editable
+              ? [
+                  {
+                    children: <img src={close} alt={'close'} />,
+                    onClick: () => {},
+                    key: 0,
+                  },
+                ]
+              : undefined
+          }
+        />
+      )}
     />
   );
 };
@@ -73,6 +93,10 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy }) 
 export const Basic = () => {
   const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
   return <Template numFiles={numFiles} />;
+};
+export const WithThumbnailButtonsAndEditableText = () => {
+  const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
+  return <Template numFiles={numFiles} editable />;
 };
 export const WithCustomDragLayer = () => {
   const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });

@@ -30,12 +30,14 @@ export interface CommonToastProps {
 export interface AddToast extends CommonToastProps {
   /**
    * If true, toast will have a close button.
+   * @default true
    */
   closable?: boolean;
   /**
    * If provided, will set a timeout for the toast to disappear. This will
    * override the `defaultTimeout` prop from `ToastProvider`. Give a value of
    * 0 to prevent the toast from timing out.
+   * @default defaultTimeout
    */
   timeout?: number;
 }

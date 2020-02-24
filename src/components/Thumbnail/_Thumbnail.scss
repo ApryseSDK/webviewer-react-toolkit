@@ -35,7 +35,7 @@ $thumbnail-border-size: 2px;
   }
 
   &:hover,
-  &--focused.ui__thumbnail--selected:not(.ui__thumbnail--disabled) {
+  &--focused:not(.ui__thumbnail--disabled) {
     // Do not style for hover or focus if anything is dragging
     &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging) {
       .ui__thumbnail__controls {
@@ -47,10 +47,8 @@ $thumbnail-border-size: 2px;
   &:hover,
   &--focused:not(.ui__thumbnail--disabled) {
     // Do not style for hover or focus if anything is dragging
-    &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging) {
-      &:not(.ui__thumbnail--selected) {
-        background-color: $color-gray-3;
-      }
+    &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging):not(.ui__thumbnail--selected) {
+      background-color: $color-gray-3;
     }
   }
 
