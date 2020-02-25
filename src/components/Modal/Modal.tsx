@@ -1,12 +1,12 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, MouseEvent, ReactNode, useEffect, useMemo } from 'react';
+import React, { AriaAttributes, FC, HTMLAttributes, MouseEvent, ReactNode, useEffect, useMemo } from 'react';
 import { useUnmountDelay } from '../../hooks';
 import { Close } from '../../icons';
+import { getStringId } from '../../utils';
 import { ButtonGroup } from '../ButtonGroup';
 import { FocusTrap } from '../FocusTrap';
 import { IconButton } from '../IconButton';
 import { Overlay } from '../Overlay';
-import { getStringId } from '../../utils';
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -43,6 +43,10 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
    * a keyboard event (escape key pressed).
    */
   onClose?(event: KeyboardEvent | MouseEvent): void;
+  /** @default "dialog" */
+  role?: HTMLAttributes<HTMLDivElement>['role'];
+  /** @default true */
+  'aria-modal'?: AriaAttributes['aria-atomic'];
 }
 
 /* eslint-disable jsx-a11y/interactive-supports-focus, jsx-a11y/click-events-have-key-events */
@@ -56,7 +60,8 @@ export const Modal: FC<ModalProps> = ({
   children,
   buttonGroup,
   className,
-
+  role = 'dialog',
+  'aria-modal': ariaModal = true,
   ...props
 }) => {
   const { mounted } = useUnmountDelay(open);
@@ -96,30 +101,32 @@ export const Modal: FC<ModalProps> = ({
       >
         {mounted ? (
           <FocusTrap focusLastOnUnlock locked>
-            <div
-              {...props}
-              className={modalClass}
-              role="dialog"
-              aria-modal={true}
-              aria-labelledby={headingId}
-              aria-describedby={bodyId}
-            >
-              <div className="ui__modal__top">
-                <div className="ui__modal__top__heading" id={headingId}>
-                  {heading}
+            <div className="ui__modal__paddingFix">
+              <div
+                {...props}
+                className={modalClass}
+                role={role}
+                aria-modal={ariaModal}
+                aria-labelledby={headingId}
+                aria-describedby={bodyId}
+              >
+                <div className="ui__modal__top">
+                  <div className="ui__modal__top__heading" id={headingId}>
+                    {heading}
+                  </div>
+                  {onClose ? (
+                    <IconButton className="ui__modal__top__close" onClick={onClose} aria-label="Close">
+                      <Close />
+                    </IconButton>
+                  ) : (
+                    undefined
+                  )}
                 </div>
-                {onClose ? (
-                  <IconButton className="ui__modal__top__close" onClick={onClose} aria-label="Close">
-                    <Close />
-                  </IconButton>
-                ) : (
-                  undefined
-                )}
+                <div className={bodyClass} id={bodyId}>
+                  {children}
+                </div>
+                {buttonGroup ? <ButtonGroup className="ui__modal__buttonGroup">{buttonGroup}</ButtonGroup> : undefined}
               </div>
-              <div className={bodyClass} id={bodyId}>
-                {children}
-              </div>
-              {buttonGroup ? <ButtonGroup className="ui__modal__buttonGroup">{buttonGroup}</ButtonGroup> : undefined}
             </div>
           </FocusTrap>
         ) : (
