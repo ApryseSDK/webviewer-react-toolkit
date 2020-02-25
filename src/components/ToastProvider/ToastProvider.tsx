@@ -112,6 +112,8 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, noTimeou
           <div className="ui__toastProvider__toast" key={toastId}>
             <Toast
               {...toastProps}
+              role={toastProps.toastType === 'error' ? 'alert' : 'status'}
+              aria-live={toastProps.toastType === 'error' ? 'assertive' : 'polite'}
               onMouseEnter={onHover}
               onMouseLeave={onBlur}
               className={toastProviderClass}

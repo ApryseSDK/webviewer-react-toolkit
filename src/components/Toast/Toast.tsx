@@ -1,7 +1,8 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, MouseEventHandler, useMemo } from 'react';
+import React, { AriaAttributes, FC, HTMLAttributes, MouseEventHandler, useMemo } from 'react';
 import { CommonToastProps } from '../../hooks';
 import { Close, Error, Info, Success, Warning } from '../../icons';
+import { getStringId } from '../../utils';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 
@@ -10,6 +11,12 @@ export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElem
    * If provided, toast will have a close button.
    */
   onClose?: MouseEventHandler<HTMLButtonElement>;
+  /** @default "status" */
+  role?: HTMLAttributes<HTMLDivElement>['role'];
+  /** @default "polite" */
+  'aria-live'?: AriaAttributes['aria-live'];
+  /** @default true */
+  'aria-atomic'?: AriaAttributes['aria-atomic'];
 }
 
 export const Toast: FC<ToastProps> = ({
@@ -19,9 +26,13 @@ export const Toast: FC<ToastProps> = ({
   onClose,
   action,
   className,
+  role = 'status',
+  'aria-live': ariaLive = 'polite',
+  'aria-atomic': ariaAtomic = true,
   ...props
 }) => {
-  const toastClass = classnames('ui__base ui__toast', `ui__toast--type-${toastType}`, className);
+  const headingId = useMemo(() => getStringId('modal_heading', 8), []);
+  const bodyId = useMemo(() => getStringId('modal_body', 8), []);
 
   const Icon = useMemo(() => {
     switch (toastType) {
@@ -36,15 +47,37 @@ export const Toast: FC<ToastProps> = ({
     }
   }, [toastType]);
 
+  const toastClass = classnames('ui__base ui__toast', `ui__toast--type-${toastType}`, className);
+
   return (
-    <div {...props} className={toastClass}>
+    <div
+      {...props}
+      className={toastClass}
+      role={role}
+      aria-live={ariaLive}
+      aria-atomic={ariaAtomic}
+      aria-labelledby={headingId}
+      aria-describedby={bodyId}
+    >
       <div className="ui__toast__border" />
       <div className="ui__toast__icon">
         <Icon />
       </div>
       <div className="ui__toast__copy">
-        {heading ? <div className="ui__toast__copy__heading">{heading}</div> : undefined}
-        {children ? <div className="ui__toast__copy__body">{children}</div> : undefined}
+        {heading ? (
+          <div className="ui__toast__copy__heading" id={headingId}>
+            {heading}
+          </div>
+        ) : (
+          undefined
+        )}
+        {children ? (
+          <div className="ui__toast__copy__body" id={bodyId}>
+            {children}
+          </div>
+        ) : (
+          undefined
+        )}
       </div>
       {action ? (
         <div className="ui__toast__action">
@@ -57,7 +90,7 @@ export const Toast: FC<ToastProps> = ({
       )}
       {onClose ? (
         <div className="ui__toast__action">
-          <IconButton onClick={onClose}>
+          <IconButton onClick={onClose} aria-label="Close">
             <Close />
           </IconButton>
         </div>

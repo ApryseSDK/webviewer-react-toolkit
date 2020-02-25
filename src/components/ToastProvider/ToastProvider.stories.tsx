@@ -29,14 +29,14 @@ const DemoButtons = () => {
   };
 
   return (
-    <div>
+    <div style={{ display: 'grid', justifyContent: 'center', gap: 8 }}>
       <Button onClick={() => pushToast('info')}>Add info Toast</Button>
-      <br />
       <Button onClick={() => pushToast('success')}>Add success Toast</Button>
-      <br />
       <Button onClick={() => pushToast('warning')}>Add warning Toast</Button>
-      <br />
       <Button onClick={() => pushToast('error')}>Add error Toast</Button>
+      <Button buttonStyle="outline" onClick={() => toast.remove()}>
+        Pop current Toast
+      </Button>
     </div>
   );
 };
