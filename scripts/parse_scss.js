@@ -249,45 +249,42 @@ function main() {
   /* --- Generate variables and colors. --- */
 
   const declarations = (() => {
-    const color = [];
-    const zIndex = [];
-    const padding = [];
-    const fontSize = [];
-    const fontWeight = [];
-    const borderRadius = [];
-    const boxShadow = [];
-    const focus = [];
-    const other = [];
+    const obj = {};
+
+    const entries = Object.entries({
+      color: '--color',
+      fontSize: '--font-size',
+      fontWeight: '--font-weight',
+      padding: '--padding',
+      borderRadius: '--border-radius',
+      boxShadow: '--box-shadow',
+      focus: '--focus',
+      fontFamily: '--font-family',
+      zIndex: '--z-index',
+    });
+
+    entries.forEach(([key]) => (obj[key] = []));
+    obj.other = [];
 
     nodes.forEach(n => {
       if (n.type !== 'decl') return;
-      if (n.prop.startsWith('--color')) return color.push(n);
-      if (n.prop.startsWith('--z-index')) return zIndex.push(n);
-      if (n.prop.startsWith('--padding')) return padding.push(n);
-      if (n.prop.startsWith('--font-size')) return fontSize.push(n);
-      if (n.prop.startsWith('--font-weight')) return fontWeight.push(n);
-      if (n.prop.startsWith('--border-radius')) return borderRadius.push(n);
-      if (n.prop.startsWith('--box-shadow')) return boxShadow.push(n);
-      if (n.prop.startsWith('--focus')) return focus.push(n);
-      other.push(n);
+      const found = entries.find(([, startsWith]) =>
+        n.prop.startsWith(startsWith),
+      );
+      if (!found) return obj.other.push(n);
+      obj[found[0]].push(n);
     });
 
-    return {
-      color,
-      zIndex,
-      padding,
-      fontSize,
-      fontWeight,
-      borderRadius,
-      boxShadow,
-      focus,
-      other,
-    };
+    Object.entries(obj).forEach(
+      ([key, sorted]) => (obj[key] = sorted.map(mapper)),
+    );
+
+    const { color, ...rest } = obj;
+
+    return [color, rest];
   })();
 
-  /* --- Map colors and sort by type. --- */
-
-  const allColors = declarations.color.map(mapper);
+  /* --- Sort colors by type. --- */
 
   const colors = (() => {
     const theme = [];
@@ -298,7 +295,7 @@ function main() {
     const message = [];
     const other = [];
 
-    allColors.forEach(c => {
+    declarations[0].forEach(c => {
       if (c.scss.startsWith('$color-theme')) return theme.push(c);
       if (c.scss.startsWith('$color-font')) return font.push(c);
       if (c.scss.startsWith('$color-gray')) return gray.push(c);
@@ -311,28 +308,7 @@ function main() {
     return { theme, font, gray, blueGray, contrast, message, other };
   })();
 
-  /* --- Map variables. --- */
-
-  const fontSize = declarations.fontSize.map(mapper);
-  const fontWeight = declarations.fontWeight.map(mapper);
-  const padding = declarations.padding.map(mapper);
-  const borderRadius = declarations.borderRadius.map(mapper);
-  const boxShadow = declarations.boxShadow.map(mapper);
-  const focus = declarations.focus.map(mapper);
-  const zIndex = declarations.zIndex.map(mapper);
-  const other = declarations.other.map(mapper);
-
-  const variableObject = {
-    colors,
-    fontSize,
-    fontWeight,
-    padding,
-    borderRadius,
-    boxShadow,
-    focus,
-    zIndex,
-    other,
-  };
+  const variableObject = { colors, ...declarations[1] };
 
   createSassVariablesFile(variableObject);
   printFile(
