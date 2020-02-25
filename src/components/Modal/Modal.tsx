@@ -1,11 +1,12 @@
 import classnames from 'classnames';
-import React, { FC, HTMLAttributes, MouseEvent, ReactNode, useEffect } from 'react';
+import React, { FC, HTMLAttributes, MouseEvent, ReactNode, useEffect, useMemo } from 'react';
 import { useUnmountDelay } from '../../hooks';
 import { Close } from '../../icons';
 import { ButtonGroup } from '../ButtonGroup';
 import { FocusTrap } from '../FocusTrap';
 import { IconButton } from '../IconButton';
 import { Overlay } from '../Overlay';
+import { getStringId } from '../../utils';
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -60,6 +61,9 @@ export const Modal: FC<ModalProps> = ({
 }) => {
   const { mounted } = useUnmountDelay(open);
 
+  const headingId = useMemo(() => getStringId('modal_heading', 8), []);
+  const bodyId = useMemo(() => getStringId('modal_body', 8), []);
+
   useEffect(() => {
     if (open && closeOnEscape && onClose) {
       const listener = (event: KeyboardEvent) => {
@@ -92,18 +96,29 @@ export const Modal: FC<ModalProps> = ({
       >
         {mounted ? (
           <FocusTrap focusLastOnUnlock locked>
-            <div {...props} className={modalClass}>
+            <div
+              {...props}
+              className={modalClass}
+              role="dialog"
+              aria-modal={true}
+              aria-labelledby={headingId}
+              aria-describedby={bodyId}
+            >
               <div className="ui__modal__top">
-                <div className="ui__modal__top__heading">{heading}</div>
+                <div className="ui__modal__top__heading" id={headingId}>
+                  {heading}
+                </div>
                 {onClose ? (
-                  <IconButton className="ui__modal__top__close" onClick={onClose}>
+                  <IconButton className="ui__modal__top__close" onClick={onClose} aria-label="Close">
                     <Close />
                   </IconButton>
                 ) : (
                   undefined
                 )}
               </div>
-              <div className={bodyClass}>{children}</div>
+              <div className={bodyClass} id={bodyId}>
+                {children}
+              </div>
               {buttonGroup ? <ButtonGroup className="ui__modal__buttonGroup">{buttonGroup}</ButtonGroup> : undefined}
             </div>
           </FocusTrap>
