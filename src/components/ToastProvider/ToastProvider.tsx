@@ -34,11 +34,20 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, noTimeou
 
   const _pop = useCallback(() => {
     setClosing(true);
-    setTimeout(() => {
-      setToasts(prev => prev.slice(1));
-      setClosing(false);
-    }, 250);
   }, []);
+  useEffect(() => {
+    if (closing) {
+      const timeoutId = window.setTimeout(() => {
+        setToasts(prev => prev.slice(1));
+        setClosing(false);
+      }, 250);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
+    }
+    return;
+  }, [closing]);
 
   const { toastId, closable = true, timeout, ...toastProps }: ToastQueueItem = toasts[0] || {};
 
