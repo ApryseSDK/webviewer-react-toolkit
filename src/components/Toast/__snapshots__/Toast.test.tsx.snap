@@ -2,7 +2,12 @@
 
 exports[`Toast component snapshot renders default toast 1`] = `
 <div
+  aria-atomic={true}
+  aria-describedby="modal_body_1234"
+  aria-labelledby="modal_heading_1234"
+  aria-live="polite"
   className="ui__base ui__toast ui__toast--type-info"
+  role="status"
 >
   <div
     className="ui__toast__border"

@@ -2,6 +2,8 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import { Toast } from '../Toast';
 
+jest.mock('../../utils', () => ({ getStringId: (prefix: string) => `${prefix}_1234` }));
+
 describe('Toast component', () => {
   it('renders its contents', () => {
     const toast = shallow(<Toast heading={''} />);
