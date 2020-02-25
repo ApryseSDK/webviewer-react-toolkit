@@ -120,12 +120,34 @@ async function generateMixinsFile(input, output, transform, replace = v => v) {
       })
       .filter(Boolean)
       .join('\n\n');
+
     const media = isMedia ? ` {\n  // Content\n}` : '';
+
+    const comment = (() => {
+      const index = mixinNodes.indexOf(m);
+      const commentNode = mixinNodes[index - 1];
+      if (
+        !commentNode ||
+        commentNode.type !== 'comment' ||
+        css[commentNode.source.end.line].trim() === ''
+      ) {
+        return undefined;
+      }
+      return commentNode.text.trim() || undefined;
+    })();
+
+    console.log('\n\n\n --------- \n\n\n');
+    console.log(m.params);
+    console.log('\n\n\n --------- \n\n\n');
+    console.log(m);
+
     return {
       include: `@include ${m.params}${media};`,
+      comment,
+      title: m.params.match(/([^(\s]+).*/)[1],
       code: replace(
         css
-          .slice(m.source.start.line - 2, m.source.end.line - 1)
+          .slice(m.source.start.line - 1, m.source.end.line - 1)
           .filter(line => !line.includes('@mixin'))
           .map(line =>
             line.replace('  ', '').replace('@content;', '/* Content */'),
@@ -151,6 +173,8 @@ async function generateMixinsFile(input, output, transform, replace = v => v) {
 ${data
   .map(
     (d, i) => `
+### \`${d.title}\`${d.comment ? '\n\n' + d.comment : ''}
+
 <Mixins index={${i}} />
 
 \`\`\`scss
