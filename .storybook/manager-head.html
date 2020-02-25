@@ -23,6 +23,15 @@
     });
 
     iframeWindow.addEventListener('DOMContentLoaded', () => {
+      // Set the theme immediately on load.
+      const storedTheme = localStorage.getItem('data-theme') || '';
+      const darkTheme = storedTheme === 'dark';
+      const newTheme = darkTheme ? 'dark' : '';
+      iframeWindow.document.documentElement.setAttribute(
+        'data-theme',
+        newTheme,
+      );
+
       zoomObserver.observe(iframeWindow.document.body, {
         attributes: true,
         childList: true,
