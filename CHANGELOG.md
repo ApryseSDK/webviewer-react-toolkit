@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.1...v0.3.0-beta.2) (2020-02-25)
+
+### Features
+
+- **Modal:** improved accessibility on modal ([9613ba7](https://github.com/PDFTron/webviewer-react-toolkit/commit/9613ba76db40067fb31cc6e48850ad8a82257121))
+- **Toast:** improved accessibility on toast ([cf0e696](https://github.com/PDFTron/webviewer-react-toolkit/commit/cf0e696f524ae353e6cb5c01345c92a45cf0611a))
+
+### Bug Fixes
+
+- **ToastProvider:** cancel close timeout on unmount ([ab9dcd9](https://github.com/PDFTron/webviewer-react-toolkit/commit/ab9dcd987a59dfeef3814cb0b215adac6152c7d9))
+- **ToastProvider:** remove pointer events on toast wrapper ([e802738](https://github.com/PDFTron/webviewer-react-toolkit/commit/e8027380e8051934f2766c3650aeb40b22680940))
+
+### Styles
+
+- **font:** added Tahoma as backup font, made font-family a variable ([3d1756b](https://github.com/PDFTron/webviewer-react-toolkit/commit/3d1756b5b3c0b3aa777230849e7a2b949facea1d))
+
 ## [0.3.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0-beta.5...v0.3.0-beta.1) (2020-02-24)
 
 ### Styles
