@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0...v0.2.1) (2020-02-26)
+
+### Features
+
+- **Modal:** improved accessibility on modal ([9613ba7](https://github.com/PDFTron/webviewer-react-toolkit/commit/9613ba76db40067fb31cc6e48850ad8a82257121))
+- **Toast:** improved accessibility on toast ([cf0e696](https://github.com/PDFTron/webviewer-react-toolkit/commit/cf0e696f524ae353e6cb5c01345c92a45cf0611a))
+
+### Bug Fixes
+
+- **Button:** no longer shows hover or active style when disabled ([43f8895](https://github.com/PDFTron/webviewer-react-toolkit/commit/43f8895d0c1a83d21774716d53d760b563f62bc6))
+- **ToastProvider:** cancel close timeout on unmount ([ab9dcd9](https://github.com/PDFTron/webviewer-react-toolkit/commit/ab9dcd987a59dfeef3814cb0b215adac6152c7d9))
+- **ToastProvider:** remove pointer events on toast wrapper ([e802738](https://github.com/PDFTron/webviewer-react-toolkit/commit/e8027380e8051934f2766c3650aeb40b22680940))
+
+### Styles
+
+- **mixins:** added padding-bottom mixin ([704fb11](https://github.com/PDFTron/webviewer-react-toolkit/commit/704fb116b5ade3c1030d103a6d6d8c31041eeb80))
+- **Modal:** allow scrolling modal if height is greater than screen ([1f508e1](https://github.com/PDFTron/webviewer-react-toolkit/commit/1f508e1322666cd83ae2c1629764900c25ce4436))
+- **font:** added Tahoma as backup font, made font-family a variable ([3d1756b](https://github.com/PDFTron/webviewer-react-toolkit/commit/3d1756b5b3c0b3aa777230849e7a2b949facea1d))
+- **Button:** opacity on internals when disabled ([21eeb27](https://github.com/PDFTron/webviewer-react-toolkit/commit/21eeb272ce35c07e3da90e931832b5b9448c4be1))
+- **ButtonGroup:** can nest groups for more complex layouts ([d531544](https://github.com/PDFTron/webviewer-react-toolkit/commit/d53154466715dbb75ccf078abba9cb3b214facad))
+
 ## [0.3.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.2...v0.3.0-beta.3) (2020-02-26)
 
 ### Bug Fixes
