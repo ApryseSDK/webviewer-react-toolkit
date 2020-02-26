@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.2...v0.3.0-beta.3) (2020-02-26)
+
+### Bug Fixes
+
+- **Button:** no longer shows hover or active style when disabled ([43f8895](https://github.com/PDFTron/webviewer-react-toolkit/commit/43f8895d0c1a83d21774716d53d760b563f62bc6))
+
+### Styles
+
+- **mixins:** added padding-bottom mixin ([704fb11](https://github.com/PDFTron/webviewer-react-toolkit/commit/704fb116b5ade3c1030d103a6d6d8c31041eeb80))
+- **Modal:** allow scrolling modal if height is greater than screen ([1f508e1](https://github.com/PDFTron/webviewer-react-toolkit/commit/1f508e1322666cd83ae2c1629764900c25ce4436))
+
 ## [0.3.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.1...v0.3.0-beta.2) (2020-02-25)
 
 ### Features
