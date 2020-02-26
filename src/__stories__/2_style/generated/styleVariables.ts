@@ -285,6 +285,14 @@ export default {
       dark: 'box-shadow 0.1s cubic-bezier(0.4, 1, 0.75, 0.9)',
     },
   ],
+  fontFamily: [
+    {
+      scss: '$font-family',
+      css: 'var(--font-family)',
+      value: 'Lato, Tahoma, sans-serif',
+      dark: 'Lato, Tahoma, sans-serif',
+    },
+  ],
   zIndex: [
     {
       scss: '$z-index-local',

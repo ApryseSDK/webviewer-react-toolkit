@@ -10,6 +10,11 @@
     display: flex;
     justify-content: flex-end;
     padding: $padding;
+    pointer-events: none !important;
+
+    > * {
+      pointer-events: all;
+    }
 
     transform: translateY(-100%);
     @include slide-in;

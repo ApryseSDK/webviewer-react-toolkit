@@ -1,15 +1,18 @@
 /* --- Focus shadows (for smooth, put transition: $focus-transition on element. --- */
 
+// The standard focus outline shadow.
 @mixin focus {
   box-shadow: 0 0 0 2px var(--color-focus-shadow);
 }
 
+// Focus outline shadow for elements that require inset shadow.
 @mixin focus-inset {
   box-shadow: inset 0 0 0 2px var(--color-focus-shadow);
 }
 
 /* --- Positional. --- */
 
+// Position absolutely, and fill the parent container.
 @mixin absolute-fill {
   position: absolute;
   top: 0;
@@ -18,6 +21,7 @@
   left: 0;
 }
 
+// Position fixed, and fill the screen.
 @mixin fixed-fill {
   position: fixed;
   top: 0;
@@ -26,10 +30,38 @@
   left: 0;
 }
 
+// Make a container flex, and center all children.
 @mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/*
+Browsers like firefox ignore the bottom padding in scrolling containers. The
+fix, other than inserting padding on the last child (which can cause visual
+issues if the last child has a border or background color) is to add the
+padding height `::after` the last child.
+
+> Note: if you are using grids, the gap will be placed between `::after`
+> pseudo-element and the target element. Therefore you must subtract the
+> `$grid-row-gap` from the `$paddingBottom`.
+
+- [Firefox Bug](https://bugzilla.mozilla.org/show_bug.cgi?id=748518)
+- [Stack Overflow Thread](https://stackoverflow.com/a/35413665/10577245)
+*/
+@mixin padding-bottom($paddingBottom, $grid-row-gap: 0px) {
+  // This doesn't need to be important if you remember to always remove bottom
+  // padding on the container you're adding this mixin to.
+  padding-bottom: 0 !important;
+
+  &:last-child::after {
+    content: '';
+    display: block;
+    // Using calc allows for css variables, if you don't use them you can just
+    // do direct padding - grid.
+    height: calc(#{$paddingBottom} - #{$grid-row-gap});
+  }
 }
 
 /* --- Animations. --- */
@@ -75,6 +107,7 @@
   }
 }
 
+// Standard transition for all opacity changes.
 @mixin opacity-transition {
   transition: opacity 0.25s;
 }

@@ -51,17 +51,29 @@ to copy the value to your clipboard.
 <ToastProvider>
 
 
+### `focus`
+
+The standard focus outline shadow.
+
 <Mixins index={0} />
 
 ```scss
 box-shadow: 0 0 0 2px var(--color-focus-shadow);
 ```
 
+### `focus-inset`
+
+Focus outline shadow for elements that require inset shadow.
+
 <Mixins index={1} />
 
 ```scss
 box-shadow: inset 0 0 0 2px var(--color-focus-shadow);
 ```
+
+### `absolute-fill`
+
+Position absolutely, and fill the parent container.
 
 <Mixins index={2} />
 
@@ -73,6 +85,10 @@ bottom: 0;
 left: 0;
 ```
 
+### `fixed-fill`
+
+Position fixed, and fill the screen.
+
 <Mixins index={3} />
 
 ```scss
@@ -83,6 +99,10 @@ bottom: 0;
 left: 0;
 ```
 
+### `flex-center`
+
+Make a container flex, and center all children.
+
 <Mixins index={4} />
 
 ```scss
@@ -91,10 +111,43 @@ justify-content: center;
 align-items: center;
 ```
 
+### `padding-bottom`
+
+Browsers like firefox ignore the bottom padding in scrolling containers. The
+fix, other than inserting padding on the last child (which can cause visual
+issues if the last child has a border or background color) is to add the
+padding height `::after` the last child.
+
+> Note: if you are using grids, the gap will be placed between `::after`
+> pseudo-element and the target element. Therefore you must subtract the
+> `$grid-row-gap` from the `$paddingBottom`.
+
+- [Firefox Bug](https://bugzilla.mozilla.org/show_bug.cgi?id=748518)
+- [Stack Overflow Thread](https://stackoverflow.com/a/35413665/10577245)
+
 <Mixins index={5} />
 
 ```scss
-// This provides the animation for skeleton loading.
+// This doesn't need to be important if you remember to always remove bottom
+// padding on the container you're adding this mixin to.
+padding-bottom: 0 !important;
+
+&:last-child::after {
+  content: '';
+  display: block;
+  // Using calc allows for css variables, if you don't use them you can just
+  // do direct padding - grid.
+  height: calc(#{$paddingBottom} - #{$grid-row-gap});
+}
+```
+
+### `skeleton`
+
+This provides the animation for skeleton loading.
+
+<Mixins index={6} />
+
+```scss
 animation: timeline 2s linear infinite;
 background: linear-gradient(to right, #eee 0%, #ddd 10%, #eee 20%);
 background-size: 600px auto;
@@ -109,10 +162,13 @@ background-size: 600px auto;
 }
 ```
 
-<Mixins index={6} />
+### `spinner`
+
+This provides the animation for spinning loaders.
+
+<Mixins index={7} />
 
 ```scss
-// This provides the animation for spinning loaders.
 animation: spin 1.2s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite;
 
 @keyframes spin {
@@ -125,10 +181,13 @@ animation: spin 1.2s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite;
 }
 ```
 
-<Mixins index={7} />
+### `slide-in`
+
+This provides the animation for sliding in toasts from the top.
+
+<Mixins index={8} />
 
 ```scss
-// This provides the animation for sliding in toasts from the top.
 animation: slide 0.25s forwards;
 
 @keyframes slide {
@@ -138,7 +197,11 @@ animation: slide 0.25s forwards;
 }
 ```
 
-<Mixins index={8} />
+### `opacity-transition`
+
+Standard transition for all opacity changes.
+
+<Mixins index={9} />
 
 ```scss
 transition: opacity 0.25s;

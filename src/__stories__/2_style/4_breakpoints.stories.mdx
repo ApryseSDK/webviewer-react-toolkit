@@ -28,7 +28,7 @@ Or copy the code into your CSS files:
 ```css
 div {
   @media (min-width: 768px) {
-    @content;
+    background-color: blue;
   }
 }
 ```
@@ -57,14 +57,21 @@ to copy the value to your clipboard.
 <ToastProvider>
 
 
+### `for-phone-only`
+
+Try not to use this, as it breaks "mobile first" principles. Applies only to mobile devices.
+
 <Mixins index={0} />
 
 ```scss
-// Try not to use this, as it breaks "mobile first" principles.
 @media (max-width: 767px) {
   /* Content */
 }
 ```
+
+### `for-tablet-up`
+
+Style applies to devices with width tablet or above.
 
 <Mixins index={1} />
 
@@ -73,6 +80,10 @@ to copy the value to your clipboard.
   /* Content */
 }
 ```
+
+### `for-desktop-up`
+
+Style applies to devices with width desktop or above.
 
 <Mixins index={2} />
 

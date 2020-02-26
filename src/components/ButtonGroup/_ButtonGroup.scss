@@ -3,6 +3,12 @@
   display: flex;
   flex-wrap: wrap;
 
+  // Undo negative margin on nested groups.
+  > .ui__buttonGroup {
+    margin: 0;
+  }
+
+  // Buttons inside are kept apart by padding.
   > button {
     margin: $padding-tiny;
   }

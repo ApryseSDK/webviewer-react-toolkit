@@ -21,7 +21,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ buttonStyle = 'default', buttonSize = 'default', type = 'button', className, ...buttonProps }, ref) => {
+  ({ buttonStyle = 'default', buttonSize = 'default', type = 'button', className, children, ...buttonProps }, ref) => {
     const isUserTabbing = useAccessibleFocus();
 
     const buttonClass = classnames(
@@ -35,6 +35,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className,
     );
 
-    return <button {...buttonProps} className={buttonClass} type={type} ref={ref} />;
+    return (
+      <button {...buttonProps} className={buttonClass} type={type} ref={ref}>
+        <div className="ui__button__internal">{children}</div>
+      </button>
+    );
   },
 );

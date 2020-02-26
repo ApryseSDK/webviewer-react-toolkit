@@ -40,6 +40,19 @@ export const Basic = () => {
   );
 };
 
+export const Nested = () => {
+  return (
+    <ButtonGroup position="space-between" centerMobile>
+      <Button>Other</Button>
+
+      <ButtonGroup position="right" centerMobile>
+        <Button>Accept</Button>
+        <Button buttonStyle="outline">Cancel</Button>
+      </ButtonGroup>
+    </ButtonGroup>
+  );
+};
+
 export const WithLargeButtons = () => {
   return (
     <ButtonGroup
@@ -47,7 +60,7 @@ export const WithLargeButtons = () => {
       reverseWrap={boolean('reverseWrap', false)}
       centerMobile={boolean('centerMobile', false)}
     >
-      <Button>Accept</Button>
+      <Button>Accept But With Long Name So You Can See It Wrap</Button>
       <Button buttonStyle="outline">Cancel But With Long Name So You Can See It Wrap</Button>
     </ButtonGroup>
   );
