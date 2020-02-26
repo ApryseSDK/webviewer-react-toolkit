@@ -26,7 +26,7 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
 
     const handleOnClick = useOnClick(onClick, { disabled, stopPropagation: true });
 
-    const handleKeyUp = useKeyForClick(onKeyPress, clickableDivRef);
+    const handleKeyPress = useKeyForClick(onKeyPress, clickableDivRef);
 
     const isUserTabbing = useAccessibleFocus();
 
@@ -48,7 +48,7 @@ export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
         tabIndex={disabled ? -1 : tabIndex ?? 0}
         className={clickableDivClass}
         onClick={handleOnClick}
-        onKeyPress={handleKeyUp}
+        onKeyPress={handleKeyPress}
         ref={clickableDivRef}
       >
         {children}

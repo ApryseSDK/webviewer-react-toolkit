@@ -35,7 +35,7 @@
       color: $color-contrast-1;
       fill: $color-contrast-1;
 
-      &:active {
+      &:active:not(.ui__button--disabled) {
         border-color: $color-blue-gray-6;
         background-color: $color-blue-gray-6;
       }
@@ -47,7 +47,7 @@
       color: $color-blue-gray-5;
       fill: $color-blue-gray-5;
 
-      &:active {
+      &:active:not(.ui__button--disabled) {
         color: $color-blue-gray-6;
         fill: $color-blue-gray-6;
       }
@@ -61,13 +61,13 @@
       transition: background-color 75ms ease-in-out, color 75ms ease-in-out;
 
       &:focus.ui__button--tabbing,
-      &:hover {
+      &:hover:not(.ui__button--disabled) {
         background-color: $color-blue-gray-5;
         color: $color-contrast-1;
         fill: $color-contrast-1;
       }
 
-      &:active {
+      &:active:not(.ui__button--disabled) {
         border-color: $color-blue-gray-6;
         background-color: $color-blue-gray-6;
       }
