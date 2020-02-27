@@ -1,9 +1,10 @@
 import classnames from 'classnames';
 import React, { AriaAttributes, FC, HTMLAttributes, MouseEventHandler, useMemo } from 'react';
 import { CommonToastProps } from '../../hooks';
-import { Close, Error, Info, Success, Warning } from '../../icons';
+import { Close } from '../../icons';
 import { getStringId } from '../../utils';
 import { Button } from '../Button';
+import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
 
 export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElement> {
@@ -34,16 +35,16 @@ export const Toast: FC<ToastProps> = ({
   const headingId = useMemo(() => getStringId('modal_heading', 8), []);
   const bodyId = useMemo(() => getStringId('modal_body', 8), []);
 
-  const Icon = useMemo(() => {
+  const icon = useMemo(() => {
     switch (toastType) {
       case 'info':
-        return Info;
+        return 'Info';
       case 'success':
-        return Success;
+        return 'Success';
       case 'warning':
-        return Warning;
+        return 'Warning';
       case 'error':
-        return Error;
+        return 'Error';
     }
   }, [toastType]);
 
@@ -60,9 +61,7 @@ export const Toast: FC<ToastProps> = ({
       aria-describedby={bodyId}
     >
       <div className="ui__toast__border" />
-      <div className="ui__toast__icon">
-        <Icon />
-      </div>
+      <Icon icon={icon} className="ui__toast__icon" />
       <div className="ui__toast__copy">
         {heading ? (
           <div className="ui__toast__copy__heading" id={headingId}>

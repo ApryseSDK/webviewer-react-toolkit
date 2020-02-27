@@ -13,6 +13,7 @@ export * from './EditableText';
 export * from './FileOrganizer';
 export * from './FileSkeleton';
 export * from './FocusTrap';
+export * from './Icon';
 export * from './IconButton';
 export * from './Image';
 export * from './Modal';

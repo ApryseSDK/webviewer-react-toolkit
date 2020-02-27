@@ -12,11 +12,10 @@ exports[`Toast component snapshot renders default toast 1`] = `
   <div
     className="ui__toast__border"
   />
-  <div
+  <ForwardRef
     className="ui__toast__icon"
-  >
-    <Info />
-  </div>
+    icon="Info"
+  />
   <div
     className="ui__toast__copy"
   />
