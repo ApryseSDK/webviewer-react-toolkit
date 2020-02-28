@@ -66,8 +66,8 @@ export const Modal: FC<ModalProps> = ({
 }) => {
   const { mounted } = useUnmountDelay(open);
 
-  const headingId = useMemo(() => getStringId('modal_heading', 8), []);
-  const bodyId = useMemo(() => getStringId('modal_body', 8), []);
+  const headingId = useMemo(() => getStringId('modal_heading'), []);
+  const bodyId = useMemo(() => getStringId('modal_body'), []);
 
   useEffect(() => {
     if (open && closeOnEscape && onClose) {
@@ -103,12 +103,12 @@ export const Modal: FC<ModalProps> = ({
           <FocusTrap focusLastOnUnlock locked>
             <div className="ui__modal__paddingFix">
               <div
+                aria-labelledby={headingId}
+                aria-describedby={bodyId}
                 {...props}
                 className={modalClass}
                 role={role}
                 aria-modal={ariaModal}
-                aria-labelledby={headingId}
-                aria-describedby={bodyId}
               >
                 <div className="ui__modal__top">
                   <div className="ui__modal__top__heading" id={headingId}>

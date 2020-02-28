@@ -32,8 +32,8 @@ export const Toast: FC<ToastProps> = ({
   'aria-atomic': ariaAtomic = true,
   ...props
 }) => {
-  const headingId = useMemo(() => getStringId('modal_heading', 8), []);
-  const bodyId = useMemo(() => getStringId('modal_body', 8), []);
+  const headingId = useMemo(() => getStringId('toast_heading'), []);
+  const bodyId = useMemo(() => getStringId('toast_body'), []);
 
   const icon = useMemo(() => {
     switch (toastType) {
@@ -52,13 +52,13 @@ export const Toast: FC<ToastProps> = ({
 
   return (
     <div
+      aria-labelledby={heading ? headingId : undefined}
+      aria-describedby={children ? bodyId : undefined}
       {...props}
       className={toastClass}
       role={role}
       aria-live={ariaLive}
       aria-atomic={ariaAtomic}
-      aria-labelledby={headingId}
-      aria-describedby={bodyId}
     >
       <div className="ui__toast__border" />
       <Icon icon={icon} className="ui__toast__icon" />
