@@ -43,6 +43,11 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
    * a keyboard event (escape key pressed).
    */
   onClose?(event: KeyboardEvent | MouseEvent): void;
+  /**
+   * Provide alongside `onClose` for localized accessibility.
+   * @default "Close"
+   */
+  closeLabel?: AriaAttributes['aria-label'];
   /** @default "dialog" */
   role?: HTMLAttributes<HTMLDivElement>['role'];
   /** @default true */
@@ -57,6 +62,7 @@ export const Modal: FC<ModalProps> = ({
   heading,
   open,
   onClose,
+  closeLabel = 'Close',
   children,
   buttonGroup,
   className,
@@ -115,7 +121,7 @@ export const Modal: FC<ModalProps> = ({
                     {heading}
                   </div>
                   {onClose ? (
-                    <IconButton className="ui__modal__top__close" onClick={onClose} aria-label="Close">
+                    <IconButton className="ui__modal__top__close" onClick={onClose} aria-label={closeLabel}>
                       <Close />
                     </IconButton>
                   ) : (

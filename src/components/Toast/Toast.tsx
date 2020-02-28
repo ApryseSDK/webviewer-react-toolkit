@@ -12,6 +12,11 @@ export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElem
    * If provided, toast will have a close button.
    */
   onClose?: MouseEventHandler<HTMLButtonElement>;
+  /**
+   * Provide alongside `onClose` for localized accessibility.
+   * @default "Close"
+   */
+  closeLabel?: AriaAttributes['aria-label'];
   /** @default "status" */
   role?: HTMLAttributes<HTMLDivElement>['role'];
   /** @default "polite" */
@@ -25,6 +30,7 @@ export const Toast: FC<ToastProps> = ({
   children,
   message = 'info',
   onClose,
+  closeLabel = 'Close',
   action,
   className,
   role = 'status',
@@ -89,7 +95,7 @@ export const Toast: FC<ToastProps> = ({
       )}
       {onClose ? (
         <div className="ui__toast__action">
-          <IconButton onClick={onClose} aria-label="Close">
+          <IconButton onClick={onClose} aria-label={closeLabel}>
             <Close />
           </IconButton>
         </div>
