@@ -8,9 +8,7 @@ export function useAccessibleFocus() {
   const [isUserTabbing, setIsUserTabbing] = useState(observable.isUserTabbing);
 
   useEffect(() => {
-    const subscriber = () => setIsUserTabbing(observable.isUserTabbing);
-    const unsubscribe = observable.subscribe(subscriber);
-    return unsubscribe;
+    return observable.subscribe(() => setIsUserTabbing(observable.isUserTabbing));
   }, []);
 
   return isUserTabbing;

@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { AddToast, ToastContext, ToastContextValue, CommonToastProps, useCurrentRef } from '../../hooks';
+import { AddToast, CommonToastProps, ToastContext, ToastContextValue, useCurrentRef } from '../../hooks';
 import { Overlay } from '../Overlay';
 import { Toast } from '../Toast';
 
@@ -15,7 +15,7 @@ export interface ToastProviderProps {
    * type, or array of types. This could be used to persist error toasts until
    * they are cleared manually.
    */
-  noTimeout?: CommonToastProps['toastType'] | CommonToastProps['toastType'][];
+  noTimeout?: CommonToastProps['message'] | CommonToastProps['message'][];
 }
 
 interface ToastQueueItem extends AddToast {
@@ -57,13 +57,13 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, noTimeou
     if (!noTimeoutTypes.current) return timeoutNum;
     if (Array.isArray(noTimeoutTypes.current)) {
       if (!noTimeoutTypes.current.length) return timeoutNum;
-      if (!noTimeoutTypes.current.includes(toastProps.toastType)) return timeoutNum;
+      if (!noTimeoutTypes.current.includes(toastProps.message)) return timeoutNum;
       return 0;
     } else {
-      if (noTimeoutTypes.current !== toastProps.toastType) return timeoutNum;
+      if (noTimeoutTypes.current !== toastProps.message) return timeoutNum;
       return 0;
     }
-  }, [defaultTimeout, noTimeoutTypes, timeout, toastProps.toastType]);
+  }, [defaultTimeout, noTimeoutTypes, timeout, toastProps.message]);
 
   useEffect(() => {
     if (!hovered && toastId && timeoutValue) {
@@ -112,8 +112,8 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, noTimeou
           <div className="ui__toastProvider__toast" key={toastId}>
             <Toast
               {...toastProps}
-              role={toastProps.toastType === 'error' ? 'alert' : 'status'}
-              aria-live={toastProps.toastType === 'error' ? 'assertive' : 'polite'}
+              role={toastProps.message === 'error' ? 'alert' : 'status'}
+              aria-live={toastProps.message === 'error' ? 'assertive' : 'polite'}
               onMouseEnter={onHover}
               onMouseLeave={onBlur}
               className={toastProviderClass}

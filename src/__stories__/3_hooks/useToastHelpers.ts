@@ -4,7 +4,7 @@ import { Include } from '../../utils';
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
 
-interface Test extends AddToast, Include<ToastProps, 'heading' | 'children' | 'toastType' | 'action'> {}
+interface Test extends AddToast, Include<ToastProps, 'heading' | 'children' | 'message' | 'action'> {}
 
 export function options(x: Test) {}
 export function output(x: ToastContextValue) {}

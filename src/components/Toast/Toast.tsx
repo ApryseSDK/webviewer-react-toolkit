@@ -23,7 +23,7 @@ export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElem
 export const Toast: FC<ToastProps> = ({
   heading,
   children,
-  toastType = 'info',
+  message = 'info',
   onClose,
   action,
   className,
@@ -36,7 +36,7 @@ export const Toast: FC<ToastProps> = ({
   const bodyId = useMemo(() => getStringId('toast_body'), []);
 
   const icon = useMemo(() => {
-    switch (toastType) {
+    switch (message) {
       case 'info':
         return 'Info';
       case 'success':
@@ -46,9 +46,9 @@ export const Toast: FC<ToastProps> = ({
       case 'error':
         return 'Error';
     }
-  }, [toastType]);
+  }, [message]);
 
-  const toastClass = classnames('ui__base ui__toast', `ui__toast--type-${toastType}`, className);
+  const toastClass = classnames('ui__base ui__toast', `ui__toast--type-${message}`, className);
 
   return (
     <div
