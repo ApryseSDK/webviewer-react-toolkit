@@ -4,7 +4,7 @@ exports[`Toast component snapshot renders default toast 1`] = `
 <div
   aria-atomic={true}
   aria-live="polite"
-  className="ui__base ui__toast ui__toast--type-info"
+  className="ui__base ui__toast ui__toast--message-info"
   role="status"
 >
   <div

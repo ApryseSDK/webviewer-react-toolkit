@@ -54,7 +54,7 @@ export const Toast: FC<ToastProps> = ({
     }
   }, [message]);
 
-  const toastClass = classnames('ui__base ui__toast', `ui__toast--type-${message}`, className);
+  const toastClass = classnames('ui__base ui__toast', `ui__toast--message-${message}`, className);
 
   return (
     <div
