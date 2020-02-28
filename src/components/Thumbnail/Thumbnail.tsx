@@ -135,8 +135,8 @@ export function Thumbnail<F extends FileLike>({
         />
       </div>
       <div className="ui__thumbnail__controls">
-        {buttonProps?.map(buttonPropObject => (
-          <ToolButton disabled={disabled} onClick={e => buttonPropObject.onClick(e, file.file)}>
+        {buttonProps?.map(({ key, ...buttonPropObject }) => (
+          <ToolButton key={key} disabled={disabled} onClick={e => buttonPropObject.onClick(e, file.file)}>
             {buttonPropObject.children}
           </ToolButton>
         ))}
