@@ -111,3 +111,8 @@ padding height `::after` the last child.
 @mixin opacity-transition {
   transition: opacity 0.25s;
 }
+
+// A faster transition for more critical items such as thumbnail buttons.
+@mixin opacity-transition-fast {
+  transition: opacity 0.1s;
+}

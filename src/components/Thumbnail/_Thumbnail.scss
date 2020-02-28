@@ -63,14 +63,14 @@ $thumbnail-border-size: 2px;
   }
 
   &__controls {
-    transition: 0.1s opacity;
+    @include opacity-transition-fast;
     position: absolute;
     top: $padding-tiny;
     right: $padding-tiny;
     opacity: 0;
     display: flex;
-    overflow: hidden;
-    border-radius: $border-radius-small;
+    border-radius: $border-radius;
+    background-color: $color-background-canvas;
   }
 
   &__selectedIcon {
