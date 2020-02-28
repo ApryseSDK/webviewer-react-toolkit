@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ToolButton component snapshot renders default toolButton 1`] = `
-<button
-  className="ui__base ui__toolButton"
-  onClick={[Function]}
+<div
+  className="ui__base ui__toolButton ui__toolButton--bottom"
 >
-  <div
-    className="ui__toolButton__internals"
+  <ForwardRef
+    className="ui__toolButton__action ui__toolButton--bottom"
+    onClick={[Function]}
   />
-</button>
+</div>
 `;
