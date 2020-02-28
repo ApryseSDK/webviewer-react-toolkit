@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React, { forwardRef, HTMLAttributes, ReactNode, SVGProps, useMemo } from 'react';
 import * as icons from './../../icons';
 
-export type AvailableIcons = 'Close' | 'Error' | 'Info' | 'MultiPage' | 'SinglePage' | 'Success' | 'Warning';
+export type AvailableIcons = keyof typeof icons;
 
 export interface IconProps extends HTMLAttributes<HTMLElement> {
   /**
