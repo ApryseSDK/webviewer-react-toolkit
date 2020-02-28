@@ -16,6 +16,7 @@ export * from './FocusTrap';
 export * from './Icon';
 export * from './IconButton';
 export * from './Image';
+export * from './Input';
 export * from './Modal';
 export * from './Overlay';
 export * from './Spinner';

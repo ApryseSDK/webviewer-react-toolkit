@@ -1,0 +1,82 @@
+.ui__input__wrapper {
+  width: 200px;
+
+  &--fill {
+    width: 100%;
+  }
+
+  &--pad {
+    padding-bottom: 20px;
+  }
+}
+
+.ui__input {
+  border-radius: $border-radius;
+  transition: $focus-transition;
+  background-color: $color-gray-1;
+  border: 1px solid $color-gray-3;
+  display: inline-flex;
+  width: 100%;
+
+  &--message {
+    &-default {
+      &.ui__input--focused {
+        border: 1px solid $color-theme-primary;
+      }
+
+      &.ui__input--focused {
+        @include focus;
+      }
+    }
+
+    &-warning {
+      border-color: $color-message-warning;
+
+      .ui__input__icon {
+        fill: $color-message-warning;
+      }
+
+      &.ui__input--focused {
+        box-shadow: 0 0 0 2px var(--color-message-warning-focus-shadow);
+      }
+    }
+
+    &-error {
+      border-color: $color-message-error;
+
+      .ui__input__icon {
+        fill: $color-message-error;
+      }
+
+      &.ui__input--focused {
+        box-shadow: 0 0 0 2px var(--color-message-error-focus-shadow);
+      }
+    }
+  }
+
+  .ui__input__input {
+    flex: 1 1 auto;
+    padding: $padding-tiny;
+    height: 28px;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    color: $color-font-primary;
+    min-height: 24px;
+
+    &--disabled {
+      opacity: 0.7;
+    }
+  }
+
+  &__icon {
+    flex: 0 0;
+    padding: 0 2px;
+  }
+
+  &__messageText {
+    width: 100%;
+    font-size: $font-size-small;
+    margin-top: $padding-tiny;
+  }
+}

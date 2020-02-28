@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input component snapshot renders default input 1`] = `
+<div
+  className="ui__base ui__input__wrapper"
+>
+  <div
+    className="ui__input ui__input--message-default"
+  >
+    <input
+      className="ui__input__input"
+      onBlur={[Function]}
+      onFocus={[Function]}
+    />
+  </div>
+</div>
+`;
