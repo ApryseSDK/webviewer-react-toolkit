@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.1...v0.3.0-beta.4) (2020-02-28)
+
+### Features
+
+- **Icon:** added icon component for using included or custom icons ([741b6e5](https://github.com/PDFTron/webviewer-react-toolkit/commit/741b6e58e811db91ca7e75427b5161d155026bc1))
+- **icons:** added ChevronDown and RotateRight icons ([af137c6](https://github.com/PDFTron/webviewer-react-toolkit/commit/af137c65ee3f9131e934a0c102d8bb68302e756d))
+- **ToolButton:** added expandProps for expandable menu button ([a65a7e3](https://github.com/PDFTron/webviewer-react-toolkit/commit/a65a7e3ebf57e7528a69ed25e3c78592c79bab23))
+
+### Bug Fixes
+
+- **Thumbnail:** fixed issue with keys not registering on tool buttons ([e24afb5](https://github.com/PDFTron/webviewer-react-toolkit/commit/e24afb52ecc8f03f6ff9874355a4e617a095944e))
+
 ## [0.2.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0...v0.2.1) (2020-02-26)
 
 ### Features
