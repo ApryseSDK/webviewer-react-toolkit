@@ -1,10 +1,10 @@
 import classnames from 'classnames';
 import React, { AriaAttributes, FC, HTMLAttributes, MouseEvent, ReactNode, useEffect, useMemo } from 'react';
 import { useUnmountDelay } from '../../hooks';
-import { Close } from '../../icons';
 import { getStringId } from '../../utils';
 import { ButtonGroup } from '../ButtonGroup';
 import { FocusTrap } from '../FocusTrap';
+import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
 import { Overlay } from '../Overlay';
 
@@ -122,7 +122,7 @@ export const Modal: FC<ModalProps> = ({
                   </div>
                   {onClose ? (
                     <IconButton className="ui__modal__top__close" onClick={onClose} aria-label={closeLabel}>
-                      <Close />
+                      <Icon icon="Close" />
                     </IconButton>
                   ) : (
                     undefined

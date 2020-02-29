@@ -1,7 +1,6 @@
 import classnames from 'classnames';
 import React, { AriaAttributes, FC, HTMLAttributes, MouseEventHandler, useMemo } from 'react';
 import { CommonToastProps } from '../../hooks';
-import { Close } from '../../icons';
 import { getStringId } from '../../utils';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
@@ -96,7 +95,7 @@ export const Toast: FC<ToastProps> = ({
       {onClose ? (
         <div className="ui__toast__action">
           <IconButton onClick={onClose} aria-label={closeLabel}>
-            <Close />
+            <Icon icon="Close" />
           </IconButton>
         </div>
       ) : (

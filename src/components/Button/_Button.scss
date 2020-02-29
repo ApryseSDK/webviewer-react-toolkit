@@ -34,7 +34,10 @@
       border: 1px solid $color-blue-gray-5;
       background-color: $color-blue-gray-5;
       color: $color-contrast-1;
-      fill: $color-contrast-1;
+
+      i {
+        fill: $color-contrast-1;
+      }
 
       &:active:not(.ui__button--disabled) {
         border-color: $color-blue-gray-6;
@@ -46,11 +49,17 @@
       border: 1px solid transparent;
       background-color: transparent;
       color: $color-blue-gray-5;
-      fill: $color-blue-gray-5;
+
+      i {
+        fill: $color-blue-gray-5;
+      }
 
       &:active:not(.ui__button--disabled) {
         color: $color-blue-gray-6;
-        fill: $color-blue-gray-6;
+
+        i {
+          fill: $color-blue-gray-6;
+        }
       }
     }
 
@@ -58,14 +67,20 @@
       border: 1px solid $color-blue-gray-5;
       background-color: transparent;
       color: $color-blue-gray-5;
-      fill: $color-blue-gray-5;
+
+      i {
+        fill: $color-blue-gray-5;
+      }
       transition: background-color 75ms ease-in-out, color 75ms ease-in-out;
 
       &:focus.ui__button--tabbing,
       &:hover:not(.ui__button--disabled) {
         background-color: $color-blue-gray-5;
         color: $color-contrast-1;
-        fill: $color-contrast-1;
+
+        i {
+          fill: $color-contrast-1;
+        }
       }
 
       &:active:not(.ui__button--disabled) {
