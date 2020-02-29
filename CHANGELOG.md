@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.5...v0.3.0-beta.6) (2020-02-29)
+
+### Bug Fixes
+
+- **Button:** fix font color icon buttons ([a04522e](https://github.com/PDFTron/webviewer-react-toolkit/commit/a04522e788cc90f132b5c5366be49e40679af1e0))
+- **Icon:** display inline for icon ([2a67871](https://github.com/PDFTron/webviewer-react-toolkit/commit/2a67871917eddd8cead4c386aef5487b2921a29c))
+
 ## [0.3.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.4...v0.3.0-beta.5) (2020-02-28)
 
 ### ⚠ BREAKING CHANGES
