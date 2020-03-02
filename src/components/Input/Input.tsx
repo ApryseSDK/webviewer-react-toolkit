@@ -1,7 +1,7 @@
 import classnames from 'classnames';
-import React, { forwardRef, InputHTMLAttributes, useMemo } from 'react';
+import React, { forwardRef, InputHTMLAttributes, ReactNode, useMemo } from 'react';
 import { useFocus } from '../../hooks';
-import { Icon } from '../Icon';
+import { AvailableIcons, Icon } from '../Icon';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   /**
@@ -29,6 +29,12 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
    * being absent. This prevents UI jumping when message text appears.
    */
   padMessageText?: boolean;
+  /**
+   * If provided will wrap the icon in an icon button, allowing handling of
+   * onClick events and attaching aria-labels. This will override any default
+   * icons like the ones for warning and error messages.
+   */
+  rightElement?: ReactNode;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -42,22 +48,28 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className,
       onFocus,
       onBlur,
+      rightElement,
       ...props
     },
     ref,
   ) => {
     const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
-    const icon = useMemo(() => {
+    const rightIcon = useMemo(() => {
+      if (rightElement) return rightElement;
+
+      let icon: AvailableIcons | undefined = undefined;
       switch (message) {
-        case 'default':
-          return undefined;
         case 'warning':
-          return 'Warning';
+          icon = 'Warning';
+          break;
         case 'error':
-          return 'Error';
+          icon = 'Error';
+          break;
       }
-    }, [message]);
+
+      return icon ? <Icon className="ui__input__icon" icon={icon} /> : undefined;
+    }, [message, rightElement]);
 
     const wrapperClass = classnames(
       'ui__base ui__input__wrapper',
@@ -74,7 +86,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className={wrapperClass}>
         <div className={mainClass}>
           <input {...props} onFocus={handleOnFocus} onBlur={handleOnBlur} className={inputClass} ref={ref} />
-          {icon ? <Icon className="ui__input__icon" icon={icon} /> : undefined}
+          {rightIcon}
         </div>
         {messageText ? <div className="ui__input__messageText">{messageText}</div> : undefined}
       </div>

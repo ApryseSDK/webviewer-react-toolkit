@@ -32,7 +32,7 @@
     &-warning {
       border-color: $color-message-warning;
 
-      .ui__input__icon {
+      i {
         fill: $color-message-warning;
       }
 
@@ -44,7 +44,7 @@
     &-error {
       border-color: $color-message-error;
 
-      .ui__input__icon {
+      i {
         fill: $color-message-error;
       }
 
@@ -69,14 +69,21 @@
     }
   }
 
-  &__icon {
-    flex: 0 0;
-    padding: 0 2px;
-  }
-
   &__messageText {
     width: 100%;
     font-size: $font-size-small;
     margin-top: $padding-tiny;
+  }
+
+  // Override any icon buttons so they have no padding.
+  .ui__iconButton {
+    border: none;
+    padding: 0;
+    min-height: 0;
+  }
+
+  // Override any icons so that they have an internal padding.
+  .ui__icon {
+    padding: 0 2px;
   }
 }
