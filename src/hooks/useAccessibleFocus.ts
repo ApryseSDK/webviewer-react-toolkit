@@ -44,9 +44,7 @@ class AccessibleFocusObservable {
 
   private _unsubscribe(subscriber: Function) {
     return () => {
-      const index = this._subscribers.indexOf(subscriber);
-      if (index === -1) return;
-      this._subscribers.splice(index, 1);
+      this._subscribers = this._subscribers.filter(s => s !== subscriber);
       // If no subscribers, stop listening to document.
       if (this._subscribers.length === 0) this._removeAllListeners();
     };
