@@ -136,11 +136,6 @@ async function generateMixinsFile(input, output, transform, replace = v => v) {
       return commentNode.text.trim() || undefined;
     })();
 
-    console.log('\n\n\n --------- \n\n\n');
-    console.log(m.params);
-    console.log('\n\n\n --------- \n\n\n');
-    console.log(m);
-
     return {
       include: `@include ${m.params}${media};`,
       comment,

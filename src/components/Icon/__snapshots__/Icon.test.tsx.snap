@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon component snapshot renders default icon 1`] = `
+<i
+  className="ui__base ui__icon"
+>
+  <Close />
+</i>
+`;

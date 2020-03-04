@@ -1,10 +1,10 @@
 import classnames from 'classnames';
 import React, { AriaAttributes, FC, HTMLAttributes, MouseEvent, ReactNode, useEffect, useMemo } from 'react';
 import { useUnmountDelay } from '../../hooks';
-import { Close } from '../../icons';
 import { getStringId } from '../../utils';
 import { ButtonGroup } from '../ButtonGroup';
 import { FocusTrap } from '../FocusTrap';
+import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
 import { Overlay } from '../Overlay';
 
@@ -43,6 +43,11 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
    * a keyboard event (escape key pressed).
    */
   onClose?(event: KeyboardEvent | MouseEvent): void;
+  /**
+   * Provide alongside `onClose` for localized accessibility.
+   * @default "Close"
+   */
+  closeLabel?: AriaAttributes['aria-label'];
   /** @default "dialog" */
   role?: HTMLAttributes<HTMLDivElement>['role'];
   /** @default true */
@@ -57,6 +62,7 @@ export const Modal: FC<ModalProps> = ({
   heading,
   open,
   onClose,
+  closeLabel = 'Close',
   children,
   buttonGroup,
   className,
@@ -66,8 +72,8 @@ export const Modal: FC<ModalProps> = ({
 }) => {
   const { mounted } = useUnmountDelay(open);
 
-  const headingId = useMemo(() => getStringId('modal_heading', 8), []);
-  const bodyId = useMemo(() => getStringId('modal_body', 8), []);
+  const headingId = useMemo(() => getStringId('modal_heading'), []);
+  const bodyId = useMemo(() => getStringId('modal_body'), []);
 
   useEffect(() => {
     if (open && closeOnEscape && onClose) {
@@ -103,20 +109,20 @@ export const Modal: FC<ModalProps> = ({
           <FocusTrap focusLastOnUnlock locked>
             <div className="ui__modal__paddingFix">
               <div
+                aria-labelledby={headingId}
+                aria-describedby={bodyId}
                 {...props}
                 className={modalClass}
                 role={role}
                 aria-modal={ariaModal}
-                aria-labelledby={headingId}
-                aria-describedby={bodyId}
               >
                 <div className="ui__modal__top">
                   <div className="ui__modal__top__heading" id={headingId}>
                     {heading}
                   </div>
                   {onClose ? (
-                    <IconButton className="ui__modal__top__close" onClick={onClose} aria-label="Close">
-                      <Close />
+                    <IconButton className="ui__modal__top__close" onClick={onClose} aria-label={closeLabel}>
+                      <Icon icon="Close" />
                     </IconButton>
                   ) : (
                     undefined

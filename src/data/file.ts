@@ -85,7 +85,7 @@ export class File implements FileLike {
       throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');
     }
 
-    this._id = getStringId('File');
+    this._id = getStringId('file');
     this._name = name;
     this._originalName = originalName || name;
     this._extension = extension || getExtension(name);

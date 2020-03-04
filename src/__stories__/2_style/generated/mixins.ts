@@ -9,4 +9,5 @@ export default [
   '@include spinner;',
   '@include slide-in;',
   '@include opacity-transition;',
+  '@include opacity-transition-fast;',
 ];

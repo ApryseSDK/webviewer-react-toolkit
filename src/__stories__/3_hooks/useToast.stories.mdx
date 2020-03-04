@@ -18,7 +18,7 @@ const { add, remove } = useToast();
 const toastId = add({
   heading: 'You are not able to do that',
   children: 'The action you are attempting to do is not possible.',
-  toastType: 'warning',
+  message: 'warning',
   action: { text: 'Try Again', onClick: tryAgain },
   closable: true,
   timeout: 4000,

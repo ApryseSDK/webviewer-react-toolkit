@@ -1,31 +1,38 @@
-.ui__toolButton {
-  background-color: rgba(100, 100, 100, 0.7);
-  border: none;
-  outline: none;
-  height: 32px;
-  min-width: 32px;
-  padding: $padding-tiny;
-  cursor: pointer;
-  user-select: none;
-  transition: $focus-transition;
+$tool-button-background: rgba(175, 175, 175, 0.3);
 
-  &:hover:not(.ui__toolButton--disabled) {
-    background-color: rgba(75, 75, 75, 0.7);
-  }
-
-  &:focus.ui__toolButton--tabbing:not(.ui__toolButton--disabled) {
-    box-shadow: inset 0 0 0 2px rgba(75, 75, 75, 0.7);
-  }
-
+%tool-button-background {
+  &:hover:not(.ui__toolButton--disabled),
+  &:focus.ui__toolButton--tabbing:not(.ui__toolButton--disabled),
   &:active:not(.ui__toolButton--disabled) {
-    background-color: rgba(50, 50, 50, 0.7);
+    background-color: $tool-button-background;
   }
+}
 
-  &--disabled {
-    cursor: default;
+.ui__toolButton {
+  display: inline-flex;
+  flex-direction: column;
 
-    .ui__toolButton__internals {
-      opacity: 0.5;
+  &--expanded {
+    &.ui__toolButton--right {
+      flex-direction: row;
+    }
+
+    &.ui__toolButton--bottom {
+      flex-direction: column;
+    }
+  }
+}
+
+.ui__toolButton__action {
+  @extend %tool-button-background;
+
+  &.ui__toolButton--expanded {
+    &.ui__toolButton--right {
+      border-radius: $border-radius 0 0 $border-radius;
+    }
+
+    &.ui__toolButton--bottom {
+      border-radius: $border-radius $border-radius 0 0;
     }
   }
 
@@ -34,4 +41,20 @@
     height: 100%;
     @include flex-center;
   }
+}
+
+.ui__toolButton__expand.ui__button {
+  padding: 0;
+  @include flex-center;
+  min-height: 0;
+
+  &.ui__toolButton--right {
+    border-radius: 0 $border-radius $border-radius 0;
+  }
+
+  &.ui__toolButton--bottom {
+    border-radius: 0 0 $border-radius $border-radius;
+  }
+
+  @extend %tool-button-background;
 }

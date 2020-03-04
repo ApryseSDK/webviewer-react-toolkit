@@ -2,6 +2,61 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.6...v0.3.0-beta.7) (2020-03-04)
+
+### Features
+
+- **Input:** rightElement prop for adding custom right element ([9f441b1](https://github.com/PDFTron/webviewer-react-toolkit/commit/9f441b1bb368c9ecb91aea9684e8c26240b36202))
+
+### Refactors
+
+- **useAccessibleFocus:** simplify observable class ([03c648d](https://github.com/PDFTron/webviewer-react-toolkit/commit/03c648d0104c82275abb2c030abad0877ddd4cb4))
+
+## [0.3.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.5...v0.3.0-beta.6) (2020-02-29)
+
+### Bug Fixes
+
+- **Button:** fix font color icon buttons ([a04522e](https://github.com/PDFTron/webviewer-react-toolkit/commit/a04522e788cc90f132b5c5366be49e40679af1e0))
+- **Icon:** display inline for icon ([2a67871](https://github.com/PDFTron/webviewer-react-toolkit/commit/2a67871917eddd8cead4c386aef5487b2921a29c))
+
+## [0.3.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.4...v0.3.0-beta.5) (2020-02-28)
+
+### ⚠ BREAKING CHANGES
+
+- **Toast:** prop toastType renamed to message, as it will now be used across multiple components
+
+### Features
+
+- **a11y:** added aria-labels to close buttons of modal and toast ([fab395f](https://github.com/PDFTron/webviewer-react-toolkit/commit/fab395fcdba1e40c22cd46021ce1c4a7c7df46a5))
+- **icons:** added Hide, Show and Search icons ([4cf10f5](https://github.com/PDFTron/webviewer-react-toolkit/commit/4cf10f5143e83c422f5fe734dbb6787c7b709c20))
+- **Input:** added input component ([394a7be](https://github.com/PDFTron/webviewer-react-toolkit/commit/394a7beb3eaedc42188820a1b2f7a41cfd1e8f2d))
+- **Toast:** renamed toastType prop to message ([238630f](https://github.com/PDFTron/webviewer-react-toolkit/commit/238630fbf31e868c964cad3bc36b92a44ad1c424))
+
+### Bug Fixes
+
+- **useAccessibleFocus:** remove all listeners when no subscribers ([3ab273f](https://github.com/PDFTron/webviewer-react-toolkit/commit/3ab273f8edbb30a3d55626b8572fa8ed477d07e9))
+
+### Refactors
+
+- **id:** switched to sequential ID generation ([65eb0b3](https://github.com/PDFTron/webviewer-react-toolkit/commit/65eb0b3aeb3308198cc1c643d925c8f4b18ce676))
+
+### Styles
+
+- **colors:** added focus shadows for message colors ([fc9eaa2](https://github.com/PDFTron/webviewer-react-toolkit/commit/fc9eaa2e60d15530e44fb204dffbabc7dec31f63))
+- **Icon:** flex center items within icon ([df5c160](https://github.com/PDFTron/webviewer-react-toolkit/commit/df5c160044935767b0fcf0da2d0d7840f4cefdb7))
+
+## [0.3.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.1...v0.3.0-beta.4) (2020-02-28)
+
+### Features
+
+- **Icon:** added icon component for using included or custom icons ([741b6e5](https://github.com/PDFTron/webviewer-react-toolkit/commit/741b6e58e811db91ca7e75427b5161d155026bc1))
+- **icons:** added ChevronDown and RotateRight icons ([af137c6](https://github.com/PDFTron/webviewer-react-toolkit/commit/af137c65ee3f9131e934a0c102d8bb68302e756d))
+- **ToolButton:** added expandProps for expandable menu button ([a65a7e3](https://github.com/PDFTron/webviewer-react-toolkit/commit/a65a7e3ebf57e7528a69ed25e3c78592c79bab23))
+
+### Bug Fixes
+
+- **Thumbnail:** fixed issue with keys not registering on tool buttons ([e24afb5](https://github.com/PDFTron/webviewer-react-toolkit/commit/e24afb52ecc8f03f6ff9874355a4e617a095944e))
+
 ## [0.2.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.0...v0.2.1) (2020-02-26)
 
 ### Features

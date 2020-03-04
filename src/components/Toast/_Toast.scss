@@ -5,7 +5,7 @@
   border-radius: $border-radius;
   overflow: hidden;
   box-shadow: $box-shadow-3;
-  padding-right: $padding-tiny;
+  padding-right: 2px;
 
   @include for-phone-only {
     width: 100%;
@@ -15,13 +15,12 @@
     max-width: 500px;
   }
 
-  &--type {
+  &--message {
     &-info {
       .ui__toast__border {
         background-color: $color-message-info;
       }
-      .ui__toast__icon,
-      .ui__toast__close__button {
+      .ui__toast__icon {
         fill: $color-message-info;
       }
     }
@@ -30,8 +29,7 @@
       .ui__toast__border {
         background-color: $color-message-warning;
       }
-      .ui__toast__icon,
-      .ui__toast__close__button {
+      .ui__toast__icon {
         fill: $color-message-warning;
       }
     }
@@ -40,8 +38,7 @@
       .ui__toast__border {
         background-color: $color-message-error;
       }
-      .ui__toast__icon,
-      .ui__toast__close__button {
+      .ui__toast__icon {
         fill: $color-message-error;
       }
     }
@@ -50,8 +47,7 @@
       .ui__toast__border {
         background-color: $color-message-success;
       }
-      .ui__toast__icon,
-      .ui__toast__close__button {
+      .ui__toast__icon {
         fill: $color-message-success;
       }
     }

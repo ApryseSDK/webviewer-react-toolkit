@@ -16,7 +16,7 @@ export interface CommonToastProps {
    * icon of the toast.
    * @default "info"
    */
-  toastType?: 'info' | 'success' | 'warning' | 'error';
+  message?: 'info' | 'success' | 'warning' | 'error';
   /**
    * Adds an action button to the toast. Will position to the left of the close
    * button if `onClose` was provided.

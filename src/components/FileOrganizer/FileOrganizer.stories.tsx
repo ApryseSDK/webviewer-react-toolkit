@@ -6,10 +6,10 @@ import { createFile, FakeFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 import { integer } from '../../storybook-helpers/knobs/integer';
 import { FileOrganizer, FileOrganizerProps } from '../FileOrganizer';
+import { Icon } from '../Icon';
 import { Thumbnail } from '../Thumbnail';
 import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
 import readme from './README.md';
-import close from '../Thumbnail/close-24px.svg';
 
 export default {
   title: 'Components/FileOrganizer',
@@ -77,7 +77,7 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy, ed
             editable
               ? [
                   {
-                    children: <img src={close} alt={'close'} />,
+                    children: <Icon icon="Close" />,
                     onClick: () => {},
                     key: 0,
                   },

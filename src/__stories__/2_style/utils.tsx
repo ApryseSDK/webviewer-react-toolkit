@@ -31,7 +31,7 @@ export function useCopy() {
           toast.add({
             heading: 'Copied Value',
             children: <code style={{ whiteSpace: 'pre-wrap' }}>{text}</code>,
-            toastType: 'success',
+            message: 'success',
             timeout: 2000,
           });
         },
@@ -39,7 +39,7 @@ export function useCopy() {
           toast.add({
             heading: 'Error Copying Text',
             children: <code style={{ whiteSpace: 'pre-wrap' }}>{err}</code>,
-            toastType: 'error',
+            message: 'error',
             timeout: 2000,
           });
         },

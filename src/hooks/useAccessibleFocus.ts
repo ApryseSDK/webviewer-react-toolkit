@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Will return a boolean is true if the user is using keyboard navigation. It
- * will become false if they use their mouse.
+ * Will return true if the user is using keyboard navigation, or false if they
+ * are using their mouse. The returned value will be true if the Tab key was
+ * used more recently than mouse click, and false if not.
  */
 export function useAccessibleFocus() {
   const [isUserTabbing, setIsUserTabbing] = useState(observable.isUserTabbing);
 
   useEffect(() => {
-    const subscriber = () => setIsUserTabbing(observable.isUserTabbing);
-    const unsubscribe = observable.subscribe(subscriber);
-    return unsubscribe;
+    return observable.subscribe(() => setIsUserTabbing(observable.isUserTabbing));
   }, []);
 
   return isUserTabbing;
@@ -45,9 +44,7 @@ class AccessibleFocusObservable {
 
   private _unsubscribe(subscriber: Function) {
     return () => {
-      const index = this._subscribers.indexOf(subscriber);
-      if (index === -1) return;
-      this._subscribers.splice(index, 1);
+      this._subscribers = this._subscribers.filter(s => s !== subscriber);
       // If no subscribers, stop listening to document.
       if (this._subscribers.length === 0) this._removeAllListeners();
     };
@@ -82,7 +79,7 @@ class AccessibleFocusObservable {
 
   private _removeAllListeners() {
     window.removeEventListener('mousedown', this._handleFirstMouse);
-    window.addEventListener('keydown', this._handleFirstTab);
+    window.removeEventListener('keydown', this._handleFirstTab);
   }
 }
 

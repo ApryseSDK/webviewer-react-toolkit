@@ -47,8 +47,7 @@
     }
 
     &__close.ui__button {
-      // margin: $padding-tiny;
-      padding: 0 calc(#{$padding} - 2px);
+      padding: 0 calc(#{$padding-medium} - 2px);
       margin: 2px;
     }
   }

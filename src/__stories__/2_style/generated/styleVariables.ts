@@ -125,6 +125,30 @@ export default {
         value: '#e74c3c',
         dark: '#e74c3c',
       },
+      {
+        scss: '$color-message-info-focus-shadow',
+        css: 'var(--color-message-info-focus-shadow)',
+        value: 'rgba(41, 128, 185, 0.4)',
+        dark: 'rgba(41, 128, 185, 0.4)',
+      },
+      {
+        scss: '$color-message-success-focus-shadow',
+        css: 'var(--color-message-success-focus-shadow)',
+        value: 'rgba(39, 174, 96, 0.4)',
+        dark: 'rgba(39, 174, 96, 0.4)',
+      },
+      {
+        scss: '$color-message-warning-focus-shadow',
+        css: 'var(--color-message-warning-focus-shadow)',
+        value: 'rgba(230, 126, 34, 0.4)',
+        dark: 'rgba(230, 126, 34, 0.4)',
+      },
+      {
+        scss: '$color-message-error-focus-shadow',
+        css: 'var(--color-message-error-focus-shadow)',
+        value: 'rgba(231, 76, 60, 0.4)',
+        dark: 'rgba(231, 76, 60, 0.4)',
+      },
     ],
     other: [
       {

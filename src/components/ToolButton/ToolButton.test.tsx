@@ -16,13 +16,17 @@ describe('ToolButton component', () => {
 
   it('clicking toolButton triggers onClick prop', () => {
     const onClick = spy();
-    mount(<ToolButton onClick={onClick} />).simulate('click');
+    mount(<ToolButton onClick={onClick} />)
+      .find('button.ui__toolButton__action')
+      .simulate('click');
     expect(onClick.callCount).toBe(1);
   });
 
   it('clicking disabled toolButton does not trigger onClick prop', () => {
     const onClick = spy();
-    mount(<ToolButton onClick={onClick} disabled />).simulate('click');
+    mount(<ToolButton onClick={onClick} disabled />)
+      .find('button.ui__toolButton__action')
+      .simulate('click');
     expect(onClick.callCount).toBe(0);
   });
 });

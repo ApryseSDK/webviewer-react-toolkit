@@ -1,9 +1,9 @@
 import classnames from 'classnames';
 import React, { AriaAttributes, FC, HTMLAttributes, MouseEventHandler, useMemo } from 'react';
 import { CommonToastProps } from '../../hooks';
-import { Close, Error, Info, Success, Warning } from '../../icons';
 import { getStringId } from '../../utils';
 import { Button } from '../Button';
+import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
 
 export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElement> {
@@ -11,6 +11,11 @@ export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElem
    * If provided, toast will have a close button.
    */
   onClose?: MouseEventHandler<HTMLButtonElement>;
+  /**
+   * Provide alongside `onClose` for localized accessibility.
+   * @default "Close"
+   */
+  closeLabel?: AriaAttributes['aria-label'];
   /** @default "status" */
   role?: HTMLAttributes<HTMLDivElement>['role'];
   /** @default "polite" */
@@ -22,8 +27,9 @@ export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElem
 export const Toast: FC<ToastProps> = ({
   heading,
   children,
-  toastType = 'info',
+  message = 'info',
   onClose,
+  closeLabel = 'Close',
   action,
   className,
   role = 'status',
@@ -31,38 +37,36 @@ export const Toast: FC<ToastProps> = ({
   'aria-atomic': ariaAtomic = true,
   ...props
 }) => {
-  const headingId = useMemo(() => getStringId('modal_heading', 8), []);
-  const bodyId = useMemo(() => getStringId('modal_body', 8), []);
+  const headingId = useMemo(() => getStringId('toast_heading'), []);
+  const bodyId = useMemo(() => getStringId('toast_body'), []);
 
-  const Icon = useMemo(() => {
-    switch (toastType) {
+  const icon = useMemo(() => {
+    switch (message) {
       case 'info':
-        return Info;
+        return 'Info';
       case 'success':
-        return Success;
+        return 'Success';
       case 'warning':
-        return Warning;
+        return 'Warning';
       case 'error':
-        return Error;
+        return 'Error';
     }
-  }, [toastType]);
+  }, [message]);
 
-  const toastClass = classnames('ui__base ui__toast', `ui__toast--type-${toastType}`, className);
+  const toastClass = classnames('ui__base ui__toast', `ui__toast--message-${message}`, className);
 
   return (
     <div
+      aria-labelledby={heading ? headingId : undefined}
+      aria-describedby={children ? bodyId : undefined}
       {...props}
       className={toastClass}
       role={role}
       aria-live={ariaLive}
       aria-atomic={ariaAtomic}
-      aria-labelledby={headingId}
-      aria-describedby={bodyId}
     >
       <div className="ui__toast__border" />
-      <div className="ui__toast__icon">
-        <Icon />
-      </div>
+      <Icon icon={icon} className="ui__toast__icon" />
       <div className="ui__toast__copy">
         {heading ? (
           <div className="ui__toast__copy__heading" id={headingId}>
@@ -90,8 +94,8 @@ export const Toast: FC<ToastProps> = ({
       )}
       {onClose ? (
         <div className="ui__toast__action">
-          <IconButton onClick={onClose} aria-label="Close">
-            <Close />
+          <IconButton onClick={onClose} aria-label={closeLabel}>
+            <Icon icon="Close" />
           </IconButton>
         </div>
       ) : (
