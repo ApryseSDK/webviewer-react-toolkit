@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.6...v0.3.0-beta.7) (2020-03-04)
+
+### Features
+
+- **Input:** rightElement prop for adding custom right element ([9f441b1](https://github.com/PDFTron/webviewer-react-toolkit/commit/9f441b1bb368c9ecb91aea9684e8c26240b36202))
+
+### Refactors
+
+- **useAccessibleFocus:** simplify observable class ([03c648d](https://github.com/PDFTron/webviewer-react-toolkit/commit/03c648d0104c82275abb2c030abad0877ddd4cb4))
+
 ## [0.3.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0-beta.5...v0.3.0-beta.6) (2020-02-29)
 
 ### Bug Fixes
