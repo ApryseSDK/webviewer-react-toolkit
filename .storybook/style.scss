@@ -52,6 +52,10 @@ body {
 // Change appearance of inserted stories.
 #docs-root {
   .sbdocs-content {
+    a svg {
+      fill: rgba(240, 240, 255, 0.7);
+    }
+
     kbd {
       font-family: 'IBM Plex Mono', 'Operator Mono', 'Fira Code Retina',
         'Fira Code', 'FiraCode-Retina', 'Andale Mono', 'Lucida Console',
