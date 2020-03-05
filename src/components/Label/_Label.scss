@@ -1,0 +1,12 @@
+.ui__label {
+  &--attached::after {
+    height: 2px;
+    width: 1px;
+    content: '';
+    display: block;
+  }
+
+  &--disabled {
+    opacity: 0.7;
+  }
+}

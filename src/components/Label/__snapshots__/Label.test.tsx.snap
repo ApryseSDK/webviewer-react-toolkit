@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Label component snapshot renders default label 1`] = `
+<Fragment>
+  <label
+    className="ui__base ui__label"
+    htmlFor="label_1"
+  />
+</Fragment>
+`;
