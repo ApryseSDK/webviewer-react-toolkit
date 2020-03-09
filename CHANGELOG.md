@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0...v0.3.1) (2020-03-09)
+
+### Features
+
+- **Label:** added a generic form field label ([88d3d3f](https://github.com/PDFTron/webviewer-react-toolkit/commit/88d3d3f4e6dd3e1823c542b366a3ffbab5fadfc8))
+
 ## [0.3.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.2.1...v0.3.0) (2020-03-04)
 
 ### ⚠ BREAKING CHANGES
