@@ -24,7 +24,7 @@ export default {
       {
         scss: '$color-font-secondary',
         css: 'var(--color-font-secondary)',
-        value: '#424242',
+        value: '#636363',
         dark: '#989ba3',
       },
     ],
