@@ -9,4 +9,11 @@
   &--disabled {
     opacity: 0.7;
   }
+
+  &__optional {
+    font-size: $font-size-small;
+    margin-left: $padding-tiny;
+    color: $color-font-secondary;
+    font-style: italic;
+  }
 }

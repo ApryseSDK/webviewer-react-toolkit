@@ -8,6 +8,10 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
    */
   label: ReactNode;
   /**
+   * Provide a string specifying that this field is optional.
+   */
+  optionalText?: string;
+  /**
    * Pass a child element which can accept an `id` prop. If you don't specify
    * the `id` prop, one will be generated to link the label to the element. If
    * you wish to link this label to a form field without passing children, you
@@ -16,7 +20,7 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   children?: ReactElement;
 }
 
-export const Label: FC<LabelProps> = ({ label, children, className, htmlFor, ...props }) => {
+export const Label: FC<LabelProps> = ({ label, optionalText, children, className, htmlFor, ...props }) => {
   const childrenId = children?.props.id;
   const id = useMemo(() => {
     if (childrenId) return childrenId;
@@ -33,6 +37,7 @@ export const Label: FC<LabelProps> = ({ label, children, className, htmlFor, ...
     <>
       <label {...props} className={labelClass} htmlFor={htmlFor ?? id}>
         {label}
+        {optionalText ? <span className="ui__label__optional">{optionalText}</span> : undefined}
       </label>
       {children ? cloneElement(children, { id }) : undefined}
     </>
