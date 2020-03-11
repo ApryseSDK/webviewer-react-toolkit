@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Choice component snapshot renders default choice 1`] = `
+<span
+  className="ui__base ui__choice"
+>
+  <span
+    className="ui__choice__input"
+  >
+    <div
+      className="ui__choice__input__check"
+    />
+    <input
+      id="label_1"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      type="checkbox"
+    />
+  </span>
+  <label
+    className="ui__choice__label"
+    htmlFor="label_1"
+  >
+    Label
+  </label>
+</span>
+`;

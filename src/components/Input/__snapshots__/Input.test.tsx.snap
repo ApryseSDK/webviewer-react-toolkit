@@ -11,6 +11,7 @@ exports[`Input component snapshot renders default input 1`] = `
       className="ui__input__input"
       onBlur={[Function]}
       onFocus={[Function]}
+      type="text"
     />
   </div>
 </div>
