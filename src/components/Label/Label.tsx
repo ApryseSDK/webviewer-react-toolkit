@@ -1,6 +1,6 @@
 import classnames from 'classnames';
-import React, { cloneElement, FC, LabelHTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
-import { getStringId } from '../../utils';
+import React, { cloneElement, FC, LabelHTMLAttributes, ReactElement, ReactNode } from 'react';
+import { useID } from '../../hooks/useID';
 
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   /**
@@ -22,10 +22,7 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 
 export const Label: FC<LabelProps> = ({ label, optionalText, children, className, htmlFor, ...props }) => {
   const childrenId = children?.props.id;
-  const id = useMemo(() => {
-    if (childrenId) return childrenId;
-    return getStringId('label');
-  }, [childrenId]);
+  const id = useID(childrenId);
 
   const labelClass = classnames(
     'ui__base ui__label',
