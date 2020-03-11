@@ -5,6 +5,7 @@
 // <import-start>
 export * from './Button';
 export * from './ButtonGroup';
+export * from './Choice';
 export * from './ClickableDiv';
 export * from './DndMultiProvider';
 export * from './DragLayer';
