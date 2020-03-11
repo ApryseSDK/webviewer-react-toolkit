@@ -1,6 +1,6 @@
-import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
+import { action } from '../../storybook-helpers/action/action';
 import { ClickableDiv } from '../ClickableDiv';
 import readme from './README.md';
 

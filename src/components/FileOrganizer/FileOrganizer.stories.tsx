@@ -1,7 +1,7 @@
-import { action } from '@storybook/addon-actions';
 import { boolean, number } from '@storybook/addon-knobs';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useManagedFiles } from '../../hooks';
+import { action } from '../../storybook-helpers/action/action';
 import { createFile, FakeFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 import { integer } from '../../storybook-helpers/knobs/integer';

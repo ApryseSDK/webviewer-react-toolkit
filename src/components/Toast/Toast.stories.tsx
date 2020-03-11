@@ -1,6 +1,6 @@
-import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
+import { action } from '../../storybook-helpers/action/action';
 import { Toast } from '../Toast';
 import readme from './README.md';
 
