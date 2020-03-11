@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.1...v0.3.2) (2020-03-11)
+
+### Features
+
+- **Choice:** choice component for radio buttons or checkboxes ([124bcb1](https://github.com/PDFTron/webviewer-react-toolkit/commit/124bcb10877cb846f48d99d5d921b361dd17c8ed))
+- **icons:** added Check and Circle icons ([8f81fba](https://github.com/PDFTron/webviewer-react-toolkit/commit/8f81fba3e0237d3b8e464cecc40f8ff982105cb5))
+- **Input:** narrowed possible input types ([5885568](https://github.com/PDFTron/webviewer-react-toolkit/commit/5885568c1741f7a54dfe99b9b5e0daa913dda62f))
+- **Label:** optional text for label ([71341c0](https://github.com/PDFTron/webviewer-react-toolkit/commit/71341c016d5b82018a794598dde4015734340842))
+- **useID:** new hook to generate IDs if not given ([a5775a6](https://github.com/PDFTron/webviewer-react-toolkit/commit/a5775a6fd84967c8c974643bbeb892cb8b311924))
+
+### Styles
+
+- **colors:** lightened font secondary in light theme ([0a73451](https://github.com/PDFTron/webviewer-react-toolkit/commit/0a7345169cb1a6e820659d6a4728003d473f8117))
+
 ### [0.3.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.0...v0.3.1) (2020-03-09)
 
 ### Features
