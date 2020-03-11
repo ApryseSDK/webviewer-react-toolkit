@@ -1,6 +1,6 @@
-import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import React, { useState } from 'react';
+import { action } from '../../storybook-helpers/action/action';
 import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
 import { Input } from '../Input';
@@ -8,9 +8,33 @@ import readme from './README.md';
 
 export default { title: 'Components/Input', component: Input, parameters: { readme } };
 
+const getTypeSelect = () => {
+  return select(
+    'type',
+    [
+      'color',
+      'date',
+      'datetime-local',
+      'email',
+      // 'file',
+      'month',
+      'number',
+      'password',
+      // 'range',
+      'search',
+      'tel',
+      'text',
+      'time',
+      'url',
+      'week',
+    ],
+    'text',
+  );
+};
+
 export const Basic = () => (
   <Input
-    type={select('type', ['date', 'email', 'number', 'password', 'search', 'text'], 'text')}
+    type={getTypeSelect()}
     message={select('message', ['default', 'warning', 'error'], 'default')}
     messageText={text('messageText', '')}
     fillWidth={boolean('fillWidth', false)}
@@ -23,7 +47,7 @@ export const Basic = () => (
 export const Controlled = () => (
   <Input
     value={text('value', '')}
-    type={select('type', ['date', 'email', 'number', 'password', 'search', 'text'], 'text')}
+    type={getTypeSelect()}
     message={select('message', ['default', 'warning', 'error'], 'default')}
     messageText={text('messageText', '')}
     fillWidth={boolean('fillWidth', false)}

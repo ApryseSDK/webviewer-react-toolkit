@@ -3,6 +3,23 @@ import React, { forwardRef, InputHTMLAttributes, ReactNode, useMemo } from 'reac
 import { useFocus } from '../../hooks';
 import { AvailableIcons, Icon } from '../Icon';
 
+type InputTypes =
+  | 'color'
+  | 'date'
+  | 'datetime-local'
+  | 'email'
+  // | 'file'
+  | 'month'
+  | 'number'
+  | 'password'
+  // | 'range'
+  | 'search'
+  | 'tel'
+  | 'text'
+  | 'time'
+  | 'url'
+  | 'week';
+
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   /**
    * Messaging feedback for the input. This can be used for displaying feedback
@@ -35,6 +52,11 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
    * icons like the ones for warning and error messages.
    */
   rightElement?: ReactNode;
+  /**
+   * A smaller subset of all possible input types.
+   * @default "text"
+   */
+  type?: InputTypes;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -49,6 +71,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onFocus,
       onBlur,
       rightElement,
+      type = 'text',
       ...props
     },
     ref,
@@ -85,7 +108,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={wrapperClass}>
         <div className={mainClass}>
-          <input {...props} onFocus={handleOnFocus} onBlur={handleOnBlur} className={inputClass} ref={ref} />
+          <input
+            {...props}
+            type={type}
+            onFocus={handleOnFocus}
+            onBlur={handleOnBlur}
+            className={inputClass}
+            ref={ref}
+          />
           {rightIcon}
         </div>
         {messageText ? <div className="ui__input__messageText">{messageText}</div> : undefined}
