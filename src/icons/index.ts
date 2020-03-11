@@ -1,4 +1,6 @@
+export * from './Check';
 export * from './ChevronDown';
+export * from './Circle';
 export * from './Close';
 export * from './Error';
 export * from './Hide';
