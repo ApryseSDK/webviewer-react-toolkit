@@ -1,4 +1,3 @@
-import { boolean } from '@storybook/addon-knobs';
 import React, { CSSProperties } from 'react';
 import { Image } from '../Image';
 import { Spinner } from '../Spinner';
@@ -22,7 +21,6 @@ export const Basic = () => (
         'https://www.webfx.com/blog/images/cdn.designinstruct.com/files/582-how-to-image-placeholders/generic-image-placeholder.png'
       }
       onRenderLoading={() => <Spinner />}
-      loading={boolean('loading', false)}
     />
   </div>
 );
@@ -42,7 +40,6 @@ export const WithPromiseSrc = () => (
         )
       }
       onRenderLoading={() => <Spinner />}
-      loading={boolean('loading', false)}
     />
   </div>
 );

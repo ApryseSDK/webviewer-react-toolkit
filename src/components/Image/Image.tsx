@@ -10,10 +10,6 @@ export interface ImageProps extends Remove<ImgHTMLAttributes<HTMLImageElement>, 
    */
   src?: FuturableOrLazy<string>;
   /**
-   * If given, will override the loading based on whether src is fetched.
-   */
-  loading?: boolean;
-  /**
    * Specific classes for all of the internal elements. If you just wish to give
    * a class to image, you can use `className`.
    */
@@ -25,7 +21,7 @@ export interface ImageProps extends Remove<ImgHTMLAttributes<HTMLImageElement>, 
 }
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, loading, classes, onRenderLoading, alt, className, ...imgProps }, ref) => {
+  ({ src, classes, onRenderLoading, alt, className, ...imgProps }, ref) => {
     const [source, setSource] = useState<string | undefined>(typeof src === 'string' ? src : undefined);
 
     const getSource = useCallback(async (srcGetter: FuturableOrLazy<string>) => {
@@ -40,12 +36,12 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(
 
     const wrapperClass = classnames('ui__base ui__image__wrapper', classes?.wrapper);
 
-    const imageClass = classnames('ui__image', { 'ui__image--loading': loading ?? !source }, classes?.image, className);
+    const imageClass = classnames('ui__image', { 'ui__image--loading': !source }, classes?.image, className);
 
     const overlayClass = classnames(
       'ui__image__overlay',
       {
-        'ui__image__overlay--loading': loading || !source,
+        'ui__image__overlay--loading': !source,
         'ui__image__overlay--hide': !onRenderLoading,
       },
       classes?.overlay,
