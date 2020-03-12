@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.2...v0.4.0-beta.1) (2020-03-12)
+
+### ⚠ BREAKING CHANGES
+
+- **Image:** can no longer manually specify image loading, can now use native loading prop to mark an image for lazy loading
+
+### Bug Fixes
+
+- **Image:** removed loading prop as it clashed with image loading prop ([2cc917c](https://github.com/PDFTron/webviewer-react-toolkit/commit/2cc917c2d1014d9af28e2d1e0b2bbcb62b499c66))
+
 ### [0.3.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.1...v0.3.2) (2020-03-11)
 
 ### Features
