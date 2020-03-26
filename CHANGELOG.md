@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.2...v0.4.0-beta.3) (2020-03-26)
+
+### Bug Fixes
+
+- **Overlay:** do not generate overlay if window does not exist ([742939f](https://github.com/PDFTron/webviewer-react-toolkit/commit/742939ff49e86f5f5cb3e7aa8b020715524f84dd))
+
 ## [0.4.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.1...v0.4.0-beta.2) (2020-03-26)
 
 ### Bug Fixes
