@@ -13,15 +13,19 @@ function generateOverlayLayer() {
   const elements = new Set<number>();
   const classes: { [className: string]: number } = {};
 
-  const overlayRoot = document.createElement('div');
-  overlayRoot.classList.add('ui__base', 'ui__overlay');
+  const overlayRoot = document ? document.createElement('div') : undefined;
+  overlayRoot?.classList.add('ui__base', 'ui__overlay');
 
-  const appendElement = () => document.body.appendChild(overlayRoot);
-  const removeElement = () => document.body.removeChild(overlayRoot);
+  const appendElement = () => {
+    if (document && overlayRoot) document.body.appendChild(overlayRoot);
+  };
+  const removeElement = () => {
+    if (document && overlayRoot) document.body.removeChild(overlayRoot);
+  };
 
   const addClass = (className?: string) => {
     if (!className) return;
-    overlayRoot.classList.add(className);
+    overlayRoot?.classList.add(className);
     classes[className] = (classes[className] || 0) + 1;
   };
 
@@ -30,7 +34,7 @@ function generateOverlayLayer() {
     classes[className] = (classes[className] || 0) - 1;
     if (classes[className] <= 0) {
       delete classes[className];
-      overlayRoot.classList.remove(className);
+      overlayRoot?.classList.remove(className);
     }
   };
 
@@ -50,6 +54,7 @@ function generateOverlayLayer() {
 
   return (({ children, className }) => {
     useEffect(() => add({ className }), [className]);
+    if (!overlayRoot) return null;
     return createPortal(children, overlayRoot);
   }) as FC<OverlayProps>;
 }
