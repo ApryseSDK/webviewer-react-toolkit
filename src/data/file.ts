@@ -140,6 +140,7 @@ export class File implements FileLike {
   }
   set name(name: string) {
     this._name = name;
+    this._extension = getExtension(name);
     this.dispatchEvent('onnamechange');
   }
 
