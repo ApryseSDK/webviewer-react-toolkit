@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.4...v0.4.0-beta.5) (2020-03-30)
+
+### Features
+
+- **file:** freezeThumbnail prevents thumbnail updates ([0cf27e7](https://github.com/PDFTron/webviewer-react-toolkit/commit/0cf27e776bdd9700f5fc7f42b0d848c639604fcd))
+
 ## [0.4.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.3...v0.4.0-beta.4) (2020-03-26)
 
 ### Build and Dependencies
