@@ -55,6 +55,10 @@ export type FileEventType =
   | 'onthumbnailchange'
   /** Triggered when the name is updated. */
   | 'onnamechange'
+  /** Triggered when the thumbnail is frozen. */
+  | 'onfreezethumbnail'
+  /** Triggered when the thumbnail is unfrozen. */
+  | 'onunfreezethumbnail'
   /** Change is always fired after every other event, unless stopPropagation was called. */
   | 'onchange';
 
@@ -71,6 +75,7 @@ export class File implements FileLike {
   private _fileObj: MemoizedPromise<Blob>;
   private _documentObj: MemoizedPromise<CoreControls.Document>;
   private _thumbnail: MemoizedPromise<string>;
+  private _freezeThumbnail: boolean;
   private _subscribers: FileEventListenersObj;
 
   /**
@@ -93,6 +98,8 @@ export class File implements FileLike {
     this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
     this._fileObj = new MemoizedPromise(fileObj ?? this._generateFileObj);
     this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
+
+    this._freezeThumbnail = false;
 
     this._subscribers = {};
   }
@@ -136,6 +143,16 @@ export class File implements FileLike {
     this.dispatchEvent('onnamechange');
   }
 
+  /** Freeze to prevent thumbnail from changing. */
+  get freezeThumbnail() {
+    return this._freezeThumbnail;
+  }
+  set freezeThumbnail(freezeThumbnail: boolean) {
+    this._freezeThumbnail = freezeThumbnail;
+    if (freezeThumbnail) this.dispatchEvent('onfreezethumbnail');
+    else this.dispatchEvent('onunfreezethumbnail');
+  }
+
   /* --- Memoized promise value setters. --- */
 
   /**
@@ -143,6 +160,7 @@ export class File implements FileLike {
    * @param thumbnail The thumbnail, promise, or getter for the thumbnail.
    */
   setThumbnail(thumbnail?: FuturableOrLazy<string>) {
+    if (this.freezeThumbnail) return;
     this._thumbnail = new MemoizedPromise(thumbnail ?? this._generateThumbnail);
     this.dispatchEvent('onthumbnailchange');
   }
