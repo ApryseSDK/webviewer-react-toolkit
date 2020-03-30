@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.6...v0.4.0-beta.7) (2020-03-30)
+
+### Features
+
+- **Thumbnail:** image class name prop ([26aeca3](https://github.com/PDFTron/webviewer-react-toolkit/commit/26aeca3b2c89f29c883367a8839faf2082a1bcc9))
+
 ## [0.4.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.5...v0.4.0-beta.6) (2020-03-30)
 
 ### Bug Fixes
