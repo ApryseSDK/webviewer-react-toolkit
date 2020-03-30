@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.5...v0.4.0-beta.6) (2020-03-30)
+
+### Bug Fixes
+
+- **file:** parse extension from set name ([b37a1f7](https://github.com/PDFTron/webviewer-react-toolkit/commit/b37a1f7ca9d464afec70f8776413980177b89cd2))
+
 ## [0.4.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.4...v0.4.0-beta.5) (2020-03-30)
 
 ### Features
