@@ -55,6 +55,10 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
    */
   isShownOnLoad?: boolean;
   /**
+   * Class for the thumbnail image.
+   */
+  imageClassName?: string;
+  /**
    * Callback fired when the name is edited and saved.
    * @param newName The new name to set on the file.
    * @param file The target file.
@@ -80,6 +84,7 @@ export function Thumbnail<F extends FileLike>({
   onEditingChange,
   throttle,
   isShownOnLoad,
+  imageClassName,
   className,
   disabled,
   onFocus,
@@ -132,6 +137,7 @@ export function Thumbnail<F extends FileLike>({
           src={file.thumbnail}
           alt={file.name}
           onRenderLoading={() => <FileSkeleton className="ui__thumbnail__image__skeleton" />}
+          className={imageClassName}
         />
       </div>
       <div className="ui__thumbnail__controls">
