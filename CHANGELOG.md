@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.7...v0.4.0-beta.8) (2020-03-31)
+
+### Features
+
+- **ThumbnailSkeleton:** skeleton loader for thumbnail ([0f994f3](https://github.com/PDFTron/webviewer-react-toolkit/commit/0f994f36bcfe4907293115a46c3b0ec25acf12e2))
+
 ## [0.4.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.6...v0.4.0-beta.7) (2020-03-30)
 
 ### Features
