@@ -1,0 +1,31 @@
+.ui__thumbnailSkeleton {
+  padding: $padding;
+  position: relative;
+  outline: none;
+  width: $thumbnail-dimensions;
+  height: $thumbnail-dimensions;
+  transition: 0.1s background-color;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    background-color: $color-gray-3;
+  }
+
+  &__image {
+    @include flex-center;
+    flex-direction: column;
+    height: 0;
+    flex: 1 1 auto;
+
+    .ui__thumbnailSkeleton__image__skeleton {
+      border: 1px solid $color-blue-gray-1;
+      transition: $focus-transition;
+    }
+  }
+
+  &__label {
+    margin-top: $padding;
+    height: 28px;
+  }
+}

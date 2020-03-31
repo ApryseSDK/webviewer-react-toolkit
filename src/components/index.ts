@@ -24,6 +24,7 @@ export * from './Overlay';
 export * from './Spinner';
 export * from './Thumbnail';
 export * from './ThumbnailDragLayer';
+export * from './ThumbnailSkeleton';
 export * from './Toast';
 export * from './ToastProvider';
 export * from './ToolButton';
