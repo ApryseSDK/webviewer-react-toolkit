@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.9](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.8...v0.4.0-beta.9) (2020-03-31)
+
+### Features
+
+- **icons:** added download icon ([3bc32a7](https://github.com/PDFTron/webviewer-react-toolkit/commit/3bc32a724915ea33e6b7f7b4855f0f2df71abe72))
+- **Thumbnail:** only show focus state when using keyboard navigation ([420a156](https://github.com/PDFTron/webviewer-react-toolkit/commit/420a156c02b47001ef3a70a2f509594db73fcb96))
+
 ## [0.4.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.7...v0.4.0-beta.8) (2020-03-31)
 
 ### Features
