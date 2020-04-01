@@ -1,0 +1,19 @@
+.ui__filePicker {
+  &__file {
+    display: flex;
+    align-items: center;
+    min-height: 28px;
+
+    &__text {
+      flex: 1 1 auto;
+    }
+
+    &__delete.ui__button.ui__iconButton {
+      height: 28px;
+      width: 28px;
+      min-height: 28px;
+      min-width: 28px;
+      margin-left: $padding-tiny;
+    }
+  }
+}
