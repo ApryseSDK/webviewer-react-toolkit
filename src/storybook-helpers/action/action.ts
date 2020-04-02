@@ -10,7 +10,7 @@ export function action(name: string, options?: ActionOptions) {
   const primedAction = _action(name, options);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (event?: SyntheticEvent<HTMLElement> | any, ...args: any[]) => {
-    if (event && event.persist) event.persist();
+    if (event && event.nativeEvent) event = event.nativeEvent;
     setTimeout(() => primedAction(event, ...args));
   };
 }
