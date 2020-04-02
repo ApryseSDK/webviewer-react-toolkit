@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.11](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.10...v0.4.0-beta.11) (2020-04-02)
+
+### Styles
+
+- **FilePicker:** trim long file names ([1e99fc9](https://github.com/PDFTron/webviewer-react-toolkit/commit/1e99fc974bf84c834085a5ad3424285b7c6afdb2))
+
 ## [0.4.0-beta.10](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.9...v0.4.0-beta.10) (2020-04-01)
 
 ### Features
