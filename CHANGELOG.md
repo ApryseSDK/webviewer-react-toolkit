@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.12](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.11...v0.4.0-beta.12) (2020-04-02)
+
+### Styles
+
+- **EditableText:** prevent letter cut off ([a54ee71](https://github.com/PDFTron/webviewer-react-toolkit/commit/a54ee711ab11649d2c2fc959e3253de0df171442))
+
 ## [0.4.0-beta.11](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.10...v0.4.0-beta.11) (2020-04-02)
 
 ### Styles
