@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.13](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.12...v0.4.0-beta.13) (2020-04-03)
+
+### Features
+
+- **Input:** added leftElement and updated search example ([d0e0d60](https://github.com/PDFTron/webviewer-react-toolkit/commit/d0e0d60587549269e087cd815d65a7b2414f674a))
+
 ## [0.4.0-beta.12](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.11...v0.4.0-beta.12) (2020-04-02)
 
 ### Styles
