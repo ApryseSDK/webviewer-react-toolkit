@@ -57,16 +57,7 @@ export const Controlled = () => (
   />
 );
 
-export const SearchExample = () => (
-  <Input
-    type="search"
-    rightElement={
-      <IconButton aria-label="Search" onClick={action('IconButton onClick')}>
-        <Icon icon="Search" />
-      </IconButton>
-    }
-  />
-);
+export const SearchExample = () => <Input type="search" leftElement={<Icon icon="Search" />} />;
 
 export const PasswordExample = () => {
   const [showPassword, setShowPassword] = useState(false);

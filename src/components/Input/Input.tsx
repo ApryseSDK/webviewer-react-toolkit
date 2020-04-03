@@ -47,11 +47,13 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
    */
   padMessageText?: boolean;
   /**
-   * If provided will wrap the icon in an icon button, allowing handling of
-   * onClick events and attaching aria-labels. This will override any default
-   * icons like the ones for warning and error messages.
+   * A custom element to place on the right of the input.
    */
   rightElement?: ReactNode;
+  /**
+   * A custom element to place on the left of the input.
+   */
+  leftElement?: ReactNode;
   /**
    * A smaller subset of all possible input types.
    * @default "text"
@@ -71,6 +73,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onFocus,
       onBlur,
       rightElement,
+      leftElement,
       type = 'text',
       ...props
     },
@@ -108,6 +111,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={wrapperClass}>
         <div className={mainClass}>
+          {leftElement}
           <input
             {...props}
             type={type}
