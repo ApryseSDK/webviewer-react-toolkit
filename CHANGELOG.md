@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.14](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.13...v0.4.0-beta.14) (2020-04-08)
+
+### ⚠ BREAKING CHANGES
+
+- **Image:** no longer accepts classes prop, image and loading placeholder are no longer wrapped by a div
+
+### Features
+
+- **Image:** simplify image component ([7db5cf5](https://github.com/PDFTron/webviewer-react-toolkit/commit/7db5cf5a4f614583e0593bc8248999baf42b6046))
+- **Thumbnail:** always show toolbuttons on mobile ([a4f96a0](https://github.com/PDFTron/webviewer-react-toolkit/commit/a4f96a080ac24b0c8e7a621130864b28d8b839b6))
+
 ## [0.4.0-beta.13](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.12...v0.4.0-beta.13) (2020-04-03)
 
 ### Features
