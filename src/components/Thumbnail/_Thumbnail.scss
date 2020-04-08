@@ -34,6 +34,12 @@ $thumbnail-border-size: 2px;
     pointer-events: none;
   }
 
+  @include for-phone-only {
+    .ui__thumbnail__controls {
+      opacity: 1;
+    }
+  }
+
   &:hover,
   &--focused.ui__thumbnail--tabbing:not(.ui__thumbnail--disabled) {
     // Do not style for hover or focus if anything is dragging
