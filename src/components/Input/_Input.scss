@@ -16,6 +16,7 @@
   background-color: $color-gray-1;
   border: 1px solid $color-gray-3;
   display: inline-flex;
+  align-items: center;
   width: 100%;
 
   &--message {
@@ -85,5 +86,9 @@
   // Override any icons so that they have an internal padding.
   .ui__icon {
     padding: 0 2px;
+  }
+
+  svg {
+    fill: $color-blue-gray-5;
   }
 }

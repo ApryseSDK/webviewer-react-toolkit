@@ -5,6 +5,7 @@ import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
 import { Input } from '../Input';
 import readme from './README.md';
+import { Search } from '../../icons';
 
 export default { title: 'Components/Input', component: Input, parameters: { readme } };
 
@@ -57,7 +58,7 @@ export const Controlled = () => (
   />
 );
 
-export const SearchExample = () => <Input type="search" leftElement={<Icon icon="Search" />} />;
+export const SearchExample = () => <Input type="search" leftElement={<Search />} />;
 
 export const PasswordExample = () => {
   const [showPassword, setShowPassword] = useState(false);
