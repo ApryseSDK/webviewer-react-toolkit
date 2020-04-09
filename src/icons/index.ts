@@ -6,6 +6,7 @@ export * from './Download';
 export * from './Error';
 export * from './Hide';
 export * from './Info';
+export * from './Menu';
 export * from './MultiPage';
 export * from './RotateRight';
 export * from './Search';
