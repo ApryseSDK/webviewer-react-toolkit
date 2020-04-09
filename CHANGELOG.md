@@ -2,99 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.4.0-beta.14](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.13...v0.4.0-beta.14) (2020-04-08)
+## [0.4.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.2...v0.4.1) (2020-04-09)
 
 ### ⚠ BREAKING CHANGES
 
 - **Image:** no longer accepts classes prop, image and loading placeholder are no longer wrapped by a div
+- **Image:** can no longer manually specify image loading, can now use native loading prop to mark an image for lazy loading
 
 ### Features
 
+- **icons:** added menu icon ([71f3183](https://github.com/PDFTron/webviewer-react-toolkit/commit/71f31835c5256fa70c42e526936091e4631e06a0))
+- **Input:** correct color and alignment of icons ([da5356b](https://github.com/PDFTron/webviewer-react-toolkit/commit/da5356bb4939a3250ae15a3427a57fd904a42e51))
 - **Image:** simplify image component ([7db5cf5](https://github.com/PDFTron/webviewer-react-toolkit/commit/7db5cf5a4f614583e0593bc8248999baf42b6046))
 - **Thumbnail:** always show toolbuttons on mobile ([a4f96a0](https://github.com/PDFTron/webviewer-react-toolkit/commit/a4f96a080ac24b0c8e7a621130864b28d8b839b6))
-
-## [0.4.0-beta.13](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.12...v0.4.0-beta.13) (2020-04-03)
-
-### Features
-
 - **Input:** added leftElement and updated search example ([d0e0d60](https://github.com/PDFTron/webviewer-react-toolkit/commit/d0e0d60587549269e087cd815d65a7b2414f674a))
-
-## [0.4.0-beta.12](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.11...v0.4.0-beta.12) (2020-04-02)
-
-### Styles
-
-- **EditableText:** prevent letter cut off ([a54ee71](https://github.com/PDFTron/webviewer-react-toolkit/commit/a54ee711ab11649d2c2fc959e3253de0df171442))
-
-## [0.4.0-beta.11](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.10...v0.4.0-beta.11) (2020-04-02)
-
-### Styles
-
-- **FilePicker:** trim long file names ([1e99fc9](https://github.com/PDFTron/webviewer-react-toolkit/commit/1e99fc974bf84c834085a5ad3424285b7c6afdb2))
-
-## [0.4.0-beta.10](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.9...v0.4.0-beta.10) (2020-04-01)
-
-### Features
-
 - **FilePicker:** created file picker component ([1d317de](https://github.com/PDFTron/webviewer-react-toolkit/commit/1d317de402e1da66704d180f690adb8a08d2b71e))
-
-## [0.4.0-beta.9](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.8...v0.4.0-beta.9) (2020-03-31)
-
-### Features
-
 - **icons:** added download icon ([3bc32a7](https://github.com/PDFTron/webviewer-react-toolkit/commit/3bc32a724915ea33e6b7f7b4855f0f2df71abe72))
 - **Thumbnail:** only show focus state when using keyboard navigation ([420a156](https://github.com/PDFTron/webviewer-react-toolkit/commit/420a156c02b47001ef3a70a2f509594db73fcb96))
-
-## [0.4.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.7...v0.4.0-beta.8) (2020-03-31)
-
-### Features
-
 - **ThumbnailSkeleton:** skeleton loader for thumbnail ([0f994f3](https://github.com/PDFTron/webviewer-react-toolkit/commit/0f994f36bcfe4907293115a46c3b0ec25acf12e2))
-
-## [0.4.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.6...v0.4.0-beta.7) (2020-03-30)
-
-### Features
-
 - **Thumbnail:** image class name prop ([26aeca3](https://github.com/PDFTron/webviewer-react-toolkit/commit/26aeca3b2c89f29c883367a8839faf2082a1bcc9))
-
-## [0.4.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.5...v0.4.0-beta.6) (2020-03-30)
+- **file:** freezeThumbnail prevents thumbnail updates ([0cf27e7](https://github.com/PDFTron/webviewer-react-toolkit/commit/0cf27e776bdd9700f5fc7f42b0d848c639604fcd))
 
 ### Bug Fixes
 
 - **file:** parse extension from set name ([b37a1f7](https://github.com/PDFTron/webviewer-react-toolkit/commit/b37a1f7ca9d464afec70f8776413980177b89cd2))
+- **Overlay:** do not generate overlay if window does not exist ([742939f](https://github.com/PDFTron/webviewer-react-toolkit/commit/742939ff49e86f5f5cb3e7aa8b020715524f84dd))
+- **Overlay:** check for document to prevent serverside errors ([e421805](https://github.com/PDFTron/webviewer-react-toolkit/commit/e4218059ac76ab878f11bcccb580299f1c8aedd4))
+- **Image:** removed loading prop as it clashed with image loading prop ([2cc917c](https://github.com/PDFTron/webviewer-react-toolkit/commit/2cc917c2d1014d9af28e2d1e0b2bbcb62b499c66))
 
-## [0.4.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.4...v0.4.0-beta.5) (2020-03-30)
+### Styles
 
-### Features
-
-- **file:** freezeThumbnail prevents thumbnail updates ([0cf27e7](https://github.com/PDFTron/webviewer-react-toolkit/commit/0cf27e776bdd9700f5fc7f42b0d848c639604fcd))
-
-## [0.4.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.3...v0.4.0-beta.4) (2020-03-26)
+- **EditableText:** prevent letter cut off ([a54ee71](https://github.com/PDFTron/webviewer-react-toolkit/commit/a54ee711ab11649d2c2fc959e3253de0df171442))
+- **FilePicker:** trim long file names ([1e99fc9](https://github.com/PDFTron/webviewer-react-toolkit/commit/1e99fc974bf84c834085a5ad3424285b7c6afdb2))
 
 ### Build and Dependencies
 
 - **compiler:** compile to es5 rather than es2015 ([73fef01](https://github.com/PDFTron/webviewer-react-toolkit/commit/73fef015c3fda810337ba630b0305bf7a5767b9e))
-
-## [0.4.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.2...v0.4.0-beta.3) (2020-03-26)
-
-### Bug Fixes
-
-- **Overlay:** do not generate overlay if window does not exist ([742939f](https://github.com/PDFTron/webviewer-react-toolkit/commit/742939ff49e86f5f5cb3e7aa8b020715524f84dd))
-
-## [0.4.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.0-beta.1...v0.4.0-beta.2) (2020-03-26)
-
-### Bug Fixes
-
-- **Overlay:** check for document to prevent serverside errors ([e421805](https://github.com/PDFTron/webviewer-react-toolkit/commit/e4218059ac76ab878f11bcccb580299f1c8aedd4))
-
-## [0.4.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.2...v0.4.0-beta.1) (2020-03-12)
-
-### ⚠ BREAKING CHANGES
-
-- **Image:** can no longer manually specify image loading, can now use native loading prop to mark an image for lazy loading
-
-### Bug Fixes
-
-- **Image:** removed loading prop as it clashed with image loading prop ([2cc917c](https://github.com/PDFTron/webviewer-react-toolkit/commit/2cc917c2d1014d9af28e2d1e0b2bbcb62b499c66))
 
 ### [0.3.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.1...v0.3.2) (2020-03-11)
 
