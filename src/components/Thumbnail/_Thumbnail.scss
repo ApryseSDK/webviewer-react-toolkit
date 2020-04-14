@@ -90,6 +90,7 @@ $thumbnail-border-size: 2px;
     flex-direction: column;
     height: 0;
     flex: 1 1 auto;
+    pointer-events: none;
 
     img,
     .ui__thumbnail__image__skeleton {
