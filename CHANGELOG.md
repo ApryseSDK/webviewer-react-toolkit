@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.1...v0.5.0-beta.1) (2020-04-14)
+
+### Features
+
+- **Choice:** added props to make choice a switch and move label to left ([1b51df0](https://github.com/PDFTron/webviewer-react-toolkit/commit/1b51df05e4c94bc0291581bf27b0119a2e9bc090))
+
 ## [0.4.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.2...v0.4.1) (2020-04-09)
 
 ### ⚠ BREAKING CHANGES
