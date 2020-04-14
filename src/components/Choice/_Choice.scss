@@ -1,5 +1,9 @@
 $choice-check-size: 15px;
 
+$choice-switch-size: 14px;
+$choice-switch-height: 10px;
+$choice-switch-width: 24px;
+
 .ui__choice {
   display: flex;
   margin: $padding-tiny $padding-tiny $padding-tiny 0;
@@ -50,6 +54,39 @@ $choice-check-size: 15px;
       }
     }
 
+    &__switch {
+      position: absolute;
+      width: $choice-switch-width;
+      height: $choice-switch-height;
+      padding: 2px;
+      border: 1px solid $color-blue-gray-3;
+      border-radius: $choice-switch-height / 2;
+      background-color: $color-gray-1;
+      transition: $focus-transition;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &--checked .ui__choice__input__toggle {
+        left: $choice-switch-width - $choice-switch-size - 1px;
+      }
+
+      &--focus .ui__choice__input__toggle {
+        @include focus();
+      }
+    }
+
+    &__toggle {
+      position: absolute;
+      height: $choice-switch-size;
+      width: $choice-switch-size;
+      border-radius: 50%;
+      background-color: $color-blue-gray-5;
+      top: 50%;
+      left: -1px;
+      transform: translateY(-50%);
+      transition: left 0.25s ease;
+    }
+
     &__icon {
       height: 17px;
       width: 17px;
@@ -65,6 +102,23 @@ $choice-check-size: 15px;
       position: absolute;
       height: $choice-check-size;
       width: $choice-check-size;
+    }
+
+    &--switch {
+      height: $choice-check-size; // Keep as full-height to center switch.
+      width: $choice-switch-width;
+
+      > input {
+        height: $choice-switch-size;
+        width: $choice-switch-width;
+      }
+    }
+  }
+
+  &--leftLabel {
+    .ui__choice__label {
+      padding-right: $padding-tiny;
+      padding-left: 0;
     }
   }
 

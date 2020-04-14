@@ -11,7 +11,9 @@ export const Basic = () => (
     onChange={action('onChange')}
     label={text('label', 'Choice')}
     radio={boolean('radio', false)}
+    isSwitch={boolean('isSwitch', false)}
     disabled={boolean('disabled', false)}
+    leftLabel={boolean('leftLabel', false)}
   />
 );
 
@@ -20,15 +22,19 @@ export const Controlled = () => (
     onChange={action('onChange')}
     label={text('label', 'Choice')}
     radio={boolean('radio', false)}
+    isSwitch={boolean('isSwitch', false)}
     disabled={boolean('disabled', false)}
     checked={boolean('checked', false)}
+    leftLabel={boolean('leftLabel', false)}
   />
 );
 
 export const NativeFormControlled = () => {
   const props = {
     radio: boolean('radio', true),
+    isSwitch: boolean('isSwitch', true),
     disabled: boolean('disabled', false),
+    leftLabel: boolean('leftLabel', false),
   };
 
   return (
@@ -52,11 +58,13 @@ export const CustomControlled = () => {
 
   const props = {
     radio: boolean('radio', true),
+    isSwitch: boolean('isSwitch', true),
     disabled: boolean('disabled', false),
+    leftLabel: boolean('leftLabel', false),
   };
 
   return (
-    <>
+    <div className="ui__base">
       <p>React state allows for only one to be selected (custom)</p>
       <h3>Pet</h3>
       <Choice {...props} label="Dog" onChange={() => setSelected(0)} checked={selected === 0} />
@@ -67,6 +75,6 @@ export const CustomControlled = () => {
       <Choice {...props} label="Red" onChange={() => setSelected(3)} checked={selected === 3} />
       <Choice {...props} label="Blue" onChange={() => setSelected(4)} checked={selected === 4} />
       <Choice {...props} label="Green" onChange={() => setSelected(5)} checked={selected === 5} />
-    </>
+    </div>
   );
 };

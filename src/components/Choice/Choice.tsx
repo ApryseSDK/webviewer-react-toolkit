@@ -7,6 +7,7 @@ import React, {
   useImperativeHandle,
   useRef,
   useState,
+  useMemo,
 } from 'react';
 import { useAccessibleFocus, useFocus } from '../../hooks';
 import { useID } from '../../hooks/useID';
@@ -20,14 +21,23 @@ export interface ChoiceProps extends Remove<InputHTMLAttributes<HTMLInputElement
    */
   label?: string;
   /**
+   * If true, label will appear to the left of the choice.
+   */
+  leftLabel?: boolean;
+  /**
    * Choice is a checkbox unless radio is true, in which case it is a radio
    * button.
    */
   radio?: boolean;
+  /**
+   * Choice becomes a switch, rather than a checkbox or radio. It will still
+   * behave as either a checkbox, or radio if `radio` is true.
+   */
+  isSwitch?: boolean;
 }
 
 export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
-  ({ label, className, children, id, radio, onChange, onFocus, onBlur, ...props }, ref) => {
+  ({ label, leftLabel, className, children, id, radio, isSwitch, onChange, onFocus, onBlur, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
     useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
@@ -67,23 +77,47 @@ export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
       'ui__base ui__choice',
       {
         'ui__choice--radio': radio,
+        'ui__choice--leftLabel': leftLabel,
         'ui__choice--checked': checked,
         'ui__choice--disabled': props.disabled,
       },
       className,
     );
 
-    const checkClass = classnames('ui__choice__input__check', {
-      'ui__choice__input__check--checked': checked,
-      'ui__choice__input__check--focus': isUserTabbing && focused,
-    });
+    const inputClass = classnames('ui__choice__input', { 'ui__choice__input--switch': isSwitch });
+
+    const checkClass = isSwitch
+      ? classnames('ui__choice__input__switch', {
+          'ui__choice__input__switch--checked': checked,
+          'ui__choice__input__switch--focus': isUserTabbing && focused,
+        })
+      : classnames('ui__choice__input__check', {
+          'ui__choice__input__check--checked': checked,
+          'ui__choice__input__check--focus': isUserTabbing && focused,
+        });
+
+    const labelElement = useMemo(() => {
+      if (!label) return undefined;
+      return (
+        <label className="ui__choice__label" htmlFor={choiceID}>
+          {label}
+        </label>
+      );
+    }, [choiceID, label]);
 
     return (
       <span className={choiceClass}>
-        <span className="ui__choice__input">
-          <div className={checkClass}>
-            {checked && !radio ? <Icon icon="Check" className="ui__choice__input__icon" /> : undefined}
-          </div>
+        {leftLabel ? labelElement : undefined}
+        <span className={inputClass}>
+          {isSwitch ? (
+            <div className={checkClass}>
+              <div className="ui__choice__input__toggle" />
+            </div>
+          ) : (
+            <div className={checkClass}>
+              {checked && !radio ? <Icon icon="Check" className="ui__choice__input__icon" /> : undefined}
+            </div>
+          )}
           <input
             {...props}
             id={choiceID}
@@ -96,13 +130,7 @@ export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
             {children}
           </input>
         </span>
-        {label ? (
-          <label className="ui__choice__label" htmlFor={choiceID}>
-            {label}
-          </label>
-        ) : (
-          undefined
-        )}
+        {!leftLabel ? labelElement : undefined}
       </span>
     );
   },

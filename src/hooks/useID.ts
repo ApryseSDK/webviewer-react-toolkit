@@ -7,5 +7,5 @@ import { getStringId } from '../utils';
  * @param id The optional ID provided by props.
  */
 export function useID(id?: string) {
-  return useMemo(() => (id ? id : getStringId('label')), [id]);
+  return useMemo(() => id || getStringId('label'), [id]);
 }
