@@ -32,7 +32,7 @@ export const Controlled = () => (
 export const NativeFormControlled = () => {
   const props = {
     radio: boolean('radio', true),
-    isSwitch: boolean('isSwitch', true),
+    isSwitch: boolean('isSwitch', false),
     disabled: boolean('disabled', false),
     leftLabel: boolean('leftLabel', false),
   };
@@ -58,7 +58,7 @@ export const CustomControlled = () => {
 
   const props = {
     radio: boolean('radio', true),
-    isSwitch: boolean('isSwitch', true),
+    isSwitch: boolean('isSwitch', false),
     disabled: boolean('disabled', false),
     leftLabel: boolean('leftLabel', false),
   };
