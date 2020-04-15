@@ -1,28 +1,15 @@
-import { useEffect, useState } from 'react';
+import { FocusObservable } from '../../hooks';
 
-/**
- * Will return true if the user is using keyboard navigation, or false if they
- * are using their mouse. The returned value will be true if the Tab key was
- * used more recently than mouse click, and false if not. You can also provide
- * custom behavior by passing your own observable.
- * @param observable Optional custom observable.
- */
-export function useAccessibleFocus(observable: FocusObservable = tabObservable) {
-  const [isUserTabbing, setIsUserTabbing] = useState(observable.value);
+const validKeys = [
+  // Valid keys for thumbnail accessibility.
+  'Tab',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'ArrowDown',
+];
 
-  useEffect(() => {
-    return observable.subscribe(() => setIsUserTabbing(observable.value));
-  }, [observable]);
-
-  return isUserTabbing;
-}
-
-export interface FocusObservable {
-  value: boolean;
-  subscribe(subscriber: Function): void;
-}
-
-class AccessibleFocusObservable implements FocusObservable {
+class ThumbnailFocusObservable implements FocusObservable {
   private _subscribers: Function[];
   private _isUserTabbing: boolean;
 
@@ -63,7 +50,7 @@ class AccessibleFocusObservable implements FocusObservable {
   }
 
   private _handleFirstTab = (event: KeyboardEvent) => {
-    if (event.key === 'Tab') {
+    if (validKeys.includes(event.key)) {
       this._setIsUserTabbing(true);
       this._tabToMouseListener();
     }
@@ -90,4 +77,4 @@ class AccessibleFocusObservable implements FocusObservable {
   }
 }
 
-const tabObservable = new AccessibleFocusObservable();
+export const thumbnailFocusObservable = new ThumbnailFocusObservable();

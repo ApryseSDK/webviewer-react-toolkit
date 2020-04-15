@@ -1,12 +1,13 @@
 import classnames from 'classnames';
 import React, { MouseEvent, ReactNode, ReactText, useRef } from 'react';
 import { FileLike } from '../../data';
-import { useFile, useFocus, useAccessibleFocus } from '../../hooks';
+import { useAccessibleFocus, useFile, useFocus } from '../../hooks';
 import { ClickableDiv, ClickableDivProps } from '../ClickableDiv';
 import { EditableText } from '../EditableText';
 import { FileSkeleton } from '../FileSkeleton';
 import { Image } from '../Image';
 import { ToolButton } from '../ToolButton';
+import { thumbnailFocusObservable } from './thumbnailFocusObservable';
 
 export interface ThumbnailButtonProps<F> {
   key: ReactText;
@@ -91,7 +92,7 @@ export function Thumbnail<F extends FileLike>({
   onBlur,
   ...divProps
 }: ThumbnailProps<F>) {
-  const isUserTabbing = useAccessibleFocus();
+  const isUserTabbing = useAccessibleFocus(thumbnailFocusObservable);
 
   const thumbnailRef = useRef<HTMLDivElement>(null);
 
