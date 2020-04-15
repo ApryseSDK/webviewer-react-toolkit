@@ -11,9 +11,9 @@ export interface UseManagedFilesOptions<F> {
    */
   preventMultiDrag?: boolean;
   /**
-   * Allows multi-select without pressing the shift key.
+   * Prevent multi select with shift or command/control.
    */
-  selectWithoutShift?: boolean;
+  preventMultiSelect?: boolean;
   /**
    * Prevent selecting the item you are currently dragging.
    */
@@ -93,7 +93,7 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
     preventMultiDrag,
     preventDeselectOnDragOther,
     preventSelectOnDrag,
-    selectWithoutShift,
+    preventMultiSelect,
   } = options;
 
   const [files, setFiles] = useState(initialFiles ?? []);
@@ -110,26 +110,46 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
 
   /* --- Selection. --- */
 
+  // Note: this is also an ordered stack, with the most recently selected last.
+  // This allows us to do shift-range selection from the most recent.
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const toggleSelectedId = useCallback(
     (id: string, event?: MouseEvent<HTMLElement>) => {
-      const canToggle = selectWithoutShift || (event ? event.shiftKey : true);
+      const multiKey = !preventMultiSelect && (event?.ctrlKey || event?.metaKey || false);
+      const rangeKey = !preventMultiSelect && (event?.shiftKey || false);
+
       setSelectedIds(prev => {
         const toggleIndex = prev.indexOf(id);
+
+        if (!multiKey && rangeKey && prev.length) {
+          const lastSelectedIndex = files.findIndex(f => f.id === prev[prev.length - 1]);
+          const toggleFileIndex = files.findIndex(f => f.id === id);
+
+          let selectedFiles: F[] = [];
+
+          if (toggleFileIndex < lastSelectedIndex) {
+            selectedFiles = files.slice(toggleFileIndex, lastSelectedIndex + 1);
+          } else {
+            selectedFiles = files.slice(lastSelectedIndex, toggleFileIndex + 1).reverse();
+          }
+
+          return selectedFiles.map(f => f.id);
+        }
+
         if (toggleIndex === -1) {
-          if (canToggle) return [...prev, id];
+          if (multiKey) return [...prev, id];
           return [id];
         }
         if (toggleIndex !== -1) {
-          if (canToggle) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
+          if (multiKey) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
           if (prev.length > 1) return [id];
           return [];
         }
         return prev;
       });
     },
-    [selectWithoutShift],
+    [files, preventMultiSelect],
   );
 
   const onDeselectAll = useCallback(() => setSelectedIds([]), []);

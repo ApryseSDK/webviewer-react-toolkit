@@ -108,7 +108,7 @@ export const UseManagedFilesHook = () => {
   const { fileOrganizerProps, getThumbnailSelectionProps, draggingIds } = useManagedFiles({
     initialFiles: Array.from({ length: 100 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('preventMultiDrag', false, 'useManagedFiles options'),
-    selectWithoutShift: boolean('selectWithoutShift', false, 'useManagedFiles options'),
+    preventMultiSelect: boolean('preventMultiSelect', false, 'useManagedFiles options'),
     preventDeselectOnDragOther: boolean('preventDeselectOnDragOther', false, 'useManagedFiles options'),
     preventSelectOnDrag: boolean('preventSelectOnDrag', false, 'useManagedFiles options'),
   });
