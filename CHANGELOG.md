@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.1...v0.5.0-beta.2) (2020-04-15)
+
+### ⚠ BREAKING CHANGES
+
+- **useManagedFiles:** removed selectWithoutShift option, added preventMultiSelect option, shift no longer multi selects, instead it range selects multiple files, while pressing command or control will allow adding multiple single files to the selection
+
+### Features
+
+- **useManagedFiles:** shift for range select, meta or ctrl for multi ([b8e7775](https://github.com/PDFTron/webviewer-react-toolkit/commit/b8e7775dd670ba6005076881bc746569ae3a6c1f))
+
+### Bug Fixes
+
+- **Thumbnail:** focus now appears on arrow nav as well as tabbing ([70efd90](https://github.com/PDFTron/webviewer-react-toolkit/commit/70efd9044a2a7fb751182f8dc9dd89f13a35ac06))
+- **Thumbnail:** prevent image drag from interfering with file dragging ([53dfa12](https://github.com/PDFTron/webviewer-react-toolkit/commit/53dfa129682279a2d4b213d08ee6b915d369f055))
+
 ## [0.5.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.1...v0.5.0-beta.1) (2020-04-14)
 
 ### Features
