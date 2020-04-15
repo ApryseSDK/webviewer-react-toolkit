@@ -8,6 +8,10 @@ export interface FileDetails {
    */
   name: string;
   /**
+   * Optional ID for file. If falsy, will generate a unique ID.
+   */
+  id?: string;
+  /**
    * The original name of the file.
    * @default name
    */
@@ -84,13 +88,13 @@ export class File implements FileLike {
    * this `File` with.
    */
   constructor(fileDetails: FileDetails) {
-    const { name, originalName, extension, fileObj, documentObj, thumbnail } = fileDetails;
+    const { name, id, originalName, extension, fileObj, documentObj, thumbnail } = fileDetails;
 
     if (!fileObj && !documentObj) {
       throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');
     }
 
-    this._id = getStringId('file');
+    this._id = id || getStringId('file');
     this._name = name;
     this._originalName = originalName || name;
     this._extension = extension || getExtension(name);
