@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.5...v0.5.0-beta.6) (2020-04-16)
+
+### Features
+
+- **Modal:** fullWidth prop removes max width ([82c3ab3](https://github.com/PDFTron/webviewer-react-toolkit/commit/82c3ab3c6d8ec815a1448a9e7c175c5bbeecf158))
+- **Modal:** header is now optional ([c48b234](https://github.com/PDFTron/webviewer-react-toolkit/commit/c48b234c69dc7afd57ce47b1a6d67022458ec039))
+
 ## [0.5.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.4...v0.5.0-beta.5) (2020-04-16)
 
 ### Bug Fixes
