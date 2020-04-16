@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.3...v0.5.0-beta.4) (2020-04-16)
+
+### Features
+
+- **useManagedFiles:** easyMultiSelect option ([f272fbe](https://github.com/PDFTron/webviewer-react-toolkit/commit/f272fbe2bbf43bf24afcbe7da5b49a1d4f23a58b))
+
 ## [0.5.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.2...v0.5.0-beta.3) (2020-04-15)
 
 ### Features
