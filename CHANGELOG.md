@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.4...v0.5.0-beta.5) (2020-04-16)
+
+### Bug Fixes
+
+- **Modal:** removed width auto above mobile ([a673f2c](https://github.com/PDFTron/webviewer-react-toolkit/commit/a673f2c9c7ce869b8959a57953fb2a34c3b8690c))
+
 ## [0.5.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.3...v0.5.0-beta.4) (2020-04-16)
 
 ### Features
