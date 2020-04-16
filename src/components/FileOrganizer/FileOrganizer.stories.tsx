@@ -111,6 +111,7 @@ export const UseManagedFilesHook = () => {
     preventMultiSelect: boolean('preventMultiSelect', false, 'useManagedFiles options'),
     preventDeselectOnDragOther: boolean('preventDeselectOnDragOther', false, 'useManagedFiles options'),
     preventSelectOnDrag: boolean('preventSelectOnDrag', false, 'useManagedFiles options'),
+    easyMultiSelect: boolean('easyMultiSelect', false, 'useManagedFiles options'),
   });
 
   return (

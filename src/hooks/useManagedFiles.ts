@@ -22,6 +22,10 @@ export interface UseManagedFilesOptions<F> {
    * Prevent deselecting all selected items when you drag an unselected item.
    */
   preventDeselectOnDragOther?: boolean;
+  /**
+   * Allows multi-select by clicking other files without holding command/control.
+   */
+  easyMultiSelect?: boolean;
 }
 
 export interface UseManagedFilesOutput<F> {
@@ -87,15 +91,14 @@ export interface UseManagedFilesOutput<F> {
  * `FileOrganizer` component.
  * @param options Options for managing files.
  */
-export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFilesOptions<F> = {}) {
-  const {
-    initialFiles,
-    preventMultiDrag,
-    preventDeselectOnDragOther,
-    preventSelectOnDrag,
-    preventMultiSelect,
-  } = options;
-
+export function useManagedFiles<F extends ObjectWithId>({
+  initialFiles,
+  preventMultiDrag,
+  preventDeselectOnDragOther,
+  preventSelectOnDrag,
+  preventMultiSelect,
+  easyMultiSelect,
+}: UseManagedFilesOptions<F> = {}) {
   const [files, setFiles] = useState(initialFiles ?? []);
 
   const addFile = useCallback((file: F, index?: number) => {
@@ -138,18 +141,18 @@ export function useManagedFiles<F extends ObjectWithId>(options: UseManagedFiles
         }
 
         if (toggleIndex === -1) {
-          if (multiKey) return [...prev, id];
+          if (easyMultiSelect || multiKey) return [...prev, id];
           return [id];
         }
         if (toggleIndex !== -1) {
-          if (multiKey) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
+          if (easyMultiSelect || multiKey) return [...prev.slice(0, toggleIndex), ...prev.slice(toggleIndex + 1)];
           if (prev.length > 1) return [id];
           return [];
         }
         return prev;
       });
     },
-    [files, preventMultiSelect],
+    [easyMultiSelect, files, preventMultiSelect],
   );
 
   const onDeselectAll = useCallback(() => setSelectedIds([]), []);
