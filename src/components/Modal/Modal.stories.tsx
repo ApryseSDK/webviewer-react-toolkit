@@ -12,7 +12,8 @@ export const Basic = () => (
     open={boolean('open', true)}
     closeOnBackgroundClick={boolean('closeOnBackgroundClick', false)}
     closeOnEscape={boolean('closeOnEscape', false)}
-    heading={text('heading', 'Modal heading') || 'There must be some header!'}
+    heading={text('heading', 'Modal heading')}
+    fullWidth={boolean('fullWidth', false)}
     onClose={boolean('has onClose', true) ? action('onClose') : undefined}
   >
     {text(
@@ -29,7 +30,8 @@ export const WithButtonGroup = () => (
     open={boolean('open', true)}
     closeOnBackgroundClick={boolean('closeOnBackgroundClick', false)}
     closeOnEscape={boolean('closeOnEscape', false)}
-    heading={text('heading', 'Modal heading') || 'There must be some header!'}
+    heading={text('heading', 'Modal heading')}
+    fullWidth={boolean('fullWidth', false)}
     onClose={boolean('has onClose', true) ? action('onClose') : undefined}
     buttonGroup={
       <>
@@ -73,7 +75,8 @@ export const Scrolling = () => (
     open={boolean('open', true)}
     closeOnBackgroundClick={boolean('closeOnBackgroundClick', false)}
     closeOnEscape={boolean('closeOnEscape', false)}
-    heading={text('heading', 'Modal heading') || 'There must be some header!'}
+    heading={text('heading', 'Modal heading')}
+    fullWidth={boolean('fullWidth', false)}
     onClose={boolean('has onClose', true) ? action('onClose') : undefined}
     buttonGroup={
       <>

@@ -44,6 +44,10 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
    */
   onClose?(event: KeyboardEvent | MouseEvent): void;
   /**
+   * Modal does not have a max width.
+   */
+  fullWidth?: boolean;
+  /**
    * Provide alongside `onClose` for localized accessibility.
    * @default "Close"
    */
@@ -62,6 +66,7 @@ export const Modal: FC<ModalProps> = ({
   heading,
   open,
   onClose,
+  fullWidth,
   closeLabel = 'Close',
   children,
   buttonGroup,
@@ -90,6 +95,7 @@ export const Modal: FC<ModalProps> = ({
 
   const modalWrapperClass = classnames('ui__base ui__modal__wrapper', {
     'ui__modal__wrapper--closed': !open,
+    'ui__modal__wrapper--fullWidth': fullWidth,
   });
 
   const modalClass = classnames('ui__modal', className);

@@ -16,6 +16,12 @@
     opacity: 0;
     pointer-events: none !important;
   }
+
+  &--fullWidth {
+    .ui__modal__paddingFix {
+      max-width: none !important;
+    }
+  }
 }
 
 // This fixes the firefox bottom padding bug.
