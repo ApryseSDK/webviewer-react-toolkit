@@ -12,7 +12,7 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * Heading to display at the top of the modal.
    */
-  heading: ReactNode;
+  heading?: ReactNode;
   /**
    * The primary body content of the modal.
    */
@@ -115,7 +115,7 @@ export const Modal: FC<ModalProps> = ({
           <FocusTrap focusLastOnUnlock locked>
             <div className="ui__modal__paddingFix">
               <div
-                aria-labelledby={headingId}
+                aria-labelledby={heading ? headingId : undefined}
                 aria-describedby={bodyId}
                 {...props}
                 className={modalClass}
