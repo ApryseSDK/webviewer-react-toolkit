@@ -48,6 +48,10 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
    */
   fullWidth?: boolean;
   /**
+   * Class for the outermost wrapper
+   */
+  wrapperClassName?: string;
+  /**
    * Provide alongside `onClose` for localized accessibility.
    * @default "Close"
    */
@@ -67,6 +71,7 @@ export const Modal: FC<ModalProps> = ({
   open,
   onClose,
   fullWidth,
+  wrapperClassName,
   closeLabel = 'Close',
   children,
   buttonGroup,
@@ -93,10 +98,14 @@ export const Modal: FC<ModalProps> = ({
 
   const backgroundIsButton = !!(closeOnBackgroundClick && onClose);
 
-  const modalWrapperClass = classnames('ui__base ui__modal__wrapper', {
-    'ui__modal__wrapper--closed': !open,
-    'ui__modal__wrapper--fullWidth': fullWidth,
-  });
+  const modalWrapperClass = classnames(
+    'ui__base ui__modal__wrapper',
+    {
+      'ui__modal__wrapper--closed': !open,
+      'ui__modal__wrapper--fullWidth': fullWidth,
+    },
+    wrapperClassName,
+  );
 
   const modalClass = classnames('ui__modal', className);
 
@@ -112,8 +121,8 @@ export const Modal: FC<ModalProps> = ({
         onClick={backgroundIsButton ? onClose : undefined}
       >
         {mounted ? (
-          <FocusTrap focusLastOnUnlock locked>
-            <div className="ui__modal__paddingFix">
+          <div className="ui__modal__paddingFix">
+            <FocusTrap focusLastOnUnlock locked>
               <div
                 aria-labelledby={heading ? headingId : undefined}
                 aria-describedby={bodyId}
@@ -139,8 +148,8 @@ export const Modal: FC<ModalProps> = ({
                 </div>
                 {buttonGroup ? <ButtonGroup className="ui__modal__buttonGroup">{buttonGroup}</ButtonGroup> : undefined}
               </div>
-            </div>
-          </FocusTrap>
+            </FocusTrap>
+          </div>
         ) : (
           undefined
         )}
