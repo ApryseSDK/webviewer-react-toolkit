@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.9](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.8...v0.5.0-beta.9) (2020-04-17)
+
+### Bug Fixes
+
+- **useFocusTrap:** fix infinite loop while server-side rendering ([77681c3](https://github.com/PDFTron/webviewer-react-toolkit/commit/77681c3c4c53c5c24be75a962b0f8d6e8e7efbe1))
+
 ## [0.5.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.7...v0.5.0-beta.8) (2020-04-17)
 
 ### Features
