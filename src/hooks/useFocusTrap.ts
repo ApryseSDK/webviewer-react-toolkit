@@ -1,5 +1,6 @@
 import { RefObject, useCallback, useEffect, useRef } from 'react';
 import { focusableElementDomString } from '../utils';
+import { useCurrentRef } from './useCurrentRef';
 
 export interface UseFocusTrapOptions {
   /**
@@ -88,6 +89,7 @@ export function useFocusTrap<T extends HTMLElement>(locked = false, options: Use
 
   // Add document listeners for lock focus and check focus
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     document.addEventListener('keydown', lockFocus);
     document.addEventListener('focusin', checkFocus);
 
@@ -98,16 +100,14 @@ export function useFocusTrap<T extends HTMLElement>(locked = false, options: Use
   }, [checkFocus, lockFocus]);
 
   // Keep the ref to focusLastOnUnlock fresh, prevents useEffect refresh.
-  const focusLastOnUnlockRef = useRef(focusLastOnUnlock);
-  useEffect(() => {
-    focusLastOnUnlockRef.current = focusLastOnUnlock;
-  }, [focusLastOnUnlock]);
+  const focusLastOnUnlockRef = useCurrentRef(focusLastOnUnlock);
 
   // When locked is changed, will maybe store last element focused prior
   // to lock being enabled, and will call lockFocus to focus first element
   // if it exists. Returns when locked is disabled, and will focus prior
   // element if stored (return focus to previous element).
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     let lastFocusedElement: HTMLElement;
 
     if (locked) {
@@ -120,7 +120,7 @@ export function useFocusTrap<T extends HTMLElement>(locked = false, options: Use
       lockFocus();
     }
     return;
-  }, [lockFocus, locked]);
+  }, [focusLastOnUnlockRef, lockFocus, locked]);
 
   return focusRef;
 }
