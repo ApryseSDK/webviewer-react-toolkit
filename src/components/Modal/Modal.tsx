@@ -87,8 +87,6 @@ export const Modal: FC<ModalProps> = ({
 }) => {
   const { mounted } = useUnmountDelay(open);
 
-  const unlocked = noUnmount && !mounted;
-
   const headingId = useMemo(() => getStringId('modal_heading'), []);
   const bodyId = useMemo(() => getStringId('modal_body'), []);
 
@@ -114,13 +112,7 @@ export const Modal: FC<ModalProps> = ({
     wrapperClassName,
   );
 
-  const modalClass = classnames(
-    'ui__modal',
-    {
-      'ui__modal--hidden': unlocked,
-    },
-    className,
-  );
+  const modalClass = classnames('ui__modal', { 'ui__modal--hidden': noUnmount && !mounted }, className);
 
   const bodyClass = classnames('ui__modal__body', {
     'ui__modal__body--noButton': !buttonGroup,
@@ -135,7 +127,7 @@ export const Modal: FC<ModalProps> = ({
       >
         {noUnmount || mounted ? (
           <div className="ui__modal__paddingFix">
-            <FocusTrap focusLastOnUnlock locked={!unlocked}>
+            <FocusTrap focusLastOnUnlock locked={open}>
               <div
                 aria-labelledby={heading ? headingId : undefined}
                 aria-describedby={bodyId}
