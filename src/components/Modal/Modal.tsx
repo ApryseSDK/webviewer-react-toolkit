@@ -48,6 +48,10 @@ export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
    */
   fullWidth?: boolean;
   /**
+   * Do not unmount the modal when it is closed.
+   */
+  noUnmount?: boolean;
+  /**
    * Class for the outermost wrapper
    */
   wrapperClassName?: string;
@@ -71,6 +75,7 @@ export const Modal: FC<ModalProps> = ({
   open,
   onClose,
   fullWidth,
+  noUnmount,
   wrapperClassName,
   closeLabel = 'Close',
   children,
@@ -81,6 +86,8 @@ export const Modal: FC<ModalProps> = ({
   ...props
 }) => {
   const { mounted } = useUnmountDelay(open);
+
+  const unlocked = noUnmount && !mounted;
 
   const headingId = useMemo(() => getStringId('modal_heading'), []);
   const bodyId = useMemo(() => getStringId('modal_body'), []);
@@ -96,7 +103,7 @@ export const Modal: FC<ModalProps> = ({
     return;
   }, [closeOnEscape, onClose, open]);
 
-  const backgroundIsButton = !!(closeOnBackgroundClick && onClose);
+  const backgroundIsButton = !!(open && closeOnBackgroundClick && onClose);
 
   const modalWrapperClass = classnames(
     'ui__base ui__modal__wrapper',
@@ -107,7 +114,13 @@ export const Modal: FC<ModalProps> = ({
     wrapperClassName,
   );
 
-  const modalClass = classnames('ui__modal', className);
+  const modalClass = classnames(
+    'ui__modal',
+    {
+      'ui__modal--hidden': unlocked,
+    },
+    className,
+  );
 
   const bodyClass = classnames('ui__modal__body', {
     'ui__modal__body--noButton': !buttonGroup,
@@ -120,9 +133,9 @@ export const Modal: FC<ModalProps> = ({
         className={modalWrapperClass}
         onClick={backgroundIsButton ? onClose : undefined}
       >
-        {mounted ? (
+        {noUnmount || mounted ? (
           <div className="ui__modal__paddingFix">
-            <FocusTrap focusLastOnUnlock locked>
+            <FocusTrap focusLastOnUnlock locked={!unlocked}>
               <div
                 aria-labelledby={heading ? headingId : undefined}
                 aria-describedby={bodyId}

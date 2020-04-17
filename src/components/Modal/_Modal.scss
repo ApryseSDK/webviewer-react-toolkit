@@ -42,6 +42,10 @@
   overflow: hidden;
   width: 100%;
 
+  &--hidden {
+    display: none;
+  }
+
   &__top {
     display: flex;
 

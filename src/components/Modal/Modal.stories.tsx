@@ -1,5 +1,5 @@
 import { boolean, text } from '@storybook/addon-knobs';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { action } from '../../storybook-helpers/action/action';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
@@ -88,3 +88,33 @@ export const Scrolling = () => (
     <p style={{ whiteSpace: 'pre-wrap' }}>{lorem}</p>
   </Modal>
 );
+
+const Timer = () => {
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    const increment = () => setSeconds(prev => prev + 1);
+    const timer = window.setInterval(increment, 1000);
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, []);
+  return (
+    <p>
+      Time passed: {seconds} second{seconds === 1 ? '' : 's'}
+    </p>
+  );
+};
+
+export const UnmountExample = () => {
+  const noUnmount = boolean('noUnmount', false);
+  return (
+    <Modal
+      open={boolean('open', true)}
+      onClose={action('onClose')}
+      noUnmount={noUnmount}
+      heading={noUnmount ? 'noUnmount true, time will persist' : 'noUnmount false, time will reset'}
+    >
+      <Timer />
+    </Modal>
+  );
+};
