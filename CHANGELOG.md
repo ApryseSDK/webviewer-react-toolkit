@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.11](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.10...v0.5.0-beta.11) (2020-04-17)
+
+### Bug Fixes
+
+- **Modal:** if noUnmount is true use visibility instead of display none ([bf4b04c](https://github.com/PDFTron/webviewer-react-toolkit/commit/bf4b04c808763b4d9d015c801f4078610f62306e))
+
 ## [0.5.0-beta.10](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.9...v0.5.0-beta.10) (2020-04-17)
 
 ### Bug Fixes
