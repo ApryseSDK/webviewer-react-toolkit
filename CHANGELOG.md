@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.10](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.9...v0.5.0-beta.10) (2020-04-17)
+
+### Bug Fixes
+
+- **Modal:** fixed focus lock logic ([43bfc3a](https://github.com/PDFTron/webviewer-react-toolkit/commit/43bfc3a987924a274fc35d71dc19a5d446ba2f9d))
+
 ## [0.5.0-beta.9](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.8...v0.5.0-beta.9) (2020-04-17)
 
 ### Bug Fixes
