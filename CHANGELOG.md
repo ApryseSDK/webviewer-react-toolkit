@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.7...v0.5.0-beta.8) (2020-04-17)
+
+### Features
+
+- **Modal:** added noUnmount prop to disable modal unmount when closed ([313341d](https://github.com/PDFTron/webviewer-react-toolkit/commit/313341d8b5f4195fe15e59ced2e33b378ebcb2c2))
+
 ## [0.5.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.6...v0.5.0-beta.7) (2020-04-17)
 
 ### Features
