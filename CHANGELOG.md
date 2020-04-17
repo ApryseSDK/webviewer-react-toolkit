@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.6...v0.5.0-beta.7) (2020-04-17)
+
+### Features
+
+- **Modal:** added wrapperClassName prop ([9f1348d](https://github.com/PDFTron/webviewer-react-toolkit/commit/9f1348dc1cf7281e6587d9945792fdd47cb5e6e4))
+
 ## [0.5.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.5...v0.5.0-beta.6) (2020-04-16)
 
 ### Features
