@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilePlaceholder component snapshot renders default filePlaceholder 1`] = `
+<div
+  className="ui__base ui__filePlaceholder"
+>
+  <div
+    className="ui__filePlaceholder__block ui__filePlaceholder__block--thumbnail"
+  />
+  <div
+    className="ui__filePlaceholder__block ui__filePlaceholder__block--line-sm"
+  />
+  <div
+    className="ui__filePlaceholder__block ui__filePlaceholder__block--line-xs"
+  />
+  <div
+    className="ui__filePlaceholder__block ui__filePlaceholder__block--line-df"
+  />
+  <div
+    className="ui__filePlaceholder__block ui__filePlaceholder__block--line-lgx"
+  />
+  <div
+    className="ui__filePlaceholder__block ui__filePlaceholder__block--line-lg"
+  />
+  <div
+    className="ui__filePlaceholder__block ui__filePlaceholder__block--line-df"
+  />
+</div>
+`;
