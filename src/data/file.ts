@@ -299,7 +299,7 @@ export class File implements FileLike {
 
   /** Generate a thumbnail from document object. */
   private _generateThumbnail = () => {
-    return getThumbnail(this.documentObj.get());
+    return getThumbnail(this.documentObj.get(), this.extension);
   };
 
   /** Generate a file object from document object. */

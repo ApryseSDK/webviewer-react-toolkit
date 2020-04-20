@@ -65,8 +65,14 @@ export async function getRotatedDocument(
 /**
  * Gets the thumbnail for a document.
  * @param documentObj A CoreControls Document, or promise to get it.
+ * @param extension If provided, will exit early if extension is not supported.
  */
-export async function getThumbnail(documentObj: Futurable<CoreControls.Document>): Promise<string> {
+export async function getThumbnail(documentObj: Futurable<CoreControls.Document>, extension?: string): Promise<string> {
+  if (extension) {
+    // TODO(types): once types are supported, remove `as unknown`
+    const supportedFiles = (window.CoreControls?.SupportedFileFormats?.CLIENT as unknown) as string[] | undefined;
+    if (supportedFiles && !supportedFiles.includes(extension)) return '';
+  }
   const fetchedDocument = await documentObj;
   const canvas: HTMLCanvasElement = await new Promise(resolve => {
     const pageWidth = fetchedDocument.getPageInfo(0).width;
@@ -75,5 +81,5 @@ export async function getThumbnail(documentObj: Futurable<CoreControls.Document>
     fetchedDocument.loadThumbnailAsync(0, resolve);
   });
 
-  return canvas.toDataURL();
+  return canvas.toDataURL() || '';
 }
