@@ -3,7 +3,7 @@ import React from 'react';
 
 export interface FileSkeletonProps {
   /**
-   * Classname of the skeleton wrapper
+   * Classname of the skeleton wrapper.
    */
   className?: string;
 }

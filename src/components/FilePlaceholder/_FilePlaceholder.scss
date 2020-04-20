@@ -1,0 +1,57 @@
+.ui__filePlaceholder {
+  background-color: white;
+  padding: 10px;
+  height: 164px;
+  width: 128px;
+  position: relative;
+
+  &__block {
+    background-color: #ccc;
+
+    &--thumbnail {
+      width: 40px;
+      height: 40px;
+      float: left;
+    }
+
+    &--line-sm {
+      margin-left: 50px;
+      margin-top: 10px;
+      height: 6px;
+    }
+
+    &--line-xs {
+      margin-left: 50px;
+      margin-top: 10px;
+      width: 40px;
+      height: 6px;
+    }
+
+    &--line-df {
+      margin-top: 20px;
+      width: 90px;
+      height: 6px;
+    }
+
+    &--line-lg {
+      margin-top: 10px;
+      width: 90px;
+      height: 6px;
+    }
+
+    &--line-lgx {
+      margin-top: 10px;
+      height: 6px;
+    }
+  }
+
+  &__extension {
+    position: absolute;
+    color: #ccc;
+    text-align: center;
+    font-size: $font-size-large;
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
+  }
+}

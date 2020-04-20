@@ -13,6 +13,7 @@ export * from './Draggable';
 export * from './EditableText';
 export * from './FileOrganizer';
 export * from './FilePicker';
+export * from './FilePlaceholder';
 export * from './FileSkeleton';
 export * from './FocusTrap';
 export * from './Icon';
