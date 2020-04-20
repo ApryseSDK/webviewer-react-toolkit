@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.13](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.12...v0.5.0-beta.13) (2020-04-20)
+
+### Features
+
+- **file:** improved methods for setting global or local license ([94d827a](https://github.com/PDFTron/webviewer-react-toolkit/commit/94d827af4ce10a6cadb5ffb0d515a0aa10bc15fb))
+
 ## [0.5.0-beta.12](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.11...v0.5.0-beta.12) (2020-04-20)
 
 ### Features
