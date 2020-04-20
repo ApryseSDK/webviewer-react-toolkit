@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.14](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.13...v0.5.0-beta.14) (2020-04-20)
+
+### Features
+
+- **Thumbnail:** white background color on thumbnail image ([fbb8366](https://github.com/PDFTron/webviewer-react-toolkit/commit/fbb83669c254f30ba0e080a54949d35629965af9))
+
 ## [0.5.0-beta.13](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.12...v0.5.0-beta.13) (2020-04-20)
 
 ### Features
