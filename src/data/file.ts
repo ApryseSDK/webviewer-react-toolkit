@@ -1,4 +1,12 @@
-import { blobToDocument, documentToBlob, getExtension, getRotatedDocument, getStringId, getThumbnail } from '../utils';
+import {
+  blobToDocument,
+  documentToBlob,
+  getExtension,
+  getRotatedDocument,
+  getStringId,
+  getThumbnail,
+  globalLicense,
+} from '../utils';
 import { FuturableOrLazy } from './futurable';
 import { MemoizedPromise } from './memoizedPromise';
 
@@ -35,6 +43,12 @@ export interface FileDetails {
    * Thumbnail data URL string, or function to get it.
    */
   thumbnail?: MemoizedPromise<string> | FuturableOrLazy<string>;
+  /**
+   * Set the WebViewer license key for only this file. If you wish to set for
+   * all files, use the static `File.setGlobalLicense` method. This local
+   * license will take priority over the global license.
+   */
+  license?: string;
 }
 
 export interface FileLike {
@@ -81,6 +95,7 @@ export class File implements FileLike {
   private _thumbnail: MemoizedPromise<string>;
   private _freezeThumbnail: boolean;
   private _subscribers: FileEventListenersObj;
+  private _license?: string;
 
   /**
    * Initialize the `File`.
@@ -88,7 +103,7 @@ export class File implements FileLike {
    * this `File` with.
    */
   constructor(fileDetails: FileDetails) {
-    const { name, id, originalName, extension, fileObj, documentObj, thumbnail } = fileDetails;
+    const { name, id, originalName, extension, fileObj, documentObj, thumbnail, license } = fileDetails;
 
     if (!fileObj && !documentObj) {
       throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');
@@ -106,6 +121,17 @@ export class File implements FileLike {
     this._freezeThumbnail = false;
 
     this._subscribers = {};
+
+    this._license = license;
+  }
+
+  /**
+   * Set the license key in order to use full WebViewer features. This only
+   * needs to be done once, and will be used globally by all files.
+   * @param license The license key for WebViewer.
+   */
+  static setGlobalLicense(license: string) {
+    globalLicense.set(license);
   }
 
   /** A unique ID generated for the file. */
@@ -231,7 +257,7 @@ export class File implements FileLike {
       originalName: this.originalName,
       extension: this.extension,
       ...rest,
-      documentObj: documentObj || blobToDocument(documentToBlob(this.documentObj.get()), this.extension),
+      documentObj: documentObj || blobToDocument(documentToBlob(this.documentObj.get()), this.extension, this._license),
     });
   }
 
@@ -283,6 +309,6 @@ export class File implements FileLike {
 
   /** Generate a document object from file object and extension. */
   private _generateDocumentObj = () => {
-    return blobToDocument(this.fileObj.get(), this.extension);
+    return blobToDocument(this.fileObj.get(), this.extension, this._license);
   };
 }

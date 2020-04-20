@@ -1,6 +1,19 @@
 import { Futurable } from '../data';
 import { THUMBNAIL_WIDTH } from './constantUtils';
 
+export const globalLicense = (() => {
+  let l: string | undefined = undefined;
+
+  return {
+    set(newLicense: string) {
+      l = newLicense;
+    },
+    get() {
+      return l;
+    },
+  };
+})();
+
 /**
  * Convert a CoreControls Document into a Blob.
  * @param documentObj A CoreControls Document, or promise to get it.
@@ -16,13 +29,16 @@ export async function documentToBlob(documentObj: Futurable<CoreControls.Documen
  * Convert a Blob and extension into a CoreControls Document.
  * @param blob A Blob, or promise to get it.
  * @param extension The file extension of the provided Blob.
+ * @param l License key. If not provided, will try to use global license.
  */
-export async function blobToDocument(blob: Futurable<Blob>, extension: string): Promise<CoreControls.Document> {
-  // @ts-ignore no typing for `l` method.
-  const l = window.WebViewer?.l?.();
+export async function blobToDocument(
+  blob: Futurable<Blob>,
+  extension: string,
+  l?: string,
+): Promise<CoreControls.Document> {
   const coreControls = window.CoreControls;
   const fetchedBlob = await blob;
-  return await coreControls.createDocument(fetchedBlob, { extension, l });
+  return await coreControls.createDocument(fetchedBlob, { extension, l: l || globalLicense.get() });
 }
 
 /**
