@@ -92,6 +92,10 @@ $thumbnail-border-size: 2px;
     flex: 1 1 auto;
     pointer-events: none;
 
+    img {
+      background-color: white;
+    }
+
     img,
     .ui__thumbnail__image__skeleton {
       border: 1px solid $color-blue-gray-1;
