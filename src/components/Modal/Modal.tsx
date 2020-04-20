@@ -1,5 +1,15 @@
 import classnames from 'classnames';
-import React, { AriaAttributes, FC, HTMLAttributes, MouseEvent, ReactNode, useEffect, useMemo } from 'react';
+import React, {
+  AriaAttributes,
+  FC,
+  HTMLAttributes,
+  MouseEvent,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useCallback,
+  MouseEventHandler,
+} from 'react';
 import { useUnmountDelay } from '../../hooks';
 import { getStringId } from '../../utils';
 import { ButtonGroup } from '../ButtonGroup';
@@ -103,6 +113,15 @@ export const Modal: FC<ModalProps> = ({
 
   const backgroundIsButton = !!(open && closeOnBackgroundClick && onClose);
 
+  const handleBackgroundClick = useCallback<MouseEventHandler<HTMLDivElement>>(
+    event => {
+      if (!backgroundIsButton) return;
+      if (event.currentTarget !== event.target) return;
+      onClose?.(event);
+    },
+    [backgroundIsButton, onClose],
+  );
+
   const modalWrapperClass = classnames(
     'ui__base ui__modal__wrapper',
     {
@@ -123,7 +142,7 @@ export const Modal: FC<ModalProps> = ({
       <div
         role={backgroundIsButton ? 'button' : undefined}
         className={modalWrapperClass}
-        onClick={backgroundIsButton ? onClose : undefined}
+        onClick={handleBackgroundClick}
       >
         {noUnmount || mounted ? (
           <div className="ui__modal__paddingFix">
