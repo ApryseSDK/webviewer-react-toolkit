@@ -42,6 +42,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
 
     // On.
+    'no-empty': ['error', { allowEmptyCatch: true }],
     'prefer-const': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',

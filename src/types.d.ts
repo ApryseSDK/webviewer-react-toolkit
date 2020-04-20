@@ -1,18 +1,9 @@
-/* eslint-disable */
-
 /**
  * The namespace for anything to do with PDF actions and action dispatch.
  * Actions can be defined by providing a JavaScript object that has the desired properties, and a name property defining the action subtype it represents. See documentation for specific action types for allowable properties.
  * @namespace Actions
  */
 declare namespace Actions {
-  /**
-   * Create an action.
-   * @class A generic action.
-   * @memberof Actions
-   * @param {?object} options A map of properties to set on the Action
-   * @property {string} name Get the action's name.
-   */
   class Action {
     constructor(options: any);
     /**
@@ -32,20 +23,6 @@ declare namespace Actions {
      */
     name: string;
   }
-  /**
-   * Creates a destination object.
-   * @class A PDF Destination object, representing a location and fitting strategy.
-   * @memberof Actions
-   * @param {?object} options A map of properties to initialize on the Dest object
-   * @property {number} page Gets and sets the 1-based page number to go to.
-   * @property {string} fit Gets the fit style (One of XYZ, FitBH, FitH, FitBV, FitV, FitR, Fit)
-   * @property {(number|undefined)} top Gets the top of the destination rectangle
-   * @property {(number|undefined)} left Gets the left hand side of the destination rectangle
-   * @property {(number|undefined)} bottom Gets the bottom of the destination rectangle
-   * @property {(number|undefined)} right Gets the right hand side of the destination rectangle
-   * @property {(number|undefined)} zoom Gets the zoom at which to view the destination
-   * @property {(string|undefined)} name Gets the name of the destination
-   */
   class Dest {
     constructor(options: any);
     /**
@@ -53,7 +30,7 @@ declare namespace Actions {
      */
     page: number;
     /**
-     * Gets the fit style (One of XYZ, FitBH, FitH, FitBV, FitV, FitR, Fit)
+     * Gets the fit style (One of XYZ, FitBH, FitH, FitBV, FitV, FitR, FitB, Fit)
      */
     fit: string;
     /**
@@ -88,14 +65,6 @@ declare namespace Actions {
    * @mixin
    */
   interface Dispatcher {}
-  /**
-   * Creates a GoTo action.
-   * @class A GoTo Action. Navigates to a specific page of the document with various fit options.
-   * @memberof Actions
-   * @augments Actions.Action
-   * @param {?object} options A map of properties to set on the Action.
-   * @property {Actions.Dest} dest Gets the destination object.
-   */
   class GoTo extends Actions.Action {
     constructor(options: any);
     /**
@@ -115,16 +84,6 @@ declare namespace Actions {
      */
     dest: Actions.Dest;
   }
-  /**
-   * Creates a GoToR action.
-   * @class A GoToR Action. Navigates to a destination in another document.
-   * @memberof Actions
-   * @augments Actions.Action
-   * @param {?object} options A map of properties to set on the Action.
-   * @property {Actions.Dest} dest Gets the destination object.
-   * @property {string} filename Gets the original filename of the remote document.
-   * @property {boolean} newWindow Gets whether the document should be opened in a new window or not.
-   */
   class GoToR extends Actions.Action {
     constructor(options: any);
     /**
@@ -185,14 +144,6 @@ declare namespace Actions {
      */
     hide: boolean;
   }
-  /**
-   * Creates a JavaScript action.
-   * @class A JavaScript action.
-   * @memberof Actions
-   * @augments Actions.Action
-   * @param {?object} options A map of properties to set on the Action
-   * @property {string} javascript The JavaScript string to execute when the action is triggered
-   */
   class JavaScript extends Actions.Action {
     constructor(options: any);
     /**
@@ -212,14 +163,6 @@ declare namespace Actions {
      */
     javascript: string;
   }
-  /**
-   * Creates a named action.
-   * @class A named action (currently one of NextPage, PrevPage, FirstPage, LastPage)
-   * @memberof Actions
-   * @augments Actions.Action
-   * @param {?object} options A map of properties to set on the Action
-   * @property {string} action The name of the action to perform.
-   */
   class Named extends Actions.Action {
     constructor(options: any);
     /**
@@ -239,15 +182,6 @@ declare namespace Actions {
      */
     action: string;
   }
-  /**
-   * Creates a reset-form action.
-   * @class An action that resets form fields to their default values.
-   * @memberof Actions
-   * @augments Actions.Action
-   * @param {?object} options A map of properties to set on the Action
-   * @property {Array<string>} fields The names of the fields on which the action should operate
-   * @property {boolean} exclude Whether the action should reset only the fields specified in fields, or all the fields except those.
-   */
   class ResetForm extends Actions.Action {
     constructor(options: any);
     /**
@@ -271,14 +205,6 @@ declare namespace Actions {
      */
     exclude: boolean;
   }
-  /**
-   * Creates an URI action.
-   * @class An URI Action.
-   * @memberof Actions
-   * @augments Actions.Action
-   * @param {?object} options A map of properties to set on the Action
-   * @property {string} uri The URI to launch when the action is triggered
-   */
   class URI extends Actions.Action {
     constructor(options: any);
     /**
@@ -435,10 +361,27 @@ declare namespace Annotations {
        */
       fieldChanged(field: Annotations.Forms.Field): void;
       /**
-       * Calls the specified callback for each of the fields in the document.
-       * @method Annotations.Forms.FieldManager#forEachField
-       * @param {function} callback The function that will be called for each field. The callback is passed the field object.
-       */
+             * Calls the specified callback for each of the root fields in the document.
+             *
+             * If there is a tree of form fields, then this will only iterate over root fields. Please use {@link Annotations.Forms.Field.children} and a tree traversal algorithm to traverse the fields. If you know the name of your field, you can use {@link Annotations.Forms.FieldManager.getField}.
+             * @method Annotations.Forms.FieldManager#forEachField
+             * @param {function} callback The function that will be called for each field. The callback is passed the field object.
+             * @example
+             * var stack = [];
+                     fieldManager.forEachField(function(field) {
+                     stack.push(field); // Push root fields
+                   });
+                     while (stack.length > 0) {
+                     var current = stack.pop();
+                     if (current.isTerminal()) {
+                       // Work with terminal/leaf fields
+                     }
+                     else {
+                       // Traverse children
+                       stack = stack.concat(current.children);
+                     }
+                   }
+             */
       forEachField(callback: (...params: any[]) => any): void;
       /**
        * Updates the function to be used for handling alert messages for field validation.
@@ -458,30 +401,46 @@ declare namespace Annotations {
      * @listens Annotations.Forms.Field#calculate
      * @listens Annotations.Forms.Field#commit
      *
-     * @param {!string} name The field's full name
-     * @param {?(Annotations.Forms.Field|object)} options The options with which to construct the field. If options is a Field, the constructor returns the existing object.
+     * @param {string} name The field's full name.
+     * @param {Annotations.Forms.Field|object} [options] The options with which to construct the field. If options is a Field, the constructor returns the existing object.
+     * @param {string} [options.type] The field's type. One of ('Tx', 'Btn', 'Ch' or 'Sig').
+     * @param {Array<Annotations.Forms.Field>} [options.children] The field's children.
+     * @param {Array<Annotations.WidgetAnnotation>} [options.widgets] The field's child widgets.
+     * @param {Annotations.Forms.FieldManager} [options.fieldManager] The field's field manager.
+     * @param {Annotations.Font} [options.font] The font that is used by the field.
+     * @param {number} [options.maxLen] The field's maximum length. -1 means infinite.
+     * @param {string} [options.tooltipName] The text to be displayed when hovering over the field and the userName property is not defined.
      *
-     * @property {object<string, Array<Actions.Action>>} [actions={}] Gets the field's actions.
+     * @property {string} type Returns the field's type. One of ('Tx', 'Btn', 'Ch' or 'Sig')
      * @property {Array<Annotations.Forms.Field>} [children=[]] The field's children
-     * @property {?(number|string)} [defaultValue=null] The field's default value
-     * @property {?(number|string)} [exportValue=null] The field's export value. Defaults to the field's value if not set.
+     * @property {Array<Annotations.WidgetAnnotation>} [widgets=[]] The field's child widgets
+     * @property {object<string, Array<Actions.Action>>} [actions={}] Gets the field's actions.
+     * @property {number|string} [defaultValue=null] The field's default value
+     * @property {number|string} [exportValue=null] The field's export value. Defaults to the field's value if not set.
      * @property {Annotations.WidgetFlags} [flags=new Annotations.WidgetFlags()] The field's flags object
      * @property {Annotations.Font} [font=new Annotations.Font()] Returns the field's associated font object
      * @property {boolean} [IsModified=false] Is field is modified?
      * @property {number} [maxLen=-1] The field's maximum length. -1 means infinite.
      * @property {string} name The full name of the field.
-     * @property {?Array<object>} [options=[]] The field's options (or permanently null if the field type does not support options).
-     * @property {string} options.value
-     * @property {string} options.displayValue
-     * @property {string} options.tooltipName The text to be displayed when hovering over the field
+     * @property {Array<object>} [options=[]] The field's options (or permanently null if the field type does not support options).
      * @property {string} [quadding='Left-justified'] Returns the field's quadding. (One of 'Left-justified', 'Right-justified', 'Centered')
-     * @property {string} type Returns the field's type. One of ('Tx', 'Btn', 'Ch' or 'Sig')
-     * @property {?(number|string)} [value=null] The field's value.
-     * @property {string} userName A short description string of the field. Displayed as tooltip text when the mouse cursor enters the field.
-     * @property {Array<Annotations.WidgetAnnotation>} [widgets=[]] The field's child widgets
+     * @property {number|string} [value=null] The field's value.
+     * @property {string} userName The text to be displayed when hovering over the field.
+     * @property {string} tooltipName The text to be displayed when hovering over the field and the userName property is not defined.
      */
     class Field implements Actions.Dispatcher {
-      constructor(name: string, options: Annotations.Forms.Field | any);
+      constructor(
+        name: string,
+        options?: {
+          type?: string;
+          children?: Annotations.Forms.Field[];
+          widgets?: Annotations.WidgetAnnotation[];
+          fieldManager?: Annotations.Forms.FieldManager;
+          font?: Annotations.Font;
+          maxLen?: number;
+          tooltipName?: string;
+        },
+      );
       /**
        * Set all field properties form the given object.
        * @method Annotations.Forms.Field#set
@@ -501,9 +460,9 @@ declare namespace Annotations {
        */
       setVisible(visible: boolean): void;
       /**
-       * Is this a terminal field? Currently, this checks for field children.
+       * Checks whether the current field is a terminal/leaf node (no children).
        * @method Annotations.Forms.Field#isTerminal
-       * @returns {boolean} Whether this field is terminal
+       * @returns {boolean} Whether this field is terminal/leaf node
        */
       isTerminal(): boolean;
       /**
@@ -523,15 +482,23 @@ declare namespace Annotations {
        */
       commit(event: any, value: string | number, widget: any): void;
       /**
+       * Returns the field's type. One of ('Tx', 'Btn', 'Ch' or 'Sig')
+       */
+      type: string;
+      /**
+       * The field's children
+       */
+      children?: Annotations.Forms.Field[];
+      /**
+       * The field's child widgets
+       */
+      widgets?: Annotations.WidgetAnnotation[];
+      /**
        * Gets the field's actions.
        */
       actions?: {
         [key: string]: Actions.Action[];
       };
-      /**
-       * The field's children
-       */
-      children?: Annotations.Forms.Field[];
       /**
        * The field's default value
        */
@@ -563,31 +530,23 @@ declare namespace Annotations {
       /**
        * The field's options (or permanently null if the field type does not support options).
        */
-      options?: {
-        value: string;
-        displayValue: string;
-        tooltipName: string;
-      };
+      options?: object[];
       /**
        * Returns the field's quadding. (One of 'Left-justified', 'Right-justified', 'Centered')
        */
       quadding?: string;
       /**
-       * Returns the field's type. One of ('Tx', 'Btn', 'Ch' or 'Sig')
-       */
-      type: string;
-      /**
        * The field's value.
        */
       value?: number | string;
       /**
-       * A short description string of the field. Displayed as tooltip text when the mouse cursor enters the field.
+       * The text to be displayed when hovering over the field.
        */
       userName: string;
       /**
-       * The field's child widgets
+       * The text to be displayed when hovering over the field and the userName property is not defined.
        */
-      widgets?: Annotations.WidgetAnnotation[];
+      tooltipName: string;
     }
   }
   /**
@@ -622,8 +581,10 @@ declare namespace Annotations {
    * @property {number} Width Gets or sets the width of the annotation
    * @property {number} X Gets or sets the annotation's x-axis position.
    * @property {number} Y Gets or sets the annotation's y-axis position.
+   * @property {number} Rotation Gets or sets the annotation's clockwise rotation in degrees. Valid values are 0, 90, 180 and 270. Only applies to Stamp, FreeText and Caret annotations.
    * @property {boolean} MaintainAspectRatio Gets or sets if the annotation maintains aspect ratio when being resized.
-   * @property {boolean} isClickableOutsideRect Gets or sets whether any parts of the annotation drawn outside of the rect are clickable
+   * @property {boolean} isClickableOutsideRect Gets or sets whether any parts of the annotation drawn outside of the rect are clickable.
+   * @property {string} ToolName The name of the tool that is used to create this annotation.
    */
   class Annotation {
     /**
@@ -783,7 +744,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -851,6 +813,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -975,98 +964,96 @@ declare namespace Annotations {
      */
     Y: number;
     /**
+     * Gets or sets the annotation's clockwise rotation in degrees. Valid values are 0, 90, 180 and 270. Only applies to Stamp, FreeText and Caret annotations.
+     */
+    Rotation: number;
+    /**
      * Gets or sets if the annotation maintains aspect ratio when being resized.
      */
     MaintainAspectRatio: boolean;
     /**
-     * Gets or sets whether any parts of the annotation drawn outside of the rect are clickable
+     * Gets or sets whether any parts of the annotation drawn outside of the rect are clickable.
      */
     isClickableOutsideRect: boolean;
+    /**
+     * The name of the tool that is used to create this annotation.
+     */
+    ToolName: string;
   }
   /**
-   * Creates a new ControlHandle with the specified dimensions.
-   * @class Represents a base class for control handles for selected annotations that can be moved.
-   * Control handles are typically used to resize an annotation or other operations that modify the annotation.
-   * @name Annotations.ControlHandle
-   * @param {number} x the x-coordinate of the upper-left point
-   * @param {number} y the y-coordinate of the upper-left point
-   * @param {number} width the width of the control handle
-   * @param {number} height the width of the control handle
+   * Creates a new instance of Border.
+   * @class Represents a class that contains border information for an annotation.
+   * @name Annotations.Border
+   * @param {object} options The initialization options, an object with properties color, width, style, cornerRadius
+   * @property {Annotations.Color} color The color of the border
+   * @property {number} width The width of the border
+   * @property {string} style The style of the border (possible types include: solid, bevelled, inset)
+   * @property {number} cornerRadius The corner radius size
    */
-  class ControlHandle {
-    constructor(x: number, y: number, width: number, height: number);
+  class Border {
+    constructor(options: any);
     /**
-     * Defines the width of all control handles. Default is 8.
-     * @name Annotations.ControlHandle#handleWidth
+     * The color of the border
      */
-    handleWidth: any;
+    color: Annotations.Color;
     /**
-     * Defines the height of all control handles. Default is 8.
-     * @name Annotations.ControlHandle#handleHeight
+     * The width of the border
      */
-    handleHeight: any;
+    width: number;
     /**
-     * Defines a padding for selection accuracy. Default is 1.
-     * Increase this value to make selection more forgiving.
-     * @name Annotations.ControlHandle#selectionAccuracyPadding
+     * The style of the border (possible types include: solid, bevelled, inset)
      */
-    selectionAccuracyPadding: any;
+    style: string;
     /**
-     * Determines if the provided point is a hit on the control handle.
-     * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
-     * @method Annotations.ControlHandle#testSelection
-     * @param {Annotations.Annotation} annotation the annotation
-     * @param {Annotations.Rect} selectionBox the selection rect
-     * @param {number} zoom the current zoom level of the document
-     * @param {number} x the x-coordinate of the point to test, in page coordinates
-     * @param {number} y the y-coordinate of the point to test, in page coordinates
-     * @returns {boolean} true if the provided point is a hit
+     * The corner radius size
      */
-    testSelection(
-      annotation: Annotations.Annotation,
-      selectionBox: Annotations.Rect,
-      zoom: number,
-      x: number,
-      y: number,
-    ): boolean;
+    cornerRadius: number;
+  }
+  /**
+   * Creates a new instance of Color.
+   * @class Represents a class that contains a color's RGB and alpha value.
+   * @name Annotations.Color
+   * @param {number} r the R (red) value (0-255)
+   * @param {number} g the G (green) value (0-255)
+   * @param {number} b the B (blue) value (0-255)
+   * @param {number} a the A (alpha) value (0-1.0)
+   * @property {number} R the R (red) value (0-255)
+   * @property {number} G the G (green) value (0-255)
+   * @property {number} B the B (blue) value (0-255)
+   * @property {number} A the A (alpha) value (0-1.0)
+   */
+  class Color {
+    constructor(r: number, g: number, b: number, a: number);
     /**
-     * Draws the control handle's appearance on the provided canvas context
-     * @method Annotations.ControlHandle#draw
-     * @param {CanvasRenderingContext2D} ctx the annotation canvas context
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {Annotations.Rect} selectionBox the selection rect
-     * @param {number} zoom the current zoom level of the document
+     * Outputs the current color as a CSS3 RGB color string.
+     * @method Annotations.Color#toString
+     * @example ex. "rgb(0,0,0)" or "rgba(0,255,0,0.5)"
+     * @returns {string} The CSS3 RGB color string.
+     * @override
      */
-    draw(
-      ctx: CanvasRenderingContext2D,
-      annotation: Annotations.Annotation,
-      selectionBox: Annotations.Rect,
-      zoom: number,
-    ): void;
+    toString(): string;
     /**
-     * The method invoked when a control handle is moved.
-     * Override the method to provide custom behavior to control handles.
-     * @method Annotations.ControlHandle#move
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {number} deltaX the change in x-coordinate
-     * @param {number} deltaY the change in y-coordinate
-     * @param {Annotations.Point} fromPoint the original page point (on mouse down)
-     * @param {Annotations.Point} toPoint the current page point
-     * @returns {boolean} return true if a redraw operation is necessary
+     * Returns the color as a hex string e.g. #FFFFFF
+     * @method Annotations.Color#toHexString
+     * @returns {string} The hex color string.
      */
-    move(
-      annotation: Annotations.Annotation,
-      deltaX: number,
-      deltaY: number,
-      fromPoint: Annotations.Point,
-      toPoint: Annotations.Point,
-    ): boolean;
+    toHexString(): string;
     /**
-     * Gets the dimensions of the control handle
-     * @method Annotations.ControlHandle#getDimensions
-     * @param {Annotations.Rect} selectionBox the selection rect
+     * the R (red) value (0-255)
      */
-    getDimensions(selectionBox: Annotations.Rect): void;
+    R: number;
+    /**
+     * the G (green) value (0-255)
+     */
+    G: number;
+    /**
+     * the B (blue) value (0-255)
+     */
+    B: number;
+    /**
+     * the A (alpha) value (0-1.0)
+     */
+    A: number;
   }
   /**
    * Creates a new box control handle
@@ -1128,202 +1115,6 @@ declare namespace Annotations {
       selectionBox: Annotations.Rect,
       zoom: number,
     ): void;
-    /**
-     * The method invoked when a control handle is moved.
-     * Override the method to provide custom behavior to control handles.
-     * @method Annotations.ControlHandle#move
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {number} deltaX the change in x-coordinate
-     * @param {number} deltaY the change in y-coordinate
-     * @param {Annotations.Point} fromPoint the original page point (on mouse down)
-     * @param {Annotations.Point} toPoint the current page point
-     * @returns {boolean} return true if a redraw operation is necessary
-     */
-    move(
-      annotation: Annotations.Annotation,
-      deltaX: number,
-      deltaY: number,
-      fromPoint: Annotations.Point,
-      toPoint: Annotations.Point,
-    ): boolean;
-    /**
-     * Gets the dimensions of the control handle
-     * @method Annotations.ControlHandle#getDimensions
-     * @param {Annotations.Rect} selectionBox the selection rect
-     */
-    getDimensions(selectionBox: Annotations.Rect): void;
-  }
-  /**
-   * Creates a path control handle.
-   * @class A control handle that manipulates path-based annotations ({@link Annotations.IPathAnnotation}) by moving the points in the path. The annotation must implement the getPath() method.
-   * @name Annotations.PathControlHandle
-   * @extends Annotations.ControlHandle
-   * @param {number} x the x coordinate of the point
-   * @param {number} y the y coordinate of the point
-   * @param {number} width the width of the handle
-   * @param {number} height the height of the handle
-   * @param {number} pathIndex the index of the point in the path array
-   */
-  class PathControlHandle extends Annotations.ControlHandle {
-    constructor(x: number, y: number, width: number, height: number, pathIndex: number);
-    /**
-     * Defines the width of all control handles. Default is 8.
-     * @name Annotations.ControlHandle#handleWidth
-     */
-    handleWidth: any;
-    /**
-     * Defines the height of all control handles. Default is 8.
-     * @name Annotations.ControlHandle#handleHeight
-     */
-    handleHeight: any;
-    /**
-     * Defines a padding for selection accuracy. Default is 1.
-     * Increase this value to make selection more forgiving.
-     * @name Annotations.ControlHandle#selectionAccuracyPadding
-     */
-    selectionAccuracyPadding: any;
-    /**
-     * Determines if the provided point is a hit on the control handle.
-     * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
-     * @method Annotations.ControlHandle#testSelection
-     * @param {Annotations.Annotation} annotation the annotation
-     * @param {Annotations.Rect} selectionBox the selection rect
-     * @param {number} zoom the current zoom level of the document
-     * @param {number} x the x-coordinate of the point to test, in page coordinates
-     * @param {number} y the y-coordinate of the point to test, in page coordinates
-     * @returns {boolean} true if the provided point is a hit
-     */
-    testSelection(
-      annotation: Annotations.Annotation,
-      selectionBox: Annotations.Rect,
-      zoom: number,
-      x: number,
-      y: number,
-    ): boolean;
-    /**
-     * Draws the control handle's appearance on the provided canvas context
-     * @method Annotations.ControlHandle#draw
-     * @param {CanvasRenderingContext2D} ctx the annotation canvas context
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {Annotations.Rect} selectionBox the selection rect
-     * @param {number} zoom the current zoom level of the document
-     */
-    draw(
-      ctx: CanvasRenderingContext2D,
-      annotation: Annotations.Annotation,
-      selectionBox: Annotations.Rect,
-      zoom: number,
-    ): void;
-    /**
-     * The method invoked when a control handle is moved.
-     * Override the method to provide custom behavior to control handles.
-     * @method Annotations.ControlHandle#move
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {number} deltaX the change in x-coordinate
-     * @param {number} deltaY the change in y-coordinate
-     * @param {Annotations.Point} fromPoint the original page point (on mouse down)
-     * @param {Annotations.Point} toPoint the current page point
-     * @returns {boolean} return true if a redraw operation is necessary
-     */
-    move(
-      annotation: Annotations.Annotation,
-      deltaX: number,
-      deltaY: number,
-      fromPoint: Annotations.Point,
-      toPoint: Annotations.Point,
-    ): boolean;
-    /**
-     * Gets the dimensions of the control handle
-     * @method Annotations.ControlHandle#getDimensions
-     * @param {Annotations.Rect} selectionBox the selection rect
-     */
-    getDimensions(selectionBox: Annotations.Rect): void;
-  }
-  /**
-   * Creates a polygon control handle.
-   * @class A control handle that manipulates path-based annotations ({@link Annotations.IPathAnnotation}) by moving the points in the path. The annotation must implement the getPath() method.
-   * @name Annotations.PolygonControlHandle
-   * @extends Annotations.PathControlHandle
-   * @param {number} x the x coordinate of the point
-   * @param {number} y the y coordinate of the point
-   * @param {number} width the width of the handle
-   * @param {number} height the height of the handle
-   * @param {number} pathIndex the index of the point in the path array
-   */
-  class PolygonControlHandle extends Annotations.PathControlHandle {
-    constructor(x: number, y: number, width: number, height: number, pathIndex: number);
-    /**
-     * Defines the width of all control handles. Default is 8.
-     * @name Annotations.ControlHandle#handleWidth
-     */
-    handleWidth: any;
-    /**
-     * Defines the height of all control handles. Default is 8.
-     * @name Annotations.ControlHandle#handleHeight
-     */
-    handleHeight: any;
-    /**
-     * Defines a padding for selection accuracy. Default is 1.
-     * Increase this value to make selection more forgiving.
-     * @name Annotations.ControlHandle#selectionAccuracyPadding
-     */
-    selectionAccuracyPadding: any;
-    /**
-     * Determines if the provided point is a hit on the control handle.
-     * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
-     * @method Annotations.ControlHandle#testSelection
-     * @param {Annotations.Annotation} annotation the annotation
-     * @param {Annotations.Rect} selectionBox the selection rect
-     * @param {number} zoom the current zoom level of the document
-     * @param {number} x the x-coordinate of the point to test, in page coordinates
-     * @param {number} y the y-coordinate of the point to test, in page coordinates
-     * @returns {boolean} true if the provided point is a hit
-     */
-    testSelection(
-      annotation: Annotations.Annotation,
-      selectionBox: Annotations.Rect,
-      zoom: number,
-      x: number,
-      y: number,
-    ): boolean;
-    /**
-     * Draws the control handle's appearance on the provided canvas context
-     * @method Annotations.ControlHandle#draw
-     * @param {CanvasRenderingContext2D} ctx the annotation canvas context
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {Annotations.Rect} selectionBox the selection rect
-     * @param {number} zoom the current zoom level of the document
-     */
-    draw(
-      ctx: CanvasRenderingContext2D,
-      annotation: Annotations.Annotation,
-      selectionBox: Annotations.Rect,
-      zoom: number,
-    ): void;
-    /**
-     * The method invoked when a control handle is moved.
-     * Override the method to provide custom behavior to control handles.
-     * @method Annotations.ControlHandle#move
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {number} deltaX the change in x-coordinate
-     * @param {number} deltaY the change in y-coordinate
-     * @param {Annotations.Point} fromPoint the original page point (on mouse down)
-     * @param {Annotations.Point} toPoint the current page point
-     * @returns {boolean} return true if a redraw operation is necessary
-     */
-    move(
-      annotation: Annotations.Annotation,
-      deltaX: number,
-      deltaY: number,
-      fromPoint: Annotations.Point,
-      toPoint: Annotations.Point,
-    ): boolean;
-    /**
-     * Gets the dimensions of the control handle
-     * @method Annotations.ControlHandle#getDimensions
-     * @param {Annotations.Rect} selectionBox the selection rect
-     */
-    getDimensions(selectionBox: Annotations.Rect): void;
   }
   /**
    * Creates a callout control handle.
@@ -1386,30 +1177,67 @@ declare namespace Annotations {
       selectionBox: Annotations.Rect,
       zoom: number,
     ): void;
+  }
+  /**
+   * Creates a new ControlHandle with the specified dimensions.
+   * @class Represents a base class for control handles for selected annotations that can be moved.
+   * Control handles are typically used to resize an annotation or other operations that modify the annotation.
+   * @name Annotations.ControlHandle
+   * @param {number} x the x-coordinate of the upper-left point
+   * @param {number} y the y-coordinate of the upper-left point
+   * @param {number} width the width of the control handle
+   * @param {number} height the width of the control handle
+   */
+  class ControlHandle {
+    constructor(x: number, y: number, width: number, height: number);
     /**
-     * The method invoked when a control handle is moved.
-     * Override the method to provide custom behavior to control handles.
-     * @method Annotations.ControlHandle#move
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {number} deltaX the change in x-coordinate
-     * @param {number} deltaY the change in y-coordinate
-     * @param {Annotations.Point} fromPoint the original page point (on mouse down)
-     * @param {Annotations.Point} toPoint the current page point
-     * @returns {boolean} return true if a redraw operation is necessary
+     * Defines the width of all control handles. Default is 8.
+     * @name Annotations.ControlHandle#handleWidth
      */
-    move(
+    handleWidth: any;
+    /**
+     * Defines the height of all control handles. Default is 8.
+     * @name Annotations.ControlHandle#handleHeight
+     */
+    handleHeight: any;
+    /**
+     * Defines a padding for selection accuracy. Default is 1.
+     * Increase this value to make selection more forgiving.
+     * @name Annotations.ControlHandle#selectionAccuracyPadding
+     */
+    selectionAccuracyPadding: any;
+    /**
+     * Determines if the provided point is a hit on the control handle.
+     * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
+     * @method Annotations.ControlHandle#testSelection
+     * @param {Annotations.Annotation} annotation the annotation
+     * @param {Annotations.Rect} selectionBox the selection rect
+     * @param {number} zoom the current zoom level of the document
+     * @param {number} x the x-coordinate of the point to test, in page coordinates
+     * @param {number} y the y-coordinate of the point to test, in page coordinates
+     * @returns {boolean} true if the provided point is a hit
+     */
+    testSelection(
       annotation: Annotations.Annotation,
-      deltaX: number,
-      deltaY: number,
-      fromPoint: Annotations.Point,
-      toPoint: Annotations.Point,
+      selectionBox: Annotations.Rect,
+      zoom: number,
+      x: number,
+      y: number,
     ): boolean;
     /**
-     * Gets the dimensions of the control handle
-     * @method Annotations.ControlHandle#getDimensions
+     * Draws the control handle's appearance on the provided canvas context
+     * @method Annotations.ControlHandle#draw
+     * @param {CanvasRenderingContext2D} ctx the annotation canvas context
+     * @param {Annotations.Annotation} annotation the annotation to modify
      * @param {Annotations.Rect} selectionBox the selection rect
+     * @param {number} zoom the current zoom level of the document
      */
-    getDimensions(selectionBox: Annotations.Rect): void;
+    draw(
+      ctx: CanvasRenderingContext2D,
+      annotation: Annotations.Annotation,
+      selectionBox: Annotations.Rect,
+      zoom: number,
+    ): void;
   }
   /**
    * Creates a line control handle.
@@ -1472,40 +1300,1082 @@ declare namespace Annotations {
       selectionBox: Annotations.Rect,
       zoom: number,
     ): void;
-    /**
-     * The method invoked when a control handle is moved.
-     * Override the method to provide custom behavior to control handles.
-     * @method Annotations.ControlHandle#move
-     * @param {Annotations.Annotation} annotation the annotation to modify
-     * @param {number} deltaX the change in x-coordinate
-     * @param {number} deltaY the change in y-coordinate
-     * @param {Annotations.Point} fromPoint the original page point (on mouse down)
-     * @param {Annotations.Point} toPoint the current page point
-     * @returns {boolean} return true if a redraw operation is necessary
-     */
-    move(
-      annotation: Annotations.Annotation,
-      deltaX: number,
-      deltaY: number,
-      fromPoint: Annotations.Point,
-      toPoint: Annotations.Point,
-    ): boolean;
-    /**
-     * Gets the dimensions of the control handle
-     * @method Annotations.ControlHandle#getDimensions
-     * @param {Annotations.Rect} selectionBox the selection rect
-     */
-    getDimensions(selectionBox: Annotations.Rect): void;
   }
   /**
-   * Create a new selection model.
-   * @class Represents a class that contains information about how an annotation should behave when selected.
-   * @name Annotations.SelectionModel
-   * @param {Annotations.Annotation} annotation the annotation selected
-   * @param {boolean} canModify modification of the annotation is allowed
-   * @param {boolean} isSelected the annotation is already selected
+   * Creates a path control handle.
+   * @class A control handle that manipulates path-based annotations ({@link Annotations.IPathAnnotation}) by moving the points in the path. The annotation must implement the getPath() method.
+   * @name Annotations.PathControlHandle
+   * @extends Annotations.ControlHandle
+   * @param {number} x the x coordinate of the point
+   * @param {number} y the y coordinate of the point
+   * @param {number} width the width of the handle
+   * @param {number} height the height of the handle
+   * @param {number} pathIndex the index of the point in the path array
    */
-  class SelectionModel {
+  class PathControlHandle extends Annotations.ControlHandle {
+    constructor(x: number, y: number, width: number, height: number, pathIndex: number);
+    /**
+     * Defines the width of all control handles. Default is 8.
+     * @name Annotations.ControlHandle#handleWidth
+     */
+    handleWidth: any;
+    /**
+     * Defines the height of all control handles. Default is 8.
+     * @name Annotations.ControlHandle#handleHeight
+     */
+    handleHeight: any;
+    /**
+     * Defines a padding for selection accuracy. Default is 1.
+     * Increase this value to make selection more forgiving.
+     * @name Annotations.ControlHandle#selectionAccuracyPadding
+     */
+    selectionAccuracyPadding: any;
+    /**
+     * Determines if the provided point is a hit on the control handle.
+     * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
+     * @method Annotations.ControlHandle#testSelection
+     * @param {Annotations.Annotation} annotation the annotation
+     * @param {Annotations.Rect} selectionBox the selection rect
+     * @param {number} zoom the current zoom level of the document
+     * @param {number} x the x-coordinate of the point to test, in page coordinates
+     * @param {number} y the y-coordinate of the point to test, in page coordinates
+     * @returns {boolean} true if the provided point is a hit
+     */
+    testSelection(
+      annotation: Annotations.Annotation,
+      selectionBox: Annotations.Rect,
+      zoom: number,
+      x: number,
+      y: number,
+    ): boolean;
+    /**
+     * Draws the control handle's appearance on the provided canvas context
+     * @method Annotations.ControlHandle#draw
+     * @param {CanvasRenderingContext2D} ctx the annotation canvas context
+     * @param {Annotations.Annotation} annotation the annotation to modify
+     * @param {Annotations.Rect} selectionBox the selection rect
+     * @param {number} zoom the current zoom level of the document
+     */
+    draw(
+      ctx: CanvasRenderingContext2D,
+      annotation: Annotations.Annotation,
+      selectionBox: Annotations.Rect,
+      zoom: number,
+    ): void;
+  }
+  /**
+   * Creates a polygon control handle.
+   * @class A control handle that manipulates path-based annotations ({@link Annotations.IPathAnnotation}) by moving the points in the path. The annotation must implement the getPath() method.
+   * @name Annotations.PolygonControlHandle
+   * @extends Annotations.PathControlHandle
+   * @param {number} x the x coordinate of the point
+   * @param {number} y the y coordinate of the point
+   * @param {number} width the width of the handle
+   * @param {number} height the height of the handle
+   * @param {number} pathIndex the index of the point in the path array
+   */
+  class PolygonControlHandle extends Annotations.PathControlHandle {
+    constructor(x: number, y: number, width: number, height: number, pathIndex: number);
+    /**
+     * Defines the width of all control handles. Default is 8.
+     * @name Annotations.ControlHandle#handleWidth
+     */
+    handleWidth: any;
+    /**
+     * Defines the height of all control handles. Default is 8.
+     * @name Annotations.ControlHandle#handleHeight
+     */
+    handleHeight: any;
+    /**
+     * Defines a padding for selection accuracy. Default is 1.
+     * Increase this value to make selection more forgiving.
+     * @name Annotations.ControlHandle#selectionAccuracyPadding
+     */
+    selectionAccuracyPadding: any;
+    /**
+     * Determines if the provided point is a hit on the control handle.
+     * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
+     * @method Annotations.ControlHandle#testSelection
+     * @param {Annotations.Annotation} annotation the annotation
+     * @param {Annotations.Rect} selectionBox the selection rect
+     * @param {number} zoom the current zoom level of the document
+     * @param {number} x the x-coordinate of the point to test, in page coordinates
+     * @param {number} y the y-coordinate of the point to test, in page coordinates
+     * @returns {boolean} true if the provided point is a hit
+     */
+    testSelection(
+      annotation: Annotations.Annotation,
+      selectionBox: Annotations.Rect,
+      zoom: number,
+      x: number,
+      y: number,
+    ): boolean;
+    /**
+     * Draws the control handle's appearance on the provided canvas context
+     * @method Annotations.ControlHandle#draw
+     * @param {CanvasRenderingContext2D} ctx the annotation canvas context
+     * @param {Annotations.Annotation} annotation the annotation to modify
+     * @param {Annotations.Rect} selectionBox the selection rect
+     * @param {number} zoom the current zoom level of the document
+     */
+    draw(
+      ctx: CanvasRenderingContext2D,
+      annotation: Annotations.Annotation,
+      selectionBox: Annotations.Rect,
+      zoom: number,
+    ): void;
+  }
+  /**
+   * @class Contains the tools to create and manipulate form field data
+   * @name Annotations.Forms
+   * @property {function} getUsableInputWidth A function to set the allowable width for fields with "scroll long text" disabled.
+   * It takes the width of the field and it should return a number which is the new allowable width
+   */
+  class Forms {
+    /**
+     * A function to set the allowable width for fields with "scroll long text" disabled.
+     * It takes the width of the field and it should return a number which is the new allowable width
+     */
+    getUsableInputWidth: (...params: any[]) => any;
+  }
+  /**
+   * A class representing a PDF font.
+   * @class Annotations.Font
+   *
+   * @param {object} [params] An object containing parameters to be initialised on the font.
+   * @property {string} name The font's name
+   * @property {number} [size=0] The font's size
+   * @property {string} [type='Type1'] The font's type (One of CIDType0, CIDType2, MMType1, TrueType, Type0, Type1, Type3)
+   * @property {(Annotations.Color|array|object)} [strokeColor=new Annotations.Color([0,0,0])] The font's stroke color
+   * @property {(Annotations.Color|array|object)} [fillColor=new Annotations.Color([0,0,0])] The font's fill color
+   * @property {number} calculatedSize The calculated size of the font if size is 0
+   */
+  class Font {
+    constructor(params?: any);
+    /**
+     * Set all properties on Font using a Font or a Font-like object.
+     * @method Annotations.Font#set
+     * @param {(Annotations.Font|object)} options The options to set on the Font
+     */
+    set(options: Annotations.Font | any): void;
+    /**
+     * Is the font solid black?
+     * @method Annotations.Font#isBlack
+     * @returns {boolean} Whether the font is solid black
+     */
+    isBlack(): boolean;
+    /**
+     * Convert the font to a CSS object like one would pass to jQuery.css().
+     * @method Annotations.Font#toCSS
+     * @param {number} zoom
+     * @returns {object} An object appropriate to pass to jQuery.css()
+     */
+    toCSS(zoom: number): any;
+    /**
+     * The font's name
+     */
+    name: string;
+    /**
+     * The font's size
+     */
+    size?: number;
+    /**
+     * The font's type (One of CIDType0, CIDType2, MMType1, TrueType, Type0, Type1, Type3)
+     */
+    type?: string;
+    /**
+     * The font's stroke color
+     */
+    strokeColor?: Annotations.Color | any[] | any;
+    /**
+     * The font's fill color
+     */
+    fillColor?: Annotations.Color | any[] | any;
+    /**
+     * The calculated size of the font if size is 0
+     */
+    calculatedSize: number;
+  }
+  interface HTMLAnnotation extends Actions.Dispatcher {}
+  /**
+   * An common base class annotation that displays its contents using HTML5 instead of via Canvas.
+   * @params {object} options A map of parameters to set on the new HTMLAnnotation.
+   * @class Annotations.HTMLAnnotation
+   * @augments Annotations.Annotation
+   * @mixes Actions.Dispatcher
+   * @property {{x1: number, y1: number, x2: number, y2: number}} rect The annotation's rectangle
+   * @property {?Element} element Gets the annotation's outer display element, if it exists
+   * @property {?Element} innerElement Gets the annotation's inner UI element, if it exists
+   * @property {boolean} [hidden=false] Gets and sets whether the annotation is hidden
+   * @property {(Annotations.Color|object|Array<any>)} [color=new Annotations.Color()] Gets and sets the annotation's color (any type that can be used to construct Annotations.Color)
+   * @property {(Annotations.Border|object)} [border=new Annotations.Border()] Gets and sets the annotation's border (is a border, or a map of border properties)
+   * @property {(Annotations.Color|object|Array<any>)} [backgroundColor=new Annotations.Color()] Gets and sets the annotation's background color
+   * @property {{string, Array<Actions.Action>}} [actions={}] Gets the actions attached to this annotation as an object with triggers as keys and arrays of actions as values
+   * @property {number} [rotation=0] Gets and sets the annotation's rotation (must be one of 0, 90, 180, 270)
+   */
+  class HTMLAnnotation extends Annotations.Annotation implements Actions.Dispatcher {
+    /**
+     * Draws the annotation on the provide canvas context, relative to the page.
+     * The point (0,0) coresponds to the top left corner of the page.
+     * @method Annotations.Annotation#draw
+     * @param {CanvasRenderingContext2D} ctx The canvas context prepared to be drawn on.
+     * @param {object} pageMatrix The page matrix for the page that the annotation is on.
+     * You can get this object by calling getPageMatrix on the document object.
+     */
+    draw(ctx: CanvasRenderingContext2D, pageMatrix: any): void;
+    /**
+     * Whether the annotation is visible on the document or not.
+     * If the Hidden or NoView flags are set, or if the annotation is a reply to another annotation then it won't be visible.
+     * @method Annotations.Annotation#isVisible
+     * @return {boolean} Whether the annotation is visible on the document or not
+     */
+    isVisible(): boolean;
+    /**
+     * Sets the size and location of the annotation's bounding rectangle.
+     * Use this method instead of resize when only the x, y, width and height needs to be modified.
+     * Use setRectWithNormalization instead of setRect if you want to reverse
+     * any wrong-way-round coordinates instead of ignoring them.
+     * @method Annotations.Annotation#setRectWithNormalization
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    setRectWithNormalization(rect: Annotations.Rect): void;
+    /**
+     * Sets the size and location of the annotation's bounding rectangle.
+     * Use this method instead of resize when only the x, y, width and height needs to be modified.
+     * Beware: this method ignores coordinates if they are the wrong way around.
+     * (It hasn't been fixed for reasons of maintaining backward compatibility.
+     * use setRectWithNormalization instead if you want it to reverse the
+     * wrong-way-round coordinates instead of ignoring them.)
+     * @method Annotations.Annotation#setRect
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    setRect(rect: Annotations.Rect): void;
+    /**
+     * Adjusts the annotation's bounding rectangle to take into account changes to the annotation
+     * e.g. stroke thickness, start/end points, etc
+     * @method Annotations.Annotation#adjustRect
+     */
+    adjustRect(): void;
+    /**
+     * Resize the annotation based on a new given {@link Annotations.Rect}.
+     * Use this method instead of setRect when internal properties (other than x, y, width and height) need to be modified on move/resize.
+     * @method Annotations.Annotation#resize
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    resize(rect: Annotations.Rect): void;
+    /**
+     * Gets the x position measured in page coordinates of an annotation.
+     * @method Annotations.Annotation#getX
+     * @return {number} the x position
+     */
+    getX(): number;
+    /**
+     * Sets the x position measured in page coordinates of an annotation.
+     * @method Annotations.Annotation#setX
+     * @param {number} value the x position
+     */
+    setX(value: number): void;
+    /**
+     * Gets the y position measured in page coordinates.
+     * @method Annotations.Annotation#getY
+     * @return {number}
+     */
+    getY(): number;
+    /**
+     * Sets the y position measured in page coordinates.
+     * @method Annotations.Annotation#setY
+     * @param {number} value the y position
+     */
+    setY(value: number): void;
+    /**
+     * Gets the width of the annotation.
+     * @method Annotations.Annotation#getWidth
+     * @return {number} the width of the annotation.
+     */
+    getWidth(): number;
+    /**
+     * Sets the width of the annotation.
+     * @method Annotations.Annotation#setWidth
+     * @param {number} value the width of the annotation.
+     */
+    setWidth(value: number): void;
+    /**
+     * Gets the height of the annotation.
+     * @method Annotations.Annotation#getHeight
+     * @return {number} the height of the annotation.
+     */
+    getHeight(): number;
+    /**
+     * Sets the height of the annotation.
+     * @method Annotations.Annotation#setHeight
+     * @param {number} value the height of the annotation.
+     */
+    setHeight(value: number): void;
+    /**
+     * Get annotation bounding rectangle
+     * @method Annotations.Annotation#getRect
+     * @returns {Annotations.Rect}
+     */
+    getRect(): Annotations.Rect;
+    /**
+     * Gets the padding that will be applied by default on the annotation's rectangle.
+     * @method Annotations.Annotation#getRectPadding
+     * @returns {number} The amount of padding
+     */
+    getRectPadding(): number;
+    /**
+     * Gets the page number of the annotation.
+     * Note: page number starts from 1.
+     * @method Annotations.Annotation#getPageNumber
+     * @returns {number} The annotation's page number
+     */
+    getPageNumber(): number;
+    /**
+     * Sets the page number of the annotation.
+     * Note: page numbers start from 1.
+     * @method Annotations.Annotation#setPageNumber
+     * @param {number} value the page number to be set
+     */
+    setPageNumber(value: number): void;
+    /**
+     * Gets the leftmost x position measured in page coordinates.
+     * @method Annotations.Annotation#getLeft
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getLeft(): number;
+    /**
+     * Gets the rightmost x position measured in page coordinates.
+     * @method Annotations.Annotation#getRight
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getRight(): number;
+    /**
+     * Gets the topmost y position measured in page coordinates.
+     * @method Annotations.Annotation#getTop
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getTop(): number;
+    /**
+     * Gets the bottommost y position measured in page coordinates.
+     * @method Annotations.Annotation#getBottom
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getBottom(): number;
+    /**
+     * Sets the custom data associated with the specified key.
+     * @method Annotations.Annotation#setCustomData
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
+     * @param {*} value The custom data to store
+     */
+    setCustomData(key: string, value: any): void;
+    /**
+     * Returns custom data associated with the given key.
+     * @method Annotations.Annotation#getCustomData
+     * @param {string} key The key for which to retrieve the associated data.
+     * @return {*} value The custom data. If no data is available an empty string is returned.
+     */
+    getCustomData(key: string): any;
+    /**
+     * Deletes custom data associated with the given key.
+     * @method Annotations.Annotation#deleteCustomData
+     * @param {string} key The key for which to delete the associated data.
+     */
+    deleteCustomData(key: string): void;
+    /**
+     * Gets the text content for the annotation.
+     * Contents may be displayed in an annotation's popup or directly on the page (in the case of FreeTextAnnotation).
+     * @method Annotations.Annotation#getContents
+     * @return {string} the text content for the annotation.
+     */
+    getContents(): string;
+    /**
+     * Set the text content for the annotation.
+     * Note that this will not refresh the text in the UI.
+     * @method Annotations.Annotation#setContents
+     * @param {string} value the text content to be set
+     */
+    setContents(value: string): void;
+    /**
+     * Gets the list of replies to this annotation.
+     * @method Annotations.Annotation#getReplies
+     * @return {Array<Annotations.Annotation>} The list of replies
+     */
+    getReplies(): Annotations.Annotation[];
+    /**
+     * Gets the list of group children to this annotation.
+     * @method Annotations.Annotation#getGroupedChildren
+     * @return {Array<Annotations.Annotation>} The list of group children
+     */
+    getGroupedChildren(): Annotations.Annotation[];
+    /**
+     * Gets the status of the annotation, and returns an empty string if no status set.
+     * @method Annotations.Annotation#getStatus
+     * @return {string} The last status update.
+     */
+    getStatus(): string;
+    /**
+     * Gets whether the annotation is a reply to another annotation.
+     * @method Annotations.Annotation#isReply
+     * @return {boolean} Returns true if it does reply to another annotation, false otherwise.
+     */
+    isReply(): boolean;
+    /**
+     * Gets whether the annotation is a child of a group
+     * @method Annotations.Annotation#isGrouped
+     * @return {boolean} Returns true if the annotation is a child of a group, false otherwise.
+     */
+    isGrouped(): boolean;
+    /**
+     * Resolves when all required resources have finished loading.
+     * Currently only applicable to stamp annotations that use images.
+     * @method Annotations.Annotation#resourcesLoaded
+     * @return {Promise<any>} A promise that resolves when the resources have finished loading
+     */
+    resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
+    /**
+     * Serialize the annotation to an xml element
+     * @method Annotations.Annotation#serialize
+     * @param {Element} element an xml element representing the annotation
+     * @param {object} pageMatrix the page matrix used to convert XOD coordinates to PDF coordinates.
+     * @returns {Element} the resulting xml element representing the annotation
+     */
+    serialize(element: Element, pageMatrix: any): Element;
+    /**
+     * Deserializes the xml element into the annotation
+     * @method Annotations.Annotation#deserialize
+     * @param {Element} element an xml element representing the annotation
+     * @param {object} pageMatrix the page matrix used to convert PDF coordinates to XOD coordinates.
+     */
+    deserialize(element: Element, pageMatrix: any): void;
+    /**
+     * The annotation's rectangle
+     */
+    rect: any;
+    /**
+     * Gets the annotation's outer display element, if it exists
+     */
+    element: Element;
+    /**
+     * Gets the annotation's inner UI element, if it exists
+     */
+    innerElement: Element;
+    /**
+     * Gets and sets whether the annotation is hidden
+     */
+    hidden?: boolean;
+    /**
+     * Gets and sets the annotation's color (any type that can be used to construct Annotations.Color)
+     */
+    color?: Annotations.Color | any | any[];
+    /**
+     * Gets and sets the annotation's border (is a border, or a map of border properties)
+     */
+    border?: Annotations.Border | any;
+    /**
+     * Gets and sets the annotation's background color
+     */
+    backgroundColor?: Annotations.Color | any | any[];
+    /**
+     * Gets the actions attached to this annotation as an object with triggers as keys and arrays of actions as values
+     */
+    actions?: any;
+    /**
+     * Gets and sets the annotation's rotation (must be one of 0, 90, 180, 270)
+     */
+    rotation?: number;
+  }
+  /**
+   * Represents a PDF Link annotation with associated actions.
+   * @class Annotations.Link
+   * @extends Annotations.HTMLAnnotation
+   * @param {object} options A map of properties to set on the new Link
+   */
+  class Link extends Annotations.HTMLAnnotation {
+    constructor(options: any);
+    /**
+     * Draws the annotation on the provide canvas context, relative to the page.
+     * The point (0,0) coresponds to the top left corner of the page.
+     * @method Annotations.Annotation#draw
+     * @param {CanvasRenderingContext2D} ctx The canvas context prepared to be drawn on.
+     * @param {object} pageMatrix The page matrix for the page that the annotation is on.
+     * You can get this object by calling getPageMatrix on the document object.
+     */
+    draw(ctx: CanvasRenderingContext2D, pageMatrix: any): void;
+    /**
+     * Whether the annotation is visible on the document or not.
+     * If the Hidden or NoView flags are set, or if the annotation is a reply to another annotation then it won't be visible.
+     * @method Annotations.Annotation#isVisible
+     * @return {boolean} Whether the annotation is visible on the document or not
+     */
+    isVisible(): boolean;
+    /**
+     * Sets the size and location of the annotation's bounding rectangle.
+     * Use this method instead of resize when only the x, y, width and height needs to be modified.
+     * Use setRectWithNormalization instead of setRect if you want to reverse
+     * any wrong-way-round coordinates instead of ignoring them.
+     * @method Annotations.Annotation#setRectWithNormalization
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    setRectWithNormalization(rect: Annotations.Rect): void;
+    /**
+     * Sets the size and location of the annotation's bounding rectangle.
+     * Use this method instead of resize when only the x, y, width and height needs to be modified.
+     * Beware: this method ignores coordinates if they are the wrong way around.
+     * (It hasn't been fixed for reasons of maintaining backward compatibility.
+     * use setRectWithNormalization instead if you want it to reverse the
+     * wrong-way-round coordinates instead of ignoring them.)
+     * @method Annotations.Annotation#setRect
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    setRect(rect: Annotations.Rect): void;
+    /**
+     * Adjusts the annotation's bounding rectangle to take into account changes to the annotation
+     * e.g. stroke thickness, start/end points, etc
+     * @method Annotations.Annotation#adjustRect
+     */
+    adjustRect(): void;
+    /**
+     * Resize the annotation based on a new given {@link Annotations.Rect}.
+     * Use this method instead of setRect when internal properties (other than x, y, width and height) need to be modified on move/resize.
+     * @method Annotations.Annotation#resize
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    resize(rect: Annotations.Rect): void;
+    /**
+     * Gets the x position measured in page coordinates of an annotation.
+     * @method Annotations.Annotation#getX
+     * @return {number} the x position
+     */
+    getX(): number;
+    /**
+     * Sets the x position measured in page coordinates of an annotation.
+     * @method Annotations.Annotation#setX
+     * @param {number} value the x position
+     */
+    setX(value: number): void;
+    /**
+     * Gets the y position measured in page coordinates.
+     * @method Annotations.Annotation#getY
+     * @return {number}
+     */
+    getY(): number;
+    /**
+     * Sets the y position measured in page coordinates.
+     * @method Annotations.Annotation#setY
+     * @param {number} value the y position
+     */
+    setY(value: number): void;
+    /**
+     * Gets the width of the annotation.
+     * @method Annotations.Annotation#getWidth
+     * @return {number} the width of the annotation.
+     */
+    getWidth(): number;
+    /**
+     * Sets the width of the annotation.
+     * @method Annotations.Annotation#setWidth
+     * @param {number} value the width of the annotation.
+     */
+    setWidth(value: number): void;
+    /**
+     * Gets the height of the annotation.
+     * @method Annotations.Annotation#getHeight
+     * @return {number} the height of the annotation.
+     */
+    getHeight(): number;
+    /**
+     * Sets the height of the annotation.
+     * @method Annotations.Annotation#setHeight
+     * @param {number} value the height of the annotation.
+     */
+    setHeight(value: number): void;
+    /**
+     * Get annotation bounding rectangle
+     * @method Annotations.Annotation#getRect
+     * @returns {Annotations.Rect}
+     */
+    getRect(): Annotations.Rect;
+    /**
+     * Gets the padding that will be applied by default on the annotation's rectangle.
+     * @method Annotations.Annotation#getRectPadding
+     * @returns {number} The amount of padding
+     */
+    getRectPadding(): number;
+    /**
+     * Gets the page number of the annotation.
+     * Note: page number starts from 1.
+     * @method Annotations.Annotation#getPageNumber
+     * @returns {number} The annotation's page number
+     */
+    getPageNumber(): number;
+    /**
+     * Sets the page number of the annotation.
+     * Note: page numbers start from 1.
+     * @method Annotations.Annotation#setPageNumber
+     * @param {number} value the page number to be set
+     */
+    setPageNumber(value: number): void;
+    /**
+     * Gets the leftmost x position measured in page coordinates.
+     * @method Annotations.Annotation#getLeft
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getLeft(): number;
+    /**
+     * Gets the rightmost x position measured in page coordinates.
+     * @method Annotations.Annotation#getRight
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getRight(): number;
+    /**
+     * Gets the topmost y position measured in page coordinates.
+     * @method Annotations.Annotation#getTop
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getTop(): number;
+    /**
+     * Gets the bottommost y position measured in page coordinates.
+     * @method Annotations.Annotation#getBottom
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getBottom(): number;
+    /**
+     * Sets the custom data associated with the specified key.
+     * @method Annotations.Annotation#setCustomData
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
+     * @param {*} value The custom data to store
+     */
+    setCustomData(key: string, value: any): void;
+    /**
+     * Returns custom data associated with the given key.
+     * @method Annotations.Annotation#getCustomData
+     * @param {string} key The key for which to retrieve the associated data.
+     * @return {*} value The custom data. If no data is available an empty string is returned.
+     */
+    getCustomData(key: string): any;
+    /**
+     * Deletes custom data associated with the given key.
+     * @method Annotations.Annotation#deleteCustomData
+     * @param {string} key The key for which to delete the associated data.
+     */
+    deleteCustomData(key: string): void;
+    /**
+     * Gets the text content for the annotation.
+     * Contents may be displayed in an annotation's popup or directly on the page (in the case of FreeTextAnnotation).
+     * @method Annotations.Annotation#getContents
+     * @return {string} the text content for the annotation.
+     */
+    getContents(): string;
+    /**
+     * Set the text content for the annotation.
+     * Note that this will not refresh the text in the UI.
+     * @method Annotations.Annotation#setContents
+     * @param {string} value the text content to be set
+     */
+    setContents(value: string): void;
+    /**
+     * Gets the list of replies to this annotation.
+     * @method Annotations.Annotation#getReplies
+     * @return {Array<Annotations.Annotation>} The list of replies
+     */
+    getReplies(): Annotations.Annotation[];
+    /**
+     * Gets the list of group children to this annotation.
+     * @method Annotations.Annotation#getGroupedChildren
+     * @return {Array<Annotations.Annotation>} The list of group children
+     */
+    getGroupedChildren(): Annotations.Annotation[];
+    /**
+     * Gets the status of the annotation, and returns an empty string if no status set.
+     * @method Annotations.Annotation#getStatus
+     * @return {string} The last status update.
+     */
+    getStatus(): string;
+    /**
+     * Gets whether the annotation is a reply to another annotation.
+     * @method Annotations.Annotation#isReply
+     * @return {boolean} Returns true if it does reply to another annotation, false otherwise.
+     */
+    isReply(): boolean;
+    /**
+     * Gets whether the annotation is a child of a group
+     * @method Annotations.Annotation#isGrouped
+     * @return {boolean} Returns true if the annotation is a child of a group, false otherwise.
+     */
+    isGrouped(): boolean;
+    /**
+     * Resolves when all required resources have finished loading.
+     * Currently only applicable to stamp annotations that use images.
+     * @method Annotations.Annotation#resourcesLoaded
+     * @return {Promise<any>} A promise that resolves when the resources have finished loading
+     */
+    resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
+    /**
+     * Serialize the annotation to an xml element
+     * @method Annotations.Annotation#serialize
+     * @param {Element} element an xml element representing the annotation
+     * @param {object} pageMatrix the page matrix used to convert XOD coordinates to PDF coordinates.
+     * @returns {Element} the resulting xml element representing the annotation
+     */
+    serialize(element: Element, pageMatrix: any): Element;
+    /**
+     * Deserializes the xml element into the annotation
+     * @method Annotations.Annotation#deserialize
+     * @param {Element} element an xml element representing the annotation
+     * @param {object} pageMatrix the page matrix used to convert PDF coordinates to XOD coordinates.
+     */
+    deserialize(element: Element, pageMatrix: any): void;
+  }
+  /**
+   * Creates a new Point with an x and y coordinate.
+   * @class A utility class that represents a point with an x and y coordinate.
+   * @memberof Annotations
+   * @param {number} x the x-coordinate
+   * @param {number} y the y-coordinate
+   * @property {number} x the x-coordinate
+   * @property {number} y the y-coordinate
+   */
+  class Point {
+    constructor(x: number, y: number);
+    /**
+     * the x-coordinate
+     */
+    x: number;
+    /**
+     * the y-coordinate
+     */
+    y: number;
+  }
+  /**
+   * Create a new Quad with the x and y coordinates of the the four points of a quadrilateral.
+   * @class Represents a utility class used to manipulate quadrilateral objects.
+   * @example
+   *  (x4,y4)---(x3,y3)
+   *     |        |
+   *  (x1,y1)---(x2,y2)
+   * @memberof Annotations
+   * @param {number} x1 the x coordinate of the lower-left point
+   * @param {number} y1 the y coordinate of the lower-left point
+   * @param {number} x2 the x coordinate of the lower-right point
+   * @param {number} y2 the y coordinate of the lower-right point
+   * @param {number} x3 the x coordinate of the upper-right point
+   * @param {number} y3 the y coordinate of the upper-right point
+   * @param {number} x4 the x coordinate of the upper-left point
+   * @param {number} y4 the y coordinate of the upper-left point
+   * @property {number} x1 the x coordinate of the lower-left point
+   * @property {number} y1 the y coordinate of the lower-left point
+   * @property {number} x2 the x coordinate of the lower-right point
+   * @property {number} y2 the y coordinate of the lower-right point
+   * @property {number} x3 the x coordinate of the upper-right point
+   * @property {number} y3 the y coordinate of the upper-right point
+   * @property {number} x4 the x coordinate of the upper-left point
+   * @property {number} y4 the y coordinate of the upper-left point
+   */
+  class Quad {
+    constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, x4: number, y4: number);
+    /**
+     * the x coordinate of the lower-left point
+     */
+    x1: number;
+    /**
+     * the y coordinate of the lower-left point
+     */
+    y1: number;
+    /**
+     * the x coordinate of the lower-right point
+     */
+    x2: number;
+    /**
+     * the y coordinate of the lower-right point
+     */
+    y2: number;
+    /**
+     * the x coordinate of the upper-right point
+     */
+    x3: number;
+    /**
+     * the y coordinate of the upper-right point
+     */
+    y3: number;
+    /**
+     * the x coordinate of the upper-left point
+     */
+    x4: number;
+    /**
+     * the y coordinate of the upper-left point
+     */
+    y4: number;
+  }
+  /**
+   * Create a new Rect with the x and y coordinates of the upper-left and lower right points.
+   * @class Represents a utility class used to manipulate rectangle objects.
+   * @example
+   *  (x1,y1)------|
+   *     |        |
+   *     |------(x2,y2)
+   * @memberof Annotations
+   * @param {number} x1 the x coordinate of the upper-left point
+   * @param {number} y1 the y coordinate of the upper-left point
+   * @param {number} x2 the x coordinate of the lower-right point
+   * @param {number} y2 the y coordinate of the lower-right point
+   * @property {number} x1 the x coordinate of the upper-left point
+   * @property {number} y1 the y coordinate of the upper-left point
+   * @property {number} x2 the x coordinate of the lower-right point
+   * @property {number} y2 the y coordinate of the lower-right point
+   */
+  class Rect {
+    constructor(x1: number, y1: number, x2: number, y2: number);
+    /**
+     * Gets the width of the rect
+     * @method Annotations.Rect#getWidth
+     * @returns {number} The width of the rect
+     */
+    getWidth(): number;
+    /**
+     * Gets the height of the rect
+     * @method Annotations.Rect#getHeight
+     * @returns {number} The height of the rect
+     */
+    getHeight(): number;
+    /**
+     * Translates the rect
+     * @method Annotations.Rect#translate
+     * @param {number} x The amount to translate in the x direction
+     * @param {number} y The amount to translate in the y direction
+     */
+    translate(x: number, y: number): void;
+    /**
+     * Best fit this rect into another larger rect
+     * @method Annotations.Rect#fitTo
+     * @param {Annotations.Rect} rect
+     */
+    fitTo(rect: Annotations.Rect): void;
+    /**
+     * Normalizes the rect to ensure point (x1, y1) is the upper left point and width and height are non-negative.
+     * @method Annotations.Rect#normalize
+     */
+    normalize(): void;
+    /**
+     * Normalizes the rect to ensure point (x1, y1) is the bottom left point as expected by xfdf output
+     * @method Annotations.Rect#exportNormalize
+     */
+    exportNormalize(): void;
+    /**
+     * the x coordinate of the upper-left point
+     */
+    x1: number;
+    /**
+     * the y coordinate of the upper-left point
+     */
+    y1: number;
+    /**
+     * the x coordinate of the lower-right point
+     */
+    x2: number;
+    /**
+     * the y coordinate of the lower-right point
+     */
+    y2: number;
+  }
+  /**
+   * Creates a box selection model.
+   * @class A selection model based on the annotation's bounding box. This is used for most generic annotations.
+   * @name Annotations.BoxSelectionModel
+   * @extends Annotations.SelectionModel
+   * @param {Annotations.Annotation} annotation The annotation
+   * @param {boolean} canModify Indicates if the annotation can be modified
+   */
+  class BoxSelectionModel extends Annotations.SelectionModel {
+    constructor(annotation: Annotations.Annotation, canModify: boolean);
+    /**
+     * Defines thickness of the annotation selection outline. Default is 2.
+     * @name Annotations.SelectionModel#selectionOutlineThickness
+     */
+    selectionOutlineThickness: any;
+    /**
+     * Defines a padding for selection accuracy. Default is 2.
+     * Increase this value to make selection more forgiving.
+     * @name Annotations.SelectionModel#selectionAccuracyPadding
+     */
+    selectionAccuracyPadding: any;
+    /**
+     * Defines the default color for the annotation selection outline.
+     * @name Annotations.SelectionModel#defaultSelectionOutlineColor
+     */
+    defaultSelectionOutlineColor: any;
+    /**
+     * Defines the default color for the annotation selection outline when the user is not permitted to make modifications.
+     * @name Annotations.SelectionModel#defaultNoPermissionSelectionOutlineColor
+     */
+    defaultNoPermissionSelectionOutlineColor: any;
+    /**
+     * Defines the dash size for the selection outline. Default is 4;
+     * @name Annotations.SelectionModel#selectionOutlineDashSize
+     */
+    selectionOutlineDashSize: any;
+    /**
+     * Determines if the provided point is a hit on the selected annotationhandle.
+     * * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
+     * @method Annotations.SelectionModel#testSelection
+     * @param {Annotations.Annotation} annotation the annotation
+     * @param {number} x the x-coordinate of the point to test, in page coordinates
+     * @param {number} y the y-coordinate of the point to test, in page coordinates
+     * @param {object} pageMatrix the page matrix of the page the annotation is on
+     * @param {number} zoom the zoom level of the page the annotation is on
+     * @param {CoreControls.PageRotation} rotation the rotation of the page the annotation is on
+     * @returns {boolean} true if the provided point is a hit
+     */
+    testSelection(
+      annotation: Annotations.Annotation,
+      x: number,
+      y: number,
+      pageMatrix: any,
+      zoom: number,
+      rotation: CoreControls.PageRotation,
+    ): boolean;
+    /**
+     * Hit detection for each control handle.
+     * @method Annotations.SelectionModel#testControlHandles
+     * @param {Annotations.Annotation} annotation
+     * @param {number} zoom
+     * @param {number} x
+     * @param {number} y
+     * @returns {Annotations.ControlHandle} the control handle that was hit
+     */
+    testControlHandles(
+      annotation: Annotations.Annotation,
+      zoom: number,
+      x: number,
+      y: number,
+    ): Annotations.ControlHandle;
+    /**
+     * Returns the ControlHandle objects associated with this selection model.
+     * @method Annotations.SelectionModel#getControlHandles
+     * @returns {Array<Annotations.ControlHandle>} an array of ControlHandleObject
+     */
+    getControlHandles(): Annotations.ControlHandle[];
+    /**
+     * Gets the dimensions {x, y, width, height} of the selection bounding box.
+     * It may be different from the annotation's bounding box.
+     * e.g. The selection bounding box may have a padding.
+     * @method Annotations.SelectionModel#getDimensions
+     * @param {Annotations.Annotation} annotation
+     * @returns {Annotations.Rect}
+     */
+    getDimensions(annotation: Annotations.Annotation): Annotations.Rect;
+    /**
+     * Indicates that the associated annotation is able to be modified
+     * @method Annotations.SelectionModel#canModify
+     * @returns {boolean}
+     */
+    canModify(): boolean;
+    /**
+     * Indicates that the associated annotation is already selected.
+     * This can be useful to implement different selection behaviors when an annotation is selected.
+     * @method Annotations.SelectionModel#isSelected
+     * @returns {boolean}
+     */
+    isSelected(): boolean;
+    /**
+     * Draws the selection outline of the annotation.
+     * By default, a rectangle is drawn based on the annotations x, y, width and height.
+     * @method Annotations.SelectionModel#drawSelectionOutline
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {Annotations.Annotation} annotation
+     * @param {number} zoom
+     */
+    drawSelectionOutline(ctx: CanvasRenderingContext2D, annotation: Annotations.Annotation, zoom: number): void;
+  }
+  /**
+   * Creates a callout selection model.
+   * @class A selection model for FreeTextAnnotation callouts.
+   * @name Annotations.CalloutSelectionModel
+   * @param {Annotations.Annotation} annotation the annotation
+   * @param {boolean} canModify indicates if the annotation can be modified
+   */
+  class CalloutSelectionModel {
+    constructor(annotation: Annotations.Annotation, canModify: boolean);
+  }
+  /**
+   * Creates a free text selection model.
+   * @class A selection model based on the annotation's bounding box. This is used for free text annotations.
+   * @name Annotations.FreeTextSelectionModel
+   * @extends Annotations.BoxSelectionModel
+   * @param {Annotations.Annotation} annotation the annotation
+   * @param {boolean} canModify indicates if the annotation can be modified
+   * @param {boolean} isSelected
+   */
+  class FreeTextSelectionModel extends Annotations.BoxSelectionModel {
     constructor(annotation: Annotations.Annotation, canModify: boolean, isSelected: boolean);
     /**
      * Defines thickness of the annotation selection outline. Default is 2.
@@ -1607,14 +2477,14 @@ declare namespace Annotations {
     drawSelectionOutline(ctx: CanvasRenderingContext2D, annotation: Annotations.Annotation, zoom: number): void;
   }
   /**
-   * Creates a box selection model.
-   * @class A selection model based on the annotation's bounding box. This is used for most generic annotations.
-   * @name Annotations.BoxSelectionModel
+   * Creates a line selection model.
+   * @class A selection model for LineAnnotation.
+   * @name Annotations.LineSelectionModel
    * @extends Annotations.SelectionModel
-   * @param {Annotations.Annotation} annotation The annotation
-   * @param {boolean} canModify Indicates if the annotation can be modified
+   * @param {Annotations.Annotation} annotation the annotation
+   * @param {boolean} canModify indicates if the annotation can be modified
    */
-  class BoxSelectionModel extends Annotations.SelectionModel {
+  class LineSelectionModel extends Annotations.SelectionModel {
     constructor(annotation: Annotations.Annotation, canModify: boolean);
     /**
      * Defines thickness of the annotation selection outline. Default is 2.
@@ -1934,124 +2804,33 @@ declare namespace Annotations {
     drawSelectionOutline(ctx: CanvasRenderingContext2D, annotation: Annotations.Annotation, zoom: number): void;
   }
   /**
-   * Creates a line selection model.
-   * @class A selection model for LineAnnotation.
-   * @name Annotations.LineSelectionModel
-   * @extends Annotations.SelectionModel
+   * Creates a text selection model.
+   * @class A selection model for Text annotation.
+   * @name Annotations.RedactionSelectionModel
    * @param {Annotations.Annotation} annotation the annotation
    * @param {boolean} canModify indicates if the annotation can be modified
+   * @param {boolean} isSelected the annotation is already selected
    */
-  class LineSelectionModel extends Annotations.SelectionModel {
-    constructor(annotation: Annotations.Annotation, canModify: boolean);
-    /**
-     * Defines thickness of the annotation selection outline. Default is 2.
-     * @name Annotations.SelectionModel#selectionOutlineThickness
-     */
-    selectionOutlineThickness: any;
-    /**
-     * Defines a padding for selection accuracy. Default is 2.
-     * Increase this value to make selection more forgiving.
-     * @name Annotations.SelectionModel#selectionAccuracyPadding
-     */
-    selectionAccuracyPadding: any;
-    /**
-     * Defines the default color for the annotation selection outline.
-     * @name Annotations.SelectionModel#defaultSelectionOutlineColor
-     */
-    defaultSelectionOutlineColor: any;
-    /**
-     * Defines the default color for the annotation selection outline when the user is not permitted to make modifications.
-     * @name Annotations.SelectionModel#defaultNoPermissionSelectionOutlineColor
-     */
-    defaultNoPermissionSelectionOutlineColor: any;
-    /**
-     * Defines the dash size for the selection outline. Default is 4;
-     * @name Annotations.SelectionModel#selectionOutlineDashSize
-     */
-    selectionOutlineDashSize: any;
-    /**
-     * Determines if the provided point is a hit on the selected annotationhandle.
-     * * See {@link Annotations.SelectionAlgorithm} for usuable selection algorithms.
-     * @method Annotations.SelectionModel#testSelection
-     * @param {Annotations.Annotation} annotation the annotation
-     * @param {number} x the x-coordinate of the point to test, in page coordinates
-     * @param {number} y the y-coordinate of the point to test, in page coordinates
-     * @param {object} pageMatrix the page matrix of the page the annotation is on
-     * @param {number} zoom the zoom level of the page the annotation is on
-     * @param {CoreControls.PageRotation} rotation the rotation of the page the annotation is on
-     * @returns {boolean} true if the provided point is a hit
-     */
-    testSelection(
-      annotation: Annotations.Annotation,
-      x: number,
-      y: number,
-      pageMatrix: any,
-      zoom: number,
-      rotation: CoreControls.PageRotation,
-    ): boolean;
-    /**
-     * Hit detection for each control handle.
-     * @method Annotations.SelectionModel#testControlHandles
-     * @param {Annotations.Annotation} annotation
-     * @param {number} zoom
-     * @param {number} x
-     * @param {number} y
-     * @returns {Annotations.ControlHandle} the control handle that was hit
-     */
-    testControlHandles(
-      annotation: Annotations.Annotation,
-      zoom: number,
-      x: number,
-      y: number,
-    ): Annotations.ControlHandle;
-    /**
-     * Returns the ControlHandle objects associated with this selection model.
-     * @method Annotations.SelectionModel#getControlHandles
-     * @returns {Array<Annotations.ControlHandle>} an array of ControlHandleObject
-     */
-    getControlHandles(): Annotations.ControlHandle[];
-    /**
-     * Gets the dimensions {x, y, width, height} of the selection bounding box.
-     * It may be different from the annotation's bounding box.
-     * e.g. The selection bounding box may have a padding.
-     * @method Annotations.SelectionModel#getDimensions
-     * @param {Annotations.Annotation} annotation
-     * @returns {Annotations.Rect}
-     */
-    getDimensions(annotation: Annotations.Annotation): Annotations.Rect;
-    /**
-     * Indicates that the associated annotation is able to be modified
-     * @method Annotations.SelectionModel#canModify
-     * @returns {boolean}
-     */
-    canModify(): boolean;
-    /**
-     * Indicates that the associated annotation is already selected.
-     * This can be useful to implement different selection behaviors when an annotation is selected.
-     * @method Annotations.SelectionModel#isSelected
-     * @returns {boolean}
-     */
-    isSelected(): boolean;
-    /**
-     * Draws the selection outline of the annotation.
-     * By default, a rectangle is drawn based on the annotations x, y, width and height.
-     * @method Annotations.SelectionModel#drawSelectionOutline
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {Annotations.Annotation} annotation
-     * @param {number} zoom
-     */
-    drawSelectionOutline(ctx: CanvasRenderingContext2D, annotation: Annotations.Annotation, zoom: number): void;
+  class RedactionSelectionModel {
+    constructor(annotation: Annotations.Annotation, canModify: boolean, isSelected: boolean);
   }
   /**
-   * Creates a free text selection model.
-   * @class A selection model based on the annotation's bounding box. This is used for free text annotations.
-   * @name Annotations.FreeTextSelectionModel
-   * @extends Annotations.BoxSelectionModel
-   * @param {Annotations.Annotation} annotation the annotation
-   * @param {boolean} canModify indicates if the annotation can be modified
-   * @param {boolean} isSelected
+   * Represents static utility functions to determine hit testing for annotations.
+   * @name Annotations.SelectionAlgorithm
+   * @property {number} canvasVisibilityPadding=5 Defines a padding for the canvas visibility test algorithm. Increase this value to make selection more forgiving.
    */
-  class FreeTextSelectionModel extends Annotations.BoxSelectionModel {
+  var SelectionAlgorithm: {
+    canvasVisibilityPadding: number;
+  };
+  /**
+   * Create a new selection model.
+   * @class Represents a class that contains information about how an annotation should behave when selected.
+   * @name Annotations.SelectionModel
+   * @param {Annotations.Annotation} annotation the annotation selected
+   * @param {boolean} canModify modification of the annotation is allowed
+   * @param {boolean} isSelected the annotation is already selected
+   */
+  class SelectionModel {
     constructor(annotation: Annotations.Annotation, canModify: boolean, isSelected: boolean);
     /**
      * Defines thickness of the annotation selection outline. Default is 2.
@@ -2151,16 +2930,6 @@ declare namespace Annotations {
      * @param {number} zoom
      */
     drawSelectionOutline(ctx: CanvasRenderingContext2D, annotation: Annotations.Annotation, zoom: number): void;
-  }
-  /**
-   * Creates a callout selection model.
-   * @class A selection model for FreeTextAnnotation callouts.
-   * @name Annotations.CalloutSelectionModel
-   * @param {Annotations.Annotation} annotation the annotation
-   * @param {boolean} canModify indicates if the annotation can be modified
-   */
-  class CalloutSelectionModel {
-    constructor(annotation: Annotations.Annotation, canModify: boolean);
   }
   /**
    * Creates a text selection model.
@@ -2270,794 +3039,6 @@ declare namespace Annotations {
      * @param {number} zoom
      */
     drawSelectionOutline(ctx: CanvasRenderingContext2D, annotation: Annotations.Annotation, zoom: number): void;
-  }
-  /**
-   * Creates a text selection model.
-   * @class A selection model for Text annotation.
-   * @name Annotations.RedactionSelectionModel
-   * @param {Annotations.Annotation} annotation the annotation
-   * @param {boolean} canModify indicates if the annotation can be modified
-   * @param {boolean} isSelected the annotation is already selected
-   */
-  class RedactionSelectionModel {
-    constructor(annotation: Annotations.Annotation, canModify: boolean, isSelected: boolean);
-  }
-  /**
-   * Represents static utility functions to determine hit testing for annotations.
-   * @name Annotations.SelectionAlgorithm
-   * @property {number} canvasVisibilityPadding=5 Defines a padding for the canvas visibility test algorithm. Increase this value to make selection more forgiving.
-   */
-  var SelectionAlgorithm: {
-    canvasVisibilityPadding: number;
-  };
-  /**
-   * Creates a new instance of Border.
-   * @class Represents a class that contains border information for an annotation.
-   * @name Annotations.Border
-   * @param {object} options The initialization options, an object with properties color, width, style, cornerRadius
-   * @property {Annotations.Color} color The color of the border
-   * @property {number} width The width of the border
-   * @property {string} style The style of the border (possible types include: solid, bevelled, inset)
-   * @property {number} cornerRadius The corner radius size
-   */
-  class Border {
-    constructor(options: any);
-    /**
-     * The color of the border
-     */
-    color: Annotations.Color;
-    /**
-     * The width of the border
-     */
-    width: number;
-    /**
-     * The style of the border (possible types include: solid, bevelled, inset)
-     */
-    style: string;
-    /**
-     * The corner radius size
-     */
-    cornerRadius: number;
-  }
-  /**
-   * Creates a new instance of Color.
-   * @class Represents a class that contains a color's RGB and alpha value.
-   * @name Annotations.Color
-   * @param {number} r the R (red) value (0-255)
-   * @param {number} g the G (green) value (0-255)
-   * @param {number} b the B (blue) value (0-255)
-   * @param {number} a the A (alpha) value (0-1.0)
-   * @property {number} R the R (red) value (0-255)
-   * @property {number} G the G (green) value (0-255)
-   * @property {number} B the B (blue) value (0-255)
-   * @property {number} A the A (alpha) value (0-1.0)
-   */
-  class Color {
-    constructor(r: number, g: number, b: number, a: number);
-    /**
-     * Outputs the current color as a CSS3 RGB color string.
-     * @method Annotations.Color#toString
-     * @example ex. "rgb(0,0,0)" or "rgba(0,255,0,0.5)"
-     * @override
-     */
-    toString(): void;
-    /**
-     * Returns the color as a hex string e.g. #FFFFFF
-     * @method Annotations.Color#toHexString
-     */
-    toHexString(): void;
-    /**
-     * the R (red) value (0-255)
-     */
-    R: number;
-    /**
-     * the G (green) value (0-255)
-     */
-    G: number;
-    /**
-     * the B (blue) value (0-255)
-     */
-    B: number;
-    /**
-     * the A (alpha) value (0-1.0)
-     */
-    A: number;
-  }
-  /**
-   * @class Contains the tools to create and manipulate form field data
-   * @name Annotations.Forms
-   * @property {function} getUsableInputWidth A function to set the allowable width for fields with "scroll long text" disabled.
-   * It takes the width of the field and it should return a number which is the new allowable width
-   */
-  class Forms {
-    /**
-         * A function to set the allowable width for fields with "scroll long text" disabled.
-        It takes the width of the field and it should return a number which is the new allowable width
-        */
-    getUsableInputWidth: (...params: any[]) => any;
-  }
-  /**
-   * A class representing a PDF font.
-   * @class Annotations.Font
-   *
-   * @param {object} [params] An object containing parameters to be initialised on the font.
-   * @property {string} name The font's name
-   * @property {number} [size=0] The font's size
-   * @property {string} [type='Type1'] The font's type (One of CIDType0, CIDType2, MMType1, TrueType, Type0, Type1, Type3)
-   * @property {(Annotations.Color|array|object)} [strokeColor=new Annotations.Color([0,0,0])] The font's stroke color
-   * @property {(Annotations.Color|array|object)} [fillColor=new Annotations.Color([0,0,0])] The font's fill color
-   * @property {number} calculatedSize The calculated size of the font if size is 0
-   */
-  class Font {
-    constructor(params?: any);
-    /**
-     * Set all properties on Font using a Font or a Font-like object.
-     * @method Annotations.Font#set
-     * @param {(Annotations.Font|object)} options The options to set on the Font
-     */
-    set(options: Annotations.Font | any): void;
-    /**
-     * Is the font solid black?
-     * @method Annotations.Font#isBlack
-     * @returns {boolean} Whether the font is solid black
-     */
-    isBlack(): boolean;
-    /**
-     * Convert the font to a CSS object like one would pass to jQuery.css().
-     * @method Annotations.Font#toCSS
-     * @param {number} zoom
-     * @returns {object} An object appropriate to pass to jQuery.css()
-     */
-    toCSS(zoom: number): any;
-    /**
-     * The font's name
-     */
-    name: string;
-    /**
-     * The font's size
-     */
-    size?: number;
-    /**
-     * The font's type (One of CIDType0, CIDType2, MMType1, TrueType, Type0, Type1, Type3)
-     */
-    type?: string;
-    /**
-     * The font's stroke color
-     */
-    strokeColor?: Annotations.Color | any[] | any;
-    /**
-     * The font's fill color
-     */
-    fillColor?: Annotations.Color | any[] | any;
-    /**
-     * The calculated size of the font if size is 0
-     */
-    calculatedSize: number;
-  }
-  interface HTMLAnnotation extends Actions.Dispatcher {}
-  /**
-   * An common base class annotation that displays its contents using HTML5 instead of via Canvas.
-   * @params {object} options A map of parameters to set on the new HTMLAnnotation.
-   * @class Annotations.HTMLAnnotation
-   * @augments Annotations.Annotation
-   * @mixes Actions.Dispatcher
-   * @property {{x1: number, y1: number, x2: number, y2: number}} rect The annotation's rectangle
-   * @property {?Element} element Gets the annotation's outer display element, if it exists
-   * @property {?Element} innerElement Gets the annotation's inner UI element, if it exists
-   * @property {boolean} [hidden=false] Gets and sets whether the annotation is hidden
-   * @property {(Annotations.Color|object|Array<any>)} [color=new Annotations.Color()] Gets and sets the annotation's color (any type that can be used to construct Annotations.Color)
-   * @property {(Annotations.Border|object)} [border=new Annotations.Border()] Gets and sets the annotation's border (is a border, or a map of border properties)
-   * @property {(Annotations.Color|object|Array<any>)} [backgroundColor=new Annotations.Color()] Gets and sets the annotation's background color
-   * @property {{string, Array<Actions.Action>}} [actions={}] Gets the actions attached to this annotation as an object with triggers as keys and arrays of actions as values
-   * @property {number} [rotation=0] Gets and sets the annotation's rotation (must be one of 0, 90, 180, 270)
-   */
-  class HTMLAnnotation extends Annotations.Annotation implements Actions.Dispatcher {
-    /**
-     * Draws the annotation on the provide canvas context, relative to the page.
-     * The point (0,0) coresponds to the top left corner of the page.
-     * @method Annotations.Annotation#draw
-     * @param {CanvasRenderingContext2D} ctx The canvas context prepared to be drawn on.
-     * @param {object} pageMatrix The page matrix for the page that the annotation is on.
-     * You can get this object by calling getPageMatrix on the document object.
-     */
-    draw(ctx: CanvasRenderingContext2D, pageMatrix: any): void;
-    /**
-     * Whether the annotation is visible on the document or not.
-     * If the Hidden or NoView flags are set, or if the annotation is a reply to another annotation then it won't be visible.
-     * @method Annotations.Annotation#isVisible
-     * @return {boolean} Whether the annotation is visible on the document or not
-     */
-    isVisible(): boolean;
-    /**
-     * Sets the size and location of the annotation's bounding rectangle.
-     * Use this method instead of resize when only the x, y, width and height needs to be modified.
-     * Use setRectWithNormalization instead of setRect if you want to reverse
-     * any wrong-way-round coordinates instead of ignoring them.
-     * @method Annotations.Annotation#setRectWithNormalization
-     * @export
-     * @param {Annotations.Rect} rect the new bounding rectangle
-     */
-    setRectWithNormalization(rect: Annotations.Rect): void;
-    /**
-     * Sets the size and location of the annotation's bounding rectangle.
-     * Use this method instead of resize when only the x, y, width and height needs to be modified.
-     * Beware: this method ignores coordinates if they are the wrong way around.
-     * (It hasn't been fixed for reasons of maintaining backward compatibility.
-     * use setRectWithNormalization instead if you want it to reverse the
-     * wrong-way-round coordinates instead of ignoring them.)
-     * @method Annotations.Annotation#setRect
-     * @export
-     * @param {Annotations.Rect} rect the new bounding rectangle
-     */
-    setRect(rect: Annotations.Rect): void;
-    /**
-     * Adjusts the annotation's bounding rectangle to take into account changes to the annotation
-     * e.g. stroke thickness, start/end points, etc
-     * @method Annotations.Annotation#adjustRect
-     */
-    adjustRect(): void;
-    /**
-     * Resize the annotation based on a new given {@link Annotations.Rect}.
-     * Use this method instead of setRect when internal properties (other than x, y, width and height) need to be modified on move/resize.
-     * @method Annotations.Annotation#resize
-     * @export
-     * @param {Annotations.Rect} rect the new bounding rectangle
-     */
-    resize(rect: Annotations.Rect): void;
-    /**
-     * Gets the x position measured in page coordinates of an annotation.
-     * @method Annotations.Annotation#getX
-     * @return {number} the x position
-     */
-    getX(): number;
-    /**
-     * Sets the x position measured in page coordinates of an annotation.
-     * @method Annotations.Annotation#setX
-     * @param {number} value the x position
-     */
-    setX(value: number): void;
-    /**
-     * Gets the y position measured in page coordinates.
-     * @method Annotations.Annotation#getY
-     * @return {number}
-     */
-    getY(): number;
-    /**
-     * Sets the y position measured in page coordinates.
-     * @method Annotations.Annotation#setY
-     * @param {number} value the y position
-     */
-    setY(value: number): void;
-    /**
-     * Gets the width of the annotation.
-     * @method Annotations.Annotation#getWidth
-     * @return {number} the width of the annotation.
-     */
-    getWidth(): number;
-    /**
-     * Sets the width of the annotation.
-     * @method Annotations.Annotation#setWidth
-     * @param {number} value the width of the annotation.
-     */
-    setWidth(value: number): void;
-    /**
-     * Gets the height of the annotation.
-     * @method Annotations.Annotation#getHeight
-     * @return {number} the height of the annotation.
-     */
-    getHeight(): number;
-    /**
-     * Sets the height of the annotation.
-     * @method Annotations.Annotation#setHeight
-     * @param {number} value the height of the annotation.
-     */
-    setHeight(value: number): void;
-    /**
-     * Get annotation bounding rectangle
-     * @method Annotations.Annotation#getRect
-     * @returns {Annotations.Rect}
-     */
-    getRect(): Annotations.Rect;
-    /**
-     * Gets the padding that will be applied by default on the annotation's rectangle.
-     * @method Annotations.Annotation#getRectPadding
-     * @returns {number} The amount of padding
-     */
-    getRectPadding(): number;
-    /**
-     * Gets the page number of the annotation.
-     * Note: page number starts from 1.
-     * @method Annotations.Annotation#getPageNumber
-     * @returns {number} The annotation's page number
-     */
-    getPageNumber(): number;
-    /**
-     * Sets the page number of the annotation.
-     * Note: page numbers start from 1.
-     * @method Annotations.Annotation#setPageNumber
-     * @param {number} value the page number to be set
-     */
-    setPageNumber(value: number): void;
-    /**
-     * Gets the leftmost x position measured in page coordinates.
-     * @method Annotations.Annotation#getLeft
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getLeft(): number;
-    /**
-     * Gets the rightmost x position measured in page coordinates.
-     * @method Annotations.Annotation#getRight
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getRight(): number;
-    /**
-     * Gets the topmost y position measured in page coordinates.
-     * @method Annotations.Annotation#getTop
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getTop(): number;
-    /**
-     * Gets the bottommost y position measured in page coordinates.
-     * @method Annotations.Annotation#getBottom
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getBottom(): number;
-    /**
-     * Sets the custom data associated with the specified key.
-     * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
-     * @param {*} value The custom data to store
-     */
-    setCustomData(key: string, value: any): void;
-    /**
-     * Returns custom data associated with the given key.
-     * @method Annotations.Annotation#getCustomData
-     * @param {string} key The key for which to retrieve the associated data.
-     * @return {*} value The custom data. If no data is available an empty string is returned.
-     */
-    getCustomData(key: string): any;
-    /**
-     * Deletes custom data associated with the given key.
-     * @method Annotations.Annotation#deleteCustomData
-     * @param {string} key The key for which to delete the associated data.
-     */
-    deleteCustomData(key: string): void;
-    /**
-     * Gets the text content for the annotation.
-     * Contents may be displayed in an annotation's popup or directly on the page (in the case of FreeTextAnnotation).
-     * @method Annotations.Annotation#getContents
-     * @return {string} the text content for the annotation.
-     */
-    getContents(): string;
-    /**
-     * Set the text content for the annotation.
-     * Note that this will not refresh the text in the UI.
-     * @method Annotations.Annotation#setContents
-     * @param {string} value the text content to be set
-     */
-    setContents(value: string): void;
-    /**
-     * Gets the list of replies to this annotation.
-     * @method Annotations.Annotation#getReplies
-     * @return {Array<Annotations.Annotation>} The list of replies
-     */
-    getReplies(): Annotations.Annotation[];
-    /**
-     * Gets the list of group children to this annotation.
-     * @method Annotations.Annotation#getGroupedChildren
-     * @return {Array<Annotations.Annotation>} The list of group children
-     */
-    getGroupedChildren(): Annotations.Annotation[];
-    /**
-     * Gets the status of the annotation, and returns an empty string if no status set.
-     * @method Annotations.Annotation#getStatus
-     * @return {string} The last status update.
-     */
-    getStatus(): string;
-    /**
-     * Gets whether the annotation is a reply to another annotation.
-     * @method Annotations.Annotation#isReply
-     * @return {boolean} Returns true if it does reply to another annotation, false otherwise.
-     */
-    isReply(): boolean;
-    /**
-     * Gets whether the annotation is a child of a group
-     * @method Annotations.Annotation#isGrouped
-     * @return {boolean} Returns true if the annotation is a child of a group, false otherwise.
-     */
-    isGrouped(): boolean;
-    /**
-     * Resolves when all required resources have finished loading.
-     * Currently only applicable to stamp annotations that use images.
-     * @method Annotations.Annotation#resourcesLoaded
-     * @return {Promise<any>} A promise that resolves when the resources have finished loading
-     */
-    resourcesLoaded(): Promise<any>;
-    /**
-     * Serialize the annotation to an xml element
-     * @method Annotations.Annotation#serialize
-     * @param {Element} element an xml element representing the annotation
-     * @param {object} pageMatrix the page matrix used to convert XOD coordinates to PDF coordinates.
-     * @returns {Element} the resulting xml element representing the annotation
-     */
-    serialize(element: Element, pageMatrix: any): Element;
-    /**
-     * Deserializes the xml element into the annotation
-     * @method Annotations.Annotation#deserialize
-     * @param {Element} element an xml element representing the annotation
-     * @param {object} pageMatrix the page matrix used to convert PDF coordinates to XOD coordinates.
-     */
-    deserialize(element: Element, pageMatrix: any): void;
-    /**
-     * The annotation's rectangle
-     */
-    rect: any;
-    /**
-     * Gets the annotation's outer display element, if it exists
-     */
-    element: Element;
-    /**
-     * Gets the annotation's inner UI element, if it exists
-     */
-    innerElement: Element;
-    /**
-     * Gets and sets whether the annotation is hidden
-     */
-    hidden?: boolean;
-    /**
-     * Gets and sets the annotation's color (any type that can be used to construct Annotations.Color)
-     */
-    color?: Annotations.Color | any | any[];
-    /**
-     * Gets and sets the annotation's border (is a border, or a map of border properties)
-     */
-    border?: Annotations.Border | any;
-    /**
-     * Gets and sets the annotation's background color
-     */
-    backgroundColor?: Annotations.Color | any | any[];
-    /**
-     * Gets the actions attached to this annotation as an object with triggers as keys and arrays of actions as values
-     */
-    actions?: any;
-    /**
-     * Gets and sets the annotation's rotation (must be one of 0, 90, 180, 270)
-     */
-    rotation?: number;
-  }
-  /**
-   * Represents a PDF Link annotation with associated actions.
-   * @class Annotations.Link
-   * @extends Annotations.HTMLAnnotation
-   * @param {object} options A map of properties to set on the new Link
-   */
-  class Link extends Annotations.HTMLAnnotation {
-    constructor(options: any);
-    /**
-     * Draws the annotation on the provide canvas context, relative to the page.
-     * The point (0,0) coresponds to the top left corner of the page.
-     * @method Annotations.Annotation#draw
-     * @param {CanvasRenderingContext2D} ctx The canvas context prepared to be drawn on.
-     * @param {object} pageMatrix The page matrix for the page that the annotation is on.
-     * You can get this object by calling getPageMatrix on the document object.
-     */
-    draw(ctx: CanvasRenderingContext2D, pageMatrix: any): void;
-    /**
-     * Whether the annotation is visible on the document or not.
-     * If the Hidden or NoView flags are set, or if the annotation is a reply to another annotation then it won't be visible.
-     * @method Annotations.Annotation#isVisible
-     * @return {boolean} Whether the annotation is visible on the document or not
-     */
-    isVisible(): boolean;
-    /**
-     * Sets the size and location of the annotation's bounding rectangle.
-     * Use this method instead of resize when only the x, y, width and height needs to be modified.
-     * Use setRectWithNormalization instead of setRect if you want to reverse
-     * any wrong-way-round coordinates instead of ignoring them.
-     * @method Annotations.Annotation#setRectWithNormalization
-     * @export
-     * @param {Annotations.Rect} rect the new bounding rectangle
-     */
-    setRectWithNormalization(rect: Annotations.Rect): void;
-    /**
-     * Sets the size and location of the annotation's bounding rectangle.
-     * Use this method instead of resize when only the x, y, width and height needs to be modified.
-     * Beware: this method ignores coordinates if they are the wrong way around.
-     * (It hasn't been fixed for reasons of maintaining backward compatibility.
-     * use setRectWithNormalization instead if you want it to reverse the
-     * wrong-way-round coordinates instead of ignoring them.)
-     * @method Annotations.Annotation#setRect
-     * @export
-     * @param {Annotations.Rect} rect the new bounding rectangle
-     */
-    setRect(rect: Annotations.Rect): void;
-    /**
-     * Adjusts the annotation's bounding rectangle to take into account changes to the annotation
-     * e.g. stroke thickness, start/end points, etc
-     * @method Annotations.Annotation#adjustRect
-     */
-    adjustRect(): void;
-    /**
-     * Resize the annotation based on a new given {@link Annotations.Rect}.
-     * Use this method instead of setRect when internal properties (other than x, y, width and height) need to be modified on move/resize.
-     * @method Annotations.Annotation#resize
-     * @export
-     * @param {Annotations.Rect} rect the new bounding rectangle
-     */
-    resize(rect: Annotations.Rect): void;
-    /**
-     * Gets the x position measured in page coordinates of an annotation.
-     * @method Annotations.Annotation#getX
-     * @return {number} the x position
-     */
-    getX(): number;
-    /**
-     * Sets the x position measured in page coordinates of an annotation.
-     * @method Annotations.Annotation#setX
-     * @param {number} value the x position
-     */
-    setX(value: number): void;
-    /**
-     * Gets the y position measured in page coordinates.
-     * @method Annotations.Annotation#getY
-     * @return {number}
-     */
-    getY(): number;
-    /**
-     * Sets the y position measured in page coordinates.
-     * @method Annotations.Annotation#setY
-     * @param {number} value the y position
-     */
-    setY(value: number): void;
-    /**
-     * Gets the width of the annotation.
-     * @method Annotations.Annotation#getWidth
-     * @return {number} the width of the annotation.
-     */
-    getWidth(): number;
-    /**
-     * Sets the width of the annotation.
-     * @method Annotations.Annotation#setWidth
-     * @param {number} value the width of the annotation.
-     */
-    setWidth(value: number): void;
-    /**
-     * Gets the height of the annotation.
-     * @method Annotations.Annotation#getHeight
-     * @return {number} the height of the annotation.
-     */
-    getHeight(): number;
-    /**
-     * Sets the height of the annotation.
-     * @method Annotations.Annotation#setHeight
-     * @param {number} value the height of the annotation.
-     */
-    setHeight(value: number): void;
-    /**
-     * Get annotation bounding rectangle
-     * @method Annotations.Annotation#getRect
-     * @returns {Annotations.Rect}
-     */
-    getRect(): Annotations.Rect;
-    /**
-     * Gets the padding that will be applied by default on the annotation's rectangle.
-     * @method Annotations.Annotation#getRectPadding
-     * @returns {number} The amount of padding
-     */
-    getRectPadding(): number;
-    /**
-     * Gets the page number of the annotation.
-     * Note: page number starts from 1.
-     * @method Annotations.Annotation#getPageNumber
-     * @returns {number} The annotation's page number
-     */
-    getPageNumber(): number;
-    /**
-     * Sets the page number of the annotation.
-     * Note: page numbers start from 1.
-     * @method Annotations.Annotation#setPageNumber
-     * @param {number} value the page number to be set
-     */
-    setPageNumber(value: number): void;
-    /**
-     * Gets the leftmost x position measured in page coordinates.
-     * @method Annotations.Annotation#getLeft
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getLeft(): number;
-    /**
-     * Gets the rightmost x position measured in page coordinates.
-     * @method Annotations.Annotation#getRight
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getRight(): number;
-    /**
-     * Gets the topmost y position measured in page coordinates.
-     * @method Annotations.Annotation#getTop
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getTop(): number;
-    /**
-     * Gets the bottommost y position measured in page coordinates.
-     * @method Annotations.Annotation#getBottom
-     * @deprecated Since 1.7
-     * @return {number}
-     */
-    getBottom(): number;
-    /**
-     * Sets the custom data associated with the specified key.
-     * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
-     * @param {*} value The custom data to store
-     */
-    setCustomData(key: string, value: any): void;
-    /**
-     * Returns custom data associated with the given key.
-     * @method Annotations.Annotation#getCustomData
-     * @param {string} key The key for which to retrieve the associated data.
-     * @return {*} value The custom data. If no data is available an empty string is returned.
-     */
-    getCustomData(key: string): any;
-    /**
-     * Deletes custom data associated with the given key.
-     * @method Annotations.Annotation#deleteCustomData
-     * @param {string} key The key for which to delete the associated data.
-     */
-    deleteCustomData(key: string): void;
-    /**
-     * Gets the text content for the annotation.
-     * Contents may be displayed in an annotation's popup or directly on the page (in the case of FreeTextAnnotation).
-     * @method Annotations.Annotation#getContents
-     * @return {string} the text content for the annotation.
-     */
-    getContents(): string;
-    /**
-     * Set the text content for the annotation.
-     * Note that this will not refresh the text in the UI.
-     * @method Annotations.Annotation#setContents
-     * @param {string} value the text content to be set
-     */
-    setContents(value: string): void;
-    /**
-     * Gets the list of replies to this annotation.
-     * @method Annotations.Annotation#getReplies
-     * @return {Array<Annotations.Annotation>} The list of replies
-     */
-    getReplies(): Annotations.Annotation[];
-    /**
-     * Gets the list of group children to this annotation.
-     * @method Annotations.Annotation#getGroupedChildren
-     * @return {Array<Annotations.Annotation>} The list of group children
-     */
-    getGroupedChildren(): Annotations.Annotation[];
-    /**
-     * Gets the status of the annotation, and returns an empty string if no status set.
-     * @method Annotations.Annotation#getStatus
-     * @return {string} The last status update.
-     */
-    getStatus(): string;
-    /**
-     * Gets whether the annotation is a reply to another annotation.
-     * @method Annotations.Annotation#isReply
-     * @return {boolean} Returns true if it does reply to another annotation, false otherwise.
-     */
-    isReply(): boolean;
-    /**
-     * Gets whether the annotation is a child of a group
-     * @method Annotations.Annotation#isGrouped
-     * @return {boolean} Returns true if the annotation is a child of a group, false otherwise.
-     */
-    isGrouped(): boolean;
-    /**
-     * Resolves when all required resources have finished loading.
-     * Currently only applicable to stamp annotations that use images.
-     * @method Annotations.Annotation#resourcesLoaded
-     * @return {Promise<any>} A promise that resolves when the resources have finished loading
-     */
-    resourcesLoaded(): Promise<any>;
-    /**
-     * Serialize the annotation to an xml element
-     * @method Annotations.Annotation#serialize
-     * @param {Element} element an xml element representing the annotation
-     * @param {object} pageMatrix the page matrix used to convert XOD coordinates to PDF coordinates.
-     * @returns {Element} the resulting xml element representing the annotation
-     */
-    serialize(element: Element, pageMatrix: any): Element;
-    /**
-     * Deserializes the xml element into the annotation
-     * @method Annotations.Annotation#deserialize
-     * @param {Element} element an xml element representing the annotation
-     * @param {object} pageMatrix the page matrix used to convert PDF coordinates to XOD coordinates.
-     */
-    deserialize(element: Element, pageMatrix: any): void;
-  }
-  /**
-   * Creates a new Point with an x and y coordinate.
-   * @class A utility class that represents a point with an x and y coordinate.
-   * @memberof Annotations
-   * @param {number} x the x-coordinate
-   * @param {number} y the y-coordinate
-   */
-  class Point {
-    constructor(x: number, y: number);
-  }
-  /**
-   * Create a new Quad with the x and y coordinates of the the four points of a quadrilateral.
-   * @class Represents a utility class used to manipulate quadrilateral objects.
-   * @example
-   *  (x4,y4)---(x3,y3)
-   *     |        |
-   *  (x1,y1)---(x2,y2)
-   * @memberof Annotations
-   * @param {number} x1 the x coordinate of the lower-left point
-   * @param {number} y1 the y coordinate of the lower-left point
-   * @param {number} x2 the x coordinate of the lower-right point
-   * @param {number} y2 the y coordinate of the lower-right point
-   * @param {number} x3 the x coordinate of the upper-right point
-   * @param {number} y3 the y coordinate of the upper-right point
-   * @param {number} x4 the x coordinate of the upper-left point
-   * @param {number} y4 the y coordinate of the upper-left point
-   */
-  class Quad {
-    constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, x4: number, y4: number);
-  }
-  /**
-   * Create a new Rect with the x and y coordinates of the upper-left and lower right points.
-   * @class Represents a utility class used to manipulate rectangle objects.
-   * @example
-   *  (x1,y1)------|
-   *     |        |
-   *     |------(x2,y2)
-   * @memberof Annotations
-   * @param {number} x1 the x coordinate of the upper-left point
-   * @param {number} y1 the y coordinate of the upper-left point
-   * @param {number} x2 the x coordinate of the lower-right point
-   * @param {number} y2 the y coordinate of the lower-right point
-   */
-  class Rect {
-    constructor(x1: number, y1: number, x2: number, y2: number);
-    /**
-     * Gets the width of the rect
-     * @method Annotations.Rect#getWidth
-     * @returns {number} The width of the rect
-     */
-    getWidth(): number;
-    /**
-     * Gets the height of the rect
-     * @method Annotations.Rect#getHeight
-     * @returns {number} The height of the rect
-     */
-    getHeight(): number;
-    /**
-     * Translates the rect
-     * @method Annotations.Rect#translate
-     * @param {number} x The amount to translate in the x direction
-     * @param {number} y The amount to translate in the y direction
-     */
-    translate(x: number, y: number): void;
-    /**
-     * Best fit this rect into another larger rect
-     * @method Annotations.Rect#fitTo
-     * @param {Annotations.Rect} rect
-     */
-    fitTo(rect: Annotations.Rect): void;
-    /**
-     * Normalizes the rect to ensure point (x1, y1) is the upper left point and width and height are non-negative.
-     * @method Annotations.Rect#normalize
-     */
-    normalize(): void;
-    /**
-     * Normalizes the rect to ensure point (x1, y1) is the bottom left point as expected by xfdf output
-     * @method Annotations.Rect#exportNormalize
-     */
-    exportNormalize(): void;
   }
   /**
    * Represents a caret annotation.
@@ -3231,7 +3212,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -3299,6 +3281,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -3479,7 +3488,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -3547,6 +3557,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -3735,7 +3772,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -3804,6 +3842,33 @@ declare namespace Annotations {
      */
     resourcesLoaded(): Promise<any>;
     /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
+    /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
      * @param {Element} element an xml element representing the annotation
@@ -3820,6 +3885,326 @@ declare namespace Annotations {
     deserialize(element: Element, pageMatrix: any): void;
   }
   /**
+   * Represents a file attachment annotation.
+   * @class
+   * @name FileAttachmentAnnotation
+   * @memberOf Annotations
+   * @extends Annotations.MarkupAnnotation
+   * @property {string} Icon Gets or sets the icon for this fileattachment.
+   */
+  class FileAttachmentAnnotation extends Annotations.MarkupAnnotation {
+    /**
+     * @method Annotations.FileAttachmentAnnotation#getFileMetadata
+     * @returns {Annotations.FileAttachmentAnnotation.FileMetadata} Object containing important attributes of the file
+     */
+    getFileMetadata(): Annotations.FileAttachmentAnnotation.FileMetadata;
+    /**
+     * Gets the binary contents of the file attachment
+     * @returns {Promise<Blob>} - A blob containing the binary contents of the file attachment
+     * @method Annotations.FileAttachmentAnnotation#getFileData
+     */
+    getFileData(): Promise<Blob>;
+    /**
+     * Sets the binary contents of the fileattachment
+     * @param {Blob} - A Blob containing the binary contents of the fileattachment
+     * @method Annotations.FileAttachmentAnnotation#setFileData
+     */
+    setFileData(): void;
+    /**
+     * Sets the annotation's styles for stroke, fill and opacity on the canvas context
+     * @method Annotations.MarkupAnnotation#setStyles
+     * @param {CanvasRenderingContext2D} ctx A canvas context
+     * @param {object} pageMatrix The transformation matrix for the page that the annotation is on
+     */
+    setStyles(ctx: CanvasRenderingContext2D, pageMatrix: any): void;
+    /**
+     * Draws the annotation on the provide canvas context, relative to the page.
+     * The point (0,0) coresponds to the top left corner of the page.
+     * @method Annotations.Annotation#draw
+     * @param {CanvasRenderingContext2D} ctx The canvas context prepared to be drawn on.
+     * @param {object} pageMatrix The page matrix for the page that the annotation is on.
+     * You can get this object by calling getPageMatrix on the document object.
+     */
+    draw(ctx: CanvasRenderingContext2D, pageMatrix: any): void;
+    /**
+     * Whether the annotation is visible on the document or not.
+     * If the Hidden or NoView flags are set, or if the annotation is a reply to another annotation then it won't be visible.
+     * @method Annotations.Annotation#isVisible
+     * @return {boolean} Whether the annotation is visible on the document or not
+     */
+    isVisible(): boolean;
+    /**
+     * Sets the size and location of the annotation's bounding rectangle.
+     * Use this method instead of resize when only the x, y, width and height needs to be modified.
+     * Use setRectWithNormalization instead of setRect if you want to reverse
+     * any wrong-way-round coordinates instead of ignoring them.
+     * @method Annotations.Annotation#setRectWithNormalization
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    setRectWithNormalization(rect: Annotations.Rect): void;
+    /**
+     * Sets the size and location of the annotation's bounding rectangle.
+     * Use this method instead of resize when only the x, y, width and height needs to be modified.
+     * Beware: this method ignores coordinates if they are the wrong way around.
+     * (It hasn't been fixed for reasons of maintaining backward compatibility.
+     * use setRectWithNormalization instead if you want it to reverse the
+     * wrong-way-round coordinates instead of ignoring them.)
+     * @method Annotations.Annotation#setRect
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    setRect(rect: Annotations.Rect): void;
+    /**
+     * Adjusts the annotation's bounding rectangle to take into account changes to the annotation
+     * e.g. stroke thickness, start/end points, etc
+     * @method Annotations.Annotation#adjustRect
+     */
+    adjustRect(): void;
+    /**
+     * Resize the annotation based on a new given {@link Annotations.Rect}.
+     * Use this method instead of setRect when internal properties (other than x, y, width and height) need to be modified on move/resize.
+     * @method Annotations.Annotation#resize
+     * @export
+     * @param {Annotations.Rect} rect the new bounding rectangle
+     */
+    resize(rect: Annotations.Rect): void;
+    /**
+     * Gets the x position measured in page coordinates of an annotation.
+     * @method Annotations.Annotation#getX
+     * @return {number} the x position
+     */
+    getX(): number;
+    /**
+     * Sets the x position measured in page coordinates of an annotation.
+     * @method Annotations.Annotation#setX
+     * @param {number} value the x position
+     */
+    setX(value: number): void;
+    /**
+     * Gets the y position measured in page coordinates.
+     * @method Annotations.Annotation#getY
+     * @return {number}
+     */
+    getY(): number;
+    /**
+     * Sets the y position measured in page coordinates.
+     * @method Annotations.Annotation#setY
+     * @param {number} value the y position
+     */
+    setY(value: number): void;
+    /**
+     * Gets the width of the annotation.
+     * @method Annotations.Annotation#getWidth
+     * @return {number} the width of the annotation.
+     */
+    getWidth(): number;
+    /**
+     * Sets the width of the annotation.
+     * @method Annotations.Annotation#setWidth
+     * @param {number} value the width of the annotation.
+     */
+    setWidth(value: number): void;
+    /**
+     * Gets the height of the annotation.
+     * @method Annotations.Annotation#getHeight
+     * @return {number} the height of the annotation.
+     */
+    getHeight(): number;
+    /**
+     * Sets the height of the annotation.
+     * @method Annotations.Annotation#setHeight
+     * @param {number} value the height of the annotation.
+     */
+    setHeight(value: number): void;
+    /**
+     * Get annotation bounding rectangle
+     * @method Annotations.Annotation#getRect
+     * @returns {Annotations.Rect}
+     */
+    getRect(): Annotations.Rect;
+    /**
+     * Gets the padding that will be applied by default on the annotation's rectangle.
+     * @method Annotations.Annotation#getRectPadding
+     * @returns {number} The amount of padding
+     */
+    getRectPadding(): number;
+    /**
+     * Gets the page number of the annotation.
+     * Note: page number starts from 1.
+     * @method Annotations.Annotation#getPageNumber
+     * @returns {number} The annotation's page number
+     */
+    getPageNumber(): number;
+    /**
+     * Sets the page number of the annotation.
+     * Note: page numbers start from 1.
+     * @method Annotations.Annotation#setPageNumber
+     * @param {number} value the page number to be set
+     */
+    setPageNumber(value: number): void;
+    /**
+     * Gets the leftmost x position measured in page coordinates.
+     * @method Annotations.Annotation#getLeft
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getLeft(): number;
+    /**
+     * Gets the rightmost x position measured in page coordinates.
+     * @method Annotations.Annotation#getRight
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getRight(): number;
+    /**
+     * Gets the topmost y position measured in page coordinates.
+     * @method Annotations.Annotation#getTop
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getTop(): number;
+    /**
+     * Gets the bottommost y position measured in page coordinates.
+     * @method Annotations.Annotation#getBottom
+     * @deprecated Since 1.7
+     * @return {number}
+     */
+    getBottom(): number;
+    /**
+     * Sets the custom data associated with the specified key.
+     * @method Annotations.Annotation#setCustomData
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
+     * @param {*} value The custom data to store
+     */
+    setCustomData(key: string, value: any): void;
+    /**
+     * Returns custom data associated with the given key.
+     * @method Annotations.Annotation#getCustomData
+     * @param {string} key The key for which to retrieve the associated data.
+     * @return {*} value The custom data. If no data is available an empty string is returned.
+     */
+    getCustomData(key: string): any;
+    /**
+     * Deletes custom data associated with the given key.
+     * @method Annotations.Annotation#deleteCustomData
+     * @param {string} key The key for which to delete the associated data.
+     */
+    deleteCustomData(key: string): void;
+    /**
+     * Gets the text content for the annotation.
+     * Contents may be displayed in an annotation's popup or directly on the page (in the case of FreeTextAnnotation).
+     * @method Annotations.Annotation#getContents
+     * @return {string} the text content for the annotation.
+     */
+    getContents(): string;
+    /**
+     * Set the text content for the annotation.
+     * Note that this will not refresh the text in the UI.
+     * @method Annotations.Annotation#setContents
+     * @param {string} value the text content to be set
+     */
+    setContents(value: string): void;
+    /**
+     * Gets the list of replies to this annotation.
+     * @method Annotations.Annotation#getReplies
+     * @return {Array<Annotations.Annotation>} The list of replies
+     */
+    getReplies(): Annotations.Annotation[];
+    /**
+     * Gets the list of group children to this annotation.
+     * @method Annotations.Annotation#getGroupedChildren
+     * @return {Array<Annotations.Annotation>} The list of group children
+     */
+    getGroupedChildren(): Annotations.Annotation[];
+    /**
+     * Gets the status of the annotation, and returns an empty string if no status set.
+     * @method Annotations.Annotation#getStatus
+     * @return {string} The last status update.
+     */
+    getStatus(): string;
+    /**
+     * Gets whether the annotation is a reply to another annotation.
+     * @method Annotations.Annotation#isReply
+     * @return {boolean} Returns true if it does reply to another annotation, false otherwise.
+     */
+    isReply(): boolean;
+    /**
+     * Gets whether the annotation is a child of a group
+     * @method Annotations.Annotation#isGrouped
+     * @return {boolean} Returns true if the annotation is a child of a group, false otherwise.
+     */
+    isGrouped(): boolean;
+    /**
+     * Resolves when all required resources have finished loading.
+     * Currently only applicable to stamp annotations that use images.
+     * @method Annotations.Annotation#resourcesLoaded
+     * @return {Promise<any>} A promise that resolves when the resources have finished loading
+     */
+    resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
+    /**
+     * Serialize the annotation to an xml element
+     * @method Annotations.Annotation#serialize
+     * @param {Element} element an xml element representing the annotation
+     * @param {object} pageMatrix the page matrix used to convert XOD coordinates to PDF coordinates.
+     * @returns {Element} the resulting xml element representing the annotation
+     */
+    serialize(element: Element, pageMatrix: any): Element;
+    /**
+     * Deserializes the xml element into the annotation
+     * @method Annotations.Annotation#deserialize
+     * @param {Element} element an xml element representing the annotation
+     * @param {object} pageMatrix the page matrix used to convert PDF coordinates to XOD coordinates.
+     */
+    deserialize(element: Element, pageMatrix: any): void;
+    /**
+     * Gets or sets the icon for this fileattachment.
+     */
+    Icon: string;
+  }
+  namespace FileAttachmentAnnotation {
+    /**
+     * @typedef Annotations.FileAttachmentAnnotation.FileMetadata
+     * @type {Object}
+     * @property {string} mimeType - The mimetype attribute of the file
+     * @property {string} fileName - The name of the file to be saved
+     * @property {string} size - The size in bytes of the file
+     */
+    type FileMetadata = {
+      mimeType: string;
+      fileName: string;
+      size: string;
+    };
+  }
+  /**
    * Represents a FreeHand annotation.
    * @class
    * @memberof Annotations
@@ -3829,7 +4214,7 @@ declare namespace Annotations {
    * @property {number} RightMost The rightmost point of the annotation.
    * @property {number} TopMost The topmost point of the annotation.
    * @property {number} BottomMost The bottommost point of the annotation.
-   * @property {boolean} shouldSimplifyPath Whether to simplify the path points or not. (defaults to true)
+   * @property {boolean} shouldSimplifyPath Whether to simplify the path points or not. (defaults to false)
    */
   class FreeHandAnnotation extends Annotations.IPathAnnotation {
     /**
@@ -4054,7 +4439,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -4123,6 +4509,33 @@ declare namespace Annotations {
      */
     resourcesLoaded(): Promise<any>;
     /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
+    /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
      * @param {Element} element an xml element representing the annotation
@@ -4154,7 +4567,7 @@ declare namespace Annotations {
      */
     BottomMost: number;
     /**
-     * Whether to simplify the path points or not. (defaults to true)
+     * Whether to simplify the path points or not. (defaults to false)
      */
     shouldSimplifyPath: boolean;
   }
@@ -4403,7 +4816,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -4471,6 +4885,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -4713,7 +5154,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -4781,6 +5223,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -5037,7 +5506,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -5105,6 +5575,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -5302,7 +5799,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -5370,6 +5868,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -5626,7 +6151,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -5695,6 +6221,33 @@ declare namespace Annotations {
      */
     resourcesLoaded(): Promise<any>;
     /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
+    /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
      * @param {Element} element an xml element representing the annotation
@@ -5716,8 +6269,17 @@ declare namespace Annotations {
    * @memberof Annotations
    * @name PolygonAnnotation
    * @extends Annotations.IPathAnnotation
+   * @property {number} Intensity Describes intensity of cloudy style effect. 0 for no effect.
+   * @property {string} Intent Describes the intent of the annotation, e.g PolygonCloud, PolygonDimension
+   * @property {string} ArcDrawMode Describes how the arcs of a PolygonCloud annotation will be drawn, can be one of either RANDOM_ARCS or EQUAL_ARCS
    */
   class PolygonAnnotation extends Annotations.IPathAnnotation {
+    /**
+     * Gets whether the polygon annotation is rectangular and behaves the same as a rectangle annotation.
+     * @method Annotations.PolygonAnnotation#isRectangularPolygon
+     * @returns {boolean} true if the polygon annotation is rectangular and behaves the same a rectangle annotation.
+     */
+    isRectangularPolygon(): boolean;
     /**
      * Adds a point to the path
      * @method Annotations.IPathAnnotation#addPathPoint
@@ -5914,7 +6476,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -5983,6 +6546,33 @@ declare namespace Annotations {
      */
     resourcesLoaded(): Promise<any>;
     /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
+    /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
      * @param {Element} element an xml element representing the annotation
@@ -5997,6 +6587,18 @@ declare namespace Annotations {
      * @param {object} pageMatrix the page matrix used to convert PDF coordinates to XOD coordinates.
      */
     deserialize(element: Element, pageMatrix: any): void;
+    /**
+     * Describes intensity of cloudy style effect. 0 for no effect.
+     */
+    Intensity: number;
+    /**
+     * Describes the intent of the annotation, e.g PolygonCloud, PolygonDimension
+     */
+    Intent: string;
+    /**
+     * Describes how the arcs of a PolygonCloud annotation will be drawn, can be one of either RANDOM_ARCS or EQUAL_ARCS
+     */
+    ArcDrawMode: string;
   }
   /**
    * Creates a new instance of PopupAnnotation.
@@ -6163,7 +6765,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -6231,6 +6834,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -6419,7 +7049,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -6487,6 +7118,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -6694,7 +7352,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -6762,6 +7421,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -6952,7 +7638,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -7020,6 +7707,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -7236,7 +7950,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -7304,6 +8019,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -7508,7 +8250,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -7576,6 +8319,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -7768,7 +8538,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -7836,6 +8607,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -8027,7 +8825,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -8095,6 +8894,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -8282,7 +9108,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -8350,6 +9177,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -8537,7 +9391,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -8605,6 +9460,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -8792,7 +9674,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -8860,6 +9743,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -9074,7 +9984,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -9142,6 +10053,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -9354,7 +10292,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -9422,6 +10361,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -9637,7 +10603,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -9705,6 +10672,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -9923,7 +10917,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -9991,6 +10986,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -10203,7 +11225,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -10271,6 +11294,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -10500,7 +11550,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -10568,6 +11619,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -10788,7 +11866,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -10856,6 +11935,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -11082,7 +12188,8 @@ declare namespace Annotations {
     /**
      * Sets the custom data associated with the specified key.
      * @method Annotations.Annotation#setCustomData
-     * @param {string} key The key under which to store this custom data
+     * @param {string} key The key under which to store this custom data. Data will automatically be saved in the exported XFDF
+     * and merged into the PDF when downloading.
      * @param {*} value The custom data to store
      */
     setCustomData(key: string, value: any): void;
@@ -11150,6 +12257,33 @@ declare namespace Annotations {
      * @return {Promise<any>} A promise that resolves when the resources have finished loading
      */
     resourcesLoaded(): Promise<any>;
+    /**
+     * Flags the annotation as modified if it has been before the last call to exportAnnotCommand
+     * Removes the annotation's appearance if no parameter is passed
+     * Should be called if changing a custom property on the annotation that is used for serialization
+     * Otherwise the annotation will serialize the original deserialized value
+     * @method Annotations.Annotation#setModified
+     * @param {boolean} [keepAppearance] If true then the annotation's appearance will be maintained
+     */
+    setModified(keepAppearance?: boolean): void;
+    /**
+     * Associate a link with annotation. The associated links will be deleted with the annotation.
+     * You can associate multiple links with a single annotation.
+     * @param {Array<string>|string} linkIds The link IDs to associate with the current annotation.
+     * @method Annotations.Annotation#associateLink
+     */
+    associateLink(linkIds: string[] | string): void;
+    /**
+     * Returns all associated links with the annotation.
+     * @method Annotations.Annotation#getAssociatedLinks
+     * @returns {Array<string>} Link IDs associated with the annotation.
+     */
+    getAssociatedLinks(): string[];
+    /**
+     * Removes all associated links with the annotation. Doesn't remove the underlying links.
+     * @method Annotations.Annotation#unassociateLinks
+     */
+    unassociateLinks(): void;
     /**
      * Serialize the annotation to an xml element
      * @method Annotations.Annotation#serialize
@@ -11232,9 +12366,9 @@ declare namespace Annotations {
      * If options is a string, set that flag to shouldSet.
      * @method Annotations.WidgetFlags#set
      * @param {(Array<string>|Array<number>|string|number)} options One of the possible input types to determine which flags to set
-     * @param {?boolean} shouldSet If options is a string, whether to set or unset the flag
+     * @param {boolean} [shouldSet] If options is a string, whether to set or unset the flag
      */
-    set(options: string[] | number[] | string | number, shouldSet: boolean): void;
+    set(options: string[] | number[] | string | number, shouldSet?: boolean): void;
   }
   /**
    * @name Annotations.XfdfUtils
@@ -11388,14 +12522,16 @@ declare namespace CoreControls {
      * Whether or not the current user can modify the annotation.
      * @method CoreControls.AnnotationManager#canModify
      * @param {object} annotation The annotation to check permissions on.
+     * @returns {boolean} Whether the annotation can be modified or not.
      */
-    canModify(annotation: any): void;
+    canModify(annotation: any): boolean;
     /**
      * Whether or not the current user can modify the annotation's contents.
      * @method CoreControls.AnnotationManager#canModifyContents
      * @param {object} annotation The annotation to check permissions on.
+     * @returns {boolean} Whether the annotation's contents can be modified or not.
      */
-    canModifyContents(annotation: any): void;
+    canModifyContents(annotation: any): boolean;
     /**
      * Sets the function to be called when a submit form action is triggered.
      * @method CoreControls.AnnotationManager#setSubmitFormActionCallback
@@ -11523,10 +12659,10 @@ declare namespace CoreControls {
      * Adds the specified annotations to the managed list of annotations
      * @method CoreControls.AnnotationManager#addAnnotations
      * @param {Array<Annotations.Annotation>} annotations An array of annotations.
-     * @param {boolean} imported Whether the annotations were imported from another source or not
-     * @param {boolean} isUndoRedo Whether the annotation change was caused by undo/redo or not
+     * @param {boolean} [imported] Whether the annotations were imported from another source or not
+     * @param {boolean} [isUndoRedo] Whether the annotation change was caused by undo/redo or not
      */
-    addAnnotations(annotations: Annotations.Annotation[], imported: boolean, isUndoRedo: boolean): void;
+    addAnnotations(annotations: Annotations.Annotation[], imported?: boolean, isUndoRedo?: boolean): void;
     /**
      * Gets the root annotation that this annotation is replying to.
      * If this annotation is not replying to anything then the root is itself.
@@ -11571,9 +12707,12 @@ declare namespace CoreControls {
      * @method CoreControls.AnnotationManager#applyRedactions
      * @param {(Annotations.Annotation|Annotations.Annotation[])} [annotations] An array of redaction annotations or a single redaction annotation.
      * If nothing passed, apply all redactions. If the redaction annotations overlap with other annotations, it calls deleteAnnotations on the other annotations.
-     * @return {Promise<void>} Promise for when the redactions has been applied. When using WebViewer Server, this promise is resolved to an URL string of the redacted document
+     * @return {Promise<Array<CoreControls.AnnotationManager.RedactionInfo>|string>} Returns a promise that resolves with an array of redaction info when the redactions have been applied.
+     * If using WebViewer server, the promise will resolve with a URL to the redacted document.
      */
-    applyRedactions(annotations?: Annotations.Annotation | Annotations.Annotation[]): Promise<void>;
+    applyRedactions(
+      annotations?: Annotations.Annotation | Annotations.Annotation[],
+    ): Promise<CoreControls.AnnotationManager.RedactionInfo[] | string>;
     /**
      * Check if applying redaction is enabled
      * @method CoreControls.AnnotationManager#isApplyRedactionEnabled
@@ -11606,13 +12745,13 @@ declare namespace CoreControls {
      * If an annotation is successfully deleted, the annotationChanged event will be fired with a "delete" action.
      * @method CoreControls.AnnotationManager#deleteAnnotation
      * @param {Annotations.Annotation} annotation An instance of Annotation.
-     * @param {boolean} imported Whether the annotation was imported from another source or not
+     * @param {boolean} [imported] Whether the annotation was imported from another source or not
      * @param {boolean} [force] If true then the annotation will be deleted regardless of the user's current permissions
      * @param {boolean} [isUndoRedo] Whether the annotation change was caused by undo/redo or not
      */
     deleteAnnotation(
       annotation: Annotations.Annotation,
-      imported: boolean,
+      imported?: boolean,
       force?: boolean,
       isUndoRedo?: boolean,
     ): void;
@@ -11730,18 +12869,18 @@ declare namespace CoreControls {
     /**
      * Exports all annotations as an XFDF (XML) string
      * @method CoreControls.AnnotationManager#exportAnnotations
-     * @param {object} options Options for the export. Set options.widgets or options.links or options.fields to false to disable exporting of them.
-     * @param {Array<Annotations.Annotation>} options.annotList An array of annotations to only export the XFDF for those particular annotations.
-     * @param {boolean} options.widgets Whether to export widget information
-     * @param {boolean} options.links Whether to export links information
-     * @param {boolean} options.fields Whether to export fields information
+     * @param {object} [options] Options for the export. Set options.widgets or options.links or options.fields to false to disable exporting of them.
+     * @param {Array<Annotations.Annotation>} [options.annotList] An array of annotations to only export the XFDF for those particular annotations.
+     * @param {boolean} [options.widgets] Whether to export widget information
+     * @param {boolean} [options.links] Whether to export links information
+     * @param {boolean} [options.fields] Whether to export fields information
      * @return {Promise<string>} Returns a promise that resolves with the XFDF (XML) annotations as a string
      */
-    exportAnnotations(options: {
-      annotList: Annotations.Annotation[];
-      widgets: boolean;
-      links: boolean;
-      fields: boolean;
+    exportAnnotations(options?: {
+      annotList?: Annotations.Annotation[];
+      widgets?: boolean;
+      links?: boolean;
+      fields?: boolean;
     }): Promise<string>;
     /**
      * Gets an XML string specifying the added, modified and deleted annotations.
@@ -11765,17 +12904,17 @@ declare namespace CoreControls {
      * @method CoreControls.AnnotationManager#importAnnotations
      * @param {string} xfdfString The XFDF annotations as a string
      * @param {object} [options] The options for importing
-     * @param {number} options.batchSize The number of annotations to import in each batch (default 100)
-     * @param {number} options.batchDelay The amount of time in milliseconds to delay between importing each batch (default 0)
-     * @param {Annotations.Annotation|Array<Annotations.Annotation>} options.replace The type of existing annotations that will be removed before import starts (default [])
+     * @param {number} [options.batchSize] The number of annotations to import in each batch (default 100)
+     * @param {number} [options.batchDelay] The amount of time in milliseconds to delay between importing each batch (default 0)
+     * @param {Annotations.Annotation|Array<Annotations.Annotation>} [options.replace] The type of existing annotations that will be removed before import starts (default [])
      * @return {Promise<any>} Returns a promise that resolves with the annotations have been imported
      */
     importAnnotations(
       xfdfString: string,
       options?: {
-        batchSize: number;
-        batchDelay: number;
-        replace: Annotations.Annotation | Annotations.Annotation[];
+        batchSize?: number;
+        batchDelay?: number;
+        replace?: Annotations.Annotation | Annotations.Annotation[];
       },
     ): Promise<any>;
     /**
@@ -11912,6 +13051,26 @@ declare namespace CoreControls {
      */
     controlPointHitBoxScale: number;
   }
+  namespace AnnotationManager {
+    /**
+     * @typedef {object} CoreControls.AnnotationManager.RedactionInfo
+     * @property {number} pageNumber The page number of the redaction
+     * @property {Annotations.Rect} rect A rect containing the bounding box of the redaction
+     */
+    type RedactionInfo = {
+      pageNumber: number;
+      rect: Annotations.Rect;
+    };
+    /**
+     * @typedef {Object} CoreControls.AnnotationManager.AnnotationChangedInfoObject
+     * @property {boolean} imported A boolean that will be true if the annotation change is the result of importing annotations using importAnnotations, importAnnotCommand or if the imported parameter is set to true when calling addAnnotations or deleteAnnotations
+     * @property {boolean} isUndoRedo A boolean that will be true if the annotation change is the result of an undo or redo action
+     */
+    type AnnotationChangedInfoObject = {
+      imported: boolean;
+      isUndoRedo: boolean;
+    };
+  }
   /**
    * Forces a higher level of accuracy in image downsampling at the expense of rendering performance.
    * This function should be called before loading a document to ensure this setting is used.
@@ -11950,6 +13109,7 @@ declare namespace CoreControls {
    * @param {string} [options.l] - The license key for viewing PDF or Office files (PDF/Office only).
    * @param {string} [options.docId] An unique identifier for the document, used for offline mode.
    * @param {function} [options.onLoadingProgress] - A callback function for loading progress, function signature function(percent) {}.
+   * @param {function} [options.onError] - A callback function that will be called when error occurs in the process of creating a document. function signature function(e) {}
    * @param {Promise<any>} [options.workerTransportPromise] - The workerTransportPromise that should be used to load the document.
    * @param {string|function} [options.password] -  A password string or a function of the form function(callback) where callback is of the form function(password). This 'password' function will be called when a password is required to load a PDF document and should call the callback with the retrieved password.
    * @param {string} [options.filename] - A filename that is used for the downloaded file, and for determining the extension when options.extension isn't used.
@@ -11958,6 +13118,8 @@ declare namespace CoreControls {
    * @param {boolean} [options.useDownloader] - A boolean indicating whether Downloader should be used on urls (PDF only). https://www.pdftron.com/documentation/web/guides/usedownloader-option/.
    * @param {boolean} [options.withCredentials] - Whether to set the withCredentials property on the XMLHttpRequest.
    * @param {Array<object>} [options.pageSizes] - An array of objects in the shape of { width: number, height: number }. Used to determine the page sizes when loading an image file.
+   * @param {string} [options.backendType] - A string representing the "backend type" for rendering PDF documents. Pass "ems" to force the use of the ASM.js/WebAssembly worker and "pnacl" for the "PNaCl" worker.
+   * @param {object} [options.xodOptions] - An object that contains the options for a XOD document.
    * @param {boolean} [options.xodOptions.decrypt] - Function to be called to decrypt a part of the XOD file. For default XOD AES encryption pass CoreControls.Encryption.decrypt.
    * @param {boolean} [options.xodOptions.decryptOptions] -  An object with options for the decryption e.g. {p: "pass", type: "aes"} where is p is the password.
    * @param {boolean} [options.xodOptions.streaming] - A boolean indicating whether to use http or streaming PartRetriever, it is recommended to keep streaming false for better performance. https://www.pdftron.com/documentation/web/guides/streaming-option.
@@ -11974,6 +13136,7 @@ declare namespace CoreControls {
       l?: string;
       docId?: string;
       onLoadingProgress?: (...params: any[]) => any;
+      onError?: (...params: any[]) => any;
       workerTransportPromise?: Promise<any>;
       password?: string | ((...params: any[]) => any);
       filename?: string;
@@ -11982,6 +13145,14 @@ declare namespace CoreControls {
       useDownloader?: boolean;
       withCredentials?: boolean;
       pageSizes?: object[];
+      backendType?: string;
+      xodOptions?: {
+        decrypt?: boolean;
+        decryptOptions?: boolean;
+        streaming?: boolean;
+        azureWorkaround?: boolean;
+        startOffline?: boolean;
+      };
       pdftronServer?: string;
       cacheKey?: string;
       forceClientSideInit?: boolean;
@@ -12295,9 +13466,9 @@ declare namespace CoreControls {
      * Returns an object containing the width and height of a page.
      * @method CoreControls.Document#getPageInfo
      * @param {number} pageIndex The page number, zero-indexed, of the requested page.
-     * @returns {object} An object representing the page info. Contains the properties "width" and "height".
+     * @returns {CoreControls.Document.PageInfo} An object representing the page info. Contains the properties "width" and "height".
      */
-    getPageInfo(pageIndex: number): any;
+    getPageInfo(pageIndex: number): CoreControls.Document.PageInfo;
     /**
      * Returns an object with the original x and y coordinates converted to PDF coordinates for the page.
      * @method CoreControls.Document#getPDFCoordinates
@@ -12342,9 +13513,9 @@ declare namespace CoreControls {
     /**
      * Returns an object with metadata associated with the document.
      * @method CoreControls.Document#getMetadata
-     * @returns {object} An object with document metadata
+     * @returns {Promise<object>} A promise that resolves to an object with document metadata
      */
-    getMetadata(): any;
+    getMetadata(): Promise<object>;
     /**
      * Used to know if a document contains thumbnails.
      * @method CoreControls.Document#includesThumbnails
@@ -12366,7 +13537,7 @@ declare namespace CoreControls {
      * Initialize a Document so that it can be used to load page canvases.
      * @method CoreControls.Document#loadAsync
      * @param {PartRetrievers.PartRetriever} partRetriever An instance of PartRetriever.
-     * @param {function} callback The callback to call when the Document has been initialized. If there is an error then an error object will be passed to the callback function.
+     * @param {CoreControls.Document.LoadAsyncCallback} callback
      * @param options an object that can contain the following optional parameters
      * @param {Promise<any>} [options.workerTransportPromise] Required to load a PDF or Office file. A promise that will be resolved when a worker transport has been initialized. This can be created by calling CoreControls.initPDFWorkerTransports or CoreControls.initOfficeWorkerTransports as appropriate.
      * @param {function} [options.getPassword] A method of the form function(callback) where callback is of the form function(password). getPassword will be called when a password is required to load a PDF document and should call the callback with the retrieved password.
@@ -12374,7 +13545,7 @@ declare namespace CoreControls {
      */
     loadAsync(
       partRetriever: PartRetrievers.PartRetriever,
-      callback: (...params: any[]) => any,
+      callback: CoreControls.Document.LoadAsyncCallback,
       options: {
         workerTransportPromise?: Promise<any>;
         getPassword?: (...params: any[]) => any;
@@ -12486,6 +13657,7 @@ declare namespace CoreControls {
     /**
      * [PDF/Office Document only] Asynchronously saves the document and provides the result as an ArrayBuffer.
      * To include annotations in the saved document, please provide an object with the xfdfString property.
+     *
      * @method CoreControls.Document#getFileData
      * @param {Object} [options] An optional object containing save options and parameters.
      * @param {string} [options.xfdfString] An xfdf string containing annotation data to be used when saving. This will usually be retrieved by calling exportAnnotations on a CoreControls.AnnotationManager object.
@@ -12770,6 +13942,22 @@ declare namespace CoreControls {
   }
   namespace Document {
     /**
+     * @typedef {Object} CoreControls.Document.PageInfo
+     * @property {number} width The width of the page
+     * @property {number} height The height of the page
+     */
+    type PageInfo = {
+      width: number;
+      height: number;
+    };
+    /**
+     * The callback to call when the Document has been initialized. If there is an error then an error object will be passed to the callback function.
+     * @callback LoadAsyncCallback
+     * @memberof CoreControls.Document
+     * @param {Object} [error] The error that occurs when initializing the document
+     */
+    type LoadAsyncCallback = (error?: any) => void;
+    /**
      * @typedef {Object} CoreControls.Document.XFDFInfo
      * @property {string} xfdfString The XFDF string
      * @property {Array<number>} pages Array of page numbers that annotations were extracted from
@@ -12806,6 +13994,40 @@ declare namespace CoreControls {
    * @property {object} defaults Default values for document viewer. Set FitMode, DisplayMode or Zoom.
    */
   class DocumentViewer extends EventHandler {
+    /**
+     * Search modes that control how searching is conducted.
+     * @name CoreControls.DocumentViewer#SearchMode
+     * @property {number} e_case_sensitive If set, the found text must match the case of the search term.
+     * @property {number} e_whole_word If set, the found text must be a whole word (preceeded and followed by a non-alphabetical character, or in the case of a number, a non-numerical character.
+     * @property {number} e_search_up If set, the document pages will be searched in descending order, from bottom to top.
+     * @property {number} e_page_stop If set, the search will return with a result code of Page at the end of every page. Useful for updating the UI.
+     * @property {number} e_highlight If set, the bounding box the found term will be included. Useful for highlighting text and positioning the page.
+     * @property {number} e_ambient_string If set, the characters surrounding the found term will be included. This gives context to the search result may be useful when providing a list of search results.
+     */
+    SearchMode: {
+      e_case_sensitive: number;
+      e_whole_word: number;
+      e_search_up: number;
+      e_page_stop: number;
+      e_highlight: number;
+      e_ambient_string: number;
+    };
+    /**
+     * Enum for snap mode values. Snap modes control which point within the page is considered as the queried point.
+     * @name CoreControls.DocumentViewer#SnapMode
+     * @property {number} e_DefaultSnapMode
+     * @property {number} e_PointOnLine
+     * @property {number} e_LineMidpoint
+     * @property {number} e_LineIntersection
+     * @property {number} e_PathEndpoint
+     */
+    SnapMode: {
+      e_DefaultSnapMode: number;
+      e_PointOnLine: number;
+      e_LineMidpoint: number;
+      e_LineIntersection: number;
+      e_PathEndpoint: number;
+    };
     /**
      * This function must be called after modifying the ScrollView (#DocumentViewer) element's dimensions or properties.
      * @method CoreControls.DocumentViewer#scrollViewUpdated
@@ -12852,11 +14074,61 @@ declare namespace CoreControls {
     ): void;
     /**
      * Initialize the viewer and load the given file into the viewer.
-     * This API takes the same arguments as @see CoreControls.createDocument does.
      * @method CoreControls.DocumentViewer#loadDocument
-     * @returns {Promise} A promise that resolves when the document is finished loading
+     * @param {(string|File|ArrayBuffer|Blob)} source - Source parameter, path/url to document or File.
+     * @param {object} [options]  - An object that can contain the following optional parameters.
+     * @param {string} [options.l] - The license key for viewing PDF or Office files (PDF/Office only).
+     * @param {string} [options.docId] An unique identifier for the document, used for offline mode.
+     * @param {function} [options.onLoadingProgress] - A callback function for loading progress, function signature function(percent) {}.
+     * @param {function} [options.onError] - A callback function that will be called when error occurs in the process of loading a document. function signature function(e) {}
+     * @param {Promise<any>} [options.workerTransportPromise] - The workerTransportPromise that should be used to load the document.
+     * @param {string|function} [options.password] -  A password string or a function of the form function(callback) where callback is of the form function(password). This 'password' function will be called when a password is required to load a PDF document and should call the callback with the retrieved password.
+     * @param {string} [options.filename] - A filename that is used for the downloaded file, and for determining the extension when options.extension isn't used.
+     * @param {string} [options.extension] - Used for specifying the extension of the document to be loaded. This is necessary if the URL/path does not contain the file extension or if you're loading a Blob/File.
+     * @param {object} [options.customHeaders] - An object containing custom HTTP headers to use when retrieving the document from the specified url. For example: {'Authorization' : 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='}.
+     * @param {boolean} [options.useDownloader] - A boolean indicating whether Downloader should be used on urls (PDF only). https://www.pdftron.com/documentation/web/guides/usedownloader-option/.
+     * @param {boolean} [options.withCredentials] - Whether to set the withCredentials property on the XMLHttpRequest.
+     * @param {Array<object>} [options.pageSizes] - An array of objects in the shape of { width: number, height: number }. Used to determine the page sizes when loading an image file.
+     * @param {string} [options.backendType] - A string representing the "backend type" for rendering PDF documents. Pass "ems" to force the use of the ASM.js/WebAssembly worker and "pnacl" for the "PNaCl" worker.
+     * @param {object} [options.xodOptions] - An object that contains the options for a XOD document.
+     * @param {boolean} [options.xodOptions.decrypt] - Function to be called to decrypt a part of the XOD file. For default XOD AES encryption pass CoreControls.Encryption.decrypt.
+     * @param {boolean} [options.xodOptions.decryptOptions] -  An object with options for the decryption e.g. {p: "pass", type: "aes"} where is p is the password.
+     * @param {boolean} [options.xodOptions.streaming] - A boolean indicating whether to use http or streaming PartRetriever, it is recommended to keep streaming false for better performance. https://www.pdftron.com/documentation/web/guides/streaming-option.
+     * @param {boolean} [options.xodOptions.azureWorkaround] - Whether or not to workaround the issue of Azure not accepting range requests of a certain type. Enabling the workaround will add an extra HTTP request of overhead but will still allow documents to be loaded from other locations.
+     * @param {boolean} [options.xodOptions.startOffline] - Whether to start loading the document in offline mode or not. This can be set to true if the document had previously been saved to an offline database using WebViewer APIs. You'll need to use this option to load from a completely offline state.
+     * @param {string} [options.pdftronServer] - A URL to the WebViewer server drop-in backend https://www.pdftron.com/documentation/web/guides/wv-server-deployment.
+     * @param {string} [options.cacheKey] - A key that will be used for caching the document on WebViewer Server.
+     * @param {boolean} [options.forceClientSideInit] - If set to true then when loading a document using WebViewer Server the document will always switch to client only rendering allowing page manipulation and the full API to be used.
+     * @returns {Promise<void>} A promise that resolves when the document is finished loading
      */
-    loadDocument(): Promise<void>;
+    loadDocument(
+      source: string | File | ArrayBuffer | Blob,
+      options?: {
+        l?: string;
+        docId?: string;
+        onLoadingProgress?: (...params: any[]) => any;
+        onError?: (...params: any[]) => any;
+        workerTransportPromise?: Promise<any>;
+        password?: string | ((...params: any[]) => any);
+        filename?: string;
+        extension?: string;
+        customHeaders?: any;
+        useDownloader?: boolean;
+        withCredentials?: boolean;
+        pageSizes?: object[];
+        backendType?: string;
+        xodOptions?: {
+          decrypt?: boolean;
+          decryptOptions?: boolean;
+          streaming?: boolean;
+          azureWorkaround?: boolean;
+          startOffline?: boolean;
+        };
+        pdftronServer?: string;
+        cacheKey?: string;
+        forceClientSideInit?: boolean;
+      },
+    ): Promise<void>;
     /**
      * Gets a promise that resolves when the annotations in the current document have all been loaded
      * @method CoreControls.DocumentViewer#getAnnotationsLoadedPromise
@@ -13046,19 +14318,19 @@ declare namespace CoreControls {
     /**
      * Returns a specific tool from the tool mode map.
      * @method CoreControls.DocumentViewer#getTool
-     * @param {string} Name of the tool. eg 'AnnotationEdit'
+     * @param {string|Tools.ToolNames} Name of the tool. eg 'AnnotationEdit'
      * @returns {object} The tool mode map object.
      */
-    getTool(Name: string): any;
+    getTool(Name: string | Tools.ToolNames): any;
     /**
      * Returns the current viewing rotation.
      * @method CoreControls.DocumentViewer#getRotation
      * @param {number} [pageNumber] Optionally pass the page number to get the specific page's rotation
      * @returns {CoreControls.PageRotation} The current viewing rotation.
-     * @example PageRotation.e_0 = 0 (0 degress) <br/>
-     * PageRotation.e_90 = 1 (90 degress) <br/>
-     * PageRotation.e_180 = 2 (180 degress) <br/>
-     * PageRotation.e_270 = 3 (270 degress) <br/>
+     * @example PageRotation['e_0'] = 0 (0 degress) <br/>
+     * PageRotation['e_90'] = 1 (90 degress) <br/>
+     * PageRotation['e_180'] = 2 (180 degress) <br/>
+     * PageRotation['e_270'] = 3 (270 degress) <br/>
      */
     getRotation(pageNumber?: number): CoreControls.PageRotation;
     /**
@@ -13133,19 +14405,20 @@ declare namespace CoreControls {
      * @param {number} pageNumber The page number the location is on
      * @param {number} horizontalPosition The horizontal position from the left of the page
      * @param {number} verticalPostion The vertical position from the top of the page
-     * @param {boolean} doNotJumpIfInView If true then if the page location is currently in view don't cause the viewer to shift
+     * @param {boolean} [doNotJumpIfInView] If true then if the page location is currently in view don't cause the viewer to shift
      */
     displayPageLocation(
       pageNumber: number,
       horizontalPosition: number,
       verticalPostion: number,
-      doNotJumpIfInView: boolean,
+      doNotJumpIfInView?: boolean,
     ): void;
     /**
      * Searches for a particular text string on the currently displayed Document, starting on the current page unless otherwise specified.
      * @method CoreControls.DocumentViewer#textSearchInit
      * @param {string} pattern The text to search for.
-     * @param {DocumentViewer.SearchMode} mode The options for search, controlling options such as case sensitivity and search direction.
+     * @param {number} mode The options for search, controlling options such as case sensitivity and search direction.
+     * @see CoreControls.DocumentViewer#SearchMode
      * @param {object} [options] An object that can contain the following optional parameters
      * @param {boolean} [options.fullSearch] If true, a search of the entire document will be performed. Otherwise, a single search will be performed.
      * @param {function} [options.onResult] (result) The callback function that is called when the search returns a result.
@@ -13157,7 +14430,7 @@ declare namespace CoreControls {
      */
     textSearchInit(
       pattern: string,
-      mode: DocumentViewer.SearchMode,
+      mode: number,
       options?: {
         fullSearch?: boolean;
         onResult?: (...params: any[]) => any;
@@ -13383,6 +14656,18 @@ declare namespace CoreControls {
      */
     stopPageRender(pageIndex: number): void;
     /**
+     * Sets whether viewport rendering mode should be used
+     * @method CoreControls.DocumentViewer#setViewportRenderMode
+     * @param {boolean} val Whether viewport rendering mode should be used or not
+     */
+    setViewportRenderMode(val: boolean): void;
+    /**
+     * Returns a boolean to denote if viewer is in viewport rendering mode
+     * @method CoreControls.DocumentViewer#isInViewportRenderMode
+     * @returns {boolean} the boolean to denote if in viewport render mode
+     */
+    isInViewportRenderMode(): boolean;
+    /**
      * Sets watermark to be added to documents. Instead of an options object you can also pass a Promise
      * that resolves with the watermark options object. If the document hasn't been loaded yet then
      * DocumentViewer will wait to finish loading it until the watermark options are ready.
@@ -13482,42 +14767,6 @@ declare namespace CoreControls {
   }
   namespace DocumentViewer {
     /**
-     * Search modes that control how searching is conducted.
-     * @enum {number}
-     * @name CoreControls.DocumentViewer.SearchMode
-     * @property {number} e_case_sensitive If set, the found text must match the case of the search term.
-     * @property {number} e_whole_word If set, the found text must be a whole word (preceeded and followed by a non-alphabetical character, or in the case of a number, a non-numerical character.
-     * @property {number} e_search_up If set, the document pages will be searched in descending order, from bottom to top.
-     * @property {number} e_page_stop If set, the search will return with a result code of Page at the end of every page. Useful for updating the UI.
-     * @property {number} e_highlight If set, the bounding box the found term will be included. Useful for highlighting text and positioning the page.
-     * @property {number} e_ambient_string If set, the characters surrounding the found term will be included. This gives context to the search result may be useful when providing a list of search results.
-     */
-    enum SearchMode {
-      e_case_sensitive,
-      e_whole_word,
-      e_search_up,
-      e_page_stop,
-      e_highlight,
-      e_ambient_string,
-    }
-    /**
-     * Enum for snap mode values. Snap modes control which point within the page is considered as the queried point.
-     * @name CoreControls.DocumentViewer.SnapMode
-     * @enum {number}
-     * @property {number} e_DefaultSnapMode
-     * @property {number} e_PointOnLine
-     * @property {number} e_LineMidpoint
-     * @property {number} e_LineIntersection
-     * @property {number} e_PathEndpoint
-     */
-    enum SnapMode {
-      e_DefaultSnapMode,
-      e_PointOnLine,
-      e_LineMidpoint,
-      e_LineIntersection,
-      e_PathEndpoint,
-    }
-    /**
      * Contains a list of available fit modes for the DocumentViewer.
      * @enum {function}
      * @name CoreControls.DocumentViewer.FitMode
@@ -13561,9 +14810,9 @@ declare namespace CoreControls {
    * @name getDefaultBackendType
    * @memberof CoreControls
    * @function
-   * @returns {string} Returns "pnacl" is PNaCl should be used and "ems" if Emscripten should be used
+   * @returns {'pnacl' | 'ems'} Returns "pnacl" is PNaCl should be used and "ems" if Emscripten should be used
    */
-  function getDefaultBackendType(): string;
+  function getDefaultBackendType(): 'pnacl' | 'ems';
   /**
    * Gets the current backend type being used.
    * @name getCurrentPDFBackendType
@@ -13782,6 +15031,18 @@ declare namespace CoreControls {
    */
   function isDemoMode(): boolean;
   /**
+   * Returns the WebViewer version.
+   * @method CoreControls#getVersion
+   * @returns {string} WebViewer version
+   */
+  function getVersion(): string;
+  /**
+   * Returns the specific hashed commit id that is used to build the current WebViewer version.
+   * @method CoreControls#getBuild
+   * @returns {string} A hashed commit id
+   */
+  function getBuild(): string;
+  /**
    * Set the location of the Office asm worker. This will override the location specified by CoreControls.setWorkerPath for Office worker files.
    * @name setOfficeAsmPath
    * @memberof CoreControls
@@ -13860,7 +15121,7 @@ declare namespace CoreControls {
    * @method CoreControls.office2PDFBuffer
    * @param {string|ArrayBuffer} input Either a url from which to download the file or an ArrayBuffer containing the file data.
    * @param {Object} options An object containing conversion options
-   * @param {string=} options.l The license key with which to initialze the SDK
+   * @param {string=} options.l The license key with which to initialize the SDK
    * @return {ArrayBuffer} A promise that resolves to an ArrayBuffer containing the resulting PDF data.
    */
   function office2PDFBuffer(
@@ -13951,6 +15212,14 @@ declare namespace CoreControls {
     CLIENT,
     SERVER,
   }
+  /**
+   * Enables or disables all logs coming from WebViewer.
+   * @name disableLogs
+   * @memberof CoreControls
+   * @function
+   * @param {boolean} disabled Whether or not to disable all WebViewer logs. Defaults to true
+   */
+  function disableLogs(disabled: boolean): void;
 }
 
 /**
@@ -14066,11 +15335,16 @@ declare namespace Tools {
    * @memberof Tools
    * @extends Tools.Tool
    * @param {CoreControls.DocumentViewer} docViewer an instance of DocumentViewer.
-   * @property {Annotations.Rect} PAGE_PADDING padding at the page edges that defines how close annotations can be created and dragged to the edge
    * @property {boolean} overrideSelection Whether to override the default annotation selection behavior of the tool. If true then annotations will not be selected by the tool.
    */
   class AnnotationSelectTool extends Tools.Tool {
     constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * @name Tools.AnnotationSelectTool.PAGE_PADDING
+     * @type {Annotations.Rect}
+     * padding at the page edges that defines how close annotations can be created and dragged to the edge
+     */
+    static PAGE_PADDING: Annotations.Rect;
     /**
      * Takes an event object from a mouse event and converts the location into window coordinates
      * @method Tools.Tool#getMouseLocation
@@ -14157,10 +15431,6 @@ declare namespace Tools {
      */
     setName(name: string): void;
     /**
-     * padding at the page edges that defines how close annotations can be created and dragged to the edge
-     */
-    PAGE_PADDING: Annotations.Rect;
-    /**
      * Whether to override the default annotation selection behavior of the tool. If true then annotations will not be selected by the tool.
      */
     overrideSelection: boolean;
@@ -14178,7 +15448,7 @@ declare namespace Tools {
      * Set the snap mode that will be used to calculate the end point position
      * @method Tools.PerimeterMeasurementCreateTool#setSnapMode
      * @param {number} mode Enum for a snapping mode for the snapping.
-     * @see CoreControls.DocumentViewer.SnapMode
+     * @see CoreControls.DocumentViewer#SnapMode
      */
     setSnapMode(mode: number): void;
     /**
@@ -14282,6 +15552,25 @@ declare namespace Tools {
    */
   class ArrowCreateTool extends Tools.LineCreateTool {
     constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.LineCreateTool#setDrawMode
+     * @param {Tools.LineCreateTool.DrawModes} drawMode One of the available draw modes.
+     */
+    setDrawMode(drawMode: Tools.LineCreateTool.DrawModes): void;
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.LineCreateTool#getDrawMode
+     * @returns {Tools.LineCreateTool.DrawModes} The current draw mode of the tool.
+     */
+    getDrawMode(): Tools.LineCreateTool.DrawModes;
+    /**
+     * Set the snap mode that will be used to calculate the end point position
+     * @method Tools.LineCreateTool#setSnapMode
+     * @param {number} mode Enum for a snapping mode for the snapping.
+     * @see CoreControls.DocumentViewer.SnapMode
+     */
+    setSnapMode(mode: number): void;
     /**
      * Takes an event object from a mouse event and converts the location into window coordinates
      * @method Tools.Tool#getMouseLocation
@@ -14474,6 +15763,18 @@ declare namespace Tools {
      */
     lineCount: number;
   }
+  namespace CropCreateTool {
+    /**
+     * @enum {string}
+     * @name Tools.CropCreateTool.CropModes
+     * @property {string} SINGLE_PAGE Sets the CropTool to the default single page mode
+     * @property {string} ALL_PAGES Sets the CropTool to apply the crop to all pages
+     */
+    enum CropModes {
+      SINGLE_PAGE,
+      ALL_PAGES,
+    }
+  }
   /**
    * Creates a new instance of the CropCreateTool.
    * @class Represents the tool for cropping a page.
@@ -14483,6 +15784,23 @@ declare namespace Tools {
    */
   class CropCreateTool extends Tools.RectangleCreateTool {
     constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Sets the crop mode for the tool
+     * @method Tools.CropCreateTool#setCropMode
+     * @param {Tools.CropCreateTool.CropModes} cropMode The crop mode to select
+     * @example
+     * WebViewer(...).then(instance => {
+     *  const tool = instance.docViewer.getTool('CropPage');
+     *  tool.setCropMode(instance.Tools.CropCreateTool.CropModes.ALL_PAGES);
+     * })
+     */
+    setCropMode(cropMode: Tools.CropCreateTool.CropModes): void;
+    /**
+     * Gets the current crop mode.
+     * @method Tools.CropCreateTool#getCropMode
+     * @returns {Tools.CropCreateTool.CropModes} Returns the current crop mode;
+     */
+    getCropMode(): Tools.CropCreateTool.CropModes;
     /**
      * Takes an event object from a mouse event and converts the location into window coordinates
      * @method Tools.Tool#getMouseLocation
@@ -14585,8 +15903,20 @@ declare namespace Tools {
      */
     setEnableLeaderLines(enable: boolean): void;
     /**
+     * Sets the draw mode for the tool.
+     * @method Tools.LineCreateTool#setDrawMode
+     * @param {Tools.LineCreateTool.DrawModes} drawMode One of the available draw modes.
+     */
+    setDrawMode(drawMode: Tools.LineCreateTool.DrawModes): void;
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.LineCreateTool#getDrawMode
+     * @returns {Tools.LineCreateTool.DrawModes} The current draw mode of the tool.
+     */
+    getDrawMode(): Tools.LineCreateTool.DrawModes;
+    /**
      * Set the snap mode that will be used to calculate the end point position
-     * @method Tools.DistanceMeasurementCreateTool#setSnapMode
+     * @method Tools.LineCreateTool#setSnapMode
      * @param {number} mode Enum for a snapping mode for the snapping.
      * @see CoreControls.DocumentViewer.SnapMode
      */
@@ -14683,12 +16013,21 @@ declare namespace Tools {
    * @memberof Tools
    * @extends Tools.GenericAnnotationCreateTool
    * @param {CoreControls.DocumentViewer} docViewer an instance of DocumentViewer.
-   * @property {object} DrawModes An enum representing the draw modes available for creating lines
-   * @property {string} DrawModes.HOLD_TO_DRAW The line annotation is created by clicking and dragging
-   * @property {string} DrawModes.TWO_CLICKS The line annotation is created by one click for the start point and a second click for the end point
    */
   class EllipseCreateTool extends Tools.GenericAnnotationCreateTool {
     constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.EllipseCreateTool#setDrawMode
+     * @param {Tools.EllipseCreateTool.DrawModes} drawMode One of the available draw modes.
+     */
+    setDrawMode(drawMode: Tools.EllipseCreateTool.DrawModes): void;
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.EllipseCreateTool#getDrawMode
+     * @returns {Tools.EllipseCreateTool.DrawModes} The current draw mode of the tool.
+     */
+    getDrawMode(): Tools.EllipseCreateTool.DrawModes;
     /**
      * Takes an event object from a mouse event and converts the location into window coordinates
      * @method Tools.Tool#getMouseLocation
@@ -14774,13 +16113,106 @@ declare namespace Tools {
      * @param {string} name name of the tool
      */
     setName(name: string): void;
+  }
+  class exports extends Tools.EllipseCreateTool {
+    constructor(docViewer: CoreControls.DocumentViewer);
     /**
-     * An enum representing the draw modes available for creating lines
+     * Sets the draw mode for the tool.
+     * @method Tools.EllipseCreateTool#setDrawMode
+     * @param {Tools.EllipseCreateTool.DrawModes} drawMode One of the available draw modes.
      */
-    DrawModes: {
-      HOLD_TO_DRAW: string;
-      TWO_CLICKS: string;
-    };
+    setDrawMode(drawMode: Tools.EllipseCreateTool.DrawModes): void;
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.EllipseCreateTool#getDrawMode
+     * @returns {Tools.EllipseCreateTool.DrawModes} The current draw mode of the tool.
+     */
+    getDrawMode(): Tools.EllipseCreateTool.DrawModes;
+    /**
+     * Takes an event object from a mouse event and converts the location into window coordinates
+     * @method Tools.Tool#getMouseLocation
+     * @param e the event object containing mouse coordinates
+     */
+    getMouseLocation(e: any): void;
+    /**
+     * The function called when the left mouse button is down
+     * @method Tools.Tool#mouseLeftDown
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftDown(e: any): void;
+    /**
+     * The function called when the left mouse button is up.
+     * Typically, annotations are created and added to the annotation manager at this point.
+     * @method Tools.Tool#mouseLeftUp
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftUp(e: any): void;
+    /**
+     * The function called when the mouse moves.
+     * @method Tools.Tool#mouseMove
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseMove(e: any): void;
+    /**
+     * The function called when the mouse left button is double clicked.
+     * @method Tools.Tool#mouseDoubleClick
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseDoubleClick(e: any): void;
+    /**
+     * The function called when a keyboard key is down.
+     * @method Tools.Tool#keyDown
+     * @param e the event object containing keyboard key data.
+     *
+     */
+    keyDown(e: any): void;
+    /**
+     * The function called when a context menu should be shown.
+     * Use e.preventDefault to disable the default browser context menu
+     * @method Tools.Tool#contextMenu
+     * @param e the event object
+     */
+    contextMenu(e: any): void;
+    /**
+     * The function called when this tool is selected.
+     * Typically use for changing mouse cursors, and initializing states for the tool.
+     * @method Tools.Tool#switchIn
+     * @param {Tools.Tool} oldTool the Tool class that was previously selected.
+     *
+     */
+    switchIn(oldTool: Tools.Tool): void;
+    /**
+     * The function called when this tool is deselected.
+     * Typically use for changing mouse cursors, and cleaning up states for the tool.
+     * @method Tools.Tool#switchOut
+     * @param {Tools.Tool} newTool the Tool class that was newly selected.
+     *
+     */
+    switchOut(newTool: Tools.Tool): void;
+    /**
+     * Returns the instance of DocumentViewer for this tool.
+     * @method Tools.Tool#getDocumentViewer
+     * @return {CoreControls.DocumentViewer} the instance of DocumentViewer for this tool.
+     */
+    getDocumentViewer(): CoreControls.DocumentViewer;
+    /**
+     * Set the style for the tool, which will be applied to annotations drawn afterwards
+     * @method Tools.Tool#setStyles
+     * @param {object|function} newStyles if an object is used, it should contain properties of the new styles.
+     * If a function is used, the current styles will be passed as its argument and the function should return an object which contains properties of the new styles.
+     * Example of valid properties: StrokeColor, TextColor, FillColor, FontSize, Opacity, StrokeThickness, Precision, Scale, OverlayText, Style and Dashes.
+     */
+    setStyles(newStyles: any | ((...params: any[]) => any)): void;
+    /**
+     * Set the name of the tool, which can be accessed by toolObject.name
+     * @method Tools.Tool#setName
+     * @param {string} name name of the tool
+     */
+    setName(name: string): void;
   }
   /**
    * Represents the tool for erasing annotations.
@@ -14876,6 +16308,98 @@ declare namespace Tools {
      * @param {string} name name of the tool
      */
     setName(name: string): void;
+  }
+  class FileAttachmentCreateTool extends Tools.Tool {
+    constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Takes an event object from a mouse event and converts the location into window coordinates
+     * @method Tools.Tool#getMouseLocation
+     * @param e the event object containing mouse coordinates
+     */
+    getMouseLocation(e: any): void;
+    /**
+     * The function called when the left mouse button is down
+     * @method Tools.Tool#mouseLeftDown
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftDown(e: any): void;
+    /**
+     * The function called when the left mouse button is up.
+     * Typically, annotations are created and added to the annotation manager at this point.
+     * @method Tools.Tool#mouseLeftUp
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftUp(e: any): void;
+    /**
+     * The function called when the mouse moves.
+     * @method Tools.Tool#mouseMove
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseMove(e: any): void;
+    /**
+     * The function called when the mouse left button is double clicked.
+     * @method Tools.Tool#mouseDoubleClick
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseDoubleClick(e: any): void;
+    /**
+     * The function called when a keyboard key is down.
+     * @method Tools.Tool#keyDown
+     * @param e the event object containing keyboard key data.
+     *
+     */
+    keyDown(e: any): void;
+    /**
+     * The function called when a context menu should be shown.
+     * Use e.preventDefault to disable the default browser context menu
+     * @method Tools.Tool#contextMenu
+     * @param e the event object
+     */
+    contextMenu(e: any): void;
+    /**
+     * The function called when this tool is selected.
+     * Typically use for changing mouse cursors, and initializing states for the tool.
+     * @method Tools.Tool#switchIn
+     * @param {Tools.Tool} oldTool the Tool class that was previously selected.
+     *
+     */
+    switchIn(oldTool: Tools.Tool): void;
+    /**
+     * The function called when this tool is deselected.
+     * Typically use for changing mouse cursors, and cleaning up states for the tool.
+     * @method Tools.Tool#switchOut
+     * @param {Tools.Tool} newTool the Tool class that was newly selected.
+     *
+     */
+    switchOut(newTool: Tools.Tool): void;
+    /**
+     * Returns the instance of DocumentViewer for this tool.
+     * @method Tools.Tool#getDocumentViewer
+     * @return {CoreControls.DocumentViewer} the instance of DocumentViewer for this tool.
+     */
+    getDocumentViewer(): CoreControls.DocumentViewer;
+    /**
+     * Set the style for the tool, which will be applied to annotations drawn afterwards
+     * @method Tools.Tool#setStyles
+     * @param {object|function} newStyles if an object is used, it should contain properties of the new styles.
+     * If a function is used, the current styles will be passed as its argument and the function should return an object which contains properties of the new styles.
+     * Example of valid properties: StrokeColor, TextColor, FillColor, FontSize, Opacity, StrokeThickness, Precision, Scale, OverlayText, Style and Dashes.
+     */
+    setStyles(newStyles: any | ((...params: any[]) => any)): void;
+    /**
+     * Set the name of the tool, which can be accessed by toolObject.name
+     * @method Tools.Tool#setName
+     * @param {string} name name of the tool
+     */
+    setName(name: string): void;
+    /**
+     * A string specifying the accepted file types to be opened by the file picker. By default any file type is accepted.
+     */
+    ACCEPTED_FILE_TYPES: string;
   }
   /**
    * Creates a new instance of the FreeHandCreateTool.
@@ -15000,6 +16524,11 @@ declare namespace Tools {
   class FreeTextCreateTool extends Tools.GenericAnnotationCreateTool {
     constructor(docViewer: CoreControls.DocumentViewer);
     /**
+     * @method Tools.FreeTextCreateTool.setTextHandler
+     * @param {function} textHandler A function that should return a string that will be used as the initial text for a freetext annotation
+     */
+    static setTextHandler(textHandler: (...params: any[]) => any): void;
+    /**
      * Takes an event object from a mouse event and converts the location into window coordinates
      * @method Tools.Tool#getMouseLocation
      * @param e the event object containing mouse coordinates
@@ -15098,6 +16627,11 @@ declare namespace Tools {
    * @param {Annotations.Annotation} annotationPrototype the prototype of the Annotation to create.
    * @param {object} [constructorArg] optional argument to pass to the annotation's constructor
    * @property {Annotations.Annotation} annotation the instance of the annotation object created
+   * @property {Object} defaults the default styles of the tool
+   * @property {Annotations.Color} defaults.StrokeColor the stroke color of the tool
+   * @property {Annotations.Color} defaults.FillColor the fill color of the tool
+   * @property {number} defaults.Opacity the opacity of the tool
+   * @property {number} defaults.StrokeThickness the stroke thickness of the tool
    */
   class GenericAnnotationCreateTool extends Tools.AnnotationSelectTool {
     constructor(
@@ -15194,6 +16728,15 @@ declare namespace Tools {
      * the instance of the annotation object created
      */
     annotation: Annotations.Annotation;
+    /**
+     * the default styles of the tool
+     */
+    defaults: {
+      StrokeColor: Annotations.Color;
+      FillColor: Annotations.Color;
+      Opacity: number;
+      StrokeThickness: number;
+    };
   }
   /**
    * Creates a new instance of the LineCreateTool.
@@ -15201,12 +16744,28 @@ declare namespace Tools {
    * @memberof Tools
    * @extends Tools.GenericAnnotationCreateTool
    * @param {CoreControls.DocumentViewer} docViewer an instance of DocumentViewer.
-   * @property {object} DrawModes An enum representing the draw modes available for creating lines
-   * @property {string} DrawModes.HOLD_TO_DRAW The line annotation is created by clicking and dragging
-   * @property {string} DrawModes.TWO_CLICKS The line annotation is created by one click for the start point and a second click for the end point
    */
   class LineCreateTool extends Tools.GenericAnnotationCreateTool {
     constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.LineCreateTool#setDrawMode
+     * @param {Tools.LineCreateTool.DrawModes} drawMode One of the available draw modes.
+     */
+    setDrawMode(drawMode: Tools.LineCreateTool.DrawModes): void;
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.LineCreateTool#getDrawMode
+     * @returns {Tools.LineCreateTool.DrawModes} The current draw mode of the tool.
+     */
+    getDrawMode(): Tools.LineCreateTool.DrawModes;
+    /**
+     * Set the snap mode that will be used to calculate the end point position
+     * @method Tools.LineCreateTool#setSnapMode
+     * @param {number} mode Enum for a snapping mode for the snapping.
+     * @see CoreControls.DocumentViewer.SnapMode
+     */
+    setSnapMode(mode: number): void;
     /**
      * Takes an event object from a mouse event and converts the location into window coordinates
      * @method Tools.Tool#getMouseLocation
@@ -15292,13 +16851,6 @@ declare namespace Tools {
      * @param {string} name name of the tool
      */
     setName(name: string): void;
-    /**
-     * An enum representing the draw modes available for creating lines
-     */
-    DrawModes: {
-      HOLD_TO_DRAW: string;
-      TWO_CLICKS: string;
-    };
   }
   /**
    * Creates a new instance of MarqueeZoomTool.
@@ -15531,7 +17083,7 @@ declare namespace Tools {
      * Set the snap mode that will be used to calculate the end point position
      * @method Tools.PerimeterMeasurementCreateTool#setSnapMode
      * @param {number} mode Enum for a snapping mode for the snapping.
-     * @see CoreControls.DocumentViewer.SnapMode
+     * @see CoreControls.DocumentViewer#SnapMode
      */
     setSnapMode(mode: number): void;
     /**
@@ -15626,6 +17178,18 @@ declare namespace Tools {
      */
     setName(name: string): void;
   }
+  namespace PolygonCloudCreateTool {
+    /**
+     * @name Tools.PolygonCloudCreateTool.ArcDrawModes
+     * @enum {string}
+     * @property {string} EQUAL_ARCS The arcs in the cloud have the same width. This is the default setting
+     * @property {string} RANDOM_ARCS The arcs in the cloud have random widths
+     */
+    enum ArcDrawModes {
+      EQUAL_ARCS,
+      RANDOM_ARCS,
+    }
+  }
   /**
    * Creates a new instance of the PolygonCloudCreateTool.
    * @class Represents the tool for creating {@link Annotations.PolygonAnnotation}.
@@ -15635,6 +17199,23 @@ declare namespace Tools {
    */
   class PolygonCloudCreateTool extends Tools.PolylineCreateTool {
     constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Sets the arc drawing mode for annotations created by the tool
+     * @method Tools.PolygonCloudCreateTool#setArcDrawMode
+     * @param {string} arcDrawMode is either RANDOM_ARCS or EQUAL_ARCs
+     * use existing ENUM to pass this value
+     * @see Tools.PolygonCloudCreateTool.ArcDrawModes
+     * @example
+     * const cloudTool = docViewer.getTool('AnnotationCreatePolygonCloud');
+     * cloudTool.setArcDrawMode(instance.Tools.PolygonCloudCreateTool.ArcDrawModes.RANDOM_ARCS);
+     */
+    setArcDrawMode(arcDrawMode: string): void;
+    /**
+     * Returns the current ArcDrawMode for the tool
+     * @method Tools.PolygonCloudCreateTool#getArcDrawMode
+     * @returns {string} the ArcDrawMode
+     */
+    getArcDrawMode(): string;
     /**
      * Sets whether new annotations can be created by the tool when hovering over an existing annotation
      * @method Tools.PolylineCreateTool#setAllowCreationOverAnnotation
@@ -16024,6 +17605,119 @@ declare namespace Tools {
      */
     setName(name: string): void;
   }
+  class RectangularAreaMeasurementTool extends Tools.AreaMeasurementCreateTool {
+    constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.RectangularAreaMeasurementTool#setDrawMode
+     * @param {Tools.RectangularAreaMeasurementTool.DrawModes} drawMode One of the available draw modes.
+     */
+    setDrawMode(drawMode: Tools.RectangularAreaMeasurementTool.DrawModes): void;
+    /**
+     * Sets the draw mode for the tool.
+     * @method Tools.RectangularAreaMeasurementTool#getDrawMode
+     * @returns {Tools.RectangularAreaMeasurementTool.DrawModes} The current draw mode of the tool.
+     */
+    getDrawMode(): Tools.RectangularAreaMeasurementTool.DrawModes;
+    /**
+     * Set the snap mode that will be used to calculate the end point position
+     * @method Tools.PerimeterMeasurementCreateTool#setSnapMode
+     * @param {number} mode Enum for a snapping mode for the snapping.
+     * @see CoreControls.DocumentViewer#SnapMode
+     */
+    setSnapMode(mode: number): void;
+    /**
+     * Sets whether new annotations can be created by the tool when hovering over an existing annotation
+     * @method Tools.PolylineCreateTool#setAllowCreationOverAnnotation
+     * @param {boolean} val Whether creation of annotation is allowed when hovering over another annotation
+     */
+    setAllowCreationOverAnnotation(val: boolean): void;
+    /**
+     * Takes an event object from a mouse event and converts the location into window coordinates
+     * @method Tools.Tool#getMouseLocation
+     * @param e the event object containing mouse coordinates
+     */
+    getMouseLocation(e: any): void;
+    /**
+     * The function called when the left mouse button is down
+     * @method Tools.Tool#mouseLeftDown
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftDown(e: any): void;
+    /**
+     * The function called when the left mouse button is up.
+     * Typically, annotations are created and added to the annotation manager at this point.
+     * @method Tools.Tool#mouseLeftUp
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftUp(e: any): void;
+    /**
+     * The function called when the mouse moves.
+     * @method Tools.Tool#mouseMove
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseMove(e: any): void;
+    /**
+     * The function called when the mouse left button is double clicked.
+     * @method Tools.Tool#mouseDoubleClick
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseDoubleClick(e: any): void;
+    /**
+     * The function called when a keyboard key is down.
+     * @method Tools.Tool#keyDown
+     * @param e the event object containing keyboard key data.
+     *
+     */
+    keyDown(e: any): void;
+    /**
+     * The function called when a context menu should be shown.
+     * Use e.preventDefault to disable the default browser context menu
+     * @method Tools.Tool#contextMenu
+     * @param e the event object
+     */
+    contextMenu(e: any): void;
+    /**
+     * The function called when this tool is selected.
+     * Typically use for changing mouse cursors, and initializing states for the tool.
+     * @method Tools.Tool#switchIn
+     * @param {Tools.Tool} oldTool the Tool class that was previously selected.
+     *
+     */
+    switchIn(oldTool: Tools.Tool): void;
+    /**
+     * The function called when this tool is deselected.
+     * Typically use for changing mouse cursors, and cleaning up states for the tool.
+     * @method Tools.Tool#switchOut
+     * @param {Tools.Tool} newTool the Tool class that was newly selected.
+     *
+     */
+    switchOut(newTool: Tools.Tool): void;
+    /**
+     * Returns the instance of DocumentViewer for this tool.
+     * @method Tools.Tool#getDocumentViewer
+     * @return {CoreControls.DocumentViewer} the instance of DocumentViewer for this tool.
+     */
+    getDocumentViewer(): CoreControls.DocumentViewer;
+    /**
+     * Set the style for the tool, which will be applied to annotations drawn afterwards
+     * @method Tools.Tool#setStyles
+     * @param {object|function} newStyles if an object is used, it should contain properties of the new styles.
+     * If a function is used, the current styles will be passed as its argument and the function should return an object which contains properties of the new styles.
+     * Example of valid properties: StrokeColor, TextColor, FillColor, FontSize, Opacity, StrokeThickness, Precision, Scale, OverlayText, Style and Dashes.
+     */
+    setStyles(newStyles: any | ((...params: any[]) => any)): void;
+    /**
+     * Set the name of the tool, which can be accessed by toolObject.name
+     * @method Tools.Tool#setName
+     * @param {string} name name of the tool
+     */
+    setName(name: string): void;
+  }
   /**
    * Creates a new instance of the RedactionCreateTool.
    * @class Represents the tool for creating {@link Annotations.RedactionAnnotation}.
@@ -16141,6 +17835,138 @@ declare namespace Tools {
     setName(name: string): void;
   }
   /**
+   * Creates a new instance of the RubberStampCreateTool.
+   * @class Represents the tool for creating {@link Annotations.StampAnnotation}.
+   * @memberOf Tools
+   * @extends Tools.Tool
+   * @param {CoreControls.DocumentViewer} docViewer an instance of DocumentViewer.
+   */
+  class RubberStampCreateTool extends Tools.Tool {
+    constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * Sets the underlying annotation used by the tool
+     * @param {(Annotations.StampAnnotation)} annotation annotation to set
+     * @method Tools.RubberStampCreateTool#setRubberStamp
+     */
+    setRubberStamp(annotation: Annotations.StampAnnotation): void;
+    /**
+     * Add the stamp to the document.
+     * @method Tools.RubberStampCreateTool#addStamp
+     */
+    addStamp(): void;
+    /**
+     * Gets the preview about how the annot will be drawn on the document
+     * @param {Annotations.StampAnnotation} annotation annotation to get the preview for.
+     * @param {Object} parameters canvas parameters and optional text for annotation, e.g. translated text.
+     *  e.g. { canvasHeight: number, canvasWidth: number, text: string }
+     * @returns {String} A base64 string of the preview image
+     * @method Tools.RubberStampCreateTool#getPreview
+     */
+    getPreview(annotation: Annotations.StampAnnotation, parameters: any): string;
+    /**
+     * Shows the preview about how the underlying annot looks like if it's drawn.
+     * @method Tools.RubberStampCreateTool#showPreview
+     */
+    showPreview(): void;
+    /**
+     * Hide the preview element
+     * @method Tools.RubberStampCreateTool#hidePreview
+     */
+    hidePreview(): void;
+    /**
+     * Checks if the underlying annotation is empty.
+     * If the underlying annotation is a StampAnnotation type return true.
+     * @method Tools.RubberStampCreateTool#isEmptyStamp
+     * @return {boolean}
+     */
+    isEmptyStamp(): boolean;
+    /**
+     * Takes an event object from a mouse event and converts the location into window coordinates
+     * @method Tools.Tool#getMouseLocation
+     * @param e the event object containing mouse coordinates
+     */
+    getMouseLocation(e: any): void;
+    /**
+     * The function called when the left mouse button is down
+     * @method Tools.Tool#mouseLeftDown
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftDown(e: any): void;
+    /**
+     * The function called when the left mouse button is up.
+     * Typically, annotations are created and added to the annotation manager at this point.
+     * @method Tools.Tool#mouseLeftUp
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseLeftUp(e: any): void;
+    /**
+     * The function called when the mouse moves.
+     * @method Tools.Tool#mouseMove
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseMove(e: any): void;
+    /**
+     * The function called when the mouse left button is double clicked.
+     * @method Tools.Tool#mouseDoubleClick
+     * @param e the event object containing mouse coordinates.
+     *
+     */
+    mouseDoubleClick(e: any): void;
+    /**
+     * The function called when a keyboard key is down.
+     * @method Tools.Tool#keyDown
+     * @param e the event object containing keyboard key data.
+     *
+     */
+    keyDown(e: any): void;
+    /**
+     * The function called when a context menu should be shown.
+     * Use e.preventDefault to disable the default browser context menu
+     * @method Tools.Tool#contextMenu
+     * @param e the event object
+     */
+    contextMenu(e: any): void;
+    /**
+     * The function called when this tool is selected.
+     * Typically use for changing mouse cursors, and initializing states for the tool.
+     * @method Tools.Tool#switchIn
+     * @param {Tools.Tool} oldTool the Tool class that was previously selected.
+     *
+     */
+    switchIn(oldTool: Tools.Tool): void;
+    /**
+     * The function called when this tool is deselected.
+     * Typically use for changing mouse cursors, and cleaning up states for the tool.
+     * @method Tools.Tool#switchOut
+     * @param {Tools.Tool} newTool the Tool class that was newly selected.
+     *
+     */
+    switchOut(newTool: Tools.Tool): void;
+    /**
+     * Returns the instance of DocumentViewer for this tool.
+     * @method Tools.Tool#getDocumentViewer
+     * @return {CoreControls.DocumentViewer} the instance of DocumentViewer for this tool.
+     */
+    getDocumentViewer(): CoreControls.DocumentViewer;
+    /**
+     * Set the style for the tool, which will be applied to annotations drawn afterwards
+     * @method Tools.Tool#setStyles
+     * @param {object|function} newStyles if an object is used, it should contain properties of the new styles.
+     * If a function is used, the current styles will be passed as its argument and the function should return an object which contains properties of the new styles.
+     * Example of valid properties: StrokeColor, TextColor, FillColor, FontSize, Opacity, StrokeThickness, Precision, Scale, OverlayText, Style and Dashes.
+     */
+    setStyles(newStyles: any | ((...params: any[]) => any)): void;
+    /**
+     * Set the name of the tool, which can be accessed by toolObject.name
+     * @method Tools.Tool#setName
+     * @param {string} name name of the tool
+     */
+    setName(name: string): void;
+  }
+  /**
    * Creates a new instance of the SignatureCreateTool.
    * @name SignatureCreateTool
    * @class Represents the tool for creating a Signature which is represented by an {@link Annotations.FreeHandAnnotation}.
@@ -16149,15 +17975,24 @@ declare namespace Tools {
    * @param {CoreControls.DocumentViewer} docViewer an instance of DocumentViewer.
    * @property {CanvasRenderingContext2D} ctx The signature canvas context
    * @property {Annotations.FreeHandAnnotation|Annotations.StampAnnotation} annot The underlying annotation used by the tool
-   * @property {function} setTextHandler Sets the function that defines the value of the "sign here" text
    */
   class SignatureCreateTool extends Tools.Tool {
     constructor(docViewer: CoreControls.DocumentViewer);
+    /**
+     * @method Tools.SignatureCreateTool.setTextHandler
+     * @param {function} textHandler A function that should return a string that will be used as the "sign here" text
+     */
+    static setTextHandler(textHandler: (...params: any[]) => any): void;
     /**
      * Clears the signature canvas and the underlying annotation
      * @method Tools.SignatureCreateTool#clearSignatureCanvas
      */
     clearSignatureCanvas(): void;
+    /**
+     * Resize the current signature canvas
+     * @method Tools.SignatureCreateTool#resizeCanvas
+     */
+    resizeCanvas(): void;
     /**
      * Save an array of freehand or stamp annotations to the signature tool
      * @param {(Annotations.FreeHandAnnotation|Annotations.StampAnnotation)} annotations annotations to be saved to the signature tool
@@ -16338,10 +18173,6 @@ declare namespace Tools {
      * The underlying annotation used by the tool
      */
     annot: Annotations.FreeHandAnnotation | Annotations.StampAnnotation;
-    /**
-     * Sets the function that defines the value of the "sign here" text
-     */
-    setTextHandler: (...params: any[]) => any;
   }
   /**
    * Creates a new instance of the StampCreateTool.
@@ -16547,14 +18378,23 @@ declare namespace Tools {
   /**
    * This class should not be instantiated.
    * @class Represents an abstract class for text-based annotation creation tools.
+   * @name TextAnnotationCreateTool
    * @memberof Tools
    * @extends Tools.TextTool
    * @param {CoreControls.DocumentViewer} docViewer an instance of DocumentViewer.
-   * @param {Annotations.Annotation} textAnnotationPrototype the prototype the text-based annotation to create.
-   * @property {boolean} AUTO_SET_TEXT toggle whether selected text should be set as annotation note contents
+   * @param {Function} textAnnotationPrototype the prototype the text-based annotation to create.
+   * @property {Object} defaults the default styles of the tool
+   * @property {Annotations.Color} defaults.StrokeColor the stroke color of the tool
+   * @property {number} defaults.Opacity the opacity of the tool
    */
   class TextAnnotationCreateTool extends Tools.TextTool {
-    constructor(docViewer: CoreControls.DocumentViewer, textAnnotationPrototype: Annotations.Annotation);
+    constructor(docViewer: CoreControls.DocumentViewer, textAnnotationPrototype: (...params: any[]) => any);
+    /**
+     * @name Tools.TextAnnotationCreateTool.AUTO_SET_TEXT
+     * @type {boolean}
+     * toggle whether selected text should be set as annotation note contents
+     */
+    static AUTO_SET_TEXT: boolean;
     /**
      * Select text based on two points
      * @method Tools.TextTool#select
@@ -16656,9 +18496,12 @@ declare namespace Tools {
      */
     setName(name: string): void;
     /**
-     * toggle whether selected text should be set as annotation note contents
+     * the default styles of the tool
      */
-    AUTO_SET_TEXT: boolean;
+    defaults: {
+      StrokeColor: Annotations.Color;
+      Opacity: number;
+    };
   }
   /**
    * Creates a new instance of the TextHighlightCreateTool.
@@ -17458,6 +19301,120 @@ declare namespace Tools {
      */
     name: string;
   }
+  namespace LineCreateTool {
+    /**
+     * An enum representing the draw modes available for creating annotations.
+     * @name Tools.LineCreateTool.DrawModes
+     * @enum {string}
+     * @property {string} HOLD_TO_DRAW The annotation is created by clicking and dragging
+     * @property {string} TWO_CLICKS The annotation is created by one click for the start point and a second click for the end point
+     */
+    enum DrawModes {
+      HOLD_TO_DRAW,
+      TWO_CLICKS,
+    }
+  }
+  namespace EllipseCreateTool {
+    /**
+     * An enum representing the draw modes available for creating annotations.
+     * @name Tools.EllipseCreateTool.DrawModes
+     * @enum {string}
+     * @property {string} HOLD_TO_DRAW The annotation is created by clicking and dragging
+     * @property {string} TWO_CLICKS The annotation is created by one click for the start point and a second click for the end point
+     */
+    enum DrawModes {
+      HOLD_TO_DRAW,
+      TWO_CLICKS,
+    }
+  }
+  namespace RectangularAreaMeasurementTool {
+    /**
+     * An enum representing the draw modes available for creating annotations.
+     * @name Tools.RectangularAreaMeasurementTool.DrawModes
+     * @enum {string}
+     * @property {string} HOLD_TO_DRAW The annotation is created by clicking and dragging
+     * @property {string} TWO_CLICKS The annotation is created by one click for the start point and a second click for the end point
+     */
+    enum DrawModes {
+      HOLD_TO_DRAW,
+      TWO_CLICKS,
+    }
+  }
+  /**
+   * Represents the names for the built-in tools
+   * @name Tools.ToolNames
+   * @enum {string}
+   * @property {string} ARROW name of the arrow line tool
+   * @property {string} CALLOUT name of the callout tool
+   * @property {string} ELLIPSE name of the ellipse tool
+   * @property {string} FREEHAND name of the freehand tool
+   * @property {string} FREEHAND2 name of the second freehand tool
+   * @property {string} FREEHAND3 name of the third freehand tool
+   * @property {string} FREEHAND4 name of the fourth freehand tool
+   * @property {string} FREETEXT name of the freetext tool
+   * @property {string} LINE name of the line tool
+   * @property {string} POLYGON name of the polygon tool
+   * @property {string} POLYGON_CLOUD name of the polygon cloud tool
+   * @property {string} POLYLINE name of the polyline tool
+   * @property {string} RECTANGLE name of the rectangle tool
+   * @property {string} DISTANCE_MEASUREMENT name of the distance measurement tool
+   * @property {string} PERIMETER_MEASUREMENT name of the perimeter measurement tool
+   * @property {string} AREA_MEASUREMENT name of the area measurement tool
+   * @property {string} SIGNATURE name of the signature tool
+   * @property {string} STAMP name of the stamp tool
+   * @property {string} FILEATTACHMENT name of the file attachment tool
+   * @property {string} STICKY name of the sticky note tool
+   * @property {string} HIGHLIGHT name of the text highlight tool
+   * @property {string} HIGHLIGHT2 name of the second text highlight tool
+   * @property {string} HIGHLIGHT3 name of the third text highlight tool
+   * @property {string} HIGHLIGHT4 name of the fourth text highlight tool
+   * @property {string} SQUIGGLY name of the text squiggly tool
+   * @property {string} STRIKEOUT name of the text strikeout tool
+   * @property {string} UNDERLINE name of the text underline tool
+   * @property {string} REDACTION name of the text redaction tool
+   * @property {string} TEXT_SELECT name of the text select tool
+   * @property {string} EDIT name of the edit(select) tool
+   * @property {string} PAN name of the pan tool
+   * @property {string} CROP name of the page crop tool
+   * @property {string} MARQUEE name of the marquee zoom tool
+   * @property {string} ERASER name of the eraser tool
+   */
+  enum ToolNames {
+    ARROW,
+    CALLOUT,
+    ELLIPSE,
+    FREEHAND,
+    FREEHAND2,
+    FREEHAND3,
+    FREEHAND4,
+    FREETEXT,
+    LINE,
+    POLYGON,
+    POLYGON_CLOUD,
+    POLYLINE,
+    RECTANGLE,
+    DISTANCE_MEASUREMENT,
+    PERIMETER_MEASUREMENT,
+    AREA_MEASUREMENT,
+    SIGNATURE,
+    STAMP,
+    FILEATTACHMENT,
+    STICKY,
+    HIGHLIGHT,
+    HIGHLIGHT2,
+    HIGHLIGHT3,
+    HIGHLIGHT4,
+    SQUIGGLY,
+    STRIKEOUT,
+    UNDERLINE,
+    REDACTION,
+    TEXT_SELECT,
+    EDIT,
+    PAN,
+    CROP,
+    MARQUEE,
+    ERASER,
+  }
 }
 
 /**
@@ -17476,11 +19433,11 @@ declare namespace PDFNet {
    */
   class Convert {
     /**
-     * Method to create an TiffOutputOptions object
-     * @method PDFNet.Convert.createTiffOutputOptions
-     * @return {Promise<PDFNet.Convert.TiffOutputOptions>} A promise that resolves to a PDFNet.Convert.TiffOutputOptions.
+     * Method to create an OfficeToPDFOptions object
+     * @method PDFNet.Convert.createOfficeToPDFOptions
+     * @return {Promise<PDFNet.Convert.OfficeToPDFOptions>} A promise that resolves to a PDFNet.Convert.OfficeToPDFOptions.
      */
-    static createTiffOutputOptions(): Promise<PDFNet.Convert.TiffOutputOptions>;
+    static createOfficeToPDFOptions(): Promise<PDFNet.Convert.OfficeToPDFOptions>;
     /**
      * Convert the specified XPS document contained in memory to PDF
      * and append converted pages to the specified PDF document.
@@ -17488,33 +19445,10 @@ declare namespace PDFNet {
      * @method PDFNet.Convert.fromXpsMem
      * @param {PDFNet.PDFDoc} in_pdfdoc the PDFDoc to append to
      *
-     * @param {Array} buf the buffer containing the xps document
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf the buffer containing the xps document
      *
      */
-    static fromXpsMem(in_pdfdoc: PDFNet.PDFDoc, buf: any[]): void;
-    /**
-     * Convert the an office document (in .docx, .xlsx, pptx, or .doc format) to pdf and append to the specified PDF document.
-     * This conversion is performed entirely within PDFNet, and does not rely on Word
-     * interop or any other external functionality.
-     *
-     * @method PDFNet.Convert.officeToPdfWithPath
-     * @note Font requirements: on some systems you may need to specify extra font resources to aid
-     * in conversion. Please see http://www.pdftron.com/kb_fonts_and_builtin_office_conversion
-     *
-     * @param {PDFNet.PDFDoc} in_pdfdoc the conversion result will be appended to this pdf.
-     *
-     * @param {string} in_filename the path to the source document.
-     *
-     * @param {PDFNet.Obj} options the conversion options
-     *
-     * @throws PDFNetException
-     *
-     * @see ConversionOptions
-     *
-     * @see StreamingPDFConversion() if you would like more control over the conversion process
-     *
-     */
-    static officeToPdfWithPath(in_pdfdoc: PDFNet.PDFDoc, in_filename: string, options: PDFNet.Obj): void;
+    static fromXpsMem(in_pdfdoc: PDFNet.PDFDoc, buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): void;
     /**
      * Create a DocumentConversion object suitable for converting a file to pdf.
      * Handles incoming files in .docx, .xlsx, pptx, .doc, .png, .jpg, .bmp, .gif, .jp2, .tif, .txt, .xml and .md format
@@ -17532,14 +19466,17 @@ declare namespace PDFNet {
      *
      * @param {string} in_filename the path to the source document.
      *
-     * @param {PDFNet.Obj} options the conversion options
+     * @param {PDFNet.Obj} [options] the conversion options
      *
      * @return {Promise<PDFNet.DocumentConversion>} A promise that resolves to a DocumentConversion object which encapsulates this particular conversion.
      *
      * @see ConversionOptions
      *
      */
-    static streamingPdfConversionWithPath(in_filename: string, options: PDFNet.Obj): Promise<PDFNet.DocumentConversion>;
+    static streamingPdfConversionWithPath(
+      in_filename: string,
+      options?: PDFNet.Obj,
+    ): Promise<PDFNet.DocumentConversion>;
     /**
      * Create a DocumentConversion object suitable for converting a file to pdf and appending to the specified PDF document.
      * Handles incoming files in .docx, .xlsx, pptx, .doc, .png, .jpg, .bmp, .gif, .jp2, .tif, .txt, .xml and .md format
@@ -17559,7 +19496,7 @@ declare namespace PDFNet {
      *
      * @param {string} in_filename the path to the source document.
      *
-     * @param {PDFNet.Obj} options the conversion options
+     * @param {PDFNet.Obj} [options] the conversion options
      *
      * @return {Promise<PDFNet.DocumentConversion>} A promise that resolves to a DocumentConversion object which encapsulates this particular conversion.
      *
@@ -17569,7 +19506,7 @@ declare namespace PDFNet {
     static streamingPdfConversionWithPdfAndPath(
       in_pdfdoc: PDFNet.PDFDoc,
       in_filename: string,
-      options: PDFNet.Obj,
+      options?: PDFNet.Obj,
     ): Promise<PDFNet.DocumentConversion>;
     /**
      * Convert the an office document (in .docx, .xlsx, pptx, or .doc format) to pdf and append to the specified PDF document.
@@ -17584,7 +19521,7 @@ declare namespace PDFNet {
      *
      * @param {PDFNet.Filter} in_stream the source document data.
      *
-     * @param {PDFNet.Obj} options the conversion options
+     * @param {PDFNet.Obj} [options] the conversion options
      *
      * @throws PDFNetException
      *
@@ -17593,7 +19530,7 @@ declare namespace PDFNet {
      * @see StreamingPDFConversion() if you would like more control over the conversion process
      *
      */
-    static officeToPdfWithFilter(in_pdfdoc: PDFNet.PDFDoc, in_stream: PDFNet.Filter, options: PDFNet.Obj): void;
+    static officeToPdfWithFilter(in_pdfdoc: PDFNet.PDFDoc, in_stream: PDFNet.Filter, options?: PDFNet.Obj): void;
     /**
      * Create a DocumentConversion object suitable for converting an office document (in .docx, .xlsx, pptx, or .doc format)
      * to pdf and appending to the specified PDF document.
@@ -17611,7 +19548,7 @@ declare namespace PDFNet {
      *
      * @param {PDFNet.Filter} in_stream the source document data.
      *
-     * @param {PDFNet.Obj} options the conversion options
+     * @param {PDFNet.Obj} [options] the conversion options
      *
      * @return {Promise<PDFNet.DocumentConversion>} A promise that resolves to a DocumentConversion object which encapsulates this particular conversion.
      *
@@ -17620,7 +19557,7 @@ declare namespace PDFNet {
      */
     static streamingPdfConversionWithFilter(
       in_stream: PDFNet.Filter,
-      options: PDFNet.Obj,
+      options?: PDFNet.Obj,
     ): Promise<PDFNet.DocumentConversion>;
     /**
      * Create a DocumentConversion object suitable for converting an office document (in .docx, .xlsx, pptx, or .doc format)
@@ -17641,7 +19578,7 @@ declare namespace PDFNet {
      *
      * @param {PDFNet.Filter} in_stream the source document data.
      *
-     * @param {PDFNet.Obj} options the conversion options
+     * @param {PDFNet.Obj} [options] the conversion options
      *
      * @return {Promise<PDFNet.DocumentConversion>} A promise that resolves to a DocumentConversion object which encapsulates this particular conversion.
      *
@@ -17651,16 +19588,8 @@ declare namespace PDFNet {
     static streamingPdfConversionWithPdfAndFilter(
       in_pdfdoc: PDFNet.PDFDoc,
       in_stream: PDFNet.Filter,
-      options: PDFNet.Obj,
+      options?: PDFNet.Obj,
     ): Promise<PDFNet.DocumentConversion>;
-    /**
-     *
-     * @method PDFNet.Convert.fromCAD
-     * @param {PDFNet.PDFDoc} in_pdfdoc
-     * @param {string} in_filename
-     * @param {PDFNet.Obj} options
-     */
-    static fromCAD(in_pdfdoc: PDFNet.PDFDoc, in_filename: string, options: PDFNet.Obj): void;
     /**
      *
      * @method PDFNet.Convert.fromTiff
@@ -18012,13 +19941,13 @@ declare namespace PDFNet {
      * A constructor. Creates an Action and initializes it using given Cos/SDF object.
      *
      * @method PDFNet.Action.create
-     * @param {PDFNet.Obj} in_obj Pointer to the Cos/SDF object.
+     * @param {PDFNet.Obj} [in_obj] Pointer to the Cos/SDF object.
      *
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.Action>} A promise that resolves to an object of type: "Action"
      */
-    static create(in_obj: PDFNet.Obj): Promise<PDFNet.Action>;
+    static create(in_obj?: PDFNet.Obj): Promise<PDFNet.Action>;
     /**
      *
      * @method PDFNet.Action#copy
@@ -18256,12 +20185,12 @@ declare namespace PDFNet {
     /**
      * Create an annotation and initialize it using given Cos/SDF object.
      * @method PDFNet.Annot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.Annot>} A promise that resolves to an object of type: "Annot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.Annot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.Annot>;
     /**
      * Assignment operator
      * @method PDFNet.Annot#copy
@@ -18538,7 +20467,7 @@ declare namespace PDFNet {
      * and appearance states.
      *
      * @method PDFNet.Annot#getAppearance
-     * @param {number} annot_state
+     * @param {number} [annot_state]
      * <pre>
      * PDFNet.Annot.State = {
      * 	e_normal : 0
@@ -18549,7 +20478,7 @@ declare namespace PDFNet {
      * the annotation's appearance state, which selects the applicable
      * appearance stream from the appearance sub-dictionary. An annotation can define as many
      * as three separate appearances: The normal, rollover, and down appearance.
-     * @param {string} app_state is an optional parameter specifying the appearance state
+     * @param {string} [app_state] is an optional parameter specifying the appearance state
      * to look for (e.g. "Off", "On", etc). If appearance_state is NULL, the choice
      * between different appearance states is determined by the AS (Appearance State)
      * entry in the annotation dictionary.
@@ -18558,7 +20487,7 @@ declare namespace PDFNet {
      * does not have an appearance for the given combination of annotation and
      * appearance states.
      */
-    getAppearance(annot_state: number, app_state: string): Promise<PDFNet.Obj>;
+    getAppearance(annot_state?: number, app_state?: string): Promise<PDFNet.Obj>;
     /**
      * Sets the annotation's appearance for the given combination of annotation
      * and appearance states.
@@ -18567,7 +20496,7 @@ declare namespace PDFNet {
      * @method PDFNet.Annot#setAppearance
      * @param {PDFNet.Obj} app_stream a content stream defining the new appearance.
      *
-     * @param {number} annot_state
+     * @param {number} [annot_state]
      * <pre>
      * PDFNet.Annot.State = {
      * 	e_normal : 0
@@ -18579,17 +20508,17 @@ declare namespace PDFNet {
      * appearance stream from the appearance sub-dictionary. An annotation can define as many
      * as three separate appearances: The normal, rollover, and down appearance.
      *
-     * @param {string} app_state is an optional parameter specifying the appearance state
+     * @param {string} [app_state] is an optional parameter specifying the appearance state
      * (e.g. "Off", "On", etc) under which the new appearance should be stored. If
      * appearance_state is NULL, the annotation will have only one annotation state.
      */
-    setAppearance(app_stream: PDFNet.Obj, annot_state: number, app_state: string): void;
+    setAppearance(app_stream: PDFNet.Obj, annot_state?: number, app_state?: string): void;
     /**
      * Removes the annotation's appearance for the given combination of annotation
      * and appearance states.
      *
      * @method PDFNet.Annot#removeAppearance
-     * @param {number} annot_state
+     * @param {number} [annot_state]
      * <pre>
      * PDFNet.Annot.State = {
      * 	e_normal : 0
@@ -18601,11 +20530,11 @@ declare namespace PDFNet {
      * appearance stream from the appearance sub-dictionary. An annotation can define as many
      * as three separate appearances: The normal, rollover, and down appearance.
      *
-     * @param {string} app_state is an optional parameter specifying the appearance state
+     * @param {string} [app_state] is an optional parameter specifying the appearance state
      * (e.g. "Off", "On", etc) under which the new appearance should be stored. If
      * appearance_state is NULL, the annotation will have only one annotation state.
      */
-    removeAppearance(annot_state: number, app_state: string): void;
+    removeAppearance(annot_state?: number, app_state?: string): void;
     /**
      *
      * @method PDFNet.Annot#flatten
@@ -18707,9 +20636,9 @@ declare namespace PDFNet {
      * 3 DeviceRGB
      * 4 DeviceCMYK
      *
-     * @param {number} numcomp The number of color components used to represent the color (i.e. 1, 3, 4).
+     * @param {number} [numcomp] The number of color components used to represent the color (i.e. 1, 3, 4).
      */
-    setColor(col: PDFNet.ColorPt, numcomp: number): void;
+    setColor(col: PDFNet.ColorPt, numcomp?: number): void;
     /**
      * Returns the struct parent of an annotation.
      * (Required if the annotation is a structural content item; PDF 1.3)
@@ -18807,13 +20736,13 @@ declare namespace PDFNet {
      *
      * @method PDFNet.Annot#setBorderStyle
      * @param {PDFNet.AnnotBorderStyle} bs New border style for this annotation.
-     * @param {boolean} oldStyleOnly PDF manual specifies two ways to add border information to an annotation object,
+     * @param {boolean} [oldStyleOnly] PDF manual specifies two ways to add border information to an annotation object,
      * either through an array named 'Border' (PDF 1.0), or a dictionary called 'BS' (PDF 1.2) the latter
      * taking precedence over the former. However, if you want to create a border with rounded corners, you can only
      * do that using PDF 1.0 Border specification, in which case if you call SetBorderStyle() set the parameter
      * oldStyleOnly to true. This parameter has a default value of false in the API and does not need to be used otherwise.
      */
-    setBorderStyle(bs: PDFNet.AnnotBorderStyle, oldStyleOnly: boolean): void;
+    setBorderStyle(bs: PDFNet.AnnotBorderStyle, oldStyleOnly?: boolean): void;
     /**
      *
      * @method PDFNet.Annot.getBorderStyleStyle
@@ -18996,13 +20925,13 @@ declare namespace PDFNet {
      * Initialize a AttrObj using an existing low-level Cos/SDF object.
      *
      * @method PDFNet.AttrObj.create
-     * @param {PDFNet.Obj} dict a low-level (SDF/Cos) dictionary representing the attribute object.
+     * @param {PDFNet.Obj} [dict] a low-level (SDF/Cos) dictionary representing the attribute object.
      *
      * @note This constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.AttrObj>} A promise that resolves to an object of type: "AttrObj"
      */
-    static create(dict: PDFNet.Obj): Promise<PDFNet.AttrObj>;
+    static create(dict?: PDFNet.Obj): Promise<PDFNet.AttrObj>;
     /**
      * Copy Constructor
      * @method PDFNet.AttrObj#copy
@@ -19338,16 +21267,16 @@ declare namespace PDFNet {
      * Sets the Bookmark's color value.
      *
      * @method PDFNet.Bookmark#setColor
-     * @param {number} in_r The red component of the color.
-     * @param {number} in_g The green component of the color.
-     * @param {number} in_b The blue component of the color.
+     * @param {number} [in_r] The red component of the color.
+     * @param {number} [in_g] The green component of the color.
+     * @param {number} [in_b] The blue component of the color.
      *
      * @note The three numbers \a in_r, \a in_g, and \a in_b are in the range 0.0 to 1.0, representing
      * the components in the DeviceRGB color space of the color to be used
      * for the Bookmark's text.
      * Default color value is black, [0.0 0.0 0.0].
      */
-    setColor(in_r: number, in_g: number, in_b: number): void;
+    setColor(in_r?: number, in_g?: number, in_b?: number): void;
     /**
      * Returns the underlying SDF/Cos object.
      *
@@ -19369,12 +21298,12 @@ declare namespace PDFNet {
     /**
      * creates an Caret annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.CaretAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.CaretAnnot>} A promise that resolves to an object of type: "CaretAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.CaretAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.CaretAnnot>;
     /**
      * creates an Caret annotation and initializes it using given annotation object.
      * @method PDFNet.CaretAnnot.createFromAnnot
@@ -19424,10 +21353,10 @@ declare namespace PDFNet {
      * @method PDFNet.CheckBoxWidget.create
      * @param {PDFNet.PDFDoc} doc
      * @param {PDFNet.Rect} pos
-     * @param {string} field_name
+     * @param {string} [field_name]
      * @return {Promise<PDFNet.CheckBoxWidget>} A promise that resolves to an object of type: "CheckBoxWidget"
      */
-    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name: string): Promise<PDFNet.CheckBoxWidget>;
+    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name?: string): Promise<PDFNet.CheckBoxWidget>;
     /**
      *
      * @method PDFNet.CheckBoxWidget.createWithField
@@ -19440,10 +21369,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.CheckBoxWidget.createFromObj
-     * @param {PDFNet.Obj} obj
+     * @param {PDFNet.Obj} [obj]
      * @return {Promise<PDFNet.CheckBoxWidget>} A promise that resolves to an object of type: "CheckBoxWidget"
      */
-    static createFromObj(obj: PDFNet.Obj): Promise<PDFNet.CheckBoxWidget>;
+    static createFromObj(obj?: PDFNet.Obj): Promise<PDFNet.CheckBoxWidget>;
     /**
      *
      * @method PDFNet.CheckBoxWidget.createFromAnnot
@@ -19484,12 +21413,12 @@ declare namespace PDFNet {
     /**
      * creates an Circle annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.CircleAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.CircleAnnot>} A promise that resolves to an object of type: "CircleAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.CircleAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.CircleAnnot>;
     /**
      * creates a Circle annotation and initializes it using given annotation object.
      * @method PDFNet.CircleAnnot.createFromAnnot
@@ -19569,13 +21498,13 @@ declare namespace PDFNet {
      * Initialize a ClassMap using an existing low-level Cos/SDF ClassMap object.
      *
      * @method PDFNet.ClassMap.create
-     * @param {PDFNet.Obj} dict a low-level (SDF/Cos) ClassMap dictionary.
+     * @param {PDFNet.Obj} [dict] a low-level (SDF/Cos) ClassMap dictionary.
      *
      * @note This constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.ClassMap>} A promise that resolves to an object of type: "ClassMap"
      */
-    static create(dict: PDFNet.Obj): Promise<PDFNet.ClassMap>;
+    static create(dict?: PDFNet.Obj): Promise<PDFNet.ClassMap>;
     /**
      * Copy Constructor
      * @method PDFNet.ClassMap#copy
@@ -19608,13 +21537,13 @@ declare namespace PDFNet {
     /**
      * Constructor
      * @method PDFNet.ColorPt.init
-     * @param {number} x initialized value of first color value (eg. red for rgb colorspace);
-     * @param {number} y initialized value of second color value (eg. green for rgb colorspace);
-     * @param {number} z initialized value of third color value (eg. blue for rgb colorspace);
-     * @param {number} w initialized value of fourth color value (eg. when using CMYK);
+     * @param {number} [x] initialized value of first color value (eg. red for rgb colorspace);
+     * @param {number} [y] initialized value of second color value (eg. green for rgb colorspace);
+     * @param {number} [z] initialized value of third color value (eg. blue for rgb colorspace);
+     * @param {number} [w] initialized value of fourth color value (eg. when using CMYK);
      * @return {Promise<PDFNet.ColorPt>} A promise that resolves to an object of type: "ColorPt"
      */
-    static init(x: number, y: number, z: number, w: number): Promise<PDFNet.ColorPt>;
+    static init(x?: number, y?: number, z?: number, w?: number): Promise<PDFNet.ColorPt>;
     /**
      * Frees the native memory of the object.
      * @method PDFNet.ColorPt#destroy
@@ -19625,14 +21554,14 @@ declare namespace PDFNet {
      * color.Set(red, green, blue) will initialize the ColorPt to given
      * tint values.
      * @method PDFNet.ColorPt#set
-     * @param {number} x initialized value of first color value (eg. red for rgb colorspace);
-     * @param {number} y initialized value of second color value (eg. green for rgb colorspace);
-     * @param {number} z initialized value of third color value (eg. blue for rgb colorspace);
-     * @param {number} w initialized value of fourth color value (eg. when using CMYK);
+     * @param {number} [x] initialized value of first color value (eg. red for rgb colorspace);
+     * @param {number} [y] initialized value of second color value (eg. green for rgb colorspace);
+     * @param {number} [z] initialized value of third color value (eg. blue for rgb colorspace);
+     * @param {number} [w] initialized value of fourth color value (eg. when using CMYK);
      * @note All colorants should be in the range [0..1].
      * @note color.Set(gray) is equivalent to Set(0, gray);
      */
-    set(x: number, y: number, z: number, w: number): void;
+    set(x?: number, y?: number, z?: number, w?: number): void;
     /**
      * Sets a tint value at a given colorant index.
      *
@@ -19730,10 +21659,10 @@ declare namespace PDFNet {
      * in page Resource dictionary. If color_space dictionary is null, a non valid ColorSpace
      * object is created.
      * @method PDFNet.ColorSpace.create
-     * @param {PDFNet.Obj} color_space The Cos/SDF object to initialze the ColorSpace object with.
+     * @param {PDFNet.Obj} [color_space] The Cos/SDF object to initialze the ColorSpace object with.
      * @return {Promise<PDFNet.ColorSpace>} A promise that resolves to an object of type: "ColorSpace"
      */
-    static create(color_space: PDFNet.Obj): Promise<PDFNet.ColorSpace>;
+    static create(color_space?: PDFNet.Obj): Promise<PDFNet.ColorSpace>;
     /**
      *
      * @method PDFNet.ColorSpace.createICCFromFilter
@@ -19746,10 +21675,13 @@ declare namespace PDFNet {
      *
      * @method PDFNet.ColorSpace.createICCFromBuffer
      * @param {PDFNet.SDFDoc} doc
-     * @param {Array} buf
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf
      * @return {Promise<PDFNet.ColorSpace>} A promise that resolves to an object of type: "ColorSpace"
      */
-    static createICCFromBuffer(doc: PDFNet.SDFDoc, buf: any[]): Promise<PDFNet.ColorSpace>;
+    static createICCFromBuffer(
+      doc: PDFNet.SDFDoc,
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+    ): Promise<PDFNet.ColorSpace>;
     /**
      * Frees the native memory of the object.
      * @method PDFNet.ColorSpace#destroy
@@ -19955,10 +21887,10 @@ declare namespace PDFNet {
      * @method PDFNet.ComboBoxWidget.create
      * @param {PDFNet.PDFDoc} doc
      * @param {PDFNet.Rect} pos
-     * @param {string} field_name
+     * @param {string} [field_name]
      * @return {Promise<PDFNet.ComboBoxWidget>} A promise that resolves to an object of type: "ComboBoxWidget"
      */
-    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name: string): Promise<PDFNet.ComboBoxWidget>;
+    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name?: string): Promise<PDFNet.ComboBoxWidget>;
     /**
      *
      * @method PDFNet.ComboBoxWidget.createWithField
@@ -19971,10 +21903,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.ComboBoxWidget.createFromObj
-     * @param {PDFNet.Obj} obj
+     * @param {PDFNet.Obj} [obj]
      * @return {Promise<PDFNet.ComboBoxWidget>} A promise that resolves to an object of type: "ComboBoxWidget"
      */
-    static createFromObj(obj: PDFNet.Obj): Promise<PDFNet.ComboBoxWidget>;
+    static createFromObj(obj?: PDFNet.Obj): Promise<PDFNet.ComboBoxWidget>;
     /**
      *
      * @method PDFNet.ComboBoxWidget.createFromAnnot
@@ -20315,13 +22247,13 @@ declare namespace PDFNet {
      * Saves changes made to the Date object in the attached (or specified) SDF/Cos string.
      *
      * @method PDFNet.Date#update
-     * @param {PDFNet.Obj} d an optional parameter indicating a SDF string that should be
+     * @param {PDFNet.Obj} [d] an optional parameter indicating a SDF string that should be
      *  updated and attached to this Date. If parameter d is NULL or is omitted, update
      *  is performed on previously attached Cos/SDF date.
      *
      * @return {Promise<boolean>} A promise that resolves to true if the attached Cos/SDF string was successfully updated, false otherwise.
      */
-    update(d: PDFNet.Obj): Promise<boolean>;
+    update(d?: PDFNet.Obj): Promise<boolean>;
   }
   /**
    * A destination defines a particular view of a document, consisting of the
@@ -20590,31 +22522,31 @@ declare namespace PDFNet {
   /**
    * [Missing documentation]
    * @class
+   * @name DigestAlgorithm
+   * @memberof PDFNet
+   */
+  class DigestAlgorithm {}
+  /**
+   * The class DigitalSignatureField.
+   * A class representing a digital signature form field.
+   * @class
    * @name DigitalSignatureField
    * @memberof PDFNet
    */
   class DigitalSignatureField {
     /**
+     * Returns whether the digital signature field has been cryptographically signed. Checks whether there is a digital signature dictionary in the field and whether it has a Contents entry. Must be called before using various digital signature dictionary-related functions. Does not check validity will return true even if a valid hash has not yet been generated (which will be the case after [Certify/Sign]OnNextSave[WithCustomHandler] has been called on the signature but even before Save is called on the document).
      *
      * @method PDFNet.DigitalSignatureField#hasCryptographicSignature
-     * @return {Promise<boolean>} A promise that resolves to an object of type: "boolean"
+     * @return {Promise<boolean>} A promise that resolves to a boolean value representing whether the digital signature field has a digital signature dictionary with a Contents entry.
      */
     hasCryptographicSignature(): Promise<boolean>;
     /**
+     * Returns the SubFilter type of the digital signature. Specification says that one must check the SubFilter before using various getters. Must call HasCryptographicSignature first and use it to check whether the signature is signed.
+     *
      * @method PDFNet.DigitalSignatureField#getSubFilter
+     * @return {Promise<number>} A promise that resolves to an enumeration describing what the SubFilter of the digital signature is from within the digital signature dictionary.
      * @example Return value enum:
-     * <pre>
-     * PDFNet.DigitalSignatureField.SubFilterType = {
-     * 	e_adbe_x509_rsa_sha1 : 0
-     * 	e_adbe_pkcs7_detached : 1
-     * 	e_adbe_pkcs7_sha1 : 2
-     * 	e_ETSI_CAdES_detached : 3
-     * 	e_ETSI_RFC3161 : 4
-     * 	e_unknown : 5
-     * 	e_absent : 6
-     * }
-     * </pre>
-     * @return {Promise<number>} A promise that resolves to an object of type: "number"
      * <pre>
      * PDFNet.DigitalSignatureField.SubFilterType = {
      * 	e_adbe_x509_rsa_sha1 : 0
@@ -20629,60 +22561,70 @@ declare namespace PDFNet {
      */
     getSubFilter(): Promise<number>;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp). Returns the name of the signer of the signature from the digital signature dictionary. Must call HasCryptographicSignature first and use it to check whether the signature is signed.
      *
      * @method PDFNet.DigitalSignatureField#getSignatureName
-     * @return {Promise<string>} A promise that resolves to an object of type: "string"
+     * @return {Promise<string>} A promise that resolves to a unicode string containing the name of the signer from within the digital signature dictionary. Empty if Name entry not present.
      */
     getSignatureName(): Promise<string>;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp). Returns the Location of the signature from the digital signature dictionary. Must call HasCryptographicSignature first and use it to check whether the signature is signed.
      *
      * @method PDFNet.DigitalSignatureField#getLocation
-     * @return {Promise<string>} A promise that resolves to an object of type: "string"
+     * @return {Promise<string>} A promise that resolves to a unicode string containing the signing location from within the digital signature dictionary. Empty if Location entry not present.
      */
     getLocation(): Promise<string>;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp). Returns the Reason for the signature from the digital signature dictionary. Must call HasCryptographicSignature first and use it to check whether the signature is signed.
      *
      * @method PDFNet.DigitalSignatureField#getReason
-     * @return {Promise<string>} A promise that resolves to an object of type: "string"
+     * @return {Promise<string>} A promise that resolves to a unicode string containing the reason for the signature from within the digital signature dictionary. Empty if Reason entry not present.
      */
     getReason(): Promise<string>;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp). Returns the contact information of the signer from the digital signature dictionary. Must call HasCryptographicSignature first and use it to check whether the signature is signed.
      *
      * @method PDFNet.DigitalSignatureField#getContactInfo
-     * @return {Promise<string>} A promise that resolves to an object of type: "string"
+     * @return {Promise<string>} A promise that resolves to a unicode string containing the contact information of the signer from within the digital signature dictionary. Empty if ContactInfo entry not present.
      */
     getContactInfo(): Promise<string>;
     /**
+     * Gets number of certificates in certificate chain (Cert entry of digital signature dictionary). Must call HasCryptographicSignature first and use it to check whether the signature is signed.
      *
      * @method PDFNet.DigitalSignatureField#getCertCount
-     * @return {Promise<number>} A promise that resolves to an object of type: "number"
+     * @return {Promise<number>} A promise that resolves to an integer value the number of certificates in the Cert entry of the digital signature dictionary.
      */
     getCertCount(): Promise<number>;
     /**
+     * Returns whether the field has a visible appearance. Can be called without checking HasCryptographicSignature first, since it operates on the surrounding Field dictionary, not the "V" entry (i.e. digital signature dictionary). Performs the zero-width+height check, the Hidden bit check, and the NoView bit check as described by the PDF 2.0 specification, section 12.7.5.5 "Signature fields".
      *
      * @method PDFNet.DigitalSignatureField#hasVisibleAppearance
-     * @return {Promise<boolean>} A promise that resolves to an object of type: "boolean"
+     * @return {Promise<boolean>} A promise that resolves to a boolean representing whether or not the signature field has a visible signature.
      */
     hasVisibleAppearance(): Promise<boolean>;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp). Sets the ContactInfo entry in the digital signature dictionary. Must create a digital signature dictionary first using [Certify/Sign]OnNextSave[WithCustomHandler]. If this function is called on a digital signature field that has already been cryptographically signed with a valid hash, the hash will no longer be valid, so do not call Save (to sign/create the hash) until after you call this function, if you need to call this function in the first place. Essentially, call this function after [Certify/Sign]OnNextSave[WithCustomHandler] and before Save.
      *
      * @method PDFNet.DigitalSignatureField#setContactInfo
-     * @param {string} in_contact_info
+     * @param {string} in_contact_info -- A string containing the ContactInfo to be set.
      */
     setContactInfo(in_contact_info: string): void;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp). Sets the Location entry in the digital signature dictionary. Must create a digital signature dictionary first using [Certify/Sign]OnNextSave[WithCustomHandler]. If this function is called on a digital signature field that has already been cryptographically signed with a valid hash, the hash will no longer be valid, so do not call Save (to sign/create the hash) until after you call this function, if you need to call this function in the first place. Essentially, call this function after [Certify/Sign]OnNextSave[WithCustomHandler] and before Save.
      *
      * @method PDFNet.DigitalSignatureField#setLocation
-     * @param {string} in_location
+     * @param {string} in_location -- A string containing the Location to be set.
      */
     setLocation(in_location: string): void;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp). Sets the Reason entry in the digital signature dictionary. Must create a digital signature dictionary first using [Certify/Sign]OnNextSave[WithCustomHandler]. If this function is called on a digital signature field that has already been cryptographically signed with a valid hash, the hash will no longer be valid, so do not call Save (to sign/create the hash) until after you call this function, if you need to call this function in the first place. Essentially, call this function after [Certify/Sign]OnNextSave[WithCustomHandler] and before Save.
      *
      * @method PDFNet.DigitalSignatureField#setReason
-     * @param {string} in_reason
+     * @param {string} in_reason -- A string containing the Reason to be set.
      */
     setReason(in_reason: string): void;
     /**
+     * Sets the document locking permission level for this digital signature field. Call only on unsigned signatures, otherwise a valid hash will be invalidated.
      *
      * @method PDFNet.DigitalSignatureField#setDocumentPermissions
      * @param {number} in_perms
@@ -20694,40 +22636,38 @@ declare namespace PDFNet {
      * 	e_unrestricted : 4
      * }
      * </pre>
+     * -- An enumerated value representing the document locking permission level to set.
      */
     setDocumentPermissions(in_perms: number): void;
     /**
+     * Must be called to prepare a signature for signing, which is done afterwards by calling Save. Cannot sign two signatures during one save (throws). Default document permission level is e_annotating_formfilling_signing_allowed. Throws if signature field already has a digital signature dictionary.
      *
      * @method PDFNet.DigitalSignatureField#signOnNextSave
-     * @param {string} in_pkcs12_keyfile_path
-     * @param {string} in_password
+     * @param {string} in_pkcs12_keyfile_path -- The path to the PKCS #12 private keyfile to use to sign this digital signature.
+     * @param {string} in_password -- The password to use to parse the PKCS #12 keyfile.
      */
     signOnNextSave(in_pkcs12_keyfile_path: string, in_password: string): void;
     /**
+     * Must be called to prepare a signature for certification, which is done afterwards by calling Save. Throws if document already certified. Default document permission level is e_annotating_formfilling_signing_allowed. Throws if signature field already has a digital signature dictionary.
      *
      * @method PDFNet.DigitalSignatureField#certifyOnNextSave
-     * @param {string} in_pkcs12_keyfile_path
-     * @param {string} in_password
+     * @param {string} in_pkcs12_keyfile_path -- The path to the PKCS #12 private keyfile to use to certify this digital signature.
+     * @param {string} in_password -- The password to use to parse the PKCS #12 keyfile.
      */
     certifyOnNextSave(in_pkcs12_keyfile_path: string, in_password: string): void;
     /**
+     * Returns whether this digital signature field is locked against modifications by any digital signatures. Can be called when this field is unsigned.
      *
      * @method PDFNet.DigitalSignatureField#isLockedByDigitalSignature
-     * @return {Promise<boolean>} A promise that resolves to an object of type: "boolean"
+     * @return {Promise<boolean>} A promise that resolves to a boolean representing whether this digital signature field is locked against modifications by any digital signatures in the document.
      */
     isLockedByDigitalSignature(): Promise<boolean>;
     /**
+     * If HasCryptographicSignature, returns most restrictive permissions found in any reference entries in this digital signature. Returns Lock-resident (i.e. tentative) permissions otherwise. Throws if invalid permission value is found.
+     *
      * @method PDFNet.DigitalSignatureField#getDocumentPermissions
+     * @return {Promise<number>} A promise that resolves to an enumeration value representing the level of restrictions (potentially) placed on the document by this signature.
      * @example Return value enum:
-     * <pre>
-     * PDFNet.DigitalSignatureField.DocumentPermissions = {
-     * 	e_no_changes_allowed : 1
-     * 	e_formfilling_signing_allowed : 2
-     * 	e_annotating_formfilling_signing_allowed : 3
-     * 	e_unrestricted : 4
-     * }
-     * </pre>
-     * @return {Promise<number>} A promise that resolves to an object of type: "number"
      * <pre>
      * PDFNet.DigitalSignatureField.DocumentPermissions = {
      * 	e_no_changes_allowed : 1
@@ -20739,7 +22679,7 @@ declare namespace PDFNet {
      */
     getDocumentPermissions(): Promise<number>;
     /**
-     *
+     * Clears cryptographic signature, if present. Otherwise, does nothing. Do not need to call HasCryptographicSignature before calling this. After clearing, other signatures should still pass validation if saving after clearing was done incrementally. Clears the appearance as well.
      * @method PDFNet.DigitalSignatureField#clearSignature
      */
     clearSignature(): void;
@@ -20751,51 +22691,149 @@ declare namespace PDFNet {
      */
     static createFromField(d: PDFNet.Field): Promise<PDFNet.DigitalSignatureField>;
     /**
+     * Should not be called when SubFilter is ETSI.RFC3161 (i.e. on a DocTimeStamp).
+     * Returns the "M" entry from the digital signature dictionary, which represents the
+     * signing date/time. Must call HasCryptographicSignature first and use it to check whether the
+     * signature is signed.
      *
      * @method PDFNet.DigitalSignatureField#getSigningTime
-     * @param {PDFNet.Date} in_date
+     * @return {Promise<PDFNet.Date>} A promise that resolves to a PDF::Date object holding the signing date/time from within the digital signature dictionary. Returns a default-constructed PDF::Date if no date is present.
      */
-    getSigningTime(in_date: PDFNet.Date): void;
-    /**
-     *
-     * @method PDFNet.DigitalSignatureField#setFieldPermissions
-     * @param {number} in_action
-     * @param {string} in_field_names_list
-     * @param {number} in_field_names_size
-     */
-    setFieldPermissions(in_action: number, in_field_names_list: string, in_field_names_size: number): void;
+    getSigningTime(): Promise<PDFNet.Date>;
     /**
      *
      * @method PDFNet.DigitalSignatureField#signOnNextSaveFromBuffer
-     * @param {Array} in_pkcs12_buffer
-     * @param {number} in_password
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} in_pkcs12_buffer
+     * @param {string} in_password
      */
-    signOnNextSaveFromBuffer(in_pkcs12_buffer: any[], in_password: number): void;
+    signOnNextSaveFromBuffer(
+      in_pkcs12_buffer: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+      in_password: string,
+    ): void;
     /**
+     * Must be called to prepare a signature for signing, which is done afterwards by calling Save. Cannot sign two signatures during one save (throws). Default document permission level is e_annotating_formfilling_signing_allowed. Throws if signature field already has a digital signature dictionary.
      *
      * @method PDFNet.DigitalSignatureField#signOnNextSaveWithCustomHandler
-     * @param {number} in_signature_handler_id
+     * @param {number} in_signature_handler_id -- The unique id of the signature handler to use to sign this digital signature.
      */
     signOnNextSaveWithCustomHandler(in_signature_handler_id: number): void;
     /**
      *
      * @method PDFNet.DigitalSignatureField#certifyOnNextSaveFromBuffer
-     * @param {Array} in_pkcs12_buffer
-     * @param {number} in_password
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} in_pkcs12_buffer
+     * @param {string} in_password
      */
-    certifyOnNextSaveFromBuffer(in_pkcs12_buffer: any[], in_password: number): void;
+    certifyOnNextSaveFromBuffer(
+      in_pkcs12_buffer: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+      in_password: string,
+    ): void;
     /**
+     * Must be called to prepare a signature for certification, which is done afterwards by calling Save. Throws if document already certified. Default document permission level is e_annotating_formfilling_signing_allowed. Throws if signature field already has a digital signature dictionary.
      *
      * @method PDFNet.DigitalSignatureField#certifyOnNextSaveWithCustomHandler
-     * @param {number} in_signature_handler_id
+     * @param {number} in_signature_handler_id -- The unique id of the signature handler to use to certify this digital signature.
      */
     certifyOnNextSaveWithCustomHandler(in_signature_handler_id: number): void;
     /**
+     * Retrieves the SDF Obj of the digital signature field.
      *
      * @method PDFNet.DigitalSignatureField#getSDFObj
-     * @return {Promise<PDFNet.Obj>} A promise that resolves to an object of type: "Obj"
+     * @return {Promise<PDFNet.Obj>} A promise that resolves to the underlying SDF/Cos object.
      */
     getSDFObj(): Promise<PDFNet.Obj>;
+    /**
+     * Verifies this cryptographic digital signature in the manner specified by the VerificationOptions. EXPERIMENTAL. Digital signature verification is undergoing active development, but currently does not support a number of features. If we are missing a feature that is important to you, or if you have files that do not act as expected, please contact us using one of the following forms: https://www.pdftron.com/form/trial-support/ or https://www.pdftron.com/form/request/
+     *
+     * @method PDFNet.DigitalSignatureField#verify
+     * @param {PDFNet.VerificationOptions} in_opts -- The options specifying how to do the verification.
+     * @return {Promise<PDFNet.VerificationResult>} A promise that resolves to a VerificationResult object containing various information about the verifiability of the cryptographic digital signature.
+     */
+    verify(in_opts: PDFNet.VerificationOptions): Promise<PDFNet.VerificationResult>;
+  }
+  /**
+   * The class DisallowedChange.
+   * Data pertaining to a change detected in a document during a digital
+   * signature modification permissions verification step, the change bein
+   * g both made after the signature was signed, and disallowed by t
+   * he signature's permissions settings.
+   * @class
+   * @name DisallowedChange
+   * @memberof PDFNet
+   */
+  class DisallowedChange {
+    /**
+     * Returns the SDF object number of the indirect object associated with this DisallowedChange.
+     *
+     * @method PDFNet.DisallowedChange#getObjNum
+     * @return {Promise<number>} A promise that resolves to an unsigned 32-bit integer value.
+     */
+    getObjNum(): Promise<number>;
+    /**
+     * Returns an enumeration value representing the semantic type of this disallowed change.
+     *
+     * @method PDFNet.DisallowedChange#getType
+     * @return {Promise<number>} A promise that resolves to an enumeration value of type: Type of DisallowedChange.
+     * @example Return value enum:
+     * <pre>
+     * PDFNet.DisallowedChange.Type = {
+     * 	e_form_filled : 0
+     * 	e_digital_signature_signed : 1
+     * 	e_page_template_instantiated : 2
+     * 	e_annotation_created_or_updated_or_deleted : 3
+     * 	e_other : 4
+     * 	e_unknown : 5
+     * }
+     * </pre>
+     */
+    getType(): Promise<number>;
+    /**
+     * Returns a string value representing the semantic type of this disallowed change.
+     *
+     * @method PDFNet.DisallowedChange#getTypeAsString
+     * @return {Promise<string>} A promise that resolves to a string.
+     */
+    getTypeAsString(): Promise<string>;
+    /**
+     * Destructor
+     * @method PDFNet.DisallowedChange#destroy
+     */
+    destroy(): void;
+  }
+  /**
+   * The class DocSnapshot.
+   * Represents a state of the document.
+   * @class
+   * @name DocSnapshot
+   * @memberof PDFNet
+   */
+  class DocSnapshot {
+    /**
+     * Returns a hash that is unique to particular document states.
+     *
+     * @method PDFNet.DocSnapshot#getHash
+     * @return {Promise<number>} A promise that resolves to a hash that is unique to particular document states.
+     */
+    getHash(): Promise<number>;
+    /**
+     * Returns whether this snapshot is valid.
+     *
+     * @method PDFNet.DocSnapshot#isValid
+     * @return {Promise<boolean>} A promise that resolves to whether this snapshot is valid.
+     */
+    isValid(): Promise<boolean>;
+    /**
+     * Returns whether this snapshot's document state is equivalent to another.
+     *
+     * @method PDFNet.DocSnapshot#equals
+     * @param {PDFNet.DocSnapshot} snapshot -- the other snapshot with which to compare.
+     * @return {Promise<boolean>} A promise that resolves to whether this snapshot's document state is equivalent to another.
+     */
+    equals(snapshot: PDFNet.DocSnapshot): Promise<boolean>;
+    /**
+     * Destructor
+     * @method PDFNet.DocSnapshot#destroy
+     */
+    destroy(): void;
   }
   /**
    * The class DocumentConversion.
@@ -21177,9 +23215,9 @@ declare namespace PDFNet {
     /**
      * set the text data for the current e_text Element.
      * @method PDFNet.Element#setTextData
-     * @param {Array} buf_text_data a pointer to a buffer containing text.
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf_text_data a pointer to a buffer containing text.
      */
-    setTextData(buf_text_data: any[]): void;
+    setTextData(buf_text_data: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): void;
     /**
      * Sets the text matrix for a text element.
      *
@@ -21336,9 +23374,9 @@ declare namespace PDFNet {
      * Another use of Reset(gs) is to make sure that two Elements have the graphics
      * state.
      * @method PDFNet.ElementBuilder#reset
-     * @param {PDFNet.GState} gs GState (graphics state) object. If NULL or unspecified, resets graphics state to default.
+     * @param {PDFNet.GState} [gs] GState (graphics state) object. If NULL or unspecified, resets graphics state to default.
      */
-    reset(gs: PDFNet.GState): void;
+    reset(gs?: PDFNet.GState): void;
     /**
      * Create a content image Element out of a given document Image.
      * @method PDFNet.ElementBuilder#createImage
@@ -21524,7 +23562,7 @@ declare namespace PDFNet {
      * @method PDFNet.ElementBuilder#createPath
      * @param {Array} buf_points A buffer/array containing data on the points in the path.
      * What each point represents is determined by the corresponding segment type.
-     * @param {Array} buf_seg_types A buffer/array containing data on the segment types.
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf_seg_types A buffer/array containing data on the segment types.
      * Possible segment types are as follows:
      * <pre>
      * PDFNet.Element.PathSegmentType = {
@@ -21538,7 +23576,10 @@ declare namespace PDFNet {
      * </pre>
      * @return {Promise<PDFNet.Element>} A promise that resolves to the path Element
      */
-    createPath(buf_points: any[], buf_seg_types: any[]): Promise<PDFNet.Element>;
+    createPath(
+      buf_points: any[],
+      buf_seg_types: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+    ): Promise<PDFNet.Element>;
     /**
      * Create a rectangle path Element.
      *
@@ -21665,28 +23706,7 @@ declare namespace PDFNet {
    * spanning multiple streams and provides a mechanism to parse contents of sub-display lists
    * (e.g. forms XObjects and Type3 fonts).
    *
-   * A sample use case for ElementReader is given below:
-   * <pre>
-   * ...
-   * ElementReader reader;
-   * reader.Begin(page);
-   * for (Element element=reader.Next(); element; element = reader.Next()) // Read page contents
-   * {
-   *   switch (element.GetType())	{
-   *     case Element::e_path: { // Process path data...
-   *         const double* data = element.GetPathPoints();
-   *         int sz = element.GetPointCount();
-   *     }
-   *     break;
-   *     case Element::e_text:
-   *         // ...
-   *     break;
-   *   }
-   * }
-   * reader.End();
-   * </pre>
-   *
-   *  For a full sample, please refer to ElementReader and ElementReaderAdvTest sample projects.
+   * For a full sample, please refer to ElementReader and ElementReaderAdvTest sample projects.
    * @class
    * @name ElementReader
    * @memberof PDFNet
@@ -21711,14 +23731,14 @@ declare namespace PDFNet {
      * @method PDFNet.ElementReader#beginOnPage
      * @param {PDFNet.Page} page A page to start processing.
      *
-     * @param {PDFNet.OCGContext} ctx An optional parameter used to specify the Optional Content (OC)
+     * @param {PDFNet.OCGContext} [ctx] An optional parameter used to specify the Optional Content (OC)
      * Context that should be used when processing the page. When the OCG::Context is specified,
      * Element::IsOCVisible() will return 'true' or 'false' depending on the visibility of the
      * current Optional Content Group (OCG) and the states of flags in the given context.
      *
      * @note When page processing is completed, make sure to call ElementReader.End().
      */
-    beginOnPage(page: PDFNet.Page, ctx: PDFNet.OCGContext): void;
+    beginOnPage(page: PDFNet.Page, ctx?: PDFNet.OCGContext): void;
     /**
      * begin processing given content stream. The content stream may be
      * a Form XObject, Type3 glyph stream, pattern stream or any other content stream.
@@ -21727,19 +23747,19 @@ declare namespace PDFNet {
      * @param {PDFNet.Obj} content_stream A stream object representing the content stream (usually
      * a Form XObject).
      *
-     * @param {PDFNet.Obj} resource_dict An optional '/Resource' dictionary parameter.
+     * @param {PDFNet.Obj} [resource_dict] An optional '/Resource' dictionary parameter.
      * If content stream refers to named resources that are not present in
      * the local Resource dictionary, the names are looked up in the supplied
      * resource dictionary.
      *
-     * @param {PDFNet.OCGContext} ctx An optional parameter used to specify the Optional Content (OC)
+     * @param {PDFNet.OCGContext} [ctx] An optional parameter used to specify the Optional Content (OC)
      * Context that should be used when processing the page. When the OCG::Context is specified,
      * Element::IsOCVisible() will return 'true' or 'false' depending on the visibility of the
      * current Optional Content Group (OCG) and the states of flags in the given context.
      *
      * @note When page processing is completed, make sure to call ElementReader.End().
      */
-    begin(content_stream: PDFNet.Obj, resource_dict: PDFNet.Obj, ctx: PDFNet.OCGContext): void;
+    begin(content_stream: PDFNet.Obj, resource_dict?: PDFNet.Obj, ctx?: PDFNet.OCGContext): void;
     /**
      * @method PDFNet.ElementReader#appendResource
      * @param {PDFNet.Obj} res resource dictionary for finding images, fonts, etc.
@@ -21789,7 +23809,7 @@ declare namespace PDFNet {
      * spawned. Note that the graphics state will be inherited from the parent content
      * stream (the content stream in which the pattern is defined as a resource) automatically.
      *
-     * @param {boolean} reset_ctm_tfm An optional parameter used to indicate whether the pattern's
+     * @param {boolean} [reset_ctm_tfm] An optional parameter used to indicate whether the pattern's
      * display list should set its initial CTM and transformation matrices to identity matrix.
      * In general, we should leave it to be false.
      *
@@ -21801,7 +23821,7 @@ declare namespace PDFNet {
      * the processing will return to the parent display list at the point where
      * pattern display list was spawned.
      */
-    patternBegin(fill_pattern: boolean, reset_ctm_tfm: boolean): void;
+    patternBegin(fill_pattern: boolean, reset_ctm_tfm?: boolean): void;
     /**
      * Close the current display list.
      *
@@ -21959,7 +23979,7 @@ declare namespace PDFNet {
      * @method PDFNet.ElementWriter#beginOnPage
      * @param {PDFNet.Page} page The page to write content.
      *
-     * @param {number} placement
+     * @param {number} [placement]
      * <pre>
      * PDFNet.ElementWriter.WriteMode = {
      * 	e_underlay : 0
@@ -21971,25 +23991,25 @@ declare namespace PDFNet {
      * be added as a foreground or background layer to the existing page. By default, the new
      * content will appear on top of the existing graphics.
      *
-     * @param {boolean} page_coord_sys An optional flag used to select the target coordinate system
+     * @param {boolean} [page_coord_sys] An optional flag used to select the target coordinate system
      * if true (default), the coordinates are relative to the lower-left corner of the page,
      * otherwise the coordinates are defined in PDF user coordinate system (which may,
      * or may not coincide with the page coordinates).
      *
-     * @param {boolean} compress An optional flag indicating whether the page content stream
+     * @param {boolean} [compress] An optional flag indicating whether the page content stream
      * should be compressed. This may be useful for debugging content streams. Also
      * some applications need to do a clear text search on strings in the PDF files.
      * By default, all content streams are compressed.
      *
-     * @param {PDFNet.Obj} resources the resource dictionary in which to store resources for the final page.
+     * @param {PDFNet.Obj} [resources] the resource dictionary in which to store resources for the final page.
      * By default, a new resource dictionary will be created.
      */
     beginOnPage(
       page: PDFNet.Page,
-      placement: number,
-      page_coord_sys: boolean,
-      compress: boolean,
-      resources: PDFNet.Obj,
+      placement?: number,
+      page_coord_sys?: boolean,
+      compress?: boolean,
+      resources?: PDFNet.Obj,
     ): void;
     /**
      * begin writing an Element sequence to a new stream. Use this function to write
@@ -22001,7 +24021,7 @@ declare namespace PDFNet {
      * @param {PDFNet.SDFDoc} doc A low-level SDF/Cos document that will contain the new stream. You can
      * access low-level document using PDFDoc::GetSDFDoc() or Obj::GetDoc() methods.
      *
-     * @param {boolean} compress An optional flag indicating whether the page content stream
+     * @param {boolean} [compress] An optional flag indicating whether the page content stream
      * should be compressed. This may be useful for debugging content streams. Also
      * some applications need to do a clear text search on strings in the PDF files.
      * By default, all content streams are compressed.
@@ -22009,7 +24029,7 @@ declare namespace PDFNet {
      * @note the newly created content stream object is returned when writing operations
      * are completed (i.e. after the call to ElementWriter::End()).
      */
-    begin(doc: PDFNet.SDFDoc, compress: boolean): void;
+    begin(doc: PDFNet.SDFDoc, compress?: boolean): void;
     /**
      * begin writing an Element sequence to a stream. Use this function to write
      * Elements to a content stream which will replace an existing content stream in an
@@ -22019,18 +24039,18 @@ declare namespace PDFNet {
      * @param {PDFNet.Obj} stream_obj_to_update A low-level SDF stream object that will contain the new stream.
      * Old stream inside that object will be discarded.
      *
-     * @param {boolean} compress An optional flag indicating whether the content stream
+     * @param {boolean} [compress] An optional flag indicating whether the content stream
      * should be compressed. This may be useful for debugging content streams. Also
      * some applications need to do a clear text search on strings in the PDF files.
      * By default, all content streams are compressed.
      *
-     * @param {PDFNet.Obj} resources the resource dictionary in which to store resources for the final page.
+     * @param {PDFNet.Obj} [resources] the resource dictionary in which to store resources for the final page.
      * By default, a new resource dictionary will be created.
      *
      * @note The content stream object is returned when writing operations
      * are completed (i.e. after the call to ElementWriter::End()).
      */
-    beginOnObj(stream_obj_to_update: PDFNet.Obj, compress: boolean, resources: PDFNet.Obj): void;
+    beginOnObj(stream_obj_to_update: PDFNet.Obj, compress?: boolean, resources?: PDFNet.Obj): void;
     /**
      * Finish writing to a page
      *
@@ -22088,6 +24108,13 @@ declare namespace PDFNet {
      * @param {PDFNet.ElementReader} r
      */
     setDefaultGState(r: PDFNet.ElementReader): void;
+    /**
+     * Write only the graphics state changes applied to this element and skip writing the element itself.
+     * This is especially useful when rewriting page content, but with the intention to skip certain elements.
+     * @method PDFNet.ElementWriter#writeGStateChanges
+     * @param {PDFNet.Element} element The element for which to write graphics state changes.
+     */
+    writeGStateChanges(element: PDFNet.Element): void;
   }
   /**
    * FDFDoc is a class representing Forms Data Format (FDF) documents.
@@ -22122,10 +24149,12 @@ declare namespace PDFNet {
      * @note the buffer ownership is not transfered to the Document so the user should
      * clean-up if necessary.
      *
-     * @param {Array} buf a memory buffer containing the serialized document
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf a memory buffer containing the serialized document
      * @return {Promise<PDFNet.FDFDoc>} A promise that resolves to an object of type: "FDFDoc"
      */
-    static createFromMemoryBuffer(buf: any[]): Promise<PDFNet.FDFDoc>;
+    static createFromMemoryBuffer(
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+    ): Promise<PDFNet.FDFDoc>;
     /**
      * Destructor
      * @method PDFNet.FDFDoc#destroy
@@ -22236,10 +24265,10 @@ declare namespace PDFNet {
      * 	e_null : 6
      * }
      * </pre>
-     * @param {PDFNet.Obj} field_value
+     * @param {PDFNet.Obj} [field_value]
      * @return {Promise<PDFNet.FDFField>} A promise that resolves to an object of type: "FDFField"
      */
-    fieldCreate(field_name: string, type: number, field_value: PDFNet.Obj): Promise<PDFNet.FDFField>;
+    fieldCreate(field_name: string, type: number, field_value?: PDFNet.Obj): Promise<PDFNet.FDFField>;
     /**
      *
      * @method PDFNet.FDFDoc#fieldCreateFromString
@@ -22283,9 +24312,9 @@ declare namespace PDFNet {
      *
      * @method PDFNet.FDFDoc#mergeAnnots
      * @param {string} command_file string containing the xml command file path or xml string of the command
-     * @param {string} permitted_user optional user name of the permitted user
+     * @param {string} [permitted_user] optional user name of the permitted user
      */
-    mergeAnnots(command_file: string, permitted_user: string): void;
+    mergeAnnots(command_file: string, permitted_user?: string): void;
     /**
      *
      * @method PDFNet.FDFDoc#getFieldIterator
@@ -22304,11 +24333,11 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.FDFField.create
-     * @param {PDFNet.Obj} field_dict
-     * @param {PDFNet.Obj} fdf_dict
+     * @param {PDFNet.Obj} [field_dict]
+     * @param {PDFNet.Obj} [fdf_dict]
      * @return {Promise<PDFNet.FDFField>} A promise that resolves to an object of type: "FDFField"
      */
-    static create(field_dict: PDFNet.Obj, fdf_dict: PDFNet.Obj): Promise<PDFNet.FDFField>;
+    static create(field_dict?: PDFNet.Obj, fdf_dict?: PDFNet.Obj): Promise<PDFNet.FDFField>;
     /**
      * @method PDFNet.FDFField#getValue
      * @return {Promise<PDFNet.Obj>} A promise that resolves to the value of the Field (the value of its /V key) or NULL if the
@@ -22795,12 +24824,12 @@ declare namespace PDFNet {
      * creates an FileAttachment annotation and initializes it using given Cos/SDF object.
      * d Cos/SDF object used to initialize the FileAttachment annotation
      * @method PDFNet.FileAttachmentAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.FileAttachmentAnnot>} A promise that resolves to an object of type: "FileAttachmentAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.FileAttachmentAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.FileAttachmentAnnot>;
     /**
      * The function saves the data referenced by this File Attachment to an
      * external file.
@@ -22811,13 +24840,13 @@ declare namespace PDFNet {
      * returns false.
      *
      * @method PDFNet.FileAttachmentAnnot#export
-     * @param {string} save_as An optional parameter indicating the filepath and filename
+     * @param {string} [save_as] An optional parameter indicating the filepath and filename
      * where the data should be saved. If this parameter is not specified the function
      * will attempt to save the file using FileSpec.GetFilePath().
      *
      * @return {Promise<boolean>} A promise that resolves to true is the file was saved successfully, false otherwise.
      */
-    export(save_as: string): Promise<boolean>;
+    export(save_as?: string): Promise<boolean>;
     /**
      *
      * @method PDFNet.FileAttachmentAnnot#createFromAnnot
@@ -22834,7 +24863,7 @@ declare namespace PDFNet {
      * @param {PDFNet.SDFDoc} doc A document to which the annotation is added.
      * @param {PDFNet.Rect} pos A rectangle specifying the annotation's bounds, in user space coordinates.
      * @param {PDFNet.FileSpec} fs a file specification object used to initialize the file attachment annotation.
-     * @param {number} icon_name
+     * @param {number} [icon_name]
      * <pre>
      * PDFNet.FileAttachmentAnnot.Icon = {
      * 	e_Graph : 0
@@ -22855,7 +24884,7 @@ declare namespace PDFNet {
       doc: PDFNet.SDFDoc,
       pos: PDFNet.Rect,
       fs: PDFNet.FileSpec,
-      icon_name: number,
+      icon_name?: number,
     ): Promise<PDFNet.FileAttachmentAnnot>;
     /**
      *
@@ -22902,7 +24931,7 @@ declare namespace PDFNet {
      * (Optional)
      *
      * @method PDFNet.FileAttachmentAnnot#setIcon
-     * @param {number} type
+     * @param {number} [type]
      * <pre>
      * PDFNet.FileAttachmentAnnot.Icon = {
      * 	e_Graph : 0
@@ -22917,7 +24946,7 @@ declare namespace PDFNet {
      * @note The annotation dictionary's appearance stream, if present, will take precedence over this entry
      * when displaying the annotation in the viewer.
      */
-    setIcon(type: number): void;
+    setIcon(type?: number): void;
     /**
      * Returns the name of the icon associated with the FileAttachment annotation.
      *
@@ -22979,12 +25008,12 @@ declare namespace PDFNet {
      *
      * @param {string} path The path to convert into a file specification.
      *
-     * @param {boolean} embed A flag indicating whether to embed specified in the PDF.
+     * @param {boolean} [embed] A flag indicating whether to embed specified in the PDF.
      * By default, all files are embedded.
      *
      * @return {Promise<PDFNet.FileSpec>} A promise that resolves to newly created FileSpec object.
      */
-    static create(doc: PDFNet.SDFDoc, path: string, embed: boolean): Promise<PDFNet.FileSpec>;
+    static create(doc: PDFNet.SDFDoc, path: string, embed?: boolean): Promise<PDFNet.FileSpec>;
     /**
      * Creates a URL file specification.
      *
@@ -23029,7 +25058,7 @@ declare namespace PDFNet {
      * The function saves the data referenced by this FileSpec to an external file.
      *
      * @method PDFNet.FileSpec#export
-     * @param {string} save_as An optional parameter indicating the filepath and filename
+     * @param {string} [save_as] An optional parameter indicating the filepath and filename
      * where the data should be saved. If this parameter is not specified, the function
      * will attempt to save the file using FileSpec.GetFilePath().
      *
@@ -23040,7 +25069,7 @@ declare namespace PDFNet {
      *
      * @return {Promise<boolean>} A promise that resolves to true is the file was saved successfully, false otherwise.
      */
-    export(save_as: string): Promise<boolean>;
+    export(save_as?: string): Promise<boolean>;
     /**
      * The function returns data referenced by this FileSpec.
      *
@@ -23352,11 +25381,11 @@ declare namespace PDFNet {
     memoryFilterReset(): void;
     /**
      * @method PDFNet.Filter.createFromMemory
-     * @param {Int8Array|Uint8Array|Uint8ClampedArray} buf A memory buffer containing the underlying data. Ttechnically any TypedArray is acceptable.
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf A memory buffer containing the underlying data.
      *
      * @return {Promise<PDFNet.Filter>} A promise that resolves to a "Filter" created from the buffer
      */
-    static createFromMemory(buf: Int8Array | Uint8Array | Uint8ClampedArray): Promise<PDFNet.Filter>;
+    static createFromMemory(buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): Promise<PDFNet.Filter>;
     /**
      * @method PDFNet.Filter.createURLFilter
      * @param {string} url A url from which the data can be downloaded.
@@ -23487,6 +25516,13 @@ declare namespace PDFNet {
      *			the promise will resolve to null if no data was remaining.
      */
     read(buf_size: number): Promise<Uint8Array>;
+    /**
+     * Read all the remaining data to a buffer from the attached filter
+     * @method PDFNet.FilterReader#readAllIntoBuffer
+     * @return {Promise<Uint8Array>} A promise that resolves to a Uint8Array containing the data that was read.
+     *			the promise will resolve to null if no data was remaining.
+     */
+    readAllIntoBuffer(): Promise<Uint8Array>;
   }
   /**
    * FilterWriter is a utility class providing a convenient way to write data
@@ -23633,16 +25669,16 @@ declare namespace PDFNet {
      * default end of line character is carriage return.
      * @method PDFNet.FilterWriter#writeLine
      * @param {string} line string to write out.
-     * @param {number} eol end of line character. Defaults to carriage return (0x0D).
+     * @param {number} [eol] end of line character. Defaults to carriage return (0x0D).
      */
-    writeLine(line: string, eol: number): void;
+    writeLine(line: string, eol?: number): void;
     /**
      * @method PDFNet.FilterWriter#writeBuffer
-     * @param {Array} buf buffer object to write out.
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf buffer object to write out.
      * @return {Promise<number>} A promise that resolves to returns the number of bytes actually written to a stream. This number may
      *   less than buf_size if the stream is corrupted.
      */
-    writeBuffer(buf: any[]): Promise<number>;
+    writeBuffer(buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): Promise<number>;
   }
   /**
    * Flattener is a optional PDFNet add-on that can be used to simplify and optimize
@@ -23692,7 +25728,8 @@ declare namespace PDFNet {
      * @param {number} dpi the resolution in Dots Per Inch
      */
     setDPI(dpi: number): void;
-    /** Used to control how precise or relaxed text flattening is. When some text is
+    /**
+     * Used to control how precise or relaxed text flattening is. When some text is
      * preserved (not flattened to image) the visual appearance of the document may be altered.
      * @method PDFNet.Flattener#setThreshold
      * @param {number} threshold
@@ -23807,10 +25844,10 @@ declare namespace PDFNet {
      * create a PDF::Font object from an existing SDF font object that is embedded
      * in the document. If font_dict is null, a non valid font is created.
      * @method PDFNet.Font.createFromObj
-     * @param {PDFNet.Obj} font_dict The Cos/SDF object to create the Font object with.
+     * @param {PDFNet.Obj} [font_dict] The Cos/SDF object to create the Font object with.
      * @return {Promise<PDFNet.Font>} A promise that resolves to an object of type: "Font"
      */
-    static createFromObj(font_dict: PDFNet.Obj): Promise<PDFNet.Font>;
+    static createFromObj(font_dict?: PDFNet.Obj): Promise<PDFNet.Font>;
     /**
      * Constructor
      * @method PDFNet.Font.create
@@ -24217,12 +26254,12 @@ declare namespace PDFNet {
     /**
      * creates a FreeText annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.FreeTextAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.FreeTextAnnot>} A promise that resolves to an object of type: "FreeTextAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.FreeTextAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.FreeTextAnnot>;
     /**
      * creates a FreeText annotation and initializes it using given annotation object.
      * @method PDFNet.FreeTextAnnot.createFromAnnot
@@ -24342,7 +26379,7 @@ declare namespace PDFNet {
      * (Optional; PDF 1.4)
      *
      * @method PDFNet.FreeTextAnnot#setIntentName
-     * @param {number} mode
+     * @param {number} [mode]
      * <pre>
      * PDFNet.FreeTextAnnot.IntentName = {
      * 	e_FreeText : 0
@@ -24354,7 +26391,7 @@ declare namespace PDFNet {
      * The intent name of the annotation as
      * an entry from the enum "IntentName".
      */
-    setIntentName(mode: number): void;
+    setIntentName(mode?: number): void;
     /**
      *
      * @method PDFNet.FreeTextAnnot#setIntentNameDefault
@@ -24448,9 +26485,9 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.FreeTextAnnot#getTextColor
-     * @param {PDFNet.ColorPt} col_comp
+     * @param {number} col_comp
      */
-    getTextColor(col_comp: PDFNet.ColorPt): void;
+    getTextColor(col_comp: number): void;
     /**
      * sets the line and border color of the FreeText Annotation.
      *
@@ -24468,9 +26505,9 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.FreeTextAnnot#getLineColor
-     * @param {PDFNet.ColorPt} col_comp
+     * @param {number} col_comp
      */
-    getLineColor(col_comp: PDFNet.ColorPt): void;
+    getLineColor(col_comp: number): void;
     /**
      * Sets the default appearance font size. A value of zero specifies
      * that the font size should should adjust so that the text uses
@@ -24511,10 +26548,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.Function.create
-     * @param {PDFNet.Obj} funct_dict
+     * @param {PDFNet.Obj} [funct_dict]
      * @return {Promise<PDFNet.Function>} A promise that resolves to an object of type: "Function"
      */
-    static create(funct_dict: PDFNet.Obj): Promise<PDFNet.Function>;
+    static create(funct_dict?: PDFNet.Obj): Promise<PDFNet.Function>;
     /**
      * Frees the native memory of the object.
      * @method PDFNet.Function#destroy
@@ -25614,14 +27651,14 @@ declare namespace PDFNet {
      * @method PDFNet.Image.createFromMemory
      * @param {PDFNet.SDFDoc} doc A document to which the image should be added. The 'Doc' object
      * can be obtained using Obj::GetDoc() or PDFDoc::GetSDFDoc().
-     * @param {Array} buf The stream or buffer containing image data. The image data must
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf The stream or buffer containing image data. The image data must
      * not be compressed and must follow PDF format for sample representation (please refer
      * to section 4.8.2 'Sample Representation' in PDF Reference Manual for details).
      * @param {number} width The width of the image, in samples.
      * @param {number} height The height of the image, in samples.
      * @param {number} bpc The number of bits used to represent each color component.
-     * @param {number} color_space The color space in which image samples are represented.
-     * @param {PDFNet.ColorSpace} encoder_hints An optional parameter that can be used to fine tune
+     * @param {PDFNet.ColorSpace} color_space The color space in which image samples are represented.
+     * @param {PDFNet.Obj} [encoder_hints] An optional parameter that can be used to fine tune
      * compression or to select a different compression algorithm. See Image::Create()
      * for details.
      *
@@ -25629,22 +27666,26 @@ declare namespace PDFNet {
      */
     static createFromMemory(
       doc: PDFNet.SDFDoc,
-      buf: any[],
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
       width: number,
       height: number,
       bpc: number,
-      color_space: number,
-      encoder_hints: PDFNet.ColorSpace,
+      color_space: PDFNet.ColorSpace,
+      encoder_hints?: PDFNet.Obj,
     ): Promise<PDFNet.Image>;
     /**
      *
      * @method PDFNet.Image.createFromMemory2
      * @param {PDFNet.SDFDoc} doc
-     * @param {Array} buf
-     * @param {number} encoder_hints
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf
+     * @param {PDFNet.Obj} [encoder_hints]
      * @return {Promise<PDFNet.Image>} A promise that resolves to an object of type: "Image"
      */
-    static createFromMemory2(doc: PDFNet.SDFDoc, buf: any[], encoder_hints: number): Promise<PDFNet.Image>;
+    static createFromMemory2(
+      doc: PDFNet.SDFDoc,
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+      encoder_hints?: PDFNet.Obj,
+    ): Promise<PDFNet.Image>;
     /**
      *
      * @method PDFNet.Image.createFromStream
@@ -25654,7 +27695,7 @@ declare namespace PDFNet {
      * @param {number} height
      * @param {number} bpc
      * @param {PDFNet.ColorSpace} color_space
-     * @param {PDFNet.Obj} encoder_hints
+     * @param {PDFNet.Obj} [encoder_hints]
      * @return {Promise<PDFNet.Image>} A promise that resolves to an object of type: "Image"
      */
     static createFromStream(
@@ -25664,20 +27705,20 @@ declare namespace PDFNet {
       height: number,
       bpc: number,
       color_space: PDFNet.ColorSpace,
-      encoder_hints: PDFNet.Obj,
+      encoder_hints?: PDFNet.Obj,
     ): Promise<PDFNet.Image>;
     /**
      *
      * @method PDFNet.Image.createFromStream2
      * @param {PDFNet.SDFDoc} doc
      * @param {PDFNet.Filter} image_data
-     * @param {PDFNet.Obj} encoder_hints
+     * @param {PDFNet.Obj} [encoder_hints]
      * @return {Promise<PDFNet.Image>} A promise that resolves to an object of type: "Image"
      */
     static createFromStream2(
       doc: PDFNet.SDFDoc,
       image_data: PDFNet.Filter,
-      encoder_hints: PDFNet.Obj,
+      encoder_hints?: PDFNet.Obj,
     ): Promise<PDFNet.Image>;
     /**
      * Create and embed an ImageMask. Embed the raw image data taking into account
@@ -25689,13 +27730,13 @@ declare namespace PDFNet {
      * @method PDFNet.Image.createImageMask
      * @param {PDFNet.SDFDoc} doc A document to which the image should be added. The 'Doc' object
      * can be obtained using Obj::GetDoc() or PDFDoc::GetSDFDoc().
-     * @param {Array} buf The stream or buffer containing image data stored in 1 bit per
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf The stream or buffer containing image data stored in 1 bit per
      * sample format. The image data must not be compressed and must follow PDF format for
      * sample representation (please refer to section 4.8.2 'Sample Representation' in PDF
      * Reference Manual for details).
      * @param {number} width The width of the image, in samples.
      * @param {number} height The height of the image, in samples.
-     * @param {number} encoder_hints An optional parameter that can be used to fine tune
+     * @param {PDFNet.Obj} [encoder_hints] An optional parameter that can be used to fine tune
      * compression or to select a different compression algorithm. See Image::Create()
      * for details.
      *
@@ -25703,10 +27744,10 @@ declare namespace PDFNet {
      */
     static createImageMask(
       doc: PDFNet.SDFDoc,
-      buf: any[],
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
       width: number,
       height: number,
-      encoder_hints: number,
+      encoder_hints?: PDFNet.Obj,
     ): Promise<PDFNet.Image>;
     /**
      *
@@ -25715,7 +27756,7 @@ declare namespace PDFNet {
      * @param {PDFNet.FilterReader} image_data
      * @param {number} width
      * @param {number} height
-     * @param {PDFNet.Obj} encoder_hints
+     * @param {PDFNet.Obj} [encoder_hints]
      * @return {Promise<PDFNet.Image>} A promise that resolves to an object of type: "Image"
      */
     static createImageMaskFromStream(
@@ -25723,7 +27764,7 @@ declare namespace PDFNet {
       image_data: PDFNet.FilterReader,
       width: number,
       height: number,
-      encoder_hints: PDFNet.Obj,
+      encoder_hints?: PDFNet.Obj,
     ): Promise<PDFNet.Image>;
     /**
      * create and embed a Soft Mask. Embed the raw image data taking into account
@@ -25735,14 +27776,14 @@ declare namespace PDFNet {
      * @method PDFNet.Image.createSoftMask
      * @param {PDFNet.SDFDoc} doc A document to which the image should be added. The 'Doc' object
      * can be obtained using Obj::GetDoc() or PDFDoc::GetSDFDoc().
-     * @param {Array} buf The stream or buffer containing image data represented in
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf The stream or buffer containing image data represented in
      * DeviceGray color space (i.e. one component per sample). The image data must not
      * be compressed and must follow PDF format for sample representation (please refer
      * to section 4.8.2 'Sample Representation' in PDF Reference Manual for details).
      * @param {number} width The width of the image, in samples.
      * @param {number} height The height of the image, in samples.
      * @param {number} bpc The number of bits used to represent each color component.
-     * @param {number} encoder_hints An optional parameter that can be used to fine tune
+     * @param {PDFNet.Obj} [encoder_hints] An optional parameter that can be used to fine tune
      * compression or to select a different compression algorithm. See Image::Create()
      * for details.
      * @note this feature is available only in PDF 1.4 and higher.
@@ -25750,11 +27791,11 @@ declare namespace PDFNet {
      */
     static createSoftMask(
       doc: PDFNet.SDFDoc,
-      buf: any[],
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
       width: number,
       height: number,
       bpc: number,
-      encoder_hints: number,
+      encoder_hints?: PDFNet.Obj,
     ): Promise<PDFNet.Image>;
     /**
      *
@@ -25764,7 +27805,7 @@ declare namespace PDFNet {
      * @param {number} width
      * @param {number} height
      * @param {number} bpc
-     * @param {PDFNet.Obj} encoder_hints
+     * @param {PDFNet.Obj} [encoder_hints]
      * @return {Promise<PDFNet.Image>} A promise that resolves to an object of type: "Image"
      */
     static createSoftMaskFromStream(
@@ -25773,28 +27814,39 @@ declare namespace PDFNet {
       width: number,
       height: number,
       bpc: number,
-      encoder_hints: PDFNet.Obj,
+      encoder_hints?: PDFNet.Obj,
     ): Promise<PDFNet.Image>;
     /**
      *
      * @method PDFNet.Image.createDirectFromMemory
      * @param {PDFNet.SDFDoc} doc
-     * @param {Array} buf
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf
      * @param {number} width
      * @param {number} height
      * @param {number} bpc
-     * @param {number} color_space
-     * @param {PDFNet.ColorSpace} input_format
+     * @param {PDFNet.ColorSpace} color_space
+     * @param {number} input_format
+     * <pre>
+     * PDFNet.Image.InputFilter = {
+     * 	e_none : 0
+     * 	e_jpeg : 1
+     * 	e_jp2 : 2
+     * 	e_flate : 3
+     * 	e_g3 : 4
+     * 	e_g4 : 5
+     * 	e_ascii_hex : 6
+     * }
+     * </pre>
      * @return {Promise<PDFNet.Image>} A promise that resolves to an object of type: "Image"
      */
     static createDirectFromMemory(
       doc: PDFNet.SDFDoc,
-      buf: any[],
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
       width: number,
       height: number,
       bpc: number,
-      color_space: number,
-      input_format: PDFNet.ColorSpace,
+      color_space: PDFNet.ColorSpace,
+      input_format: number,
     ): Promise<PDFNet.Image>;
     /**
      *
@@ -25831,10 +27883,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.Image.createFromObj
-     * @param {PDFNet.Obj} image_xobject
+     * @param {PDFNet.Obj} [image_xobject]
      * @return {Promise<PDFNet.Image>} A promise that resolves to an object of type: "Image"
      */
-    static createFromObj(image_xobject: PDFNet.Obj): Promise<PDFNet.Image>;
+    static createFromObj(image_xobject?: PDFNet.Obj): Promise<PDFNet.Image>;
     /**
      * Copy Constructor
      * @method PDFNet.Image#copy
@@ -26044,12 +28096,12 @@ declare namespace PDFNet {
     /**
      * creates an Ink annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.InkAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.InkAnnot>} A promise that resolves to an object of type: "InkAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.InkAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.InkAnnot>;
     /**
      * creates an Ink annotation and initializes it using given annotation object.
      * @method PDFNet.InkAnnot.createFromAnnot
@@ -26125,6 +28177,20 @@ declare namespace PDFNet {
      * @return {Promise<boolean>} A promise that resolves to whether an ink stroke was erased
      */
     erase(pt1: PDFNet.Point, pt2: PDFNet.Point, width: number): Promise<boolean>;
+    /**
+     * Retrieves whether the Ink will draw like a highlighter.
+     * @method PDFNet.InkAnnot#getHighlightIntent
+     * @return {Promise<boolean>} A promise that resolves to true if the Ink will draw like a highlighter. (multiply blend mode)
+     * If false it will draw in normal mode. (normal blend mode)
+     */
+    getHighlightIntent(): Promise<boolean>;
+    /**
+     * Enables or disables the Ink drawing like a highlighter.
+     * @method PDFNet.InkAnnot#setHighlightIntent
+     * @param {boolean} highlight true if the Ink will draw like a highlighter. (multiply blend mode)
+     * If false it will draw in normal mode. (normal blend mode)
+     */
+    setHighlightIntent(highlight: boolean): void;
   }
   /**
    * Supports a simple iteration over a generic collection.
@@ -26150,9 +28216,10 @@ declare namespace PDFNet {
      */
     destroy(): void;
     /**
+     * @return {Promise<Object>} A promise that resolves to an object which this iterator points to.
      * @method PDFNet.Iterator#current
      */
-    current(): void;
+    current(): Promise<object>;
   }
   /**
    * [Missing documentation]
@@ -26233,10 +28300,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.LineAnnot.createFromObj
-     * @param {PDFNet.Obj} d
+     * @param {PDFNet.Obj} [d]
      * @return {Promise<PDFNet.LineAnnot>} A promise that resolves to an object of type: "LineAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.LineAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.LineAnnot>;
     /**
      * creates a Line annotation and initializes it using given annotation object.
      * @method PDFNet.LineAnnot.createFromAnnot
@@ -26596,12 +28663,12 @@ declare namespace PDFNet {
     /**
      * creates a Link annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.LinkAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.LinkAnnot>} A promise that resolves to an object of type: "LinkAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.LinkAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.LinkAnnot>;
     /**
      * creates a Link annotation and initializes it using given annotation object.
      * @method PDFNet.LinkAnnot.createFromAnnot
@@ -26735,10 +28802,10 @@ declare namespace PDFNet {
      * @method PDFNet.ListBoxWidget.create
      * @param {PDFNet.PDFDoc} doc
      * @param {PDFNet.Rect} pos
-     * @param {string} field_name
+     * @param {string} [field_name]
      * @return {Promise<PDFNet.ListBoxWidget>} A promise that resolves to an object of type: "ListBoxWidget"
      */
-    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name: string): Promise<PDFNet.ListBoxWidget>;
+    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name?: string): Promise<PDFNet.ListBoxWidget>;
     /**
      *
      * @method PDFNet.ListBoxWidget.createWithField
@@ -26751,10 +28818,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.ListBoxWidget.createFromObj
-     * @param {PDFNet.Obj} obj
+     * @param {PDFNet.Obj} [obj]
      * @return {Promise<PDFNet.ListBoxWidget>} A promise that resolves to an object of type: "ListBoxWidget"
      */
-    static createFromObj(obj: PDFNet.Obj): Promise<PDFNet.ListBoxWidget>;
+    static createFromObj(obj?: PDFNet.Obj): Promise<PDFNet.ListBoxWidget>;
     /**
      *
      * @method PDFNet.ListBoxWidget.createFromAnnot
@@ -26832,12 +28899,12 @@ declare namespace PDFNet {
     /**
      * creates a markup annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.MarkupAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.MarkupAnnot>} A promise that resolves to an object of type: "MarkupAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.MarkupAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.MarkupAnnot>;
     /**
      * creates a markup annotation and initializes it using given annotation object.
      * @method PDFNet.MarkupAnnot.createFromAnnot
@@ -26989,7 +29056,7 @@ declare namespace PDFNet {
      * which is a border effect dictionary that specifies an effect that shall be applied to the border
      * of the annotations. Beginning with PDF 1.6, the free text annotation may also have a BE entry.
      * @method PDFNet.MarkupAnnot#setBorderEffect
-     * @param {number} effect
+     * @param {number} [effect]
      * <pre>
      * PDFNet.MarkupAnnot.BorderEffect = {
      * 	e_None : 0
@@ -27003,7 +29070,7 @@ declare namespace PDFNet {
      * dash array specified by the annotation's BorderStyle entry
      * needs to be taken into consideration.
      */
-    setBorderEffect(effect: number): void;
+    setBorderEffect(effect?: number): void;
     /**
      * @method PDFNet.MarkupAnnot#getBorderEffectIntensity
      * @return {Promise<number>} A promise that resolves to a number describing the intensity of the border effect, in the range 0 to 2.
@@ -27021,11 +29088,11 @@ declare namespace PDFNet {
      * which is a border effect dictionary that specifies an effect that shall be applied to the border
      * of the annotations. Beginning with PDF 1.6, the free text annotation may also have a BE entry.
      * @method PDFNet.MarkupAnnot#setBorderEffectIntensity
-     * @param {number} intensity A number describing the intensity of the border effect, in the
+     * @param {number} [intensity] A number describing the intensity of the border effect, in the
      * range 0 (which is default) to 2.
      * @note this parameter applies only if Border effect is e_Cloudy.
      */
-    setBorderEffectIntensity(intensity: number): void;
+    setBorderEffectIntensity(intensity?: number): void;
     /**
      * Sets the creation date for the markup annotation.
      * (Optional; PDF 1.5 )
@@ -27355,12 +29422,12 @@ declare namespace PDFNet {
     /**
      * creates a Movie annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.MovieAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.MovieAnnot>} A promise that resolves to an object of type: "MovieAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.MovieAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.MovieAnnot>;
     /**
      * creates a Movie annotation and initializes it using given annotation object.
      * @method PDFNet.MovieAnnot.createFromAnnot
@@ -27413,14 +29480,14 @@ declare namespace PDFNet {
      *(Optional)
      *
      * @method PDFNet.MovieAnnot#setToBePlayed
-     * @param {boolean} isplay A boolean value telling if the movie is to be played.
+     * @param {boolean} [isplay] A boolean value telling if the movie is to be played.
      * Default value: true.
      * @note IsToBePlayed is a flag specifying whether to play the movie when the annotation is activated.
      * The movie shall be played using default activation parameters. If the value is false,
      * the movie shall not be played.
      * Default value: true.
      */
-    setToBePlayed(isplay: boolean): void;
+    setToBePlayed(isplay?: boolean): void;
   }
   /**
    * A NameTree is a common data structure in PDF. See section 3.8.5 'Name Trees'
@@ -27829,7 +29896,7 @@ declare namespace PDFNet {
      * @method PDFNet.OCGConfig.create
      * @param {PDFNet.PDFDoc} pdfdoc The document in which the new OCG::Config will be created.
      * @param {boolean} default_config If true, the configuration will be set as the
-     * default OCG configuration (i.e. listed as a D entry under 'OCProperies'
+     * default OCG configuration (i.e. listed as a D entry under 'OCProperties'
      * dictionary).
      * @return {Promise<PDFNet.OCGConfig>} A promise that resolves to the newly created configuration object.
      */
@@ -27911,9 +29978,9 @@ declare namespace PDFNet {
     /**
      * sets the base initialization state. For more info, please see GetInitBaseState().
      * @method PDFNet.OCGConfig#setInitBaseState
-     * @param {string} value new base state ("ON", "OFF", or "Unchanged").
+     * @param {string} [value] new base state ("ON", "OFF", or "Unchanged").
      */
-    setInitBaseState(value: string): void;
+    setInitBaseState(value?: string): void;
     /**
      * @method PDFNet.OCGConfig#getInitOnStates
      * @return {Promise<PDFNet.Obj>} A promise that resolves to the "ON" initialization array from the configuration dictionary or
@@ -28005,8 +30072,8 @@ declare namespace PDFNet {
      * but the context itself has no corresponding PDF representation, and is not saved.
      * </p>
      * @class
-    * @name OCGContext
-    * @memberof PDFNet
+     * @name OCGContext
+     * @memberof PDFNet
      */
   class OCGContext {
     /**
@@ -28962,9 +31029,9 @@ declare namespace PDFNet {
      * @method PDFNet.Obj#setStreamDataWithFilter
      * @param {string} data
      * @param {number} data_size
-     * @param {PDFNet.Filter} filter_chain
+     * @param {PDFNet.Filter} [filter_chain]
      */
-    setStreamDataWithFilter(data: string, data_size: number, filter_chain: PDFNet.Filter): void;
+    setStreamDataWithFilter(data: string, data_size: number, filter_chain?: PDFNet.Filter): void;
     /**
      * @method PDFNet.Obj#getRawStream
      * @param {boolean} decrypt If true decrypt the stream if the stream is encrypted.
@@ -29941,19 +32008,19 @@ declare namespace PDFNet {
      * @note This method assumes that the first parameter passed in PDFACompliance
      * constructor (i.e. the convert parameter) is set to 'true'.
      * @param {string} file_path the output file name.
-     * @param {boolean} linearized An optional flag used to specify whether the the resulting
+     * @param {boolean} [linearized] An optional flag used to specify whether the the resulting
      * PDF/A document should be web-optimized (linearized).
      */
-    saveAsFromFileName(file_path: string, linearized: boolean): void;
+    saveAsFromFileName(file_path: string, linearized?: boolean): void;
     /**
      * Serializes the converted PDF/A document to a memory buffer.
      * @method PDFNet.PDFACompliance#saveAsFromBuffer
      * @note This method assumes that the first parameter passed in PDFACompliance
      * constructor (i.e. the convert parameter) is set to 'true'.
-     * @param {string} linearized An optional flag used to specify whether the the resulting
+     * @param {boolean} [linearized] An optional flag used to specify whether the the resulting
      * PDF/A document should be web-optimized (linearized).
      */
-    saveAsFromBuffer(linearized: string): void;
+    saveAsFromBuffer(linearized?: boolean): void;
     /**
      * Perform PDF/A validation or PDF/A conversion on the input PDF document
      * which is stored in a memory buffer.
@@ -29997,7 +32064,7 @@ declare namespace PDFNet {
      * @param {boolean} convert A flag used to instruct PDF/A processor to perform PDF/A
      * conversion (if 'true') or PDF/A validation (if 'false'). After PDF/A conversion
      * you can save the resulting document using Save() method(s).
-     * @param {Int8Array|Uint8Array|Uint8ClampedArray} buf A memory buffer containing the serialized PDF document. Ttechnically any TypedArray is acceptable.
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf A memory buffer containing the serialized PDF document.
      * @param {string} [pwd=""] A parameter that can be used to specify the password for encrypted PDF documents (typically only useful in the conversion mode).
      * @param {number} [conform=PDFNet.PDFACompliance.Conformance.e_Level1B]
      * <pre>
@@ -30020,7 +32087,7 @@ declare namespace PDFNet {
      */
     static createFromBuffer(
       convert: boolean,
-      buf: Int8Array | Uint8Array | Uint8ClampedArray,
+      buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
       pwd?: string,
       conform?: number,
       excep?: Int32Array,
@@ -30194,17 +32261,17 @@ declare namespace PDFNet {
      * @note the buffer ownership is not transfered to the document so the user should
      * clean-up any allocated memory if necessary.
      *
-     * @param {Array} buf a memory buffer containing the serialized document
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf a memory buffer containing the serialized document
      * @return {Promise<PDFNet.PDFDoc>} A promise that resolves to an object of type: "PDFDoc"
      */
-    static createFromBuffer(buf: any[]): Promise<PDFNet.PDFDoc>;
+    static createFromBuffer(buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): Promise<PDFNet.PDFDoc>;
     /**
      *
      * @method PDFNet.PDFDoc.createFromLayoutEls
-     * @param {Array} buf
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf
      * @return {Promise<PDFNet.PDFDoc>} A promise that resolves to an object of type: "PDFDoc"
      */
-    static createFromLayoutEls(buf: any[]): Promise<PDFNet.PDFDoc>;
+    static createFromLayoutEls(buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): Promise<PDFNet.PDFDoc>;
     /**
      * Copy Constructor
      * @method PDFNet.PDFDoc#createShallowCopy
@@ -30289,7 +32356,7 @@ declare namespace PDFNet {
      * obtained using GetSecurityHandler() method.
      *
      * @method PDFNet.PDFDoc#initStdSecurityHandlerBuffer
-     * @param {Array} password_buf Specifies the password used to open the document without
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} password_buf Specifies the password used to open the document without
      * any user feedback. If you would like to dynamically obtain the password,
      * you need to derive a custom class from StdSecurityHandler() and use
      * InitSecurityHandler() without any parameters. See EncTest sample
@@ -30299,7 +32366,9 @@ declare namespace PDFNet {
      * false otherwise.
      *
      */
-    initStdSecurityHandlerBuffer(password_buf: any[]): Promise<boolean>;
+    initStdSecurityHandlerBuffer(
+      password_buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+    ): Promise<boolean>;
     /**
      * @method PDFNet.PDFDoc#getSecurityHandler
      * @return {Promise<PDFNet.SecurityHandler>} A promise that resolves to currently selected SecurityHandler.
@@ -30424,9 +32493,9 @@ declare namespace PDFNet {
      * For full sample code, please take a look at ElementReader, PDFPageTest and PDFDraw sample projects.
      * @method PDFNet.PDFDoc#getPageIterator
      * @return {Promise<PDFNet.Iterator>} A promise that resolves to an iterator to the first page in the document.
-     * @param {number} page_number page to set the iterator on. 1 corresponds to the first page.
+     * @param {number} [page_number] page to set the iterator on. 1 corresponds to the first page.
      */
-    getPageIterator(page_number: number): Promise<PDFNet.Iterator>;
+    getPageIterator(page_number?: number): Promise<PDFNet.Iterator>;
     /**
      * @method PDFNet.PDFDoc#getPage
      * @param {number} page_number the page number in document's page sequence. Page numbers
@@ -30590,7 +32659,7 @@ declare namespace PDFNet {
      * @note the new page still does not belong to document page sequence and should be
      * subsequently placed at a specific location within the sequence.
      *
-     * @param {PDFNet.Rect} media_box A rectangle, expressed in default user space units, defining
+     * @param {PDFNet.Rect} [media_box] A rectangle, expressed in default user space units, defining
      * the boundaries of the physical medium on which the page is intended to be
      * displayed or printed. A user space units is 1/72 of an inch. If media_box is
      * not specified the default dimensions of the page are 8.5 x 11 inches (or
@@ -30644,7 +32713,7 @@ declare namespace PDFNet {
      *    <li>C10 =  Rect(0, 0, 79,   113)
      * </ul>
      */
-    pageCreate(media_box: PDFNet.Rect): Promise<PDFNet.Page>;
+    pageCreate(media_box?: PDFNet.Rect): Promise<PDFNet.Page>;
     /**
      * @method PDFNet.PDFDoc#getFirstBookmark
      * @return {Promise<PDFNet.Bookmark>} A promise that resolves to the first Bookmark from the document's outline tree. If the
@@ -30771,15 +32840,15 @@ declare namespace PDFNet {
      * 	e_null : 6
      * }
      * </pre>
-     * @param {PDFNet.Obj} field_value
-     * @param {PDFNet.Obj} def_field_value
+     * @param {PDFNet.Obj} [field_value]
+     * @param {PDFNet.Obj} [def_field_value]
      * @return {Promise<PDFNet.Field>} A promise that resolves to an object of type: "Field"
      */
     fieldCreate(
       field_name: string,
       type: number,
-      field_value: PDFNet.Obj,
-      def_field_value: PDFNet.Obj,
+      field_value?: PDFNet.Obj,
+      def_field_value?: PDFNet.Obj,
     ): Promise<PDFNet.Field>;
     /**
      *
@@ -30798,14 +32867,14 @@ declare namespace PDFNet {
      * }
      * </pre>
      * @param {string} field_value
-     * @param {string} def_field_value
+     * @param {string} [def_field_value]
      * @return {Promise<PDFNet.Field>} A promise that resolves to an object of type: "Field"
      */
     fieldCreateFromStrings(
       field_name: string,
       type: number,
       field_value: string,
-      def_field_value: string,
+      def_field_value?: string,
     ): Promise<PDFNet.Field>;
     /**
      * Regenerates the appearance stream for every widget annotation in the document
@@ -30817,10 +32886,10 @@ declare namespace PDFNet {
     /**
      * Flatten all annotations in the document.
      * @method PDFNet.PDFDoc#flattenAnnotations
-     * @param {boolean} forms_only if false flatten all annotations, otherwise flatten
+     * @param {boolean} [forms_only] if false flatten all annotations, otherwise flatten
      * only form fields.
      */
-    flattenAnnotations(forms_only: boolean): void;
+    flattenAnnotations(forms_only?: boolean): void;
     /**
      *
      * @method PDFNet.PDFDoc#flattenAnnotationsAdvanced
@@ -30835,7 +32904,7 @@ declare namespace PDFNet {
     /**
      * Extract form data and/or annotations to FDF
      * @method PDFNet.PDFDoc#fdfExtract
-     * @param {number} flag
+     * @param {number} [flag]
      * <pre>
      * PDFNet.PDFDoc.ExtractFlag = {
      * 	e_forms_only : 0
@@ -30846,12 +32915,12 @@ declare namespace PDFNet {
      * specifies extract options
      * @return {Promise<PDFNet.FDFDoc>} A promise that resolves to a pointer to the newly created FDF file with an interactive data.
      */
-    fdfExtract(flag: number): Promise<PDFNet.FDFDoc>;
+    fdfExtract(flag?: number): Promise<PDFNet.FDFDoc>;
     /**
      * Extract form data and/or annotations to FDF
      * @method PDFNet.PDFDoc#fdfExtractPageSet
      * @param {PDFNet.PageSet} pages_to_extract The set of pages for which to extract interactive data.
-     * @param {number} flag
+     * @param {number} [flag]
      * <pre>
      * PDFNet.PDFDoc.ExtractFlag = {
      * 	e_forms_only : 0
@@ -30862,7 +32931,7 @@ declare namespace PDFNet {
      * specifies extract options
      * @return {Promise<PDFNet.FDFDoc>} A promise that resolves to a pointer to the newly created FDF file with an interactive data.
      */
-    fdfExtractPageSet(pages_to_extract: PDFNet.PageSet, flag: number): Promise<PDFNet.FDFDoc>;
+    fdfExtractPageSet(pages_to_extract: PDFNet.PageSet, flag?: number): Promise<PDFNet.FDFDoc>;
     /**
      * Import form data from FDF file to PDF interactive form.
      * @method PDFNet.PDFDoc#fdfMerge
@@ -31048,19 +33117,19 @@ declare namespace PDFNet {
      *
      * @method PDFNet.PDFDoc#createIndirectStreamFromFilter
      * @param {PDFNet.FilterReader} data
-     * @param {PDFNet.Filter} filter_chain
+     * @param {PDFNet.Filter} [filter_chain]
      * @return {Promise<PDFNet.Obj>} A promise that resolves to an object of type: "Obj"
      */
-    createIndirectStreamFromFilter(data: PDFNet.FilterReader, filter_chain: PDFNet.Filter): Promise<PDFNet.Obj>;
+    createIndirectStreamFromFilter(data: PDFNet.FilterReader, filter_chain?: PDFNet.Filter): Promise<PDFNet.Obj>;
     /**
      *
      * @method PDFNet.PDFDoc#createIndirectStream
      * @param {string} data
      * @param {number} data_size
-     * @param {PDFNet.Filter} filter_chain
+     * @param {PDFNet.Filter} [filter_chain]
      * @return {Promise<PDFNet.Obj>} A promise that resolves to an object of type: "Obj"
      */
-    createIndirectStream(data: string, data_size: number, filter_chain: PDFNet.Filter): Promise<PDFNet.Obj>;
+    createIndirectStream(data: string, data_size: number, filter_chain?: PDFNet.Filter): Promise<PDFNet.Obj>;
     /**
      * @method PDFNet.PDFDoc#getSDFDoc
      * @return {Promise<PDFNet.SDFDoc>} A promise that resolves to document's SDF/Cos document
@@ -31100,11 +33169,14 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.PDFDoc#addStdSignatureHandlerFromBuffer
-     * @param {Array} pkcs12_buffer
-     * @param {number} pkcs12_pass
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} pkcs12_buffer
+     * @param {string} pkcs12_pass
      * @return {Promise<number>} A promise that resolves to an object of type: "number"
      */
-    addStdSignatureHandlerFromBuffer(pkcs12_buffer: any[], pkcs12_pass: number): Promise<number>;
+    addStdSignatureHandlerFromBuffer(
+      pkcs12_buffer: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+      pkcs12_pass: string,
+    ): Promise<number>;
     /**
      * Removes a signature handler from the signature manager.
      *
@@ -31145,20 +33217,33 @@ declare namespace PDFNet {
      */
     getGeometryCollectionForPage(page_num: number): Promise<PDFNet.GeometryCollection>;
     /**
+     * @method PDFNet.PDFDoc#getUndoManager
+     * @return {Promise<PDFNet.UndoManager>} A promise that resolves to the UndoManager object (one-to-one mapped to document)
+     */
+    getUndoManager(): Promise<PDFNet.UndoManager>;
+    /**
      * Creates an unsigned digital signature form field inside the document.
      *
      * @method PDFNet.PDFDoc#createDigitalSignatureField
-     * @param {string} in_sig_field_name The fully-qualified name to give the digital signature field. If one is not provided, a unique name is created automatically.
+     * @param {string} [in_sig_field_name] The fully-qualified name to give the digital signature field. If one is not provided, a unique name is created automatically.
      *
      * @return {Promise<PDFNet.DigitalSignatureField>} A promise that resolves to a DigitalSignatureField object representing the created digital signature field.
      */
-    createDigitalSignatureField(in_sig_field_name: string): Promise<PDFNet.DigitalSignatureField>;
+    createDigitalSignatureField(in_sig_field_name?: string): Promise<PDFNet.DigitalSignatureField>;
     /**
      *
-     * @method PDFNet.PDFDoc#getDigitalSignatureFieldBegin
-     * @return {Promise<PDFNet.Iterator>} A promise that resolves to an object of type: "Iterator"
+     * @method PDFNet.PDFDoc#getDigitalSignatureField
+     * @param {string} field_name
+     * @return {Promise<PDFNet.DigitalSignatureField>} A promise that resolves to an object of type: "DigitalSignatureField"
      */
-    getDigitalSignatureFieldBegin(): Promise<PDFNet.Iterator>;
+    getDigitalSignatureField(field_name: string): Promise<PDFNet.DigitalSignatureField>;
+    /**
+     * Retrieves an iterator that iterates over digital signature fields.
+     *
+     * @method PDFNet.PDFDoc#getDigitalSignatureFieldIteratorBegin
+     * @return {Promise<PDFNet.Iterator>} A promise that resolves to an iterator that iterates over digital signature fields.
+     */
+    getDigitalSignatureFieldIteratorBegin(): Promise<PDFNet.Iterator>;
     /**
      * Retrieves the most restrictive document permissions locking level from
      * all of the signed digital signatures in the document.
@@ -31176,13 +33261,6 @@ declare namespace PDFNet {
      * </pre>
      */
     getDigitalSignaturePermissions(): Promise<number>;
-    /**
-     *
-     * @method PDFNet.PDFDoc#saveViewerOptimized
-     * @param {string} path
-     * @param {PDFNet.Obj} options
-     */
-    saveViewerOptimized(path: string, options: PDFNet.Obj): void;
     /**
      * WebViewer only - Ensures that a particular page of the pdf document is finished loading
      * before reading or writing from it. Recommended to be called before
@@ -31203,49 +33281,6 @@ declare namespace PDFNet {
      * @param {number} page_number - The page to ensure completion of.
      */
     requirePage(page_number: number): void;
-    /**
-     * Use the Next() method on the returned iterator to traverse all pages in the document.
-     * For example:
-     * <pre>
-     *   PageIterator itr = pdfdoc.GetPageIterator();
-     *   while (itr.HasNext()) { //  Read every page
-     *      Page page = itr.Current();
-     *      // ...
-     *      itr.Next()
-     *   }
-     * </pre>
-     *
-     * For full sample code, please take a look at ElementReader, PDFPageTest and PDFDraw sample projects.
-     * @method PDFNet.PDFDoc#getPageIterator
-     * @return {Promise<PDFNet.Iterator>} A promise that resolves to an iterator to the first page in the document.
-     * @param {number} page_number page to set the iterator on. 1 corresponds to the first page.
-     */
-    getPageIterator(page_number: number): Promise<PDFNet.Iterator>;
-    /**
-     * An interactive form (sometimes referred to as an AcroForm) is a
-     * collection of fields for gathering information interactively from
-     * the user. A PDF document may contain any number of fields appearing
-     * on any combination of pages, all of which make up a single, global
-     * interactive form spanning the entire document.
-     *
-     * The following methods are used to access and manipulate Interactive form
-     * fields (sometimes referred to as AcroForms).
-     *
-     * @method PDFNet.PDFDoc#getFieldIteratorBegin
-     * @return {Promise<PDFNet.Iterator>} A promise that resolves to an iterator to the first Field in the document.
-     *
-     * The list of all Fields present in the document can be traversed as follows:
-     * <pre>
-     * FieldIterator itr = pdfdoc.GetFieldIterator();
-     * for(; itr.HasNext(); itr.Next()) {
-     *   Field field = itr.Current();
-     *   Console.WriteLine("Field name: {0}", field.GetName());
-     *  }
-     * </pre>
-     *
-     * For a full sample, please refer to 'InteractiveForms' sample project.
-     */
-    getFieldIteratorBegin(): Promise<PDFNet.Iterator>;
     /**
      * An interactive form (sometimes referred to as an AcroForm) is a
      * collection of fields for gathering information interactively from
@@ -31323,7 +33358,7 @@ declare namespace PDFNet {
      * consists of several pages that share the same resources.
      * @method PDFNet.PDFDoc#importPages
      * @param {PDFNet.Page[]} page_arr A list of pages to import. All pages should belong to the same source document.
-     * @param {number} import_bookmarks An optional flag specifying whether any bookmark items
+     * @param {number} [import_bookmarks] An optional flag specifying whether any bookmark items
      * pointing to pages in the import list should be merged with the target (i.e. this)
      * document.
      *
@@ -31331,7 +33366,7 @@ declare namespace PDFNet {
      * document page sequence. This can be done using methods such as PageInsert(),
      * PagePushBack(), etc.
      */
-    importPages(page_arr: PDFNet.Page[], import_bookmarks: number): Promise<PDFNet.Page>;
+    importPages(page_arr: PDFNet.Page[], import_bookmarks?: number): Promise<PDFNet.Page>;
     /**
      * Locks the document to prevent competing threads from accessing the document
      * at the same time. Threads attempting to access the document will wait in
@@ -31938,12 +33973,12 @@ declare namespace PDFNet {
      * PdFDraw constructor and destructor
      *
      * @method PDFNet.PDFDraw.create
-     * @param {number} dpi Default resolution used to rasterize pages. If the parameter is not
+     * @param {number} [dpi] Default resolution used to rasterize pages. If the parameter is not
      * specified, the initial resolution is 92 dots per inch. DPI parameter can be
      * modified at any time using PDFDraw::SetDPI() method.
      * @return {Promise<PDFNet.PDFDraw>} A promise that resolves to an object of type: "PDFDraw"
      */
-    static create(dpi: number): Promise<PDFNet.PDFDraw>;
+    static create(dpi?: number): Promise<PDFNet.PDFDraw>;
     /**
      * Frees the native memory of the object.
      * @method PDFNet.PDFDraw#destroy
@@ -32001,10 +34036,10 @@ declare namespace PDFNet {
      * @method PDFNet.PDFDraw#setImageSize
      * @param {number} width The width of the image, in pixels/samples.
      * @param {number} height The height of the image, in pixels/samples.
-     * @param {boolean} preserve_aspect_ratio True to preserve the aspect ratio, false
+     * @param {boolean} [preserve_aspect_ratio] True to preserve the aspect ratio, false
      * otherwise. By default, preserve_aspect_ratio is true.
      */
-    setImageSize(width: number, height: number, preserve_aspect_ratio: boolean): void;
+    setImageSize(width: number, height: number, preserve_aspect_ratio?: boolean): void;
     /**
      * Selects the page box/region to rasterize.
      *
@@ -32192,19 +34227,19 @@ declare namespace PDFNet {
      * that the output resolution of the image on the rasterized page. PDFNet automatically
      * controls at what resolution/zoom factor, 'image smoothing' needs to take effect.
      *
-     * @param {boolean} smoothing_enabled True to enable image smoothing, false otherwise.
-     * @param {boolean} hq_image_resampling True to use a higher quality (but slower) smoothing algorithm
+     * @param {boolean} [smoothing_enabled] True to enable image smoothing, false otherwise.
+     * @param {boolean} [hq_image_resampling] True to use a higher quality (but slower) smoothing algorithm
      * @default image smoothing is enabled and hq_image_resampling is false.
      */
-    setImageSmoothing(smoothing_enabled: boolean, hq_image_resampling: boolean): void;
+    setImageSmoothing(smoothing_enabled?: boolean, hq_image_resampling?: boolean): void;
     /**
      * enables or disables caching. Caching can improve the rendering performance in cases
      * where the same page will be drawn multiple times.
      *
      * @method PDFNet.PDFDraw#setCaching
-     * @param {boolean} enabled if true PDFRasterizer will cache frequently used graphics objects.
+     * @param {boolean} [enabled] if true PDFRasterizer will cache frequently used graphics objects.
      */
-    setCaching(enabled: boolean): void;
+    setCaching(enabled?: boolean): void;
     /**
      * Set the color post processing transformation.
      * This transform is applied to the rasterized bitmap as the final step
@@ -32225,96 +34260,6 @@ declare namespace PDFNet {
     setColorPostProcessMode(mode: number): void;
   }
   /**
-   * PDFNet contains global library initialization, registration, configuration,
-   * and termination methods.
-   *
-   * @note there is only a single, static instance of PDFNet class. Initialization
-   * and termination methods need to be called only once per application session.
-   * @class
-   * @name PDFNet
-   * @memberof PDFNet
-   */
-  class PDFNet {
-    /**
-     * A switch that can be used to turn on/off JavaScript engine
-     *
-     * @method PDFNet.PDFNet.enableJavaScript
-     * @param {boolean} enable true to enable JavaScript engine, false to disable.
-     */
-    static enableJavaScript(enable: boolean): void;
-    /**
-     * Test whether JavaScript is enabled
-     *
-     * @method PDFNet.PDFNet.isJavaScriptEnabled
-     * @return {Promise<boolean>} A promise that resolves to true if it is enabled, false otherwise
-     */
-    static isJavaScriptEnabled(): Promise<boolean>;
-    /**
-     * Sets the location of PDFNet resource file.
-     *
-     * @method PDFNet.PDFNet.addResourceSearchPath
-     * @note Starting with v.4.5 PDFNet no longer requires a seperate resource file,
-     * and so this function is not required for proper PDFNet initialization.
-     * The function can be used on all platforms to specify search paths for
-     * ICC profiles, fonts, and other user defined resources.
-     *
-     * @param {string} path The resource directory path to add to the search list.
-     */
-    static addResourceSearchPath(path: string): void;
-    /**
-     * used to set a specific Color Management System (CMS) for
-     * use during color conversion operators, image rendering, etc.
-     *
-     * @method PDFNet.PDFNet.setColorManagement
-     * @param {number} t
-     * <pre>
-     * PDFNet.CMSType = {
-     * 	e_lcms : 0
-     * 	e_icm : 1
-     * 	e_no_cms : 2
-     * }
-     * </pre>
-     * identifies the type of color management to use.
-     */
-    static setColorManagement(t: number): void;
-    /**
-     *  sets the default compression level for Flate (ZLib).
-     *
-     *	@method PDFNet.PDFNet.setDefaultFlateCompressionLevel
-     * @param {number} level An integer in range 0-9 representing the compression value to use as
-     *  a default for any Flate streams (e.g used to compress content streams, PNG images, etc).
-     *  The library normally uses the default compression level (Z_DEFAULT_COMPRESSION).
-     *  For most images, compression values in the range 3-6 compress nearly as well as higher
-     *  levels, and do so much faster. For on-line applications it may be desirable to have
-     *  maximum speed Z_BEST_SPEED = 1). You can also specify no compression (Z_NO_COMPRESSION = 0).
-     *
-     *	@default Z_DEFAULT_COMPRESSION (-1).
-     */
-    static setDefaultFlateCompressionLevel(level: number): void;
-    /**
-     * @method PDFNet.PDFNet.getVersion
-     * @return {Promise<number>} A promise that resolves to pDFNet version number.
-     */
-    static getVersion(): Promise<number>;
-    /**
-     *
-     * @method PDFNet.PDFNet.setLogLevel
-     * @param {number} level
-     * <pre>
-     * PDFNet.LogLevel = {
-     * 	e_LogLevel_Off : -1
-     * 	e_LogLevel_Fatal : 5
-     * 	e_LogLevel_Error : 4
-     * 	e_LogLevel_Warning : 3
-     * 	e_LogLevel_Info : 2
-     * 	e_LogLevel_Trace : 1
-     * 	e_LogLevel_Debug : 0
-     * }
-     * </pre>
-     */
-    static setLogLevel(level: number): void;
-  }
-  /**
    * PDFRasterizer is a low-level PDF rasterizer.
    *
    * The main purpose of this class is to convert PDF pages to raster
@@ -32332,7 +34277,7 @@ declare namespace PDFNet {
     /**
      * PdFRasterizer constructor and destructor
      * @method PDFNet.PDFRasterizer.create
-     * @param {number} type
+     * @param {number} [type]
      * <pre>
      * PDFNet.PDFRasterizer.Type = {
      * 	e_BuiltIn : 0
@@ -32341,7 +34286,7 @@ declare namespace PDFNet {
      * </pre>
      * @return {Promise<PDFNet.PDFRasterizer>} A promise that resolves to an object of type: "PDFRasterizer"
      */
-    static create(type: number): Promise<PDFNet.PDFRasterizer>;
+    static create(type?: number): Promise<PDFNet.PDFRasterizer>;
     /**
      * Frees the native memory of the object.
      * @method PDFNet.PDFRasterizer#destroy
@@ -32462,11 +34407,11 @@ declare namespace PDFNet {
      * that the output resolution of the image on the rasterized page. PDFNet automatically
      * controls at what resolution/zoom factor, 'image smoothing' needs to take effect.
      *
-     * @param {boolean} smoothing_enabled True to enable image smoothing, false otherwise.
-     * @param {boolean} hq_image_resampling True to use a higher quality (but slower) smoothing algorithm
+     * @param {boolean} [smoothing_enabled] True to enable image smoothing, false otherwise.
+     * @param {boolean} [hq_image_resampling] True to use a higher quality (but slower) smoothing algorithm
      * @default image smoothing is enabled and hq_image_resampling is false.
      */
-    setImageSmoothing(smoothing_enabled: boolean, hq_image_resampling: boolean): void;
+    setImageSmoothing(smoothing_enabled?: boolean, hq_image_resampling?: boolean): void;
     /**
      * enable or disable support for overprint and overprint simulation.
      * Overprint is a device dependent feature and the results will vary depending on
@@ -32491,9 +34436,9 @@ declare namespace PDFNet {
      * where the same page will be drawn multiple times.
      *
      * @method PDFNet.PDFRasterizer#setCaching
-     * @param {boolean} enabled if true PDFRasterizer will cache frequently used graphics objects.
+     * @param {boolean} [enabled] if true PDFRasterizer will cache frequently used graphics objects.
      */
-    setCaching(enabled: boolean): void;
+    setCaching(enabled?: boolean): void;
     /**
      *
      * @method PDFNet.PDFRasterizer#setAnnotationState
@@ -32717,7 +34662,7 @@ declare namespace PDFNet {
      * Initialize a page using an existing low-level Cos/SDF page object.
      *
      * @method PDFNet.Page.create
-     * @param {PDFNet.Obj} page_dict a low-level (SDF/Cos) page dictionary.
+     * @param {PDFNet.Obj} [page_dict] a low-level (SDF/Cos) page dictionary.
      *
      * @note This constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
@@ -32726,7 +34671,7 @@ declare namespace PDFNet {
      * and traversal this constructor is rarely used.
      * @return {Promise<PDFNet.Page>} A promise that resolves to an object of type: "Page"
      */
-    static create(page_dict: PDFNet.Obj): Promise<PDFNet.Page>;
+    static create(page_dict?: PDFNet.Obj): Promise<PDFNet.Page>;
     /**
      * Copy Constructor
      * @method PDFNet.Page#copy
@@ -33003,7 +34948,7 @@ declare namespace PDFNet {
      * @return {Promise<number>} A promise that resolves to the width for the given page region/box taking into account page
      * rotation attribute (i.e. /Rotate entry in page dictionary).
      *
-     * @param {number} box_type
+     * @param {number} [box_type]
      * <pre>
      * PDFNet.Page.Box = {
      * 	e_media : 0
@@ -33015,13 +34960,13 @@ declare namespace PDFNet {
      * </pre>
      * indicates the page box/region to query for width.
      */
-    getPageWidth(box_type: number): Promise<number>;
+    getPageWidth(box_type?: number): Promise<number>;
     /**
      * @method PDFNet.Page#getPageHeight
      * @return {Promise<number>} A promise that resolves to the height for the given page region/box taking into account page
      * rotation attribute (i.e. /Rotate entry in page dictionary).
      *
-     * @param {number} box_type
+     * @param {number} [box_type]
      * <pre>
      * PDFNet.Page.Box = {
      * 	e_media : 0
@@ -33033,16 +34978,16 @@ declare namespace PDFNet {
      * </pre>
      * indicates the page box/region to query for height.
      */
-    getPageHeight(box_type: number): Promise<number>;
+    getPageHeight(box_type?: number): Promise<number>;
     /**
      * @method PDFNet.Page#getDefaultMatrix
      * @return {Promise<PDFNet.Matrix2D>} A promise that resolves to the matrix that transforms user space coordinates to rotated and cropped coordinates.
      * The origin of this space is the bottom-left of the rotated, cropped page.
      *
-     * @param {boolean} flip_y this parameter can be used to mirror the page. if 'flip_y' is true the Y
+     * @param {boolean} [flip_y] this parameter can be used to mirror the page. if 'flip_y' is true the Y
      * axis is not flipped and it is increasing, otherwise Y axis is decreasing.
      *
-     * @param {number} box_type
+     * @param {number} [box_type]
      * <pre>
      * PDFNet.Page.Box = {
      * 	e_media : 0
@@ -33056,7 +35001,7 @@ declare namespace PDFNet {
      * should map to. By default, the function transforms user space coordinates to cropped
      * coordinates.
      *
-     * @param {number} angle
+     * @param {number} [angle]
      * <pre>
      * PDFNet.Page.Rotate = {
      * 	e_0 : 0
@@ -33069,7 +35014,7 @@ declare namespace PDFNet {
      * rotation specified in the page dictionary. This parameter is usually used to rotate the
      * page without modifying the document itself.
      */
-    getDefaultMatrix(flip_y: boolean, box_type: number, angle: number): Promise<PDFNet.Matrix2D>;
+    getDefaultMatrix(flip_y?: boolean, box_type?: number, angle?: number): Promise<PDFNet.Matrix2D>;
     /**
      * Returns SDF/Cos array containing annotation dictionaries. See Section 8.4 in
      * the PDF Reference for a description of the annotation array.
@@ -33326,23 +35271,23 @@ declare namespace PDFNet {
      * }
      * </pre>
      * The numbering style for the label.
-     * @param {string} prefix The string used to prefix the numeric portion of the
+     * @param {string} [prefix] The string used to prefix the numeric portion of the
      * page label.
-     * @param {number} start_at the value to use when generating the numeric portion of the first
+     * @param {number} [start_at] the value to use when generating the numeric portion of the first
      * label in this range; must be greater than or equal to 1.
      *
      * @return {Promise<PDFNet.PageLabel>} A promise that resolves to newly created PageLabel object.
      */
-    static create(doc: PDFNet.SDFDoc, style: number, prefix: string, start_at: number): Promise<PDFNet.PageLabel>;
+    static create(doc: PDFNet.SDFDoc, style: number, prefix?: string, start_at?: number): Promise<PDFNet.PageLabel>;
     /**
      *
      * @method PDFNet.PageLabel.createFromObj
-     * @param {PDFNet.Obj} l
-     * @param {number} first_page
-     * @param {number} last_page
+     * @param {PDFNet.Obj} [l]
+     * @param {number} [first_page]
+     * @param {number} [last_page]
      * @return {Promise<PDFNet.PageLabel>} A promise that resolves to an object of type: "PageLabel"
      */
-    static createFromObj(l: PDFNet.Obj, first_page: number, last_page: number): Promise<PDFNet.PageLabel>;
+    static createFromObj(l?: PDFNet.Obj, first_page?: number, last_page?: number): Promise<PDFNet.PageLabel>;
     /**
      *
      * @method PDFNet.PageLabel#compare
@@ -33487,7 +35432,7 @@ declare namespace PDFNet {
      * @method PDFNet.PageSet.createFilteredRange
      * @param {number} range_start
      * @param {number} range_end
-     * @param {number} filter
+     * @param {number} [filter]
      * <pre>
      * PDFNet.PageSet.Filter = {
      * 	e_all : 0
@@ -33497,7 +35442,7 @@ declare namespace PDFNet {
      * </pre>
      * @return {Promise<PDFNet.PageSet>} A promise that resolves to an object of type: "PageSet"
      */
-    static createFilteredRange(range_start: number, range_end: number, filter: number): Promise<PDFNet.PageSet>;
+    static createFilteredRange(range_start: number, range_end: number, filter?: number): Promise<PDFNet.PageSet>;
     /**
      * Frees the native memory of the object.
      * @method PDFNet.PageSet#destroy
@@ -33516,7 +35461,7 @@ declare namespace PDFNet {
      * @method PDFNet.PageSet#addRange
      * @param {number} range_start The starting value in the range
      * @param {number} range_end The ending value in the range
-     * @param {number} filter
+     * @param {number} [filter]
      * <pre>
      * PDFNet.PageSet.Filter = {
      * 	e_all : 0
@@ -33529,7 +35474,7 @@ declare namespace PDFNet {
      *		-e_odd: Includes odd numbers in the range (discards even numbers)
      *		-e_even: Includes even numbers in the range (discards odd numbers)
      */
-    addRange(range_start: number, range_end: number, filter: number): void;
+    addRange(range_start: number, range_end: number, filter?: number): void;
   }
   /**
    * Patterns are quite general, and have many uses; for example, they can be used
@@ -33683,12 +35628,12 @@ declare namespace PDFNet {
     /**
      * creates a PolyLine annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.PolyLineAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.PolyLineAnnot>} A promise that resolves to an object of type: "PolyLineAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.PolyLineAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.PolyLineAnnot>;
     /**
      * creates a PolyLine annotation and initializes it using given annotation object.
      * @method PDFNet.PolyLineAnnot.createFromAnnot
@@ -33899,12 +35844,12 @@ declare namespace PDFNet {
     /**
      * creates a Polygon annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.PolygonAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.PolygonAnnot>} A promise that resolves to an object of type: "PolygonAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.PolygonAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.PolygonAnnot>;
     /**
      * creates a Polygon annotation and initializes it using given annotation object.
      * @method PDFNet.PolygonAnnot.createFromAnnot
@@ -33939,12 +35884,12 @@ declare namespace PDFNet {
     /**
      * creates a Popup annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.PopupAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.PopupAnnot>} A promise that resolves to an object of type: "PopupAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.PopupAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.PopupAnnot>;
     /**
      * creates a Popup annotation and initializes it using given annotation object.
      * @method PDFNet.PopupAnnot.createFromAnnot
@@ -34035,10 +35980,10 @@ declare namespace PDFNet {
      * @method PDFNet.PushButtonWidget.create
      * @param {PDFNet.PDFDoc} doc
      * @param {PDFNet.Rect} pos
-     * @param {string} field_name
+     * @param {string} [field_name]
      * @return {Promise<PDFNet.PushButtonWidget>} A promise that resolves to an object of type: "PushButtonWidget"
      */
-    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name: string): Promise<PDFNet.PushButtonWidget>;
+    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name?: string): Promise<PDFNet.PushButtonWidget>;
     /**
      *
      * @method PDFNet.PushButtonWidget.createWithField
@@ -34051,10 +35996,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.PushButtonWidget.createFromObj
-     * @param {PDFNet.Obj} obj
+     * @param {PDFNet.Obj} [obj]
      * @return {Promise<PDFNet.PushButtonWidget>} A promise that resolves to an object of type: "PushButtonWidget"
      */
-    static createFromObj(obj: PDFNet.Obj): Promise<PDFNet.PushButtonWidget>;
+    static createFromObj(obj?: PDFNet.Obj): Promise<PDFNet.PushButtonWidget>;
     /**
      *
      * @method PDFNet.PushButtonWidget.createFromAnnot
@@ -34080,10 +36025,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.RadioButtonWidget.createFromObj
-     * @param {PDFNet.Obj} obj
+     * @param {PDFNet.Obj} [obj]
      * @return {Promise<PDFNet.RadioButtonWidget>} A promise that resolves to an object of type: "RadioButtonWidget"
      */
-    static createFromObj(obj: PDFNet.Obj): Promise<PDFNet.RadioButtonWidget>;
+    static createFromObj(obj?: PDFNet.Obj): Promise<PDFNet.RadioButtonWidget>;
     /**
      *
      * @method PDFNet.RadioButtonWidget.createFromAnnot
@@ -34153,14 +36098,14 @@ declare namespace PDFNet {
      * Saves changes made to the Rect object in the attached (or specified) SDF/Cos rectangle.
      *
      * @method PDFNet.Rect#update
-     * @param {PDFNet.Obj} obj an optional parameter indicating a SDF array that should be
+     * @param {PDFNet.Obj} [obj] an optional parameter indicating a SDF array that should be
      *  updated and attached to this Rect. If parameter rect is NULL or is omitted, update
      *  is performed on previously attached Cos/SDF rectangle.
      *
      * @return {Promise<boolean>} A promise that resolves to true if the attached Cos/SDF rectangle array was successfully updated,
      * false otherwise.
      */
-    update(obj: PDFNet.Obj): Promise<boolean>;
+    update(obj?: PDFNet.Obj): Promise<boolean>;
     /**
      * Get the coordinates of the rectangle
      * @method PDFNet.Rect#get
@@ -34311,12 +36256,12 @@ declare namespace PDFNet {
     /**
      * creates a Redaction annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.RedactionAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.RedactionAnnot>} A promise that resolves to an object of type: "RedactionAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.RedactionAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.RedactionAnnot>;
     /**
      * creates an Redaction annotation and initializes it using given annotation object.
      * @method PDFNet.RedactionAnnot.createFromAnnot
@@ -34422,14 +36367,14 @@ declare namespace PDFNet {
      * sets the option of whether to use repeat for the Redaction annotation.
      *
      * @method PDFNet.RedactionAnnot#setUseRepeat
-     * @param {boolean} userepeat A bool indicating whether to repeat for the Redaction annotation.
+     * @param {boolean} [userepeat] A bool indicating whether to repeat for the Redaction annotation.
      * @note If userepeat value is true, then the text specified by OverlayText
      * should be repeated to fill the redacted region after the affected content
      * has been removed. This entry is ignored if the Overlay appearance stream
      * (RO) entry is present.
      * @default userepeat = false.
      */
-    setUseRepeat(userepeat: boolean): void;
+    setUseRepeat(userepeat?: boolean): void;
     /**
      * Returns Overlay text appearance of the Redaction annotation.
      *
@@ -34473,7 +36418,7 @@ declare namespace PDFNet {
      * sets Overlay text quadding (justification) format of the Redaction annotation.
      *
      * @method PDFNet.RedactionAnnot#setQuadForm
-     * @param {number} form
+     * @param {number} [form]
      * <pre>
      * PDFNet.RedactionAnnot.QuadForm = {
      * 	e_LeftJustified : 0
@@ -34488,7 +36433,7 @@ declare namespace PDFNet {
      * used in displaying the overlay text.
      * @default form=e_LeftJustified
      */
-    setQuadForm(form: number): void;
+    setQuadForm(form?: number): void;
     /**
      * Returns Overlay appearance of the Redaction annotation.
      *
@@ -34666,6 +36611,48 @@ declare namespace PDFNet {
     ): void;
   }
   /**
+   * The class ResultSnapshot.
+   * Represents a transition between two document states.
+   * @class
+   * @name ResultSnapshot
+   * @memberof PDFNet
+   */
+  class ResultSnapshot {
+    /**
+     * Retrieves the document state to which this transition has transitioned.
+     *
+     * @method PDFNet.ResultSnapshot#currentState
+     * @return {Promise<PDFNet.DocSnapshot>} A promise that resolves to the current document state.
+     */
+    currentState(): Promise<PDFNet.DocSnapshot>;
+    /**
+     * Retrieves the document state from which this transition has transitioned.
+     *
+     * @method PDFNet.ResultSnapshot#previousState
+     * @return {Promise<PDFNet.DocSnapshot>} A promise that resolves to the previous document state.
+     */
+    previousState(): Promise<PDFNet.DocSnapshot>;
+    /**
+     * Returns whether this transition is valid or a null transition.
+     *
+     * @method PDFNet.ResultSnapshot#isOk
+     * @return {Promise<boolean>} A promise that resolves to whether this transition is valid or a null transition.
+     */
+    isOk(): Promise<boolean>;
+    /**
+     * Returns whether this transition is a null transition.
+     *
+     * @method PDFNet.ResultSnapshot#isNullTransition
+     * @return {Promise<boolean>} A promise that resolves to whether this transition is a null transition.
+     */
+    isNullTransition(): Promise<boolean>;
+    /**
+     * Destructor
+     * @method PDFNet.ResultSnapshot#destroy
+     */
+    destroy(): void;
+  }
+  /**
    * RoleMap is a dictionary that maps the names of structure types used in the
    * document to their approximate equivalents in the set of standard structure
    * types.
@@ -34724,12 +36711,12 @@ declare namespace PDFNet {
     /**
      * creates a RubberStamp annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.RubberStampAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.RubberStampAnnot>} A promise that resolves to an object of type: "RubberStampAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.RubberStampAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.RubberStampAnnot>;
     /**
      * creates a RubberStamp annotation and initializes it using given annotation object.
      * @method PDFNet.RubberStampAnnot.createFromAnnot
@@ -34780,7 +36767,7 @@ declare namespace PDFNet {
      * sets the type of the icon associated with the RubberStamp annotation.
      *
      * @method PDFNet.RubberStampAnnot#setIcon
-     * @param {number} type
+     * @param {number} [type]
      * <pre>
      * PDFNet.RubberStampAnnot.Icon = {
      * 	e_Approved : 0
@@ -34804,7 +36791,7 @@ declare namespace PDFNet {
      * the type of icon associated with the annotation.
      * Default value: e_Draft.
      */
-    setIcon(type: number): void;
+    setIcon(type?: number): void;
     /**
      *
      * @method PDFNet.RubberStampAnnot#setIconDefault
@@ -35279,10 +37266,10 @@ declare namespace PDFNet {
      * object (i.e. indirect objects they can be shared).
      *
      * @method PDFNet.SDFDoc#createIndirectString
-     * @param {Array} buf_value indirect boolean to create.
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} buf_value indirect boolean to create.
      * @return {Promise<PDFNet.Obj>} {Obj} A promise that resolves to the created indirect object.
      */
-    createIndirectString(buf_value: any[]): Promise<PDFNet.Obj>;
+    createIndirectString(buf_value: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): Promise<PDFNet.Obj>;
     /**
      * Used to create SDF/Cos indirect object.
      *
@@ -35298,19 +37285,19 @@ declare namespace PDFNet {
      *
      * @method PDFNet.SDFDoc#createIndirectStreamFromFilter
      * @param {PDFNet.FilterReader} data
-     * @param {PDFNet.Filter} filter_chain
+     * @param {PDFNet.Filter} [filter_chain]
      * @return {Promise<PDFNet.Obj>} A promise that resolves to an object of type: "Obj"
      */
-    createIndirectStreamFromFilter(data: PDFNet.FilterReader, filter_chain: PDFNet.Filter): Promise<PDFNet.Obj>;
+    createIndirectStreamFromFilter(data: PDFNet.FilterReader, filter_chain?: PDFNet.Filter): Promise<PDFNet.Obj>;
     /**
      *
      * @method PDFNet.SDFDoc#createIndirectStream
      * @param {string} data
      * @param {number} data_size
-     * @param {PDFNet.Filter} filter_chain
+     * @param {PDFNet.Filter} [filter_chain]
      * @return {Promise<PDFNet.Obj>} A promise that resolves to an object of type: "Obj"
      */
-    createIndirectStream(data: string, data_size: number, filter_chain: PDFNet.Filter): Promise<PDFNet.Obj>;
+    createIndirectStream(data: string, data_size: number, filter_chain?: PDFNet.Filter): Promise<PDFNet.Obj>;
     /**
      * Initializes document's SecurityHandler. This version of InitSecurityHandler()
      * works with Standard and Custom PDF security and can be used in situations where
@@ -35354,13 +37341,13 @@ declare namespace PDFNet {
      * Initialize a SElement using an existing low-level Cos/SDF object.
      *
      * @method PDFNet.SElement.create
-     * @param {PDFNet.Obj} dict a low-level (SDF/Cos) dictionary representing the structural element.
+     * @param {PDFNet.Obj} [dict] a low-level (SDF/Cos) dictionary representing the structural element.
      *
      * @note This constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.SElement>} A promise that resolves to an object of type: "SElement"
      */
-    static create(dict: PDFNet.Obj): Promise<PDFNet.SElement>;
+    static create(dict?: PDFNet.Obj): Promise<PDFNet.SElement>;
     /**
      *
      * @method PDFNet.SElement.createFromPDFDoc
@@ -35380,11 +37367,11 @@ declare namespace PDFNet {
      * @method PDFNet.SElement#createContentItem
      * @param {PDFNet.PDFDoc} doc The document in which the new ContentItem will be created in.
      * @param {PDFNet.Page} page The page object to insert the ContentItem in.
-     * @param {number} insert_before The position after which the kid is inserted. If
+     * @param {number} [insert_before] The position after which the kid is inserted. If
      * element currently has no kids, insert_before is ignored.
      * @return {Promise<number>} A promise that resolves to an object of type: "number"
      */
-    createContentItem(doc: PDFNet.PDFDoc, page: PDFNet.Page, insert_before: number): Promise<number>;
+    createContentItem(doc: PDFNet.PDFDoc, page: PDFNet.Page, insert_before?: number): Promise<number>;
     /**
      * @method PDFNet.SElement#isValid
      * @return {Promise<boolean>} A promise that resolves to true if this is a valid structure element object, false otherwise.
@@ -35595,12 +37582,12 @@ declare namespace PDFNet {
     /**
      * creates a Screen annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.ScreenAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.ScreenAnnot>} A promise that resolves to an object of type: "ScreenAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.ScreenAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.ScreenAnnot>;
     /**
      * creates a Screen annotation and initializes it using given annotation object.
      * @method PDFNet.ScreenAnnot.createFromAnnot
@@ -36117,9 +38104,9 @@ declare namespace PDFNet {
      * This method should be called whenever there are changes (e.g. a password change)
      * to the SecurityHandler
      * @method PDFNet.SecurityHandler#setModified
-     * @param {boolean} is_modified Value to set the SecurityHandler's is modified flag to
+     * @param {boolean} [is_modified] Value to set the SecurityHandler's is modified flag to
      */
-    setModified(is_modified: boolean): void;
+    setModified(is_modified?: boolean): void;
     /**
      * create a Standard Security Handler.
      *
@@ -36266,9 +38253,9 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.SecurityHandler#changeUserPasswordBuffer
-     * @param {Array} password_buf
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} password_buf
      */
-    changeUserPasswordBuffer(password_buf: any[]): void;
+    changeUserPasswordBuffer(password_buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): void;
     /**
      * Sets the new master/owner password.
      * @method PDFNet.SecurityHandler#changeMasterPasswordUString
@@ -36278,9 +38265,9 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.SecurityHandler#changeMasterPasswordBuffer
-     * @param {Array} password_buf
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} password_buf
      */
-    changeMasterPasswordBuffer(password_buf: any[]): void;
+    changeMasterPasswordBuffer(password_buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): void;
     /**
      *
      * @method PDFNet.SecurityHandler#initPasswordUString
@@ -36290,9 +38277,9 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.SecurityHandler#initPasswordBuffer
-     * @param {Array} password_buf
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} password_buf
      */
-    initPasswordBuffer(password_buf: any[]): void;
+    initPasswordBuffer(password_buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray): void;
     /**
      * The method is called when a user tries to set security for an encrypted
      * document and when a user tries to open a file. It must decide, based on
@@ -36470,10 +38457,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.Shading.create
-     * @param {PDFNet.Obj} shading_dict
+     * @param {PDFNet.Obj} [shading_dict]
      * @return {Promise<PDFNet.Shading>} A promise that resolves to an object of type: "Shading"
      */
-    static create(shading_dict: PDFNet.Obj): Promise<PDFNet.Shading>;
+    static create(shading_dict?: PDFNet.Obj): Promise<PDFNet.Shading>;
     /**
      * Frees the native memory of the object.
      * @method PDFNet.Shading#destroy
@@ -36705,10 +38692,10 @@ declare namespace PDFNet {
      * @method PDFNet.SignatureWidget.create
      * @param {PDFNet.PDFDoc} doc
      * @param {PDFNet.Rect} pos
-     * @param {string} field_name
+     * @param {string} [field_name]
      * @return {Promise<PDFNet.SignatureWidget>} A promise that resolves to an object of type: "SignatureWidget"
      */
-    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name: string): Promise<PDFNet.SignatureWidget>;
+    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name?: string): Promise<PDFNet.SignatureWidget>;
     /**
      *
      * @method PDFNet.SignatureWidget.createWithField
@@ -36734,10 +38721,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.SignatureWidget.createFromObj
-     * @param {PDFNet.Obj} obj
+     * @param {PDFNet.Obj} [obj]
      * @return {Promise<PDFNet.SignatureWidget>} A promise that resolves to an object of type: "SignatureWidget"
      */
-    static createFromObj(obj: PDFNet.Obj): Promise<PDFNet.SignatureWidget>;
+    static createFromObj(obj?: PDFNet.Obj): Promise<PDFNet.SignatureWidget>;
     /**
      *
      * @method PDFNet.SignatureWidget.createFromAnnot
@@ -36772,12 +38759,12 @@ declare namespace PDFNet {
     /**
      * creates a Sound annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.SoundAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.SoundAnnot>} A promise that resolves to an object of type: "SoundAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.SoundAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.SoundAnnot>;
     /**
      * creates a Sound annotation and initializes it using given annotation object.
      * @method PDFNet.SoundAnnot.createFromAnnot
@@ -36864,7 +38851,7 @@ declare namespace PDFNet {
      *(Optional)
      *
      * @method PDFNet.SoundAnnot#setIcon
-     * @param {number} type
+     * @param {number} [type]
      * <pre>
      * PDFNet.SoundAnnot.Icon = {
      * 	e_Speaker : 0
@@ -36878,7 +38865,7 @@ declare namespace PDFNet {
      * The annotation's appearance stream, if present, will take
      * precedence over this entry.
      */
-    setIcon(type: number): void;
+    setIcon(type?: number): void;
     /**
      * Returns the Icon name of the Sound annotation.
      *
@@ -36926,12 +38913,12 @@ declare namespace PDFNet {
     /**
      * creates an Square annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.SquareAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.SquareAnnot>} A promise that resolves to an object of type: "SquareAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.SquareAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.SquareAnnot>;
     /**
      * creates a Square annotation and initializes it using given annotation object.
      * @method PDFNet.SquareAnnot.createFromAnnot
@@ -37231,9 +39218,9 @@ declare namespace PDFNet {
      * @method PDFNet.Stamper#setPosition
      * @param {number} x
      * @param {number} y
-     * @param {boolean} use_percentage
+     * @param {boolean} [use_percentage]
      */
-    setPosition(x: number, y: number, use_percentage: boolean): void;
+    setPosition(x: number, y: number, use_percentage?: boolean): void;
     /**
      *
      * @method PDFNet.Stamper#setSize
@@ -37319,12 +39306,12 @@ declare namespace PDFNet {
     /**
      * creates a Text annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.TextAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.TextAnnot>} A promise that resolves to an object of type: "TextAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.TextAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.TextAnnot>;
     /**
      * creates a Text annotation and initializes it using given annotation object.
      * @method PDFNet.TextAnnot.createFromAnnot
@@ -37397,7 +39384,7 @@ declare namespace PDFNet {
      * (Optional)
      *
      * @method PDFNet.TextAnnot#setIcon
-     * @param {number} icon
+     * @param {number} [icon]
      * <pre>
      * PDFNet.TextAnnot.Icon = {
      * 	e_Comment : 0
@@ -37415,7 +39402,7 @@ declare namespace PDFNet {
      * @note The annotation's appearance stream,
      * if present, will take precedence over this entry.
      */
-    setIcon(icon: number): void;
+    setIcon(icon?: number): void;
     /**
      *
      * @method PDFNet.TextAnnot#setIconDefault
@@ -37476,10 +39463,10 @@ declare namespace PDFNet {
      * (Optional; PDF 1.5 )
      *
      * @method PDFNet.TextAnnot#setState
-     * @param {string} state A string that indicates the state of the Text annotation when first loaded.
+     * @param {string} [state] A string that indicates the state of the Text annotation when first loaded.
      * Default: "Unmarked" if StateModel is "Marked"; "None" if StateModel is "Review".
      */
-    setState(state: string): void;
+    setState(state?: string): void;
     /**
      * Returns the string indicating the state model of the Text annotation.
      * (PDF 1.5)
@@ -37601,12 +39588,12 @@ declare namespace PDFNet {
      *
      * @method PDFNet.TextExtractor#begin
      * @param {PDFNet.Page} page Page to read.
-     * @param {PDFNet.Rect} clip_ptr A pointer to the optional clipping rectangle. This
+     * @param {PDFNet.Rect} [clip_ptr] A pointer to the optional clipping rectangle. This
      * parameter can be used to selectively read text from a given rectangle.
-     * @param {number} flags A list of ProcessingFlags used to control text extraction
+     * @param {number} [flags] A list of ProcessingFlags used to control text extraction
      * algorithm.
      */
-    begin(page: PDFNet.Page, clip_ptr: PDFNet.Rect, flags: number): void;
+    begin(page: PDFNet.Page, clip_ptr?: PDFNet.Rect, flags?: number): void;
     /**
      * @method PDFNet.TextExtractor#getWordCount
      * @return {Promise<number>} A promise that resolves to the number of words on the page.
@@ -37628,14 +39615,14 @@ declare namespace PDFNet {
      * get all words in the current selection as a single string.
      *
      * @method PDFNet.TextExtractor#getAsText
-     * @param {boolean} dehyphen If true, finds and removes hyphens that split words
+     * @param {boolean} [dehyphen] If true, finds and removes hyphens that split words
      * across two lines. Hyphens are often used a the end of lines as an
      * indicator that a word spans two lines. Hyphen detection enables removal
      * of hyphen character and merging of text runs to form a single word.
      * This option has no effect on Tagged PDF files.
      * @return {Promise<string>} A promise that resolves to an object of type: "string"
      */
-    getAsText(dehyphen: boolean): Promise<string>;
+    getAsText(dehyphen?: boolean): Promise<string>;
     /**
      * Get all the characters that intersect an annotation.
      *
@@ -37648,7 +39635,7 @@ declare namespace PDFNet {
      * get text content in a form of an XML string.
      *
      * @method PDFNet.TextExtractor#getAsXML
-     * @param {number} xml_output_flags flags controlling XML output. For more
+     * @param {number} [xml_output_flags] flags controlling XML output. For more
      * information, please see TextExtract::XMLOutputFlags.
      *
      * XML output will be encoded in UTF-8 and will have the following
@@ -37687,7 +39674,7 @@ declare namespace PDFNet {
      * </pre>
      * @return {Promise<string>} A promise that resolves to an object of type: "string"
      */
-    getAsXML(xml_output_flags: number): Promise<string>;
+    getAsXML(xml_output_flags?: number): Promise<string>;
     /**
      * @method PDFNet.TextExtractor#getNumLines
      * @return {Promise<number>} A promise that resolves to the number of lines of text on the selected page.
@@ -38127,11 +40114,11 @@ declare namespace PDFNet {
      * @param {PDFNet.PDFDoc} doc
      * @param {string} pattern
      * @param {number} mode
-     * @param {number} start_page
-     * @param {number} end_page
+     * @param {number} [start_page]
+     * @param {number} [end_page]
      * @return {Promise<boolean>} A promise that resolves to an object of type: "boolean"
      */
-    begin(doc: PDFNet.PDFDoc, pattern: string, mode: number, start_page: number, end_page: number): Promise<boolean>;
+    begin(doc: PDFNet.PDFDoc, pattern: string, mode: number, start_page?: number, end_page?: number): Promise<boolean>;
     /**
      * Set the current search pattern. Note that it is not necessary to call this method since
      * the search pattern is already set when calling the Begin() method. This method is provided
@@ -38210,10 +40197,10 @@ declare namespace PDFNet {
      * @method PDFNet.TextWidget.create
      * @param {PDFNet.PDFDoc} doc
      * @param {PDFNet.Rect} pos
-     * @param {string} field_name
+     * @param {string} [field_name]
      * @return {Promise<PDFNet.TextWidget>} A promise that resolves to an object of type: "TextWidget"
      */
-    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name: string): Promise<PDFNet.TextWidget>;
+    static create(doc: PDFNet.PDFDoc, pos: PDFNet.Rect, field_name?: string): Promise<PDFNet.TextWidget>;
     /**
      *
      * @method PDFNet.TextWidget.createWithField
@@ -38226,10 +40213,10 @@ declare namespace PDFNet {
     /**
      *
      * @method PDFNet.TextWidget.createFromObj
-     * @param {PDFNet.Obj} obj
+     * @param {PDFNet.Obj} [obj]
      * @return {Promise<PDFNet.TextWidget>} A promise that resolves to an object of type: "TextWidget"
      */
-    static createFromObj(obj: PDFNet.Obj): Promise<PDFNet.TextWidget>;
+    static createFromObj(obj?: PDFNet.Obj): Promise<PDFNet.TextWidget>;
     /**
      *
      * @method PDFNet.TextWidget.createFromAnnot
@@ -38249,6 +40236,57 @@ declare namespace PDFNet {
      * @return {Promise<string>} A promise that resolves to an object of type: "string"
      */
     getText(): Promise<string>;
+  }
+  /**
+   * The class TrustVerificationResult.
+   * The detailed result of a trust verification step of a verification
+   * operation performed on a digital signature.
+   * @class
+   * @name TrustVerificationResult
+   * @memberof PDFNet
+   */
+  class TrustVerificationResult {
+    /**
+     * Retrieves the trust verification status.
+     *
+     * @method PDFNet.TrustVerificationResult#wasSuccessful
+     * @return {Promise<boolean>} A promise that resolves to a boolean representing whether or not the trust verification operation was successful. Whether trust-related warnings are treated as errors or not depend on the VerificationOptions used for the verification operation.
+     */
+    wasSuccessful(): Promise<boolean>;
+    /**
+     * Retrieves a string representation of the details of the trust verification status.
+     *
+     * @method PDFNet.TrustVerificationResult#getResultString
+     * @return {Promise<string>} A promise that resolves to a string.
+     */
+    getResultString(): Promise<string>;
+    /**
+     * Retrieves the reference-time used for trust verification as an epoch time.
+     *
+     * @method PDFNet.TrustVerificationResult#getTimeOfTrustVerification
+     * @return {Promise<number>} A promise that resolves to an integral value representing an epoch time.
+     */
+    getTimeOfTrustVerification(): Promise<number>;
+    /**
+     * Retrieves the type of reference-time used for trust verification.
+     *
+     * @method PDFNet.TrustVerificationResult#getTimeOfTrustVerificationEnum
+     * @return {Promise<number>} A promise that resolves to an enumerated value representing the type of reference-time used for trust verification.
+     * @example Return value enum:
+     * <pre>
+     * PDFNet.VerificationOptions.TimeMode = {
+     * 	e_signing : 0
+     * 	e_timestamp : 1
+     * 	e_current : 2
+     * }
+     * </pre>
+     */
+    getTimeOfTrustVerificationEnum(): Promise<number>;
+    /**
+     * Destructor
+     * @method PDFNet.TrustVerificationResult#destroy
+     */
+    destroy(): void;
   }
   /**
    * An Underline annotation shows as a line segment across the bottom
@@ -38288,6 +40326,289 @@ declare namespace PDFNet {
     static create(doc: PDFNet.SDFDoc, pos: PDFNet.Rect): Promise<PDFNet.UnderlineAnnot>;
   }
   /**
+   * The class UndoManager.
+   * Undo-redo interface; one-to-one mapped to document
+   * @class
+   * @name UndoManager
+   * @memberof PDFNet
+   */
+  class UndoManager {
+    /**
+     * Forget all changes in this manager (without changing the document).
+     *
+     * @method PDFNet.UndoManager#discardAllSnapshots
+     * @return {Promise<PDFNet.DocSnapshot>} A promise that resolves to an invalid DocSnapshot.
+     */
+    discardAllSnapshots(): Promise<PDFNet.DocSnapshot>;
+    /**
+     * Restores to the previous snapshot point, if there is one.
+     *
+     * @method PDFNet.UndoManager#undo
+     * @return {Promise<PDFNet.ResultSnapshot>} A promise that resolves to the resulting snapshot id.
+     */
+    undo(): Promise<PDFNet.ResultSnapshot>;
+    /**
+     * Returns whether it is possible to undo from the current snapshot.
+     *
+     * @method PDFNet.UndoManager#canUndo
+     * @return {Promise<boolean>} A promise that resolves to whether it is possible to undo from the current snapshot.
+     */
+    canUndo(): Promise<boolean>;
+    /**
+     * Gets the previous state of the document. This state may be invalid if it is impossible to undo.
+     *
+     * @method PDFNet.UndoManager#getNextUndoSnapshot
+     * @return {Promise<PDFNet.DocSnapshot>} A promise that resolves to the previous state of the document. This state may be invalid if it is impossible to undo.
+     */
+    getNextUndoSnapshot(): Promise<PDFNet.DocSnapshot>;
+    /**
+     * Restores to the next snapshot, if there is one.
+     *
+     * @method PDFNet.UndoManager#redo
+     * @return {Promise<PDFNet.ResultSnapshot>} A promise that resolves to a representation of the transition to the next snapshot, if there is one.
+     */
+    redo(): Promise<PDFNet.ResultSnapshot>;
+    /**
+     * Returns a boolean indicating whether it is possible to redo from the current snapshot.
+     *
+     * @method PDFNet.UndoManager#canRedo
+     * @return {Promise<boolean>} A promise that resolves to a boolean indicating whether it is possible to redo from the current snapshot.
+     */
+    canRedo(): Promise<boolean>;
+    /**
+     * Gets the next state of the document. This state may be invalid if it is impossible to redo.
+     *
+     * @method PDFNet.UndoManager#getNextRedoSnapshot
+     * @return {Promise<PDFNet.DocSnapshot>} A promise that resolves to the next state of the document. This state may be invalid if it is impossible to redo.
+     */
+    getNextRedoSnapshot(): Promise<PDFNet.DocSnapshot>;
+    /**
+     * Creates a snapshot of document state, transitions to the new snapshot.
+     *
+     * @method PDFNet.UndoManager#takeSnapshot
+     * @return {Promise<PDFNet.ResultSnapshot>} A promise that resolves to a representation of the transition.
+     */
+    takeSnapshot(): Promise<PDFNet.ResultSnapshot>;
+    /**
+     * Destructor
+     * @method PDFNet.UndoManager#destroy
+     */
+    destroy(): void;
+  }
+  /**
+   * The class VerificationOptions.
+   * Options pertaining to digital signature verification.
+   * @class
+   * @name VerificationOptions
+   * @memberof PDFNet
+   */
+  class VerificationOptions {
+    /**
+     * Constructs a set of options for digital signature verification.
+     *
+     * @method PDFNet.VerificationOptions.create
+     * @param {number} in_level
+     * <pre>
+     * PDFNet.VerificationOptions.SecurityLevel = {
+     * 	e_compatibility_and_archiving : 0
+     * 	e_maximum : 1
+     * }
+     * </pre>
+     * -- the general security level to use. Sets other security settings internally.
+     * @return {Promise<PDFNet.VerificationOptions>} A promise that resolves to an object of type: "VerificationOptions"
+     */
+    static create(in_level: number): Promise<PDFNet.VerificationOptions>;
+    /**
+     *
+     * @method PDFNet.VerificationOptions#addTrustedCertificate
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} in_binary_DER_certificate_buf
+     */
+    addTrustedCertificate(
+      in_binary_DER_certificate_buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+    ): void;
+    /**
+     *
+     * @method PDFNet.VerificationOptions#removeTrustedCertificate
+     * @param {ArrayBuffer|Int8Array|Uint8Array|Uint8ClampedArray} in_binary_DER_certificate_buf
+     */
+    removeTrustedCertificate(
+      in_binary_DER_certificate_buf: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray,
+    ): void;
+    /**
+     * Sets a flag that can turn on or off the verification of the permissibility of any modifications made to the document after the signing of the digital signature being verified, in terms of the document and field permissions specified by the digital signature being verified.
+     *
+     * @method PDFNet.VerificationOptions#enableModificationVerification
+     * @param {boolean} in_on_or_off -- A boolean.
+     */
+    enableModificationVerification(in_on_or_off: boolean): void;
+    /**
+     * Sets a flag that can turn on or off the verification of the digest (cryptographic hash) component of a digital signature.
+     *
+     * @method PDFNet.VerificationOptions#enableDigestVerification
+     * @param {boolean} in_on_or_off -- A boolean.
+     */
+    enableDigestVerification(in_on_or_off: boolean): void;
+    /**
+     * Sets a flag that can turn on or off the verification of the trust status of a digital signature.
+     *
+     * @method PDFNet.VerificationOptions#enableTrustVerification
+     * @param {boolean} in_on_or_off -- A boolean.
+     */
+    enableTrustVerification(in_on_or_off: boolean): void;
+    /**
+     * Destructor
+     * @method PDFNet.VerificationOptions#destroy
+     */
+    destroy(): void;
+    /**
+     * Adds a certificate from a url to the store of trusted certificates inside this options object.
+     * @method PDFNet.VerificationOptions.addTrustedCertificateFromURL
+     * @param {string} url The url from which to download the file
+     * @param {Object} [options] Additional options
+     * @param {boolean} options.withCredentials Whether to set the withCredentials property on the XMLHttpRequest
+     */
+    static addTrustedCertificateFromURL(
+      url: string,
+      options?: {
+        withCredentials: boolean;
+      },
+    ): void;
+  }
+  /**
+   * The class VerificationResult.
+   * The result of a verification operation performed on a digital signature.
+   * @class
+   * @name VerificationResult
+   * @memberof PDFNet
+   */
+  class VerificationResult {
+    /**
+     *
+     * @method PDFNet.VerificationResult#getDigitalSignatureField
+     * @return {Promise<PDFNet.DigitalSignatureField>} A promise that resolves to an object of type: "DigitalSignatureField"
+     */
+    getDigitalSignatureField(): Promise<PDFNet.DigitalSignatureField>;
+    /**
+     * Retrieves the main verification status. The main status is determined based on the other statuses.
+     *
+     * @method PDFNet.VerificationResult#getVerificationStatus
+     * @return {Promise<boolean>} A promise that resolves to a boolean representing whether or not the verification operation was completely successful.
+     */
+    getVerificationStatus(): Promise<boolean>;
+    /**
+     * Retrieves the document-related result condition associated with a digital signature verification operation.
+     *
+     * @method PDFNet.VerificationResult#getDocumentStatus
+     * @return {Promise<number>} A promise that resolves to a DocumentStatus-type enumeration value.
+     * @example Return value enum:
+     * <pre>
+     * PDFNet.VerificationResult.DocumentStatus = {
+     * 	e_no_error : 0
+     * 	e_corrupt_file : 1
+     * 	e_unsigned : 2
+     * 	e_bad_byteranges : 3
+     * 	e_corrupt_cryptographic_contents : 4
+     * }
+     * </pre>
+     */
+    getDocumentStatus(): Promise<number>;
+    /**
+     * Retrieves the digest-related result condition associated with a digital signature verification operation.
+     *
+     * @method PDFNet.VerificationResult#getDigestStatus
+     * @return {Promise<number>} A promise that resolves to a DigestStatus-type enumeration value.
+     * @example Return value enum:
+     * <pre>
+     * PDFNet.VerificationResult.DigestStatus = {
+     * 	e_digest_invalid : 0
+     * 	e_digest_verified : 1
+     * 	e_digest_verification_disabled : 2
+     * 	e_weak_digest_algorithm_but_digest_verifiable : 3
+     * 	e_no_digest_status : 4
+     * 	e_unsupported_encoding : 5
+     * }
+     * </pre>
+     */
+    getDigestStatus(): Promise<number>;
+    /**
+     * Retrieves the trust-related result condition associated with a digital signature verification operation.
+     *
+     * @method PDFNet.VerificationResult#getTrustStatus
+     * @return {Promise<number>} A promise that resolves to a TrustStatus-type enumeration value.
+     * @example Return value enum:
+     * <pre>
+     * PDFNet.VerificationResult.TrustStatus = {
+     * 	e_trust_verified : 0
+     * 	e_untrusted : 1
+     * 	e_trust_verification_disabled : 2
+     * 	e_no_trust_status : 3
+     * }
+     * </pre>
+     */
+    getTrustStatus(): Promise<number>;
+    /**
+     * Retrieves the result condition about permissions checks performed on any unsigned modifications associated with a digital signature verification operation.
+     *
+     * @method PDFNet.VerificationResult#getPermissionsStatus
+     * @return {Promise<number>} A promise that resolves to a ModificationPermissionsStatus-type enumeration value.
+     * @example Return value enum:
+     * <pre>
+     * PDFNet.VerificationResult.ModificationPermissionsStatus = {
+     * 	e_invalidated_by_disallowed_changes : 0
+     * 	e_has_allowed_changes : 1
+     * 	e_unmodified : 2
+     * 	e_permissions_verification_disabled : 3
+     * 	e_no_permissions_status : 4
+     * }
+     * </pre>
+     */
+    getPermissionsStatus(): Promise<number>;
+    /**
+     * Retrieves the detailed result associated with the trust step of the verification operation that returned this VerificationResult, if such a detailed trust result is available. Must call HasTrustVerificationResult first and check for a true result.
+     *
+     * @method PDFNet.VerificationResult#getTrustVerificationResult
+     * @return {Promise<PDFNet.TrustVerificationResult>} A promise that resolves to an optional TrustVerificationResult.
+     */
+    getTrustVerificationResult(): Promise<PDFNet.TrustVerificationResult>;
+    /**
+     * Returns whether there is a detailed TrustVerificationResult in this VerificationResult or not.
+     *
+     * @method PDFNet.VerificationResult#hasTrustVerificationResult
+     * @return {Promise<boolean>} A promise that resolves to a boolean.
+     */
+    hasTrustVerificationResult(): Promise<boolean>;
+    /**
+     * Retrieves a list of informational structures regarding any disallowed changes that have been made to the document since the signature associated with this verification result was signed.
+     *
+     * @method PDFNet.VerificationResult#getDisallowedChanges
+     * @return {Promise<Array<PDFNet.DisallowedChange>>} A promise that resolves to a collection of DisallowedChange objects.
+     */
+    getDisallowedChanges(): Promise<PDFNet.DisallowedChange[]>;
+    /**
+     * Retrieves an enumeration value representing the digest algorithm used to sign the signature that is associated with this verification result.
+     *
+     * @method PDFNet.VerificationResult#getSignersDigestAlgorithm
+     * @return {Promise<number>} A promise that resolves to a DigestAlgorithm enumeration value.
+     * @example Return value enum:
+     * <pre>
+     * PDFNet.DigestAlgorithm.Type = {
+     * 	e_SHA1 : 0
+     * 	e_SHA256 : 1
+     * 	e_SHA384 : 2
+     * 	e_SHA512 : 3
+     * 	e_RIPEMD160 : 4
+     * 	e_unknown_digest_algorithm : 5
+     * }
+     * </pre>
+     */
+    getSignersDigestAlgorithm(): Promise<number>;
+    /**
+     * Destructor
+     * @method PDFNet.VerificationResult#destroy
+     */
+    destroy(): void;
+  }
+  /**
    * [Missing documentation]
    * @class
    * @name ViewChangeCollection
@@ -38305,12 +40626,12 @@ declare namespace PDFNet {
     /**
      * creates a Watermark annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.WatermarkAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.WatermarkAnnot>} A promise that resolves to an object of type: "WatermarkAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.WatermarkAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.WatermarkAnnot>;
     /**
      * creates a Watermark annotation and initializes it using given annotation object.
      * @method PDFNet.WatermarkAnnot.createFromAnnot
@@ -38358,12 +40679,12 @@ declare namespace PDFNet {
     /**
      * creates a widget annotation and initializes it using given Cos/SDF object.
      * @method PDFNet.WidgetAnnot.createFromObj
-     * @param {PDFNet.Obj} d The Cos/SDF object to initialze the annotation with.
+     * @param {PDFNet.Obj} [d] The Cos/SDF object to initialze the annotation with.
      * @note The constructor does not copy any data, but is instead the logical
      * equivalent of a type cast.
      * @return {Promise<PDFNet.WidgetAnnot>} A promise that resolves to an object of type: "WidgetAnnot"
      */
-    static createFromObj(d: PDFNet.Obj): Promise<PDFNet.WidgetAnnot>;
+    static createFromObj(d?: PDFNet.Obj): Promise<PDFNet.WidgetAnnot>;
     /**
      * creates a widget annotation and initializes it using given annotation object.
      * @method PDFNet.WidgetAnnot.createFromAnnot
@@ -38404,7 +40725,7 @@ declare namespace PDFNet {
      * @method PDFNet.WidgetAnnot#setHighlightingMode
      * @note The annotation's highlighting mode is the visual effect that shall be used
      * when the mouse button is pressed or held down inside its active area
-     * @param {number} value
+     * @param {number} [value]
      * <pre>
      * PDFNet.WidgetAnnot.HighlightingMode = {
      * 	e_none : 0
@@ -38419,7 +40740,7 @@ declare namespace PDFNet {
      * for the annotation.
      * Default value: e_invert.
      */
-    setHighlightingMode(value: number): void;
+    setHighlightingMode(value?: number): void;
     /**
      * Returns the action of the widget annotation
      *
@@ -39138,887 +41459,2780 @@ declare namespace PDFNet {
        * @enum {number}
        * @name CompressionMode
        * @memberof PDFNet.Optimizer.ImageSettings
+       * @property {number} e_retain
+       * @property {number} e_flate
+       * @property {number} e_jpeg
+       * @property {number} e_jpeg2000
+       * @property {number} e_none
        */
-      enum CompressionMode {}
+      enum CompressionMode {
+        e_retain,
+        e_flate,
+        e_jpeg,
+        e_jpeg2000,
+        e_none,
+      }
       /**
        * @enum {number}
        * @name DownsampleMode
        * @memberof PDFNet.Optimizer.ImageSettings
+       * @property {number} e_off
+       * @property {number} e_default
        */
-      enum DownsampleMode {}
+      enum DownsampleMode {
+        e_off,
+        e_default,
+      }
     }
     namespace MonoImageSettings {
       /**
        * @enum {number}
        * @name CompressionMode
        * @memberof PDFNet.Optimizer.MonoImageSettings
+       * @property {number} e_jbig2
+       * @property {number} e_flate
+       * @property {number} e_none
        */
-      enum CompressionMode {}
+      enum CompressionMode {
+        e_jbig2,
+        e_flate,
+        e_none,
+      }
       /**
        * @enum {number}
        * @name DownsampleMode
        * @memberof PDFNet.Optimizer.MonoImageSettings
+       * @property {number} e_off
+       * @property {number} e_default
        */
-      enum DownsampleMode {}
+      enum DownsampleMode {
+        e_off,
+        e_default,
+      }
     }
   }
   namespace Convert {
     /**
-     * An object containing options for ToTiff functions
+     * An object containing options for wordToPdf functions
      * @class
-     * @name TiffOutputOptions
+     * @name OfficeToPDFOptions
      * @memberof PDFNet.Convert
      */
-    class TiffOutputOptions {
+    class OfficeToPDFOptions {
       /**
-       * Specifies the page box/region to rasterize.
-       * By default, page crop region will be rasterized.
-       * @method PDFNet.Convert.TiffOutputOptions#setBox
-       * @param {number} type
-       * <pre>
-       * PDFNet.Page.Box = {
-       * 	e_media : 0
-       * 	e_crop : 1
-       * 	e_bleed : 2
-       * 	e_trim : 3
-       * 	e_art : 4
-       * }
-       * </pre>
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
+       * Sets the value for LayoutResourcesPluginPath in the options object
+       * The path at which the pdftron-provided font resource plugin resides
+       * @method PDFNet.Convert.OfficeToPDFOptions#setLayoutResourcesPluginPath
+       * @param {string} value The path at which the pdftron-provided font resource plugin resides
+       * @return {PDFNet.Convert.OfficeToPDFOptions} this object, for call chaining
        */
-      setBox(type: number): PDFNet.Convert.TiffOutputOptions;
+      setLayoutResourcesPluginPath(value: string): PDFNet.Convert.OfficeToPDFOptions;
       /**
-       * Rotates all pages by a given number of degrees counterclockwise. The allowed
-       * values are 0, 90, 180, and 270. The default value is 0.
-       * @method PDFNet.Convert.TiffOutputOptions#setRotate
-       * @param {number} rotation
-       * <pre>
-       * PDFNet.Page.Rotate = {
-       * 	e_0 : 0
-       * 	e_90 : 1
-       * 	e_180 : 2
-       * 	e_270 : 3
-       * }
-       * </pre>
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
+       * Sets the value for ResourceDocPath in the options object
+       * The path at which the a .docx resource document resides
+       * @method PDFNet.Convert.OfficeToPDFOptions#setResourceDocPath
+       * @param {string} value The path at which the a .docx resource document resides
+       * @return {PDFNet.Convert.OfficeToPDFOptions} this object, for call chaining
        */
-      setRotate(rotation: number): PDFNet.Convert.TiffOutputOptions;
+      setResourceDocPath(value: string): PDFNet.Convert.OfficeToPDFOptions;
       /**
-       * User definable clip box.
-       * By default, the clip region is identical to current page 'box'.
-       * @method PDFNet.Convert.TiffOutputOptions#setClip
-       * @param {number} x1
-       * @param {number} y1
-       * @param {number} x2
-       * @param {number} y2
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
+       * Sets the value for SmartSubstitutionPluginPath in the options object
+       * The path at which the pdftron-provided font resource plugin resides
+       * @method PDFNet.Convert.OfficeToPDFOptions#setSmartSubstitutionPluginPath
+       * @param {string} value The path at which the pdftron-provided font resource plugin resides
+       * @return {PDFNet.Convert.OfficeToPDFOptions} this object, for call chaining
        */
-      setClip(x1: number, y1: number, x2: number, y2: number): PDFNet.Convert.TiffOutputOptions;
+      setSmartSubstitutionPluginPath(value: string): PDFNet.Convert.OfficeToPDFOptions;
       /**
-       * Specifies the list of pages to convert.
-       * By default, all pages are converted.
-       * @method PDFNet.Convert.TiffOutputOptions#setPages
-       * @param {string} page_desc
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
+       * @method PDFNet.Convert.OfficeToPDFOptions#setExcelDefaultCellBorderWidth
+       * @param {number} width
+       * @return {PDFNet.Convert.OfficeToPDFOptions} this object, for call chaining
        */
-      setPages(page_desc: string): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Enable or disable support for overprint and overprint simulation.
-       * Overprint is a device dependent feature and the results will vary depending on
-       * the output color space and supported colorants (i.e. CMYK, CMYK+spot, RGB, etc).
-       * Default is e_op_pdfx_on.
-       * @method PDFNet.Convert.TiffOutputOptions#setOverprint
-       * @param {number} mode
-       * <pre>
-       * PDFNet.PDFRasterizer.OverprintPreviewMode = {
-       * 	e_op_off : 0
-       * 	e_op_on : 1
-       * 	e_op_pdfx_on : 2
-       * }
-       * </pre>
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setOverprint(mode: number): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Render and export the image in CMYK mode.
-       * By default, the image is rendered and exported in RGB color space.
-       * @method PDFNet.Convert.TiffOutputOptions#setCMYK
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setCMYK(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Enables dithering when the image is exported in palletized or monochrome mode.
-       * This option is disabled by default.
-       * @method PDFNet.Convert.TiffOutputOptions#setDither
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setDither(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Render and export the image in grayscale mode. Sets pixel format to 8 bits per pixel grayscale.
-       * By default, the image is rendered and exported in RGB color space.
-       * @method PDFNet.Convert.TiffOutputOptions#setGray
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setGray(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Export the rendered image as 1 bit per pixel (monochrome) image. The image will be
-       * compressed using G4 CCITT compression algorithm. By default, the image is not dithered.
-       * To enable dithering use 'SetDither' option.
-       * This option is disabled by default.
-       * @method PDFNet.Convert.TiffOutputOptions#setMono
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setMono(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Enables or disables drawing of annotations.
-       * This option is enabled by default.
-       * @method PDFNet.Convert.TiffOutputOptions#setAnnots
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setAnnots(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Enables or disables image smoothing (default: enabled).
-       * @method PDFNet.Convert.TiffOutputOptions#setSmooth
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setSmooth(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Renders annotations in the print mode. This option can be used to render 'Print Only'
-       * annotations and to hide 'Screen Only' annotations.
-       * This option is disabled by default.
-       * @method PDFNet.Convert.TiffOutputOptions#setPrintmode
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setPrintmode(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Sets the page color to transparent. By default, Convert assumes that the page
-       * is drawn directly on an opaque white surface. Some applications may need to
-       * draw the page on a different backdrop. In this case any pixels that are not
-       * covered during rendering will be transparent.
-       * This option is disabled by default.
-       * @method PDFNet.Convert.TiffOutputOptions#setTransparentPage
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setTransparentPage(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Enabled the output of palettized TIFFs.
-       * This option is disabled by default.
-       * @method PDFNet.Convert.TiffOutputOptions#setPalettized
-       * @param {boolean} enable
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setPalettized(enable: boolean): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * The output resolution, from 1 to 1000, in Dots Per Inch (DPI). The higher
-       * the DPI, the larger the image. Resolutions larger than 1000 DPI can be
-       * achieved by rendering image in tiles or stripes. The default resolution is 92 DPI.
-       * @method PDFNet.Convert.TiffOutputOptions#setDPI
-       * @param {number} dpi
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setDPI(dpi: number): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Sets the gamma factor used for anti-aliased rendering. Typical values are in
-       * the range from 0.1 to 3. Gamma correction can be used to improve the quality
-       * of anti-aliased image output and can (to some extent) decrease the appearance
-       * common anti-aliasing artifacts (such as pixel width lines between polygons).
-       * The default gamma is 0.
-       * @method PDFNet.Convert.TiffOutputOptions#setGamma
-       * @param {number} gamma
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setGamma(gamma: number): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Sets the width of the output image, in pixels.
-       * @method PDFNet.Convert.TiffOutputOptions#setHRes
-       * @param {number} hres
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setHRes(hres: number): PDFNet.Convert.TiffOutputOptions;
-      /**
-       * Sets the height of the output image, in pixels.
-       * @method PDFNet.Convert.TiffOutputOptions#setVRes
-       * @param {number} vres
-       * @return {PDFNet.Convert.TiffOutputOptions} this object, for call chaining
-       */
-      setVRes(vres: number): PDFNet.Convert.TiffOutputOptions;
+      setExcelDefaultCellBorderWidth(width: number): PDFNet.Convert.OfficeToPDFOptions;
     }
     /**
      * @enum {number}
      * @name PrinterMode
      * @memberof PDFNet.Convert
+     * @property {number} e_auto
+     * @property {number} e_interop_only
+     * @property {number} e_printer_only
+     * @property {number} e_prefer_builtin_converter
      */
-    enum PrinterMode {}
+    enum PrinterMode {
+      e_auto,
+      e_interop_only,
+      e_printer_only,
+      e_prefer_builtin_converter,
+    }
   }
   namespace PrinterMode {
     /**
      * @enum {number}
      * @name PaperSize
      * @memberof PDFNet.PrinterMode
+     * @property {number} e_custom
+     * @property {number} e_letter
+     * @property {number} e_letter_small
+     * @property {number} e_tabloid
+     * @property {number} e_ledger
+     * @property {number} e_legal
+     * @property {number} e_statement
+     * @property {number} e_executive
+     * @property {number} e_a3
+     * @property {number} e_a4
+     * @property {number} e_a4_mall
+     * @property {number} e_a5
+     * @property {number} e_b4_jis
+     * @property {number} e_b5_jis
+     * @property {number} e_folio
+     * @property {number} e_quarto
+     * @property {number} e_10x14
+     * @property {number} e_11x17
+     * @property {number} e_note
+     * @property {number} e_envelope_9
+     * @property {number} e_envelope_10
+     * @property {number} e_envelope_11
+     * @property {number} e_envelope_12
+     * @property {number} e_envelope_14
+     * @property {number} e_c_size_sheet
+     * @property {number} e_d_size_sheet
+     * @property {number} e_e_size_sheet
+     * @property {number} e_envelope_dl
+     * @property {number} e_envelope_c5
+     * @property {number} e_envelope_c3
+     * @property {number} e_envelope_c4
+     * @property {number} e_envelope_c6
+     * @property {number} e_envelope_c65
+     * @property {number} e_envelope_b4
+     * @property {number} e_envelope_b5
+     * @property {number} e_envelope_b6
+     * @property {number} e_envelope_italy
+     * @property {number} e_envelope_monarch
+     * @property {number} e_6_3_quarters_envelope
+     * @property {number} e_us_std_fanfold
+     * @property {number} e_german_std_fanfold
+     * @property {number} e_german_legal_fanfold
+     * @property {number} e_b4_iso
+     * @property {number} e_japanese_postcard
+     * @property {number} e_9x11
+     * @property {number} e_10x11
+     * @property {number} e_15x11
+     * @property {number} e_envelope_invite
+     * @property {number} e_reserved_48
+     * @property {number} e_reserved_49
+     * @property {number} e_letter_extra
+     * @property {number} e_legal_extra
+     * @property {number} e_tabloid_extra
+     * @property {number} e_a4_extra
+     * @property {number} e_letter_transverse
+     * @property {number} e_a4_transverse
+     * @property {number} e_letter_extra_transverse
+     * @property {number} e_supera_supera_a4
+     * @property {number} e_Superb_Superb_a3
+     * @property {number} e_letter_plus
+     * @property {number} e_a4_plus
+     * @property {number} e_a5_transverse
+     * @property {number} e_b5_jis_transverse
+     * @property {number} e_a3_extra
+     * @property {number} e_a5_extra
+     * @property {number} e_b5_iso_extra
+     * @property {number} e_a2
+     * @property {number} e_a3_transverse
+     * @property {number} e_a3_extra_transverse
+     * @property {number} e_japanese_double_postcard
+     * @property {number} e_a6
+     * @property {number} e_japanese_envelope_kaku_2
+     * @property {number} e_japanese_envelope_kaku_3
+     * @property {number} e_japanese_envelope_chou_3
+     * @property {number} e_japanese_envelope_chou_4
+     * @property {number} e_letter_rotated
+     * @property {number} e_a3_rotated
+     * @property {number} e_a4_rotated
+     * @property {number} e_a5_rotated
+     * @property {number} e_b4_jis_rotated
+     * @property {number} e_b5_jis_rotated
+     * @property {number} e_japanese_postcard_rotated
+     * @property {number} e_double_japanese_postcard_rotated
+     * @property {number} e_a6_rotated
+     * @property {number} e_japanese_envelope_kaku_2_rotated
+     * @property {number} e_japanese_envelope_kaku_3_rotated
+     * @property {number} e_japanese_envelope_chou_3_rotated
+     * @property {number} e_japanese_envelope_chou_4_rotated
+     * @property {number} e_b6_jis
+     * @property {number} e_b6_jis_rotated
+     * @property {number} e_12x11
+     * @property {number} e_japanese_envelope_you_4
+     * @property {number} e_japanese_envelope_you_4_rotated
+     * @property {number} e_PrinterMode_prc_16k
+     * @property {number} e_prc_32k
+     * @property {number} e_prc_32k_big
+     * @property {number} e_prc_envelop_1
+     * @property {number} e_prc_envelop_2
+     * @property {number} e_prc_envelop_3
+     * @property {number} e_prc_envelop_4
+     * @property {number} e_prc_envelop_5
+     * @property {number} e_prc_envelop_6
+     * @property {number} e_prc_envelop_7
+     * @property {number} e_prc_envelop_8
+     * @property {number} e_prc_envelop_9
+     * @property {number} e_prc_envelop_10
+     * @property {number} e_prc_16k_rotated
+     * @property {number} e_prc_32k_rotated
+     * @property {number} e_prc_32k_big__rotated
+     * @property {number} e_prc_envelop_1_rotated
+     * @property {number} e_prc_envelop_2_rotated
+     * @property {number} e_prc_envelop_3_rotated
+     * @property {number} e_prc_envelop_4_rotated
+     * @property {number} e_prc_envelop_5_rotated
+     * @property {number} e_prc_envelop_6_rotated
+     * @property {number} e_prc_envelop_7_rotated
+     * @property {number} e_prc_envelop_8_rotated
+     * @property {number} e_prc_envelop_9_rotated
+     * @property {number} e_prc_envelop_10_rotated
      */
-    enum PaperSize {}
+    enum PaperSize {
+      e_custom,
+      e_letter,
+      e_letter_small,
+      e_tabloid,
+      e_ledger,
+      e_legal,
+      e_statement,
+      e_executive,
+      e_a3,
+      e_a4,
+      e_a4_mall,
+      e_a5,
+      e_b4_jis,
+      e_b5_jis,
+      e_folio,
+      e_quarto,
+      e_10x14,
+      e_11x17,
+      e_note,
+      e_envelope_9,
+      e_envelope_10,
+      e_envelope_11,
+      e_envelope_12,
+      e_envelope_14,
+      e_c_size_sheet,
+      e_d_size_sheet,
+      e_e_size_sheet,
+      e_envelope_dl,
+      e_envelope_c5,
+      e_envelope_c3,
+      e_envelope_c4,
+      e_envelope_c6,
+      e_envelope_c65,
+      e_envelope_b4,
+      e_envelope_b5,
+      e_envelope_b6,
+      e_envelope_italy,
+      e_envelope_monarch,
+      e_6_3_quarters_envelope,
+      e_us_std_fanfold,
+      e_german_std_fanfold,
+      e_german_legal_fanfold,
+      e_b4_iso,
+      e_japanese_postcard,
+      e_9x11,
+      e_10x11,
+      e_15x11,
+      e_envelope_invite,
+      e_reserved_48,
+      e_reserved_49,
+      e_letter_extra,
+      e_legal_extra,
+      e_tabloid_extra,
+      e_a4_extra,
+      e_letter_transverse,
+      e_a4_transverse,
+      e_letter_extra_transverse,
+      e_supera_supera_a4,
+      e_Superb_Superb_a3,
+      e_letter_plus,
+      e_a4_plus,
+      e_a5_transverse,
+      e_b5_jis_transverse,
+      e_a3_extra,
+      e_a5_extra,
+      e_b5_iso_extra,
+      e_a2,
+      e_a3_transverse,
+      e_a3_extra_transverse,
+      e_japanese_double_postcard,
+      e_a6,
+      e_japanese_envelope_kaku_2,
+      e_japanese_envelope_kaku_3,
+      e_japanese_envelope_chou_3,
+      e_japanese_envelope_chou_4,
+      e_letter_rotated,
+      e_a3_rotated,
+      e_a4_rotated,
+      e_a5_rotated,
+      e_b4_jis_rotated,
+      e_b5_jis_rotated,
+      e_japanese_postcard_rotated,
+      e_double_japanese_postcard_rotated,
+      e_a6_rotated,
+      e_japanese_envelope_kaku_2_rotated,
+      e_japanese_envelope_kaku_3_rotated,
+      e_japanese_envelope_chou_3_rotated,
+      e_japanese_envelope_chou_4_rotated,
+      e_b6_jis,
+      e_b6_jis_rotated,
+      e_12x11,
+      e_japanese_envelope_you_4,
+      e_japanese_envelope_you_4_rotated,
+      e_PrinterMode_prc_16k,
+      e_prc_32k,
+      e_prc_32k_big,
+      e_prc_envelop_1,
+      e_prc_envelop_2,
+      e_prc_envelop_3,
+      e_prc_envelop_4,
+      e_prc_envelop_5,
+      e_prc_envelop_6,
+      e_prc_envelop_7,
+      e_prc_envelop_8,
+      e_prc_envelop_9,
+      e_prc_envelop_10,
+      e_prc_16k_rotated,
+      e_prc_32k_rotated,
+      e_prc_32k_big__rotated,
+      e_prc_envelop_1_rotated,
+      e_prc_envelop_2_rotated,
+      e_prc_envelop_3_rotated,
+      e_prc_envelop_4_rotated,
+      e_prc_envelop_5_rotated,
+      e_prc_envelop_6_rotated,
+      e_prc_envelop_7_rotated,
+      e_prc_envelop_8_rotated,
+      e_prc_envelop_9_rotated,
+      e_prc_envelop_10_rotated,
+    }
   }
   namespace Field {
     /**
      * @enum {number}
      * @name EventType
      * @memberof PDFNet.Field
+     * @property {number} e_action_trigger_keystroke
+     * @property {number} e_action_trigger_format
+     * @property {number} e_action_trigger_validate
+     * @property {number} e_action_trigger_calculate
      */
-    enum EventType {}
+    enum EventType {
+      e_action_trigger_keystroke,
+      e_action_trigger_format,
+      e_action_trigger_validate,
+      e_action_trigger_calculate,
+    }
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Field
+     * @property {number} e_button
+     * @property {number} e_check
+     * @property {number} e_radio
+     * @property {number} e_text
+     * @property {number} e_choice
+     * @property {number} e_signature
+     * @property {number} e_null
      */
-    enum Type {}
+    enum Type {
+      e_button,
+      e_check,
+      e_radio,
+      e_text,
+      e_choice,
+      e_signature,
+      e_null,
+    }
     /**
      * @enum {number}
      * @name Flag
      * @memberof PDFNet.Field
+     * @property {number} e_read_only
+     * @property {number} e_required
+     * @property {number} e_no_export
+     * @property {number} e_pushbutton_flag
+     * @property {number} e_radio_flag
+     * @property {number} e_toggle_to_off
+     * @property {number} e_radios_in_unison
+     * @property {number} e_multiline
+     * @property {number} e_password
+     * @property {number} e_file_select
+     * @property {number} e_no_spellcheck
+     * @property {number} e_no_scroll
+     * @property {number} e_comb
+     * @property {number} e_rich_text
+     * @property {number} e_combo
+     * @property {number} e_edit
+     * @property {number} e_sort
+     * @property {number} e_multiselect
+     * @property {number} e_commit_on_sel_change
      */
-    enum Flag {}
+    enum Flag {
+      e_read_only,
+      e_required,
+      e_no_export,
+      e_pushbutton_flag,
+      e_radio_flag,
+      e_toggle_to_off,
+      e_radios_in_unison,
+      e_multiline,
+      e_password,
+      e_file_select,
+      e_no_spellcheck,
+      e_no_scroll,
+      e_comb,
+      e_rich_text,
+      e_combo,
+      e_edit,
+      e_sort,
+      e_multiselect,
+      e_commit_on_sel_change,
+    }
     /**
      * @enum {number}
      * @name TextJustification
      * @memberof PDFNet.Field
+     * @property {number} e_left_justified
+     * @property {number} e_centered
+     * @property {number} e_right_justified
      */
-    enum TextJustification {}
+    enum TextJustification {
+      e_left_justified,
+      e_centered,
+      e_right_justified,
+    }
   }
   namespace Filter {
     /**
      * @enum {number}
      * @name StdFileOpenMode
      * @memberof PDFNet.Filter
+     * @property {number} e_read_mode
+     * @property {number} e_write_mode
+     * @property {number} e_append_mode
      */
-    enum StdFileOpenMode {}
+    enum StdFileOpenMode {
+      e_read_mode,
+      e_write_mode,
+      e_append_mode,
+    }
     /**
      * @enum {number}
      * @name ReferencePos
      * @memberof PDFNet.Filter
+     * @property {number} e_begin
+     * @property {number} e_end
+     * @property {number} e_cur
      */
-    enum ReferencePos {}
+    enum ReferencePos {
+      e_begin,
+      e_end,
+      e_cur,
+    }
   }
   namespace OCGContext {
     /**
      * @enum {number}
      * @name OCDrawMode
      * @memberof PDFNet.OCGContext
+     * @property {number} e_VisibleOC
+     * @property {number} e_AllOC
+     * @property {number} e_NoOC
      */
-    enum OCDrawMode {}
+    enum OCDrawMode {
+      e_VisibleOC,
+      e_AllOC,
+      e_NoOC,
+    }
   }
   namespace OCMD {
     /**
      * @enum {number}
      * @name VisibilityPolicyType
      * @memberof PDFNet.OCMD
+     * @property {number} e_AllOn
+     * @property {number} e_AnyOn
+     * @property {number} e_AnyOff
+     * @property {number} e_AllOff
      */
-    enum VisibilityPolicyType {}
+    enum VisibilityPolicyType {
+      e_AllOn,
+      e_AnyOn,
+      e_AnyOff,
+      e_AllOff,
+    }
   }
   namespace PDFACompliance {
     /**
      * @enum {number}
      * @name Conformance
      * @memberof PDFNet.PDFACompliance
+     * @property {number} e_Level1A
+     * @property {number} e_Level1B
+     * @property {number} e_Level2A
+     * @property {number} e_Level2B
+     * @property {number} e_Level2U
+     * @property {number} e_Level3A
+     * @property {number} e_Level3B
+     * @property {number} e_Level3U
      */
-    enum Conformance {}
+    enum Conformance {
+      e_Level1A,
+      e_Level1B,
+      e_Level2A,
+      e_Level2B,
+      e_Level2U,
+      e_Level3A,
+      e_Level3B,
+      e_Level3U,
+    }
     /**
      * @enum {number}
      * @name ErrorCode
      * @memberof PDFNet.PDFACompliance
+     * @property {number} e_PDFA0_1_0
+     * @property {number} e_PDFA0_1_1
+     * @property {number} e_PDFA0_1_2
+     * @property {number} e_PDFA0_1_3
+     * @property {number} e_PDFA0_1_4
+     * @property {number} e_PDFA0_1_5
+     * @property {number} e_PDFA1_2_1
+     * @property {number} e_PDFA1_2_2
+     * @property {number} e_PDFA1_3_1
+     * @property {number} e_PDFA1_3_2
+     * @property {number} e_PDFA1_3_3
+     * @property {number} e_PDFA1_3_4
+     * @property {number} e_PDFA1_4_1
+     * @property {number} e_PDFA1_4_2
+     * @property {number} e_PDFA1_6_1
+     * @property {number} e_PDFA1_7_1
+     * @property {number} e_PDFA1_7_2
+     * @property {number} e_PDFA1_7_3
+     * @property {number} e_PDFA1_7_4
+     * @property {number} e_PDFA1_8_1
+     * @property {number} e_PDFA1_8_2
+     * @property {number} e_PDFA1_8_3
+     * @property {number} e_PDFA1_8_4
+     * @property {number} e_PDFA1_8_5
+     * @property {number} e_PDFA1_8_6
+     * @property {number} e_PDFA1_10_1
+     * @property {number} e_PDFA1_11_1
+     * @property {number} e_PDFA1_11_2
+     * @property {number} e_PDFA1_12_1
+     * @property {number} e_PDFA1_12_2
+     * @property {number} e_PDFA1_12_3
+     * @property {number} e_PDFA1_12_4
+     * @property {number} e_PDFA1_12_5
+     * @property {number} e_PDFA1_12_6
+     * @property {number} e_PDFA1_13_1
+     * @property {number} e_PDFA2_2_1
+     * @property {number} e_PDFA2_3_2
+     * @property {number} e_PDFA2_3_3
+     * @property {number} e_PDFA2_3_3_1
+     * @property {number} e_PDFA2_3_3_2
+     * @property {number} e_PDFA2_3_4_1
+     * @property {number} e_PDFA2_4_1
+     * @property {number} e_PDFA2_4_2
+     * @property {number} e_PDFA2_4_3
+     * @property {number} e_PDFA2_4_4
+     * @property {number} e_PDFA2_5_1
+     * @property {number} e_PDFA2_5_2
+     * @property {number} e_PDFA2_6_1
+     * @property {number} e_PDFA2_7_1
+     * @property {number} e_PDFA2_8_1
+     * @property {number} e_PDFA2_9_1
+     * @property {number} e_PDFA2_10_1
+     * @property {number} e_PDFA3_2_1
+     * @property {number} e_PDFA3_3_1
+     * @property {number} e_PDFA3_3_2
+     * @property {number} e_PDFA3_3_3_1
+     * @property {number} e_PDFA3_3_3_2
+     * @property {number} e_PDFA3_4_1
+     * @property {number} e_PDFA3_5_1
+     * @property {number} e_PDFA3_5_2
+     * @property {number} e_PDFA3_5_3
+     * @property {number} e_PDFA3_5_4
+     * @property {number} e_PDFA3_5_5
+     * @property {number} e_PDFA3_5_6
+     * @property {number} e_PDFA3_6_1
+     * @property {number} e_PDFA3_7_1
+     * @property {number} e_PDFA3_7_2
+     * @property {number} e_PDFA3_7_3
+     * @property {number} e_PDFA4_1
+     * @property {number} e_PDFA4_2
+     * @property {number} e_PDFA4_3
+     * @property {number} e_PDFA4_4
+     * @property {number} e_PDFA4_5
+     * @property {number} e_PDFA4_6
+     * @property {number} e_PDFA5_2_1
+     * @property {number} e_PDFA5_2_2
+     * @property {number} e_PDFA5_2_3
+     * @property {number} e_PDFA5_2_4
+     * @property {number} e_PDFA5_2_5
+     * @property {number} e_PDFA5_2_6
+     * @property {number} e_PDFA5_2_7
+     * @property {number} e_PDFA5_2_8
+     * @property {number} e_PDFA5_2_9
+     * @property {number} e_PDFA5_2_10
+     * @property {number} e_PDFA5_2_11
+     * @property {number} e_PDFA5_3_1
+     * @property {number} e_PDFA5_3_2_1
+     * @property {number} e_PDFA5_3_2_2
+     * @property {number} e_PDFA5_3_2_3
+     * @property {number} e_PDFA5_3_2_4
+     * @property {number} e_PDFA5_3_2_5
+     * @property {number} e_PDFA5_3_3_1
+     * @property {number} e_PDFA5_3_3_2
+     * @property {number} e_PDFA5_3_3_3
+     * @property {number} e_PDFA5_3_3_4
+     * @property {number} e_PDFA5_3_4_0
+     * @property {number} e_PDFA5_3_4_1
+     * @property {number} e_PDFA5_3_4_2
+     * @property {number} e_PDFA5_3_4_3
+     * @property {number} e_PDFA6_1_1
+     * @property {number} e_PDFA6_1_2
+     * @property {number} e_PDFA6_2_1
+     * @property {number} e_PDFA6_2_2
+     * @property {number} e_PDFA6_2_3
+     * @property {number} e_PDFA7_2_1
+     * @property {number} e_PDFA7_2_2
+     * @property {number} e_PDFA7_2_3
+     * @property {number} e_PDFA7_2_4
+     * @property {number} e_PDFA7_2_5
+     * @property {number} e_PDFA7_3_1
+     * @property {number} e_PDFA7_3_2
+     * @property {number} e_PDFA7_3_3
+     * @property {number} e_PDFA7_3_4
+     * @property {number} e_PDFA7_3_5
+     * @property {number} e_PDFA7_3_6
+     * @property {number} e_PDFA7_3_7
+     * @property {number} e_PDFA7_3_8
+     * @property {number} e_PDFA7_3_9
+     * @property {number} e_PDFA7_5_1
+     * @property {number} e_PDFA7_8_1
+     * @property {number} e_PDFA7_8_2
+     * @property {number} e_PDFA7_8_3
+     * @property {number} e_PDFA7_8_4
+     * @property {number} e_PDFA7_8_5
+     * @property {number} e_PDFA7_8_6
+     * @property {number} e_PDFA7_8_7
+     * @property {number} e_PDFA7_8_8
+     * @property {number} e_PDFA7_8_9
+     * @property {number} e_PDFA7_8_10
+     * @property {number} e_PDFA7_8_11
+     * @property {number} e_PDFA7_8_12
+     * @property {number} e_PDFA7_8_13
+     * @property {number} e_PDFA7_8_14
+     * @property {number} e_PDFA7_8_15
+     * @property {number} e_PDFA7_8_16
+     * @property {number} e_PDFA7_8_17
+     * @property {number} e_PDFA7_8_18
+     * @property {number} e_PDFA7_8_19
+     * @property {number} e_PDFA7_8_20
+     * @property {number} e_PDFA7_8_21
+     * @property {number} e_PDFA7_8_22
+     * @property {number} e_PDFA7_8_23
+     * @property {number} e_PDFA7_8_24
+     * @property {number} e_PDFA7_8_25
+     * @property {number} e_PDFA7_8_26
+     * @property {number} e_PDFA7_8_27
+     * @property {number} e_PDFA7_8_28
+     * @property {number} e_PDFA7_8_29
+     * @property {number} e_PDFA7_8_30
+     * @property {number} e_PDFA7_8_31
+     * @property {number} e_PDFA7_11_1
+     * @property {number} e_PDFA7_11_2
+     * @property {number} e_PDFA7_11_3
+     * @property {number} e_PDFA7_11_4
+     * @property {number} e_PDFA7_11_5
+     * @property {number} e_PDFA9_1
+     * @property {number} e_PDFA9_2
+     * @property {number} e_PDFA9_3
+     * @property {number} e_PDFA9_4
+     * @property {number} e_PDFA3_8_1
+     * @property {number} e_PDFA8_2_2
+     * @property {number} e_PDFA8_3_3_1
+     * @property {number} e_PDFA8_3_3_2
+     * @property {number} e_PDFA8_3_4_1
+     * @property {number} e_PDFA1_2_3
+     * @property {number} e_PDFA1_10_2
+     * @property {number} e_PDFA1_10_3
+     * @property {number} e_PDFA1_12_10
+     * @property {number} e_PDFA1_13_5
+     * @property {number} e_PDFA2_3_10
+     * @property {number} e_PDFA2_4_2_10
+     * @property {number} e_PDFA2_4_2_11
+     * @property {number} e_PDFA2_4_2_12
+     * @property {number} e_PDFA2_4_2_13
+     * @property {number} e_PDFA2_5_10
+     * @property {number} e_PDFA2_5_11
+     * @property {number} e_PDFA2_5_12
+     * @property {number} e_PDFA2_8_3_1
+     * @property {number} e_PDFA2_8_3_2
+     * @property {number} e_PDFA2_8_3_3
+     * @property {number} e_PDFA2_8_3_4
+     * @property {number} e_PDFA2_8_3_5
+     * @property {number} e_PDFA2_10_20
+     * @property {number} e_PDFA2_10_21
+     * @property {number} e_PDFA11_0_0
+     * @property {number} e_PDFA6_2_11_8
+     * @property {number} e_PDFA8_1
+     * @property {number} e_PDFA_3E1
+     * @property {number} e_PDFA_3E2
+     * @property {number} e_PDFA_3E3
+     * @property {number} e_PDFA_LAST
      */
-    enum ErrorCode {}
+    enum ErrorCode {
+      e_PDFA0_1_0,
+      e_PDFA0_1_1,
+      e_PDFA0_1_2,
+      e_PDFA0_1_3,
+      e_PDFA0_1_4,
+      e_PDFA0_1_5,
+      e_PDFA1_2_1,
+      e_PDFA1_2_2,
+      e_PDFA1_3_1,
+      e_PDFA1_3_2,
+      e_PDFA1_3_3,
+      e_PDFA1_3_4,
+      e_PDFA1_4_1,
+      e_PDFA1_4_2,
+      e_PDFA1_6_1,
+      e_PDFA1_7_1,
+      e_PDFA1_7_2,
+      e_PDFA1_7_3,
+      e_PDFA1_7_4,
+      e_PDFA1_8_1,
+      e_PDFA1_8_2,
+      e_PDFA1_8_3,
+      e_PDFA1_8_4,
+      e_PDFA1_8_5,
+      e_PDFA1_8_6,
+      e_PDFA1_10_1,
+      e_PDFA1_11_1,
+      e_PDFA1_11_2,
+      e_PDFA1_12_1,
+      e_PDFA1_12_2,
+      e_PDFA1_12_3,
+      e_PDFA1_12_4,
+      e_PDFA1_12_5,
+      e_PDFA1_12_6,
+      e_PDFA1_13_1,
+      e_PDFA2_2_1,
+      e_PDFA2_3_2,
+      e_PDFA2_3_3,
+      e_PDFA2_3_3_1,
+      e_PDFA2_3_3_2,
+      e_PDFA2_3_4_1,
+      e_PDFA2_4_1,
+      e_PDFA2_4_2,
+      e_PDFA2_4_3,
+      e_PDFA2_4_4,
+      e_PDFA2_5_1,
+      e_PDFA2_5_2,
+      e_PDFA2_6_1,
+      e_PDFA2_7_1,
+      e_PDFA2_8_1,
+      e_PDFA2_9_1,
+      e_PDFA2_10_1,
+      e_PDFA3_2_1,
+      e_PDFA3_3_1,
+      e_PDFA3_3_2,
+      e_PDFA3_3_3_1,
+      e_PDFA3_3_3_2,
+      e_PDFA3_4_1,
+      e_PDFA3_5_1,
+      e_PDFA3_5_2,
+      e_PDFA3_5_3,
+      e_PDFA3_5_4,
+      e_PDFA3_5_5,
+      e_PDFA3_5_6,
+      e_PDFA3_6_1,
+      e_PDFA3_7_1,
+      e_PDFA3_7_2,
+      e_PDFA3_7_3,
+      e_PDFA4_1,
+      e_PDFA4_2,
+      e_PDFA4_3,
+      e_PDFA4_4,
+      e_PDFA4_5,
+      e_PDFA4_6,
+      e_PDFA5_2_1,
+      e_PDFA5_2_2,
+      e_PDFA5_2_3,
+      e_PDFA5_2_4,
+      e_PDFA5_2_5,
+      e_PDFA5_2_6,
+      e_PDFA5_2_7,
+      e_PDFA5_2_8,
+      e_PDFA5_2_9,
+      e_PDFA5_2_10,
+      e_PDFA5_2_11,
+      e_PDFA5_3_1,
+      e_PDFA5_3_2_1,
+      e_PDFA5_3_2_2,
+      e_PDFA5_3_2_3,
+      e_PDFA5_3_2_4,
+      e_PDFA5_3_2_5,
+      e_PDFA5_3_3_1,
+      e_PDFA5_3_3_2,
+      e_PDFA5_3_3_3,
+      e_PDFA5_3_3_4,
+      e_PDFA5_3_4_0,
+      e_PDFA5_3_4_1,
+      e_PDFA5_3_4_2,
+      e_PDFA5_3_4_3,
+      e_PDFA6_1_1,
+      e_PDFA6_1_2,
+      e_PDFA6_2_1,
+      e_PDFA6_2_2,
+      e_PDFA6_2_3,
+      e_PDFA7_2_1,
+      e_PDFA7_2_2,
+      e_PDFA7_2_3,
+      e_PDFA7_2_4,
+      e_PDFA7_2_5,
+      e_PDFA7_3_1,
+      e_PDFA7_3_2,
+      e_PDFA7_3_3,
+      e_PDFA7_3_4,
+      e_PDFA7_3_5,
+      e_PDFA7_3_6,
+      e_PDFA7_3_7,
+      e_PDFA7_3_8,
+      e_PDFA7_3_9,
+      e_PDFA7_5_1,
+      e_PDFA7_8_1,
+      e_PDFA7_8_2,
+      e_PDFA7_8_3,
+      e_PDFA7_8_4,
+      e_PDFA7_8_5,
+      e_PDFA7_8_6,
+      e_PDFA7_8_7,
+      e_PDFA7_8_8,
+      e_PDFA7_8_9,
+      e_PDFA7_8_10,
+      e_PDFA7_8_11,
+      e_PDFA7_8_12,
+      e_PDFA7_8_13,
+      e_PDFA7_8_14,
+      e_PDFA7_8_15,
+      e_PDFA7_8_16,
+      e_PDFA7_8_17,
+      e_PDFA7_8_18,
+      e_PDFA7_8_19,
+      e_PDFA7_8_20,
+      e_PDFA7_8_21,
+      e_PDFA7_8_22,
+      e_PDFA7_8_23,
+      e_PDFA7_8_24,
+      e_PDFA7_8_25,
+      e_PDFA7_8_26,
+      e_PDFA7_8_27,
+      e_PDFA7_8_28,
+      e_PDFA7_8_29,
+      e_PDFA7_8_30,
+      e_PDFA7_8_31,
+      e_PDFA7_11_1,
+      e_PDFA7_11_2,
+      e_PDFA7_11_3,
+      e_PDFA7_11_4,
+      e_PDFA7_11_5,
+      e_PDFA9_1,
+      e_PDFA9_2,
+      e_PDFA9_3,
+      e_PDFA9_4,
+      e_PDFA3_8_1,
+      e_PDFA8_2_2,
+      e_PDFA8_3_3_1,
+      e_PDFA8_3_3_2,
+      e_PDFA8_3_4_1,
+      e_PDFA1_2_3,
+      e_PDFA1_10_2,
+      e_PDFA1_10_3,
+      e_PDFA1_12_10,
+      e_PDFA1_13_5,
+      e_PDFA2_3_10,
+      e_PDFA2_4_2_10,
+      e_PDFA2_4_2_11,
+      e_PDFA2_4_2_12,
+      e_PDFA2_4_2_13,
+      e_PDFA2_5_10,
+      e_PDFA2_5_11,
+      e_PDFA2_5_12,
+      e_PDFA2_8_3_1,
+      e_PDFA2_8_3_2,
+      e_PDFA2_8_3_3,
+      e_PDFA2_8_3_4,
+      e_PDFA2_8_3_5,
+      e_PDFA2_10_20,
+      e_PDFA2_10_21,
+      e_PDFA11_0_0,
+      e_PDFA6_2_11_8,
+      e_PDFA8_1,
+      e_PDFA_3E1,
+      e_PDFA_3E2,
+      e_PDFA_3E3,
+      e_PDFA_LAST,
+    }
   }
   namespace ContentItem {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.ContentItem
+     * @property {number} e_MCR
+     * @property {number} e_MCID
+     * @property {number} e_OBJR
+     * @property {number} e_Unknown
      */
-    enum Type {}
+    enum Type {
+      e_MCR,
+      e_MCID,
+      e_OBJR,
+      e_Unknown,
+    }
   }
   namespace Action {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Action
+     * @property {number} e_GoTo
+     * @property {number} e_GoToR
+     * @property {number} e_GoToE
+     * @property {number} e_Launch
+     * @property {number} e_Thread
+     * @property {number} e_URI
+     * @property {number} e_Sound
+     * @property {number} e_Movie
+     * @property {number} e_Hide
+     * @property {number} e_Named
+     * @property {number} e_SubmitForm
+     * @property {number} e_ResetForm
+     * @property {number} e_ImportData
+     * @property {number} e_JavaScript
+     * @property {number} e_SetOCGState
+     * @property {number} e_Rendition
+     * @property {number} e_Trans
+     * @property {number} e_GoTo3DView
+     * @property {number} e_RichMediaExecute
+     * @property {number} e_Unknown
      */
-    enum Type {}
+    enum Type {
+      e_GoTo,
+      e_GoToR,
+      e_GoToE,
+      e_Launch,
+      e_Thread,
+      e_URI,
+      e_Sound,
+      e_Movie,
+      e_Hide,
+      e_Named,
+      e_SubmitForm,
+      e_ResetForm,
+      e_ImportData,
+      e_JavaScript,
+      e_SetOCGState,
+      e_Rendition,
+      e_Trans,
+      e_GoTo3DView,
+      e_RichMediaExecute,
+      e_Unknown,
+    }
     /**
      * @enum {number}
      * @name FormActionFlag
      * @memberof PDFNet.Action
+     * @property {number} e_exclude
+     * @property {number} e_include_no_value_fields
+     * @property {number} e_export_format
+     * @property {number} e_get_method
+     * @property {number} e_submit_coordinates
+     * @property {number} e_xfdf
+     * @property {number} e_include_append_saves
+     * @property {number} e_include_annotations
+     * @property {number} e_submit_pdf
+     * @property {number} e_canonical_format
+     * @property {number} e_excl_non_user_annots
+     * @property {number} e_excl_F_key
+     * @property {number} e_embed_form
      */
-    enum FormActionFlag {}
+    enum FormActionFlag {
+      e_exclude,
+      e_include_no_value_fields,
+      e_export_format,
+      e_get_method,
+      e_submit_coordinates,
+      e_xfdf,
+      e_include_append_saves,
+      e_include_annotations,
+      e_submit_pdf,
+      e_canonical_format,
+      e_excl_non_user_annots,
+      e_excl_F_key,
+      e_embed_form,
+    }
   }
   namespace Page {
     /**
      * @enum {number}
      * @name EventType
      * @memberof PDFNet.Page
+     * @property {number} e_action_trigger_page_open
+     * @property {number} e_action_trigger_page_close
      */
-    enum EventType {}
+    enum EventType {
+      e_action_trigger_page_open,
+      e_action_trigger_page_close,
+    }
     /**
      * @enum {number}
      * @name Box
      * @memberof PDFNet.Page
+     * @property {number} e_media
+     * @property {number} e_crop
+     * @property {number} e_bleed
+     * @property {number} e_trim
+     * @property {number} e_art
      */
-    enum Box {}
+    enum Box {
+      e_media,
+      e_crop,
+      e_bleed,
+      e_trim,
+      e_art,
+    }
     /**
      * @enum {number}
      * @name Rotate
      * @memberof PDFNet.Page
+     * @property {number} e_0
+     * @property {number} e_90
+     * @property {number} e_180
+     * @property {number} e_270
      */
-    enum Rotate {}
+    enum Rotate {
+      e_0,
+      e_90,
+      e_180,
+      e_270,
+    }
   }
   namespace Annot {
     /**
      * @enum {number}
      * @name EventType
      * @memberof PDFNet.Annot
+     * @property {number} e_action_trigger_activate
+     * @property {number} e_action_trigger_annot_enter
+     * @property {number} e_action_trigger_annot_exit
+     * @property {number} e_action_trigger_annot_down
+     * @property {number} e_action_trigger_annot_up
+     * @property {number} e_action_trigger_annot_focus
+     * @property {number} e_action_trigger_annot_blur
+     * @property {number} e_action_trigger_annot_page_open
+     * @property {number} e_action_trigger_annot_page_close
+     * @property {number} e_action_trigger_annot_page_visible
+     * @property {number} e_action_trigger_annot_page_invisible
      */
-    enum EventType {}
+    enum EventType {
+      e_action_trigger_activate,
+      e_action_trigger_annot_enter,
+      e_action_trigger_annot_exit,
+      e_action_trigger_annot_down,
+      e_action_trigger_annot_up,
+      e_action_trigger_annot_focus,
+      e_action_trigger_annot_blur,
+      e_action_trigger_annot_page_open,
+      e_action_trigger_annot_page_close,
+      e_action_trigger_annot_page_visible,
+      e_action_trigger_annot_page_invisible,
+    }
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Annot
+     * @property {number} e_Text
+     * @property {number} e_Link
+     * @property {number} e_FreeText
+     * @property {number} e_Line
+     * @property {number} e_Square
+     * @property {number} e_Circle
+     * @property {number} e_Polygon
+     * @property {number} e_Polyline
+     * @property {number} e_Highlight
+     * @property {number} e_Underline
+     * @property {number} e_Squiggly
+     * @property {number} e_StrikeOut
+     * @property {number} e_Stamp
+     * @property {number} e_Caret
+     * @property {number} e_Ink
+     * @property {number} e_Popup
+     * @property {number} e_FileAttachment
+     * @property {number} e_Sound
+     * @property {number} e_Movie
+     * @property {number} e_Widget
+     * @property {number} e_Screen
+     * @property {number} e_PrinterMark
+     * @property {number} e_TrapNet
+     * @property {number} e_Watermark
+     * @property {number} e_3D
+     * @property {number} e_Redact
+     * @property {number} e_Projection
+     * @property {number} e_RichMedia
+     * @property {number} e_Unknown
      */
-    enum Type {}
+    enum Type {
+      e_Text,
+      e_Link,
+      e_FreeText,
+      e_Line,
+      e_Square,
+      e_Circle,
+      e_Polygon,
+      e_Polyline,
+      e_Highlight,
+      e_Underline,
+      e_Squiggly,
+      e_StrikeOut,
+      e_Stamp,
+      e_Caret,
+      e_Ink,
+      e_Popup,
+      e_FileAttachment,
+      e_Sound,
+      e_Movie,
+      e_Widget,
+      e_Screen,
+      e_PrinterMark,
+      e_TrapNet,
+      e_Watermark,
+      e_3D,
+      e_Redact,
+      e_Projection,
+      e_RichMedia,
+      e_Unknown,
+    }
     /**
      * @enum {number}
      * @name Flag
      * @memberof PDFNet.Annot
+     * @property {number} e_invisible
+     * @property {number} e_hidden
+     * @property {number} e_print
+     * @property {number} e_no_zoom
+     * @property {number} e_no_rotate
+     * @property {number} e_no_view
+     * @property {number} e_annot_read_only
+     * @property {number} e_locked
+     * @property {number} e_toggle_no_view
+     * @property {number} e_locked_contents
      */
-    enum Flag {}
+    enum Flag {
+      e_invisible,
+      e_hidden,
+      e_print,
+      e_no_zoom,
+      e_no_rotate,
+      e_no_view,
+      e_annot_read_only,
+      e_locked,
+      e_toggle_no_view,
+      e_locked_contents,
+    }
     /**
      * @enum {number}
      * @name State
      * @memberof PDFNet.Annot
+     * @property {number} e_normal
+     * @property {number} e_rollover
+     * @property {number} e_down
      */
-    enum State {}
+    enum State {
+      e_normal,
+      e_rollover,
+      e_down,
+    }
   }
   namespace AnnotBorderStyle {
     /**
      * @enum {number}
      * @name Style
      * @memberof PDFNet.AnnotBorderStyle
+     * @property {number} e_solid
+     * @property {number} e_dashed
+     * @property {number} e_beveled
+     * @property {number} e_inset
+     * @property {number} e_underline
      */
-    enum Style {}
+    enum Style {
+      e_solid,
+      e_dashed,
+      e_beveled,
+      e_inset,
+      e_underline,
+    }
   }
   namespace LineAnnot {
     /**
      * @enum {number}
      * @name EndingStyle
      * @memberof PDFNet.LineAnnot
+     * @property {number} e_Square
+     * @property {number} e_Circle
+     * @property {number} e_Diamond
+     * @property {number} e_OpenArrow
+     * @property {number} e_ClosedArrow
+     * @property {number} e_Butt
+     * @property {number} e_ROpenArrow
+     * @property {number} e_RClosedArrow
+     * @property {number} e_Slash
+     * @property {number} e_None
+     * @property {number} e_Unknown
      */
-    enum EndingStyle {}
+    enum EndingStyle {
+      e_Square,
+      e_Circle,
+      e_Diamond,
+      e_OpenArrow,
+      e_ClosedArrow,
+      e_Butt,
+      e_ROpenArrow,
+      e_RClosedArrow,
+      e_Slash,
+      e_None,
+      e_Unknown,
+    }
     /**
      * @enum {number}
      * @name IntentType
      * @memberof PDFNet.LineAnnot
+     * @property {number} e_LineArrow
+     * @property {number} e_LineDimension
+     * @property {number} e_null
      */
-    enum IntentType {}
+    enum IntentType {
+      e_LineArrow,
+      e_LineDimension,
+      e_null,
+    }
     /**
      * @enum {number}
      * @name CapPos
      * @memberof PDFNet.LineAnnot
+     * @property {number} e_Inline
+     * @property {number} e_Top
      */
-    enum CapPos {}
+    enum CapPos {
+      e_Inline,
+      e_Top,
+    }
   }
   namespace FileAttachmentAnnot {
     /**
      * @enum {number}
      * @name Icon
      * @memberof PDFNet.FileAttachmentAnnot
+     * @property {number} e_Graph
+     * @property {number} e_PushPin
+     * @property {number} e_Paperclip
+     * @property {number} e_Tag
+     * @property {number} e_Unknown
      */
-    enum Icon {}
+    enum Icon {
+      e_Graph,
+      e_PushPin,
+      e_Paperclip,
+      e_Tag,
+      e_Unknown,
+    }
   }
   namespace FreeTextAnnot {
     /**
      * @enum {number}
      * @name IntentName
      * @memberof PDFNet.FreeTextAnnot
+     * @property {number} e_FreeText
+     * @property {number} e_FreeTextCallout
+     * @property {number} e_FreeTextTypeWriter
+     * @property {number} e_Unknown
      */
-    enum IntentName {}
+    enum IntentName {
+      e_FreeText,
+      e_FreeTextCallout,
+      e_FreeTextTypeWriter,
+      e_Unknown,
+    }
   }
   namespace LinkAnnot {
     /**
      * @enum {number}
      * @name HighlightingMode
      * @memberof PDFNet.LinkAnnot
+     * @property {number} e_none
+     * @property {number} e_invert
+     * @property {number} e_outline
+     * @property {number} e_push
      */
-    enum HighlightingMode {}
+    enum HighlightingMode {
+      e_none,
+      e_invert,
+      e_outline,
+      e_push,
+    }
   }
   namespace MarkupAnnot {
     /**
      * @enum {number}
      * @name BorderEffect
      * @memberof PDFNet.MarkupAnnot
+     * @property {number} e_None
+     * @property {number} e_Cloudy
      */
-    enum BorderEffect {}
+    enum BorderEffect {
+      e_None,
+      e_Cloudy,
+    }
   }
   namespace PolyLineAnnot {
     /**
      * @enum {number}
      * @name IntentType
      * @memberof PDFNet.PolyLineAnnot
+     * @property {number} e_PolygonCloud
+     * @property {number} e_PolyLineDimension
+     * @property {number} e_PolygonDimension
+     * @property {number} e_Unknown
      */
-    enum IntentType {}
+    enum IntentType {
+      e_PolygonCloud,
+      e_PolyLineDimension,
+      e_PolygonDimension,
+      e_Unknown,
+    }
   }
   namespace RedactionAnnot {
     /**
      * @enum {number}
      * @name QuadForm
      * @memberof PDFNet.RedactionAnnot
+     * @property {number} e_LeftJustified
+     * @property {number} e_Centered
+     * @property {number} e_RightJustified
+     * @property {number} e_None
      */
-    enum QuadForm {}
+    enum QuadForm {
+      e_LeftJustified,
+      e_Centered,
+      e_RightJustified,
+      e_None,
+    }
   }
   namespace RubberStampAnnot {
     /**
      * @enum {number}
      * @name Icon
      * @memberof PDFNet.RubberStampAnnot
+     * @property {number} e_Approved
+     * @property {number} e_Experimental
+     * @property {number} e_NotApproved
+     * @property {number} e_AsIs
+     * @property {number} e_Expired
+     * @property {number} e_NotForPublicRelease
+     * @property {number} e_Confidential
+     * @property {number} e_Final
+     * @property {number} e_Sold
+     * @property {number} e_Departmental
+     * @property {number} e_ForComment
+     * @property {number} e_TopSecret
+     * @property {number} e_ForPublicRelease
+     * @property {number} e_Draft
+     * @property {number} e_Unknown
      */
-    enum Icon {}
+    enum Icon {
+      e_Approved,
+      e_Experimental,
+      e_NotApproved,
+      e_AsIs,
+      e_Expired,
+      e_NotForPublicRelease,
+      e_Confidential,
+      e_Final,
+      e_Sold,
+      e_Departmental,
+      e_ForComment,
+      e_TopSecret,
+      e_ForPublicRelease,
+      e_Draft,
+      e_Unknown,
+    }
   }
   namespace ScreenAnnot {
     /**
      * @enum {number}
      * @name ScaleType
      * @memberof PDFNet.ScreenAnnot
+     * @property {number} e_Anamorphic
+     * @property {number} e_Proportional
      */
-    enum ScaleType {}
+    enum ScaleType {
+      e_Anamorphic,
+      e_Proportional,
+    }
     /**
      * @enum {number}
      * @name ScaleCondition
      * @memberof PDFNet.ScreenAnnot
+     * @property {number} e_Always
+     * @property {number} e_WhenBigger
+     * @property {number} e_WhenSmaller
+     * @property {number} e_Never
      */
-    enum ScaleCondition {}
+    enum ScaleCondition {
+      e_Always,
+      e_WhenBigger,
+      e_WhenSmaller,
+      e_Never,
+    }
     /**
      * @enum {number}
      * @name IconCaptionRelation
      * @memberof PDFNet.ScreenAnnot
+     * @property {number} e_NoIcon
+     * @property {number} e_NoCaption
+     * @property {number} e_CBelowI
+     * @property {number} e_CAboveI
+     * @property {number} e_CRightILeft
+     * @property {number} e_CLeftIRight
+     * @property {number} e_COverlayI
      */
-    enum IconCaptionRelation {}
+    enum IconCaptionRelation {
+      e_NoIcon,
+      e_NoCaption,
+      e_CBelowI,
+      e_CAboveI,
+      e_CRightILeft,
+      e_CLeftIRight,
+      e_COverlayI,
+    }
   }
   namespace SoundAnnot {
     /**
      * @enum {number}
      * @name Icon
      * @memberof PDFNet.SoundAnnot
+     * @property {number} e_Speaker
+     * @property {number} e_Mic
+     * @property {number} e_Unknown
      */
-    enum Icon {}
+    enum Icon {
+      e_Speaker,
+      e_Mic,
+      e_Unknown,
+    }
   }
   namespace TextAnnot {
     /**
      * @enum {number}
      * @name Icon
      * @memberof PDFNet.TextAnnot
+     * @property {number} e_Comment
+     * @property {number} e_Key
+     * @property {number} e_Help
+     * @property {number} e_NewParagraph
+     * @property {number} e_Paragraph
+     * @property {number} e_Insert
+     * @property {number} e_Note
+     * @property {number} e_Unknown
      */
-    enum Icon {}
+    enum Icon {
+      e_Comment,
+      e_Key,
+      e_Help,
+      e_NewParagraph,
+      e_Paragraph,
+      e_Insert,
+      e_Note,
+      e_Unknown,
+    }
   }
   namespace WidgetAnnot {
     /**
      * @enum {number}
      * @name HighlightingMode
      * @memberof PDFNet.WidgetAnnot
+     * @property {number} e_none
+     * @property {number} e_invert
+     * @property {number} e_outline
+     * @property {number} e_push
+     * @property {number} e_toggle
      */
-    enum HighlightingMode {}
+    enum HighlightingMode {
+      e_none,
+      e_invert,
+      e_outline,
+      e_push,
+      e_toggle,
+    }
     /**
      * @enum {number}
      * @name ScaleType
      * @memberof PDFNet.WidgetAnnot
+     * @property {number} e_Anamorphic
+     * @property {number} e_Proportional
      */
-    enum ScaleType {}
+    enum ScaleType {
+      e_Anamorphic,
+      e_Proportional,
+    }
     /**
      * @enum {number}
      * @name IconCaptionRelation
      * @memberof PDFNet.WidgetAnnot
+     * @property {number} e_NoIcon
+     * @property {number} e_NoCaption
+     * @property {number} e_CBelowI
+     * @property {number} e_CAboveI
+     * @property {number} e_CRightILeft
+     * @property {number} e_CLeftIRight
+     * @property {number} e_COverlayI
      */
-    enum IconCaptionRelation {}
+    enum IconCaptionRelation {
+      e_NoIcon,
+      e_NoCaption,
+      e_CBelowI,
+      e_CAboveI,
+      e_CRightILeft,
+      e_CLeftIRight,
+      e_COverlayI,
+    }
     /**
      * @enum {number}
      * @name ScaleCondition
      * @memberof PDFNet.WidgetAnnot
+     * @property {number} e_Always
+     * @property {number} e_WhenBigger
+     * @property {number} e_WhenSmaller
+     * @property {number} e_Never
      */
-    enum ScaleCondition {}
+    enum ScaleCondition {
+      e_Always,
+      e_WhenBigger,
+      e_WhenSmaller,
+      e_Never,
+    }
   }
   namespace ColorSpace {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.ColorSpace
+     * @property {number} e_device_gray
+     * @property {number} e_device_rgb
+     * @property {number} e_device_cmyk
+     * @property {number} e_cal_gray
+     * @property {number} e_cal_rgb
+     * @property {number} e_lab
+     * @property {number} e_icc
+     * @property {number} e_indexed
+     * @property {number} e_pattern
+     * @property {number} e_separation
+     * @property {number} e_device_n
+     * @property {number} e_null
      */
-    enum Type {}
+    enum Type {
+      e_device_gray,
+      e_device_rgb,
+      e_device_cmyk,
+      e_cal_gray,
+      e_cal_rgb,
+      e_lab,
+      e_icc,
+      e_indexed,
+      e_pattern,
+      e_separation,
+      e_device_n,
+      e_null,
+    }
   }
   namespace DocumentConversion {
     /**
      * @enum {number}
      * @name Result
      * @memberof PDFNet.DocumentConversion
+     * @property {number} e_Success
+     * @property {number} e_Incomplete
+     * @property {number} e_Failure
      */
-    enum Result {}
+    enum Result {
+      e_Success,
+      e_Incomplete,
+      e_Failure,
+    }
   }
   namespace Destination {
     /**
      * @enum {number}
      * @name FitType
      * @memberof PDFNet.Destination
+     * @property {number} e_XYZ
+     * @property {number} e_Fit
+     * @property {number} e_FitH
+     * @property {number} e_FitV
+     * @property {number} e_FitR
+     * @property {number} e_FitB
+     * @property {number} e_FitBH
+     * @property {number} e_FitBV
      */
-    enum FitType {}
+    enum FitType {
+      e_XYZ,
+      e_Fit,
+      e_FitH,
+      e_FitV,
+      e_FitR,
+      e_FitB,
+      e_FitBH,
+      e_FitBV,
+    }
   }
   namespace GState {
     /**
      * @enum {number}
      * @name Attribute
      * @memberof PDFNet.GState
+     * @property {number} e_transform
+     * @property {number} e_rendering_intent
+     * @property {number} e_stroke_cs
+     * @property {number} e_stroke_color
+     * @property {number} e_fill_cs
+     * @property {number} e_fill_color
+     * @property {number} e_line_width
+     * @property {number} e_line_cap
+     * @property {number} e_line_join
+     * @property {number} e_flatness
+     * @property {number} e_miter_limit
+     * @property {number} e_dash_pattern
+     * @property {number} e_char_spacing
+     * @property {number} e_word_spacing
+     * @property {number} e_horizontal_scale
+     * @property {number} e_leading
+     * @property {number} e_font
+     * @property {number} e_font_size
+     * @property {number} e_text_render_mode
+     * @property {number} e_text_rise
+     * @property {number} e_text_knockout
+     * @property {number} e_text_pos_offset
+     * @property {number} e_blend_mode
+     * @property {number} e_opacity_fill
+     * @property {number} e_opacity_stroke
+     * @property {number} e_alpha_is_shape
+     * @property {number} e_soft_mask
+     * @property {number} e_smoothnes
+     * @property {number} e_auto_stoke_adjust
+     * @property {number} e_stroke_overprint
+     * @property {number} e_fill_overprint
+     * @property {number} e_overprint_mode
+     * @property {number} e_transfer_funct
+     * @property {number} e_BG_funct
+     * @property {number} e_UCR_funct
+     * @property {number} e_halftone
+     * @property {number} e_null
      */
-    enum Attribute {}
+    enum Attribute {
+      e_transform,
+      e_rendering_intent,
+      e_stroke_cs,
+      e_stroke_color,
+      e_fill_cs,
+      e_fill_color,
+      e_line_width,
+      e_line_cap,
+      e_line_join,
+      e_flatness,
+      e_miter_limit,
+      e_dash_pattern,
+      e_char_spacing,
+      e_word_spacing,
+      e_horizontal_scale,
+      e_leading,
+      e_font,
+      e_font_size,
+      e_text_render_mode,
+      e_text_rise,
+      e_text_knockout,
+      e_text_pos_offset,
+      e_blend_mode,
+      e_opacity_fill,
+      e_opacity_stroke,
+      e_alpha_is_shape,
+      e_soft_mask,
+      e_smoothnes,
+      e_auto_stoke_adjust,
+      e_stroke_overprint,
+      e_fill_overprint,
+      e_overprint_mode,
+      e_transfer_funct,
+      e_BG_funct,
+      e_UCR_funct,
+      e_halftone,
+      e_null,
+    }
     /**
      * @enum {number}
      * @name LineCap
      * @memberof PDFNet.GState
+     * @property {number} e_butt_cap
+     * @property {number} e_round_cap
+     * @property {number} e_square_cap
      */
-    enum LineCap {}
+    enum LineCap {
+      e_butt_cap,
+      e_round_cap,
+      e_square_cap,
+    }
     /**
      * @enum {number}
      * @name LineJoin
      * @memberof PDFNet.GState
+     * @property {number} e_miter_join
+     * @property {number} e_round_join
+     * @property {number} e_bevel_join
      */
-    enum LineJoin {}
+    enum LineJoin {
+      e_miter_join,
+      e_round_join,
+      e_bevel_join,
+    }
     /**
      * @enum {number}
      * @name TextRenderingMode
      * @memberof PDFNet.GState
+     * @property {number} e_fill_text
+     * @property {number} e_stroke_text
+     * @property {number} e_fill_stroke_text
+     * @property {number} e_invisible_text
+     * @property {number} e_fill_clip_text
+     * @property {number} e_stroke_clip_text
+     * @property {number} e_fill_stroke_clip_text
+     * @property {number} e_clip_text
      */
-    enum TextRenderingMode {}
+    enum TextRenderingMode {
+      e_fill_text,
+      e_stroke_text,
+      e_fill_stroke_text,
+      e_invisible_text,
+      e_fill_clip_text,
+      e_stroke_clip_text,
+      e_fill_stroke_clip_text,
+      e_clip_text,
+    }
     /**
      * @enum {number}
      * @name RenderingIntent
      * @memberof PDFNet.GState
+     * @property {number} e_absolute_colorimetric
+     * @property {number} e_relative_colorimetric
+     * @property {number} e_saturation
+     * @property {number} e_perceptual
      */
-    enum RenderingIntent {}
+    enum RenderingIntent {
+      e_absolute_colorimetric,
+      e_relative_colorimetric,
+      e_saturation,
+      e_perceptual,
+    }
     /**
      * @enum {number}
      * @name BlendMode
      * @memberof PDFNet.GState
+     * @property {number} e_bl_compatible
+     * @property {number} e_bl_normal
+     * @property {number} e_bl_multiply
+     * @property {number} e_bl_screen
+     * @property {number} e_bl_difference
+     * @property {number} e_bl_darken
+     * @property {number} e_bl_lighten
+     * @property {number} e_bl_color_dodge
+     * @property {number} e_bl_color_burn
+     * @property {number} e_bl_exclusion
+     * @property {number} e_bl_hard_light
+     * @property {number} e_bl_overlay
+     * @property {number} e_bl_soft_light
+     * @property {number} e_bl_luminosity
+     * @property {number} e_bl_hue
+     * @property {number} e_bl_saturation
+     * @property {number} e_bl_color
      */
-    enum BlendMode {}
+    enum BlendMode {
+      e_bl_compatible,
+      e_bl_normal,
+      e_bl_multiply,
+      e_bl_screen,
+      e_bl_difference,
+      e_bl_darken,
+      e_bl_lighten,
+      e_bl_color_dodge,
+      e_bl_color_burn,
+      e_bl_exclusion,
+      e_bl_hard_light,
+      e_bl_overlay,
+      e_bl_soft_light,
+      e_bl_luminosity,
+      e_bl_hue,
+      e_bl_saturation,
+      e_bl_color,
+    }
   }
   namespace Element {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Element
+     * @property {number} e_null
+     * @property {number} e_path
+     * @property {number} e_text_begin
+     * @property {number} e_text
+     * @property {number} e_text_new_line
+     * @property {number} e_text_end
+     * @property {number} e_image
+     * @property {number} e_inline_image
+     * @property {number} e_shading
+     * @property {number} e_form
+     * @property {number} e_group_begin
+     * @property {number} e_group_end
+     * @property {number} e_marked_content_begin
+     * @property {number} e_marked_content_end
+     * @property {number} e_marked_content_point
      */
-    enum Type {}
+    enum Type {
+      e_null,
+      e_path,
+      e_text_begin,
+      e_text,
+      e_text_new_line,
+      e_text_end,
+      e_image,
+      e_inline_image,
+      e_shading,
+      e_form,
+      e_group_begin,
+      e_group_end,
+      e_marked_content_begin,
+      e_marked_content_end,
+      e_marked_content_point,
+    }
     /**
      * @enum {number}
      * @name PathSegmentType
      * @memberof PDFNet.Element
+     * @property {number} e_moveto
+     * @property {number} e_lineto
+     * @property {number} e_cubicto
+     * @property {number} e_conicto
+     * @property {number} e_rect
+     * @property {number} e_closepath
      */
-    enum PathSegmentType {}
+    enum PathSegmentType {
+      e_moveto,
+      e_lineto,
+      e_cubicto,
+      e_conicto,
+      e_rect,
+      e_closepath,
+    }
   }
   namespace ElementWriter {
     /**
      * @enum {number}
      * @name WriteMode
      * @memberof PDFNet.ElementWriter
+     * @property {number} e_underlay
+     * @property {number} e_overlay
+     * @property {number} e_replacement
      */
-    enum WriteMode {}
+    enum WriteMode {
+      e_underlay,
+      e_overlay,
+      e_replacement,
+    }
   }
   namespace Flattener {
     /**
      * @enum {number}
      * @name Threshold
      * @memberof PDFNet.Flattener
+     * @property {number} e_very_strict
+     * @property {number} e_strict
+     * @property {number} e_default
+     * @property {number} e_keep_most
+     * @property {number} e_keep_all
      */
-    enum Threshold {}
+    enum Threshold {
+      e_very_strict,
+      e_strict,
+      e_default,
+      e_keep_most,
+      e_keep_all,
+    }
     /**
      * @enum {number}
      * @name Mode
      * @memberof PDFNet.Flattener
+     * @property {number} e_simple
+     * @property {number} e_fast
      */
-    enum Mode {}
+    enum Mode {
+      e_simple,
+      e_fast,
+    }
   }
   namespace Font {
     /**
      * @enum {number}
      * @name StandardType1Font
      * @memberof PDFNet.Font
+     * @property {number} e_times_roman
+     * @property {number} e_times_bold
+     * @property {number} e_times_italic
+     * @property {number} e_times_bold_italic
+     * @property {number} e_helvetica
+     * @property {number} e_helvetica_bold
+     * @property {number} e_helvetica_oblique
+     * @property {number} e_helvetica_bold_oblique
+     * @property {number} e_courier
+     * @property {number} e_courier_bold
+     * @property {number} e_courier_oblique
+     * @property {number} e_courier_bold_oblique
+     * @property {number} e_symbol
+     * @property {number} e_zapf_dingbats
+     * @property {number} e_null
      */
-    enum StandardType1Font {}
+    enum StandardType1Font {
+      e_times_roman,
+      e_times_bold,
+      e_times_italic,
+      e_times_bold_italic,
+      e_helvetica,
+      e_helvetica_bold,
+      e_helvetica_oblique,
+      e_helvetica_bold_oblique,
+      e_courier,
+      e_courier_bold,
+      e_courier_oblique,
+      e_courier_bold_oblique,
+      e_symbol,
+      e_zapf_dingbats,
+      e_null,
+    }
     /**
      * @enum {number}
      * @name Encoding
      * @memberof PDFNet.Font
+     * @property {number} e_IdentityH
+     * @property {number} e_Indices
      */
-    enum Encoding {}
+    enum Encoding {
+      e_IdentityH,
+      e_Indices,
+    }
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Font
+     * @property {number} e_Type1
+     * @property {number} e_TrueType
+     * @property {number} e_MMType1
+     * @property {number} e_Type3
+     * @property {number} e_Type0
+     * @property {number} e_CIDType0
+     * @property {number} e_CIDType2
      */
-    enum Type {}
+    enum Type {
+      e_Type1,
+      e_TrueType,
+      e_MMType1,
+      e_Type3,
+      e_Type0,
+      e_CIDType0,
+      e_CIDType2,
+    }
   }
   namespace Function {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Function
+     * @property {number} e_sampled
+     * @property {number} e_exponential
+     * @property {number} e_stitching
+     * @property {number} e_postscript
      */
-    enum Type {}
+    enum Type {
+      e_sampled,
+      e_exponential,
+      e_stitching,
+      e_postscript,
+    }
   }
   namespace Image {
     /**
      * @enum {number}
      * @name InputFilter
      * @memberof PDFNet.Image
+     * @property {number} e_none
+     * @property {number} e_jpeg
+     * @property {number} e_jp2
+     * @property {number} e_flate
+     * @property {number} e_g3
+     * @property {number} e_g4
+     * @property {number} e_ascii_hex
      */
-    enum InputFilter {}
+    enum InputFilter {
+      e_none,
+      e_jpeg,
+      e_jp2,
+      e_flate,
+      e_g3,
+      e_g4,
+      e_ascii_hex,
+    }
   }
   namespace PageLabel {
     /**
      * @enum {number}
      * @name Style
      * @memberof PDFNet.PageLabel
+     * @property {number} e_decimal
+     * @property {number} e_roman_uppercase
+     * @property {number} e_roman_lowercase
+     * @property {number} e_alphabetic_uppercase
+     * @property {number} e_alphabetic_lowercase
+     * @property {number} e_none
      */
-    enum Style {}
+    enum Style {
+      e_decimal,
+      e_roman_uppercase,
+      e_roman_lowercase,
+      e_alphabetic_uppercase,
+      e_alphabetic_lowercase,
+      e_none,
+    }
   }
   namespace PageSet {
     /**
      * @enum {number}
      * @name Filter
      * @memberof PDFNet.PageSet
+     * @property {number} e_all
+     * @property {number} e_even
+     * @property {number} e_odd
      */
-    enum Filter {}
+    enum Filter {
+      e_all,
+      e_even,
+      e_odd,
+    }
   }
   namespace PatternColor {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.PatternColor
+     * @property {number} e_uncolored_tiling_pattern
+     * @property {number} e_colored_tiling_pattern
+     * @property {number} e_shading
+     * @property {number} e_null
      */
-    enum Type {}
+    enum Type {
+      e_uncolored_tiling_pattern,
+      e_colored_tiling_pattern,
+      e_shading,
+      e_null,
+    }
     /**
      * @enum {number}
      * @name TilingType
      * @memberof PDFNet.PatternColor
+     * @property {number} e_constant_spacing
+     * @property {number} e_no_distortion
+     * @property {number} e_constant_spacing_fast_fill
      */
-    enum TilingType {}
+    enum TilingType {
+      e_constant_spacing,
+      e_no_distortion,
+      e_constant_spacing_fast_fill,
+    }
   }
   namespace GeometryCollection {
     /**
      * @enum {number}
      * @name SnappingMode
      * @memberof PDFNet.GeometryCollection
+     * @property {number} e_DefaultSnapMode
+     * @property {number} e_PointOnLine
+     * @property {number} e_LineMidpoint
+     * @property {number} e_LineIntersection
+     * @property {number} e_PathEndpoint
      */
-    enum SnappingMode {}
+    enum SnappingMode {
+      e_DefaultSnapMode,
+      e_PointOnLine,
+      e_LineMidpoint,
+      e_LineIntersection,
+      e_PathEndpoint,
+    }
   }
   namespace DigitalSignatureField {
     /**
      * @enum {number}
      * @name SubFilterType
      * @memberof PDFNet.DigitalSignatureField
+     * @property {number} e_adbe_x509_rsa_sha1
+     * @property {number} e_adbe_pkcs7_detached
+     * @property {number} e_adbe_pkcs7_sha1
+     * @property {number} e_ETSI_CAdES_detached
+     * @property {number} e_ETSI_RFC3161
+     * @property {number} e_unknown
+     * @property {number} e_absent
      */
-    enum SubFilterType {}
+    enum SubFilterType {
+      e_adbe_x509_rsa_sha1,
+      e_adbe_pkcs7_detached,
+      e_adbe_pkcs7_sha1,
+      e_ETSI_CAdES_detached,
+      e_ETSI_RFC3161,
+      e_unknown,
+      e_absent,
+    }
     /**
      * @enum {number}
      * @name DocumentPermissions
      * @memberof PDFNet.DigitalSignatureField
+     * @property {number} e_no_changes_allowed
+     * @property {number} e_formfilling_signing_allowed
+     * @property {number} e_annotating_formfilling_signing_allowed
+     * @property {number} e_unrestricted
      */
-    enum DocumentPermissions {}
+    enum DocumentPermissions {
+      e_no_changes_allowed,
+      e_formfilling_signing_allowed,
+      e_annotating_formfilling_signing_allowed,
+      e_unrestricted,
+    }
     /**
      * @enum {number}
      * @name FieldPermissions
      * @memberof PDFNet.DigitalSignatureField
+     * @property {number} e_lock_all
+     * @property {number} e_include
+     * @property {number} e_exclude
      */
-    enum FieldPermissions {}
+    enum FieldPermissions {
+      e_lock_all,
+      e_include,
+      e_exclude,
+    }
   }
   namespace PDFDoc {
     /**
      * @enum {number}
      * @name EventType
      * @memberof PDFNet.PDFDoc
+     * @property {number} e_action_trigger_doc_will_close
+     * @property {number} e_action_trigger_doc_will_save
+     * @property {number} e_action_trigger_doc_did_save
+     * @property {number} e_action_trigger_doc_will_print
+     * @property {number} e_action_trigger_doc_did_print
      */
-    enum EventType {}
+    enum EventType {
+      e_action_trigger_doc_will_close,
+      e_action_trigger_doc_will_save,
+      e_action_trigger_doc_did_save,
+      e_action_trigger_doc_will_print,
+      e_action_trigger_doc_did_print,
+    }
     /**
      * @enum {number}
      * @name InsertFlag
      * @memberof PDFNet.PDFDoc
+     * @property {number} e_none
+     * @property {number} e_insert_bookmark
      */
-    enum InsertFlag {}
+    enum InsertFlag {
+      e_none,
+      e_insert_bookmark,
+    }
     /**
      * @enum {number}
      * @name ExtractFlag
      * @memberof PDFNet.PDFDoc
+     * @property {number} e_forms_only
+     * @property {number} e_annots_only
+     * @property {number} e_both
      */
-    enum ExtractFlag {}
+    enum ExtractFlag {
+      e_forms_only,
+      e_annots_only,
+      e_both,
+    }
   }
   namespace PDFDocViewPrefs {
     /**
      * @enum {number}
      * @name PageMode
      * @memberof PDFNet.PDFDocViewPrefs
+     * @property {number} e_UseNone
+     * @property {number} e_UseThumbs
+     * @property {number} e_UseBookmarks
+     * @property {number} e_FullScreen
+     * @property {number} e_UseOC
+     * @property {number} e_UseAttachments
      */
-    enum PageMode {}
+    enum PageMode {
+      e_UseNone,
+      e_UseThumbs,
+      e_UseBookmarks,
+      e_FullScreen,
+      e_UseOC,
+      e_UseAttachments,
+    }
     /**
      * @enum {number}
      * @name PageLayout
      * @memberof PDFNet.PDFDocViewPrefs
+     * @property {number} e_Default
+     * @property {number} e_SinglePage
+     * @property {number} e_OneColumn
+     * @property {number} e_TwoColumnLeft
+     * @property {number} e_TwoColumnRight
+     * @property {number} e_TwoPageLeft
+     * @property {number} e_TwoPageRight
      */
-    enum PageLayout {}
+    enum PageLayout {
+      e_Default,
+      e_SinglePage,
+      e_OneColumn,
+      e_TwoColumnLeft,
+      e_TwoColumnRight,
+      e_TwoPageLeft,
+      e_TwoPageRight,
+    }
     /**
      * @enum {number}
      * @name ViewerPref
      * @memberof PDFNet.PDFDocViewPrefs
+     * @property {number} e_HideToolbar
+     * @property {number} e_HideMenubar
+     * @property {number} e_HideWindowUI
+     * @property {number} e_FitWindow
+     * @property {number} e_CenterWindow
+     * @property {number} e_DisplayDocTitle
      */
-    enum ViewerPref {}
+    enum ViewerPref {
+      e_HideToolbar,
+      e_HideMenubar,
+      e_HideWindowUI,
+      e_FitWindow,
+      e_CenterWindow,
+      e_DisplayDocTitle,
+    }
   }
   namespace PDFRasterizer {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.PDFRasterizer
+     * @property {number} e_BuiltIn
+     * @property {number} e_GDIPlus
      */
-    enum Type {}
+    enum Type {
+      e_BuiltIn,
+      e_GDIPlus,
+    }
     /**
      * @enum {number}
      * @name OverprintPreviewMode
      * @memberof PDFNet.PDFRasterizer
+     * @property {number} e_op_off
+     * @property {number} e_op_on
+     * @property {number} e_op_pdfx_on
      */
-    enum OverprintPreviewMode {}
+    enum OverprintPreviewMode {
+      e_op_off,
+      e_op_on,
+      e_op_pdfx_on,
+    }
     /**
      * @enum {number}
      * @name ColorPostProcessMode
      * @memberof PDFNet.PDFRasterizer
+     * @property {number} e_postprocess_none
+     * @property {number} e_postprocess_invert
      */
-    enum ColorPostProcessMode {}
+    enum ColorPostProcessMode {
+      e_postprocess_none,
+      e_postprocess_invert,
+    }
   }
   namespace PDFDraw {
     /**
      * @enum {number}
      * @name PixelFormat
      * @memberof PDFNet.PDFDraw
+     * @property {number} e_rgba
+     * @property {number} e_bgra
+     * @property {number} e_rgb
+     * @property {number} e_bgr
+     * @property {number} e_gray
+     * @property {number} e_gray_alpha
+     * @property {number} e_cmyk
      */
-    enum PixelFormat {}
+    enum PixelFormat {
+      e_rgba,
+      e_bgra,
+      e_rgb,
+      e_bgr,
+      e_gray,
+      e_gray_alpha,
+      e_cmyk,
+    }
   }
   /**
    * @enum {number}
    * @name CMSType
    * @memberof PDFNet
+   * @property {number} e_lcms
+   * @property {number} e_icm
+   * @property {number} e_no_cms
    */
-  enum CMSType {}
+  enum CMSType {
+    e_lcms,
+    e_icm,
+    e_no_cms,
+  }
   /**
    * @enum {number}
    * @name CharacterOrdering
    * @memberof PDFNet
+   * @property {number} e_Identity
+   * @property {number} e_Japan1
+   * @property {number} e_Japan2
+   * @property {number} e_GB1
+   * @property {number} e_CNS1
+   * @property {number} e_Korea1
    */
-  enum CharacterOrdering {}
+  enum CharacterOrdering {
+    e_Identity,
+    e_Japan1,
+    e_Japan2,
+    e_GB1,
+    e_CNS1,
+    e_Korea1,
+  }
   /**
    * @enum {number}
    * @name LogLevel
    * @memberof PDFNet
+   * @property {number} e_LogLevel_Off
+   * @property {number} e_LogLevel_Fatal
+   * @property {number} e_LogLevel_Error
+   * @property {number} e_LogLevel_Warning
+   * @property {number} e_LogLevel_Info
+   * @property {number} e_LogLevel_Trace
+   * @property {number} e_LogLevel_Debug
    */
-  enum LogLevel {}
+  enum LogLevel {
+    e_LogLevel_Off,
+    e_LogLevel_Fatal,
+    e_LogLevel_Error,
+    e_LogLevel_Warning,
+    e_LogLevel_Info,
+    e_LogLevel_Trace,
+    e_LogLevel_Debug,
+  }
   namespace Shading {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Shading
+     * @property {number} e_function_shading
+     * @property {number} e_axial_shading
+     * @property {number} e_radial_shading
+     * @property {number} e_free_gouraud_shading
+     * @property {number} e_lattice_gouraud_shading
+     * @property {number} e_coons_shading
+     * @property {number} e_tensor_shading
+     * @property {number} e_null
      */
-    enum Type {}
+    enum Type {
+      e_function_shading,
+      e_axial_shading,
+      e_radial_shading,
+      e_free_gouraud_shading,
+      e_lattice_gouraud_shading,
+      e_coons_shading,
+      e_tensor_shading,
+      e_null,
+    }
   }
   namespace Stamper {
     /**
      * @enum {number}
      * @name SizeType
      * @memberof PDFNet.Stamper
+     * @property {number} e_relative_scale
+     * @property {number} e_absolute_size
+     * @property {number} e_font_size
      */
-    enum SizeType {}
+    enum SizeType {
+      e_relative_scale,
+      e_absolute_size,
+      e_font_size,
+    }
     /**
      * @enum {number}
      * @name TextAlignment
      * @memberof PDFNet.Stamper
+     * @property {number} e_align_left
+     * @property {number} e_align_center
+     * @property {number} e_align_right
      */
-    enum TextAlignment {}
+    enum TextAlignment {
+      e_align_left,
+      e_align_center,
+      e_align_right,
+    }
     /**
      * @enum {number}
      * @name HorizontalAlignment
      * @memberof PDFNet.Stamper
+     * @property {number} e_horizontal_left
+     * @property {number} e_horizontal_center
+     * @property {number} e_horizontal_right
      */
-    enum HorizontalAlignment {}
+    enum HorizontalAlignment {
+      e_horizontal_left,
+      e_horizontal_center,
+      e_horizontal_right,
+    }
     /**
      * @enum {number}
      * @name VerticalAlignment
      * @memberof PDFNet.Stamper
+     * @property {number} e_vertical_bottom
+     * @property {number} e_vertical_center
+     * @property {number} e_vertical_top
      */
-    enum VerticalAlignment {}
+    enum VerticalAlignment {
+      e_vertical_bottom,
+      e_vertical_center,
+      e_vertical_top,
+    }
   }
   namespace TextExtractor {
     /**
      * @enum {number}
      * @name ProcessingFlags
      * @memberof PDFNet.TextExtractor
+     * @property {number} e_no_ligature_exp
+     * @property {number} e_no_dup_remove
+     * @property {number} e_punct_break
+     * @property {number} e_remove_hidden_text
+     * @property {number} e_no_invisible_text
      */
-    enum ProcessingFlags {}
+    enum ProcessingFlags {
+      e_no_ligature_exp,
+      e_no_dup_remove,
+      e_punct_break,
+      e_remove_hidden_text,
+      e_no_invisible_text,
+    }
     /**
      * @enum {number}
      * @name XMLOutputFlags
      * @memberof PDFNet.TextExtractor
+     * @property {number} e_words_as_elements
+     * @property {number} e_output_bbox
+     * @property {number} e_output_style_info
      */
-    enum XMLOutputFlags {}
+    enum XMLOutputFlags {
+      e_words_as_elements,
+      e_output_bbox,
+      e_output_style_info,
+    }
   }
   namespace TextSearch {
     /**
      * @enum {number}
      * @name ResultCode
      * @memberof PDFNet.TextSearch
+     * @property {number} e_done
+     * @property {number} e_page
+     * @property {number} e_found
      */
-    enum ResultCode {}
+    enum ResultCode {
+      e_done,
+      e_page,
+      e_found,
+    }
     /**
      * @enum {number}
      * @name Mode
      * @memberof PDFNet.TextSearch
+     * @property {number} e_reg_expression
+     * @property {number} e_case_sensitive
+     * @property {number} e_whole_word
+     * @property {number} e_search_up
+     * @property {number} e_page_stop
+     * @property {number} e_highlight
+     * @property {number} e_ambient_string
      */
-    enum Mode {}
+    enum Mode {
+      e_reg_expression,
+      e_case_sensitive,
+      e_whole_word,
+      e_search_up,
+      e_page_stop,
+      e_highlight,
+      e_ambient_string,
+    }
   }
   namespace Obj {
     /**
      * @enum {number}
      * @name Type
      * @memberof PDFNet.Obj
+     * @property {number} e_null
+     * @property {number} e_bool
+     * @property {number} e_number
+     * @property {number} e_name
+     * @property {number} e_string
+     * @property {number} e_dict
+     * @property {number} e_array
+     * @property {number} e_stream
      */
-    enum Type {}
+    enum Type {
+      e_null,
+      e_bool,
+      e_number,
+      e_name,
+      e_string,
+      e_dict,
+      e_array,
+      e_stream,
+    }
   }
   namespace SDFDoc {
     /**
      * @enum {number}
      * @name SaveOptions
      * @memberof PDFNet.SDFDoc
+     * @property {number} e_incremental
+     * @property {number} e_remove_unused
+     * @property {number} e_hex_strings
+     * @property {number} e_omit_xref
+     * @property {number} e_linearized
+     * @property {number} e_compatibility
      */
-    enum SaveOptions {}
+    enum SaveOptions {
+      e_incremental,
+      e_remove_unused,
+      e_hex_strings,
+      e_omit_xref,
+      e_linearized,
+      e_compatibility,
+    }
   }
   namespace SecurityHandler {
     /**
      * @enum {number}
      * @name Permission
      * @memberof PDFNet.SecurityHandler
+     * @property {number} e_owner
+     * @property {number} e_doc_open
+     * @property {number} e_doc_modify
+     * @property {number} e_print
+     * @property {number} e_print_high
+     * @property {number} e_extract_content
+     * @property {number} e_mod_annot
+     * @property {number} e_fill_forms
+     * @property {number} e_access_support
+     * @property {number} e_assemble_doc
      */
-    enum Permission {}
+    enum Permission {
+      e_owner,
+      e_doc_open,
+      e_doc_modify,
+      e_print,
+      e_print_high,
+      e_extract_content,
+      e_mod_annot,
+      e_fill_forms,
+      e_access_support,
+      e_assemble_doc,
+    }
     /**
      * @enum {number}
      * @name AlgorithmType
      * @memberof PDFNet.SecurityHandler
+     * @property {number} e_RC4_40
+     * @property {number} e_RC4_128
+     * @property {number} e_AES
+     * @property {number} e_AES_256
      */
-    enum AlgorithmType {}
+    enum AlgorithmType {
+      e_RC4_40,
+      e_RC4_128,
+      e_AES,
+      e_AES_256,
+    }
+  }
+  namespace VerificationOptions {
+    /**
+     * @enum {number}
+     * @name SecurityLevel
+     * @memberof PDFNet.VerificationOptions
+     * @property {number} e_compatibility_and_archiving
+     * @property {number} e_maximum
+     */
+    enum SecurityLevel {
+      e_compatibility_and_archiving,
+      e_maximum,
+    }
+    /**
+     * @enum {number}
+     * @name TimeMode
+     * @memberof PDFNet.VerificationOptions
+     * @property {number} e_signing
+     * @property {number} e_timestamp
+     * @property {number} e_current
+     */
+    enum TimeMode {
+      e_signing,
+      e_timestamp,
+      e_current,
+    }
+  }
+  namespace DigestAlgorithm {
+    /**
+     * @enum {number}
+     * @name Type
+     * @memberof PDFNet.DigestAlgorithm
+     * @property {number} e_SHA1
+     * @property {number} e_SHA256
+     * @property {number} e_SHA384
+     * @property {number} e_SHA512
+     * @property {number} e_RIPEMD160
+     * @property {number} e_unknown_digest_algorithm
+     */
+    enum Type {
+      e_SHA1,
+      e_SHA256,
+      e_SHA384,
+      e_SHA512,
+      e_RIPEMD160,
+      e_unknown_digest_algorithm,
+    }
+  }
+  namespace VerificationResult {
+    /**
+     * @enum {number}
+     * @name DocumentStatus
+     * @memberof PDFNet.VerificationResult
+     * @property {number} e_no_error
+     * @property {number} e_corrupt_file
+     * @property {number} e_unsigned
+     * @property {number} e_bad_byteranges
+     * @property {number} e_corrupt_cryptographic_contents
+     */
+    enum DocumentStatus {
+      e_no_error,
+      e_corrupt_file,
+      e_unsigned,
+      e_bad_byteranges,
+      e_corrupt_cryptographic_contents,
+    }
+    /**
+     * @enum {number}
+     * @name DigestStatus
+     * @memberof PDFNet.VerificationResult
+     * @property {number} e_digest_invalid
+     * @property {number} e_digest_verified
+     * @property {number} e_digest_verification_disabled
+     * @property {number} e_weak_digest_algorithm_but_digest_verifiable
+     * @property {number} e_no_digest_status
+     * @property {number} e_unsupported_encoding
+     */
+    enum DigestStatus {
+      e_digest_invalid,
+      e_digest_verified,
+      e_digest_verification_disabled,
+      e_weak_digest_algorithm_but_digest_verifiable,
+      e_no_digest_status,
+      e_unsupported_encoding,
+    }
+    /**
+     * @enum {number}
+     * @name TrustStatus
+     * @memberof PDFNet.VerificationResult
+     * @property {number} e_trust_verified
+     * @property {number} e_untrusted
+     * @property {number} e_trust_verification_disabled
+     * @property {number} e_no_trust_status
+     */
+    enum TrustStatus {
+      e_trust_verified,
+      e_untrusted,
+      e_trust_verification_disabled,
+      e_no_trust_status,
+    }
+    /**
+     * @enum {number}
+     * @name ModificationPermissionsStatus
+     * @memberof PDFNet.VerificationResult
+     * @property {number} e_invalidated_by_disallowed_changes
+     * @property {number} e_has_allowed_changes
+     * @property {number} e_unmodified
+     * @property {number} e_permissions_verification_disabled
+     * @property {number} e_no_permissions_status
+     */
+    enum ModificationPermissionsStatus {
+      e_invalidated_by_disallowed_changes,
+      e_has_allowed_changes,
+      e_unmodified,
+      e_permissions_verification_disabled,
+      e_no_permissions_status,
+    }
+  }
+  namespace DisallowedChange {
+    /**
+     * @enum {number}
+     * @name Type
+     * @memberof PDFNet.DisallowedChange
+     * @property {number} e_form_filled
+     * @property {number} e_digital_signature_signed
+     * @property {number} e_page_template_instantiated
+     * @property {number} e_annotation_created_or_updated_or_deleted
+     * @property {number} e_other
+     * @property {number} e_unknown
+     */
+    enum Type {
+      e_form_filled,
+      e_digital_signature_signed,
+      e_page_template_instantiated,
+      e_annotation_created_or_updated_or_deleted,
+      e_other,
+      e_unknown,
+    }
   }
   /**
    *
@@ -40042,16 +44256,101 @@ declare namespace PDFNet {
    */
   function pdfGetTotalRemoteByteCount(doc: PDFNet.PDFDoc): Promise<number>;
   /**
+   * A switch that can be used to turn on/off JavaScript engine
+   *
+   * @method PDFNet.enableJavaScript
+   * @param {boolean} enable true to enable JavaScript engine, false to disable.
+   */
+  function enableJavaScript(enable: boolean): void;
+  /**
+   * Test whether JavaScript is enabled
+   *
+   * @method PDFNet.isJavaScriptEnabled
+   * @return {Promise<boolean>} A promise that resolves to true if it is enabled, false otherwise
+   */
+  function isJavaScriptEnabled(): Promise<boolean>;
+  /**
+   * Sets the location of PDFNet resource file.
+   *
+   * @method PDFNet.addResourceSearchPath
+   * @note Starting with v.4.5 PDFNet no longer requires a seperate resource file,
+   * and so this function is not required for proper PDFNet initialization.
+   * The function can be used on all platforms to specify search paths for
+   * ICC profiles, fonts, and other user defined resources.
+   *
+   * @param {string} path The resource directory path to add to the search list.
+   */
+  function addResourceSearchPath(path: string): void;
+  /**
+   * used to set a specific Color Management System (CMS) for
+   * use during color conversion operators, image rendering, etc.
+   *
+   * @method PDFNet.setColorManagement
+   * @param {number} [t]
+   * <pre>
+   * PDFNet.CMSType = {
+   * 	e_lcms : 0
+   * 	e_icm : 1
+   * 	e_no_cms : 2
+   * }
+   * </pre>
+   * identifies the type of color management to use.
+   */
+  function setColorManagement(t?: number): void;
+  /**
+   *  sets the default compression level for Flate (ZLib).
+   *
+   *	@method PDFNet.setDefaultFlateCompressionLevel
+   * @param {number} level An integer in range 0-9 representing the compression value to use as
+   *  a default for any Flate streams (e.g used to compress content streams, PNG images, etc).
+   *  The library normally uses the default compression level (Z_DEFAULT_COMPRESSION).
+   *  For most images, compression values in the range 3-6 compress nearly as well as higher
+   *  levels, and do so much faster. For on-line applications it may be desirable to have
+   *  maximum speed Z_BEST_SPEED = 1). You can also specify no compression (Z_NO_COMPRESSION = 0).
+   *
+   *	@default Z_DEFAULT_COMPRESSION (-1).
+   */
+  function setDefaultFlateCompressionLevel(level: number): void;
+  /**
+   * @method PDFNet.getVersion
+   * @return {Promise<number>} A promise that resolves to pDFNet version number.
+   */
+  function getVersion(): Promise<number>;
+  /**
+   *
+   * @method PDFNet.setLogLevel
+   * @param {number} [level]
+   * <pre>
+   * PDFNet.LogLevel = {
+   * 	e_LogLevel_Off : -1
+   * 	e_LogLevel_Fatal : 5
+   * 	e_LogLevel_Error : 4
+   * 	e_LogLevel_Warning : 3
+   * 	e_LogLevel_Info : 2
+   * 	e_LogLevel_Trace : 1
+   * 	e_LogLevel_Debug : 0
+   * }
+   * </pre>
+   */
+  function setLogLevel(level?: number): void;
+  /**
+   * Get available fonts on the system.
+   *
+   * @method PDFNet.getSystemFontList
+   * @return {Promise<string>} A promise that resolves to a JSON list of fonts accessible to PDFNet
+   */
+  function getSystemFontList(): Promise<string>;
+  /**
    * This function is a utility method which will initialize PDFNet and
    * execute an action defined by the first parameter generator. Unlike
    * runGeneratorWithCleanup this method will not clean up PDFNet resources
    * which can be useful when the user wishes to keep some of the objects alive.
    * @method PDFNet.runGeneratorWithoutCleanup
    * @param {object} generator The generator object function to execute.
-   * @param {string} license_key the license key used to initialize PDFNet.
+   * @param {string} [license_key] the license key used to initialize PDFNet.
    * @return a promise that resolves to the return value of the generator.
    */
-  function runGeneratorWithoutCleanup(generator: any, license_key: string): any;
+  function runGeneratorWithoutCleanup(generator: any, license_key?: string): any;
   /**
    * This function is a utility method which will initialize PDFNet, begin a PDFNet operation
    * execute an action defined by the first parameter generator and then finish this operation.
@@ -40061,32 +44360,10 @@ declare namespace PDFNet {
    * function in which case runGeneratorWithoutCleanup should be used instead.
    * @method PDFNet.runGeneratorWithCleanup
    * @param {object} generator The generator object function to execute.
-   * @param {string} license_key the license key used to initialize PDFNet.
+   * @param {string} [license_key] the license key used to initialize PDFNet.
    * @return a promise that resolves to the return value of the generator.
    */
-  function runGeneratorWithCleanup(generator: any, license_key: string): any;
-  /**
-   * This function is a utility method which will initialize PDFNet, begin a PDFNet operation
-   * and run a callback function passed in. This method will also clean up all PDFNet resources that are allocated
-   * within the function which can greatly simplify user code. In some cases the user
-   * may wish to keep PDFNet objects alive out of the scope of this
-   * function in which case runWithoutCleanup should be used instead.
-   * @method PDFNet.runWithCleanup
-   * @param {function} callback A callback function to execute
-   * @param {string} license_key the license key used to initialize PDFNet.
-   * @return a promise that resolves to the return value (if there is one) of the input function
-   */
-  function runWithCleanup(callback: (...params: any[]) => any, license_key: string): any;
-  /**
-   * This function is a utility method which will initialize PDFNet and
-   * execute an input. Unlike runWithCleanup this method will not clean up PDFNet resources
-   * which can be useful if the user wishes to keep some of the objects alive.
-   * @method PDFNet.runWithoutCleanup
-   * @param {function} callback A callback function to execute
-   * @param {string} license_key the license key used to initialize PDFNet.
-   * @return a promise that resolves to the return value (if there is one) of the input function
-   */
-  function runWithoutCleanup(callback: (...params: any[]) => any, license_key: string): any;
+  function runGeneratorWithCleanup(generator: any, license_key?: string): any;
   /**
    * Displays in the console a list of objects still in memory in the form of their type and ID.
    * @method PDFNet.displayAllocatedObjects
@@ -40126,33 +44403,39 @@ declare namespace PDFNet {
    * object (a default javascript object {}) with its parameter "allowMultipleInstances"
    * set to "true".
    * @method PDFNet.beginOperation
-   * @param {Object} [optionsObj={}] [optionsObj.allowMultipleInstances=false] If allowMultipleInstances
+   * @param {Object} [optionsObj={}]
+   * @param {boolean} [optionsObj.allowMultipleInstances=false] If allowMultipleInstances
    * set to true, multiple instances of beginOperation will be allowed.
    */
-  function beginOperation(optionsObj?: any): void;
+  function beginOperation(optionsObj?: { allowMultipleInstances?: boolean }): void;
   /**
    * finishOperation releases the lock on all Emscripten worker operations on PDFNet.
    * Will do nothing if PDFNet.beginOperation has not been called earlier.
    * @method PDFNet.finishOperation
    */
   function finishOperation(): void;
-}
-
-/**
- * A Zipfile that buffers partial data and parses the local file headers
- * instead of the central directory.
- * @constructor
- */
-declare class StreamingZipfile {
-  constructor();
   /**
-   * Processes a new chunk of data from the zipfile, buffering it if necessary.
-   * @method StreamingZipfile#processData
-   * @param {string} data The chunk of data.
-   * @return {boolean} true if all useful data has been read from the zipfile
-   * (i.e. central directory has been reached)
+   * This function is a utility method which will initialize PDFNet, begin a PDFNet operation
+   * and run a callback function passed in. This method will also clean up all PDFNet resources that are allocated
+   * within the function which can greatly simplify user code. In some cases the user
+   * may wish to keep PDFNet objects alive out of the scope of this
+   * function in which case runWithoutCleanup should be used instead.
+   * @method PDFNet.runWithCleanup
+   * @param {function} callback A callback function to execute
+   * @param {string} license_key the license key used to initialize PDFNet.
+   * @return a promise that resolves to the return value (if there is one) of the input function
    */
-  processData(data: string): boolean;
+  function runWithCleanup(callback: (...params: any[]) => any, license_key: string): any;
+  /**
+   * This function is a utility method which will initialize PDFNet and
+   * execute an input. Unlike runWithCleanup this method will not clean up PDFNet resources
+   * which can be useful if the user wishes to keep some of the objects alive.
+   * @method PDFNet.runWithoutCleanup
+   * @param {function} callback A callback function to execute
+   * @param {string} license_key the license key used to initialize PDFNet.
+   * @return a promise that resolves to the return value (if there is one) of the input function
+   */
+  function runWithoutCleanup(callback: (...params: any[]) => any, license_key: string): any;
 }
 
 /**
@@ -40281,6 +44564,7 @@ declare namespace PartRetrievers {
    * @param {object} options Additional options
    * @param {boolean} options.useDownloader Whether to use Downloader, defaults to false.
    * @param {boolean} options.withCredentials Whether to set the withCredentials property on the XMLHttpRequest
+   * @param {object} [options.customHeaders] Custom headers to send with the XMLHttpRequests
    */
   class ExternalPdfPartRetriever {
     constructor(
@@ -40288,6 +44572,7 @@ declare namespace PartRetrievers {
       options: {
         useDownloader: boolean;
         withCredentials: boolean;
+        customHeaders?: any;
       },
     );
   }
@@ -40304,6 +44589,7 @@ declare namespace PartRetrievers {
    * @param {PartRetrievers.CacheHinting} cacheHint The type of cache hinting to use
    * @param {function} decrypt Function to be called to decrypt a part of the file
    * @param {Object} decryptOptions An object with options for the decryption e.g. {p: "pass", type: "aes"} where is p is the password
+   * @param {Object} [customHeaders] Custom headers to send with the XMLHttpRequests
    * @property {boolean} DISABLE_RANGE_HEADER Whether to disable the range header. This should only be used if your server will look at the range query parameters and return the correct bytes.
    */
   class HttpPartRetriever extends PartRetriever {
@@ -40312,6 +44598,7 @@ declare namespace PartRetrievers {
       cacheHint: PartRetrievers.CacheHinting,
       decrypt: (...params: any[]) => any,
       decryptOptions: any,
+      customHeaders?: any,
     );
     /**
      * Sets a function to be called if there is an error loading the document or retrieving a part.
@@ -40413,47 +44700,6 @@ declare namespace PartRetrievers {
    */
   class PartRetriever {}
   /**
-   * Constructs a new RangeStreamingPartRetriever.
-   * RangeStreamingPartRetriever streams a .xod file hosted on a web server and display pages as they are available.
-   * <br/><br/>
-   * <b>Note</b>: As of version 6.0, directly constructing a part retriever is deprecated and the capability will be removed in a future version. Please use the {@link PartRetrievers#getPartRetriever} function instead.
-   * @class Represents a streaming part retriever.
-   * @name RangeStreamingPartRetriever
-   * @extends PartRetriever
-   * @memberof PartRetrievers
-   * @param {string} url The URL of the file to load. May be relative to the current page.
-   * @param {PartRetrievers.CacheHinting} cacheHint The type of cache hinting to use
-   * @param {function} decrypt Function to be called to decrypt a part of the file
-   * @param {Object} decryptOptions An object with options for the decryption e.g. {password: "pass", type: "aes"}
-   */
-  class RangeStreamingPartRetriever extends PartRetriever {
-    constructor(
-      url: string,
-      cacheHint: PartRetrievers.CacheHinting,
-      decrypt: (...params: any[]) => any,
-      decryptOptions: any,
-    );
-    /**
-     * Sets a function to be called if there is an error loading the document or retrieving a part.
-     * @method PartRetriever#setErrorCallback
-     * @param {function} callback The callback to handle the error
-     */
-    setErrorCallback(callback: (...params: any[]) => any): void;
-    /**
-     * Sets custom HTTP headers that will be sent with XOD part requests.
-     * @method PartRetriever#setCustomHeaders
-     * @param {object} headers An object with the properties and values being the header names and values that will be set.
-     * e.g. { 'MyCustomHeader': 'MyCustomValue'}
-     */
-    setCustomHeaders(headers: any): void;
-    /**
-     * Sets withCredentials on xhr requests for the document.
-     * @method PartRetriever#setWithCredentials
-     * @param {boolean} withCredentials
-     */
-    setWithCredentials(withCredentials: boolean): void;
-  }
-  /**
    * Constructs a new StreamingPartRetriever.
    * StreamingPartRetriever streams a .xod file hosted on a web server and display pages as they are available.
    * <br/><br/>
@@ -40466,6 +44712,7 @@ declare namespace PartRetrievers {
    * @param {PartRetrievers.CacheHinting} cacheHint The type of cache hinting to use
    * @param {function} decrypt Function to be called to decrypt a part of the file
    * @param {Object} decryptOptions An object with options for the decryption e.g. {password: "pass", type: "aes"}
+   * @param {Object} [customHeaders] Custom headers to send with the XMLHttpRequests
    */
   class StreamingPartRetriever extends PartRetrievers.PartRetriever {
     constructor(
@@ -40473,6 +44720,7 @@ declare namespace PartRetrievers {
       cacheHint: PartRetrievers.CacheHinting,
       decrypt: (...params: any[]) => any,
       decryptOptions: any,
+      customHeaders?: any,
     );
   }
   /**
@@ -40569,25 +44817,27 @@ declare namespace PartRetrievers {
    * @memberof PartRetrievers
    * @param {PartRetrievers.TYPES} type The type of retriever you want to use.
    * @param {(File|Blob|string|ArrayBuffer)} file The file to open with the part retriever
-   * @param {Object} options Options to pass to the selected part retriever
-   * @param {Function} options.decrypt Function to be called to decrypt a part of the file
-   * @param {Function} options.decryptOptions An object with options for the decryption e.g. {p: "pass", type: "aes"} where is p is the password
-   * @param {PartRetrievers.CacheHinting} options.cacheHint The type of cache hinting to use
-   * @param {boolean} options.useDownloader Whether to use Downloader, defaults to false.
-   * @param {boolean} options.withCredentials Whether to set the withCredentials property on the XMLHttpRequest
-   * @param {Object} options.serverOptions Options to pass to the server. e.g {serverRoot: "http://your-server-domain.com"}
+   * @param {Object} [options] Options to pass to the selected part retriever
+   * @param {Function} [options.decrypt] Function to be called to decrypt a part of the file
+   * @param {Function} [options.decryptOptions] An object with options for the decryption e.g. {p: "pass", type: "aes"} where is p is the password
+   * @param {PartRetrievers.CacheHinting} [options.cacheHint] The type of cache hinting to use
+   * @param {boolean} [options.useDownloader] Whether to use Downloader, defaults to false.
+   * @param {string} [options.filename] A filename that is only useful when the type is ExternalPdfPartRetriever. Use this option when the filename can't be determined from file(the second argument).
+   * @param {boolean} [options.withCredentials] Whether to set the withCredentials property on the XMLHttpRequest
+   * @param {Object} [options.serverOptions] Options to pass to the server. e.g {serverRoot: "http://your-server-domain.com"}
    * @returns {Promise<PartRetrievers.PartRetriever>}
    */
   function getPartRetriever(
     type: PartRetrievers.TYPES,
     file: File | Blob | string | ArrayBuffer,
-    options: {
-      decrypt: (...params: any[]) => any;
-      decryptOptions: (...params: any[]) => any;
-      cacheHint: PartRetrievers.CacheHinting;
-      useDownloader: boolean;
-      withCredentials: boolean;
-      serverOptions: any;
+    options?: {
+      decrypt?: (...params: any[]) => any;
+      decryptOptions?: (...params: any[]) => any;
+      cacheHint?: PartRetrievers.CacheHinting;
+      useDownloader?: boolean;
+      filename?: string;
+      withCredentials?: boolean;
+      serverOptions?: any;
     },
   ): Promise<PartRetrievers.PartRetriever>;
 }
@@ -40730,98 +44980,29 @@ declare namespace WebViewerInstance {
    */
   type headerCallback = (header: Header) => void;
   /**
+   * @callback NoteTransformFunction
+   * @memberof WebViewerInstance
+   * @param {HTMLElement} wrapperElement  A reference to the DOM node that wraps the note. You can use this to query select child elements to mutate (see the examples below)
+   * @param {object} state The state of the note. Contains two properties, 'annotation' and 'isSelected'
+   * @param {Annotations.Annotation} state.annotation A reference to the annotation object associated with the note
+   * @param {boolean} state.isSelected whether or not the note is currently expanded
+   * @param {function} createElement A utility function that should be used when creating DOM nodes. This is a replacement for `document.createElement`.
+   * Accepts the same parameters as `document.createElement`. Using document.createElement instead of this function will cause your DOM nodes to not be cleaned up on subsequent renders.
+   */
+  type NoteTransformFunction = (
+    wrapperElement: HTMLElement,
+    state: {
+      annotation: Annotations.Annotation;
+      isSelected: boolean;
+    },
+    createElement: (...params: any[]) => any,
+  ) => void;
+  /**
    * @callback WebViewerInstance.setSignatureFontsCallback
    * @param {Array.<string>} fonts current font families
    * @returns {Array.<string>} fonts to set.
    */
   type setSignatureFontsCallback = (fonts: string[]) => string[];
-  /**
-     * Contains string enums for all features for WebViewer UI
-     * @enum {string}
-     * @name Feature
-     * @memberof WebViewerInstance
-     * @property {string} Measurement Measurement tools that can create annotations to measure distance, perimeter and area.
-     * @property {string} Annotations Render annotations in the document and be able to edit them.
-     * @property {string} Download A download button to download the current document.
-     * @property {string} FilePicker Ctrl/Cmd + O hotkey and a open file button that can be clicked to load local files.
-     * @property {string} LocalStorage Store and retrieve tool styles from window.localStorage.
-     * @property {string} NotesPanel A panel that displays information of listable annotations.
-     * @property {string} Print Ctrl/Cmd + P hotkey and a print button that can be clicked to print the current document.
-     * @property {string} Redaction Redaction tools that can redact text or areas. Need fullAPI to be on to use this feature.
-     * @property {string} TextSelection Ability to select text in a document.
-     * @property {string} TouchScrollLock Lock document scrolling in one direction in mobile devices.
-     * @property {string} Copy Ability to copy text or annotations use Ctrl/Cmd + C hotkeys or the copy button.
-     * @property {string} ThumbnailMerging Ability to drag and drop a file into the thumbnail panel to merge
-     * @property {string} ThumbnailReordering Ability to reorder pages using the thumbnail panel
-     * @example
-    WebViewer(...)
-      .then(function(instance) {
-        var Feature = instance.Feature;
-        instance.enableFeatures([Feature.Measurement]);
-        instance.disableFeatures([Feature.Copy]);
-      });
-     */
-  enum Feature {
-    Measurement,
-    Annotations,
-    Download,
-    FilePicker,
-    LocalStorage,
-    NotesPanel,
-    Print,
-    Redaction,
-    TextSelection,
-    TouchScrollLock,
-    Copy,
-    ThumbnailMerging,
-    ThumbnailReordering,
-  }
-  /**
-     * Contains all possible modes for fitting/zooming pages to the viewer. The behavior may vary depending on the LayoutMode.
-     * @enum {string}
-     * @name FitMode
-     * @memberof WebViewerInstance
-     * @property {string} FitPage A fit mode where the zoom level is fixed to the width or height of the page, whichever is smaller.
-     * @property {string} FitWidth A fit mode where the zoom level is fixed to the width of the page.
-     * @property {string} Zoom A fit mode where the zoom level is not fixed.
-     * @example
-    WebViewer(...)
-      .then(function(instance) {
-        var FitMode = instance.FitMode;
-        instance.setFitMode(FitMode.FitWidth);
-      });
-     */
-  enum FitMode {
-    FitPage,
-    FitWidth,
-    Zoom,
-  }
-  /**
-     * Contains string enums for all layouts for WebViewer. They are used to dictate how pages are placed within the viewer.
-     * @enum {string}
-     * @name LayoutMode
-     * @memberof WebViewerInstance
-     * @property {string} Single Only the current page will be visible.
-     * @property {string} Continuous All pages are visible in one column.
-     * @property {string} Facing Up to two pages will be visible.
-     * @property {string} FacingContinuous All pages visible in two columns.
-     * @property {string} FacingCover All pages visible in two columns, with an even numbered page rendered first. (i.e. The first page of the document is rendered by itself on the right side of the viewer to simulate a book cover.)
-     * @property {string} FacingCoverContinuous All pages visible, with an even numbered page rendered first. (i.e. The first page of the document is rendered by itself on the right side of the viewer to simulate a book cover.)
-     * @example
-    WebViewer(...)
-      .then(function(instance) {
-        var LayoutMode = instance.LayoutMode;
-        instance.setLayoutMode(LayoutMode.Single);
-      });
-     */
-  enum LayoutMode {
-    Single,
-    Continuous,
-    Facing,
-    FacingContinuous,
-    FacingCover,
-    FacingCoverContinuous,
-  }
   /**
    * A class which contains popup APIs.<br/><br/>
    * <span style="color: red; font-size: 1.2em; font-weight: bold">⚠</span> If you want to remove an item in a popup, use {@link WebViewerInstance#disableElements disableElements}.
@@ -40829,13 +45010,13 @@ declare namespace WebViewerInstance {
    */
   interface Popup {
     /**
-         * Add an array of items after the item that has the given data element
+         * Add an array of items after the item that has the given data element.
          * @method WebViewerInstance.Popup#add
-         * @param {Array.<object>} items Same as <a href='https://www.pdftron.com/documentation/web/guides/customizing-header#header-items' target='_blank'>header items</a>.
-         * @param {string} [dataElement] An optional string. If not given, items will be added in the beginning.
-         * @returns {object} The instance itself
+         * @param {Array.<object>} items Same as <a href='https://www.pdftron.com/documentation/web/guides/customizing-header#header-items' target='_blank'>header items</a>
+         * @param {string} [dataElement] An optional string. If not given, items will be added in the beginning
+         * @returns {this} The instance itself
          * @example
-        WebViewer(...)
+          WebViewer(...)
           .then(function(instance) {
             instance.contextMenuPopup.add({
               type: 'actionButton',
@@ -40844,15 +45025,15 @@ declare namespace WebViewerInstance {
             });
           });
          */
-    add(items: object[], dataElement?: string): any;
+    add(items: object[], dataElement?: string): this;
     /**
-         * Update all the items in the popup
+         * Update all the items in the popup.
          * To update an individual item, use {@link WebViewerInstance#updateElement updateElement}
          * @method WebViewerInstance.Popup#update
-         * @param {Array.<object>} items the items that will be rendered in the popup.
-         * @returns {object} The instance itself
+         * @param {Array.<object>} [items] the items that will be rendered in the popup
+         * @returns {this} The instance itself
          * @example
-        WebViewer(...)
+          WebViewer(...)
           .then(function(instance) {
             // replace existing items with a new array of items
             instance.contextMenuPopup.update([
@@ -40869,17 +45050,18 @@ declare namespace WebViewerInstance {
             ]);
           });
          */
-    update(items: object[]): any;
+    update(items?: object[]): this;
     /**
-         * Return the array of items in the popup
+         * Return the array of items in the popup.
          * @method WebViewerInstance.Popup#getItems
+         * @returns {Array.<object>} Current items in the popup.
          * @example
-        WebViewer(...)
+          WebViewer(...)
           .then(function(instance) {
-            instance.annotationPopup.delete('annotationCommentButton');
+            instance.annotationPopup.getItems();
           });
          */
-    getItems(): void;
+    getItems(): object[];
   }
   /**
    * A class which contains hotkeys APIs.<br/><br/>
@@ -40974,15 +45156,14 @@ declare namespace WebViewerInstance {
          * If it is an function, it will be called on key down <br/>
          * If it is an object, it should have the shape of { keydown: func1, keyup: func2 }. Func1 will be called on keydown while func2 will be called on keyup
          * @example
-        WebViewer(...)
+          WebViewer(...)
           .then(function(instance) {
               // this will be called on keydown
               instance.hotkeys.on('ctrl+d, command+d', e => {
                 e.preventDefault();
                 instance.closeDocument();
               });
-        
-              instance.hotkeys.on('ctrl+g', {
+                instance.hotkeys.on('ctrl+g', {
                 keydown: e => {
                   console.log('ctrl+g is pressed!');
                 },
@@ -40990,11 +45171,9 @@ declare namespace WebViewerInstance {
                   console.log('ctrl+g is released!')
                 },
               });
-        
-              // this will register the default zoom in handler
+                // this will register the default zoom in handler
               instance.hotkeys.on('ctrl+=, command+=');
-        
-              // this is equivalent to instance.hotkeys.on('escape');
+                // this is equivalent to instance.hotkeys.on('escape');
               instance.hotkeys.on('AnnotationEdit');
           });
          */
@@ -41005,16 +45184,75 @@ declare namespace WebViewerInstance {
          * @param {string} [key] An optional keyboard key or a tool name. If not passed, all handlers will be removed
          * @param {function} [handler] An optional function. If not passed, all handlers of the given key will be removed
          * @example
-        WebViewer(...)
+          WebViewer(...)
           .then(function(instance) {
               // this will remove all handlers for ctrl = and command =
               instance.hotkeys.off('ctrl+=, command+=');
-        
-              // this is equivalent to instance.hotkeys.off('escape');
+                // this is equivalent to instance.hotkeys.off('escape');
               instance.hotkeys.off('AnnotationEdit');
           });
          */
     function off(key?: string, handler?: (...params: any[]) => any): void;
+  }
+  /**
+   * A class which contains popup APIs.<br/><br/>
+   * <span style="color: red; font-size: 1.2em; font-weight: bold">⚠</span> If you want to remove an item in a popup, use {@link WebViewerInstance#disableElements disableElements}.
+   * @interface WebViewerInstance.Popup
+   */
+  interface Popup {
+    /**
+         * Add an array of items after the item that has the given data element.
+         * @method WebViewerInstance.Popup#add
+         * @param {Array.<object>} items Same as <a href='https://www.pdftron.com/documentation/web/guides/customizing-header#header-items' target='_blank'>header items</a>
+         * @param {string} [dataElement] An optional string. If not given, items will be added in the beginning
+         * @returns {this} The instance itself
+         * @example
+          WebViewer(...)
+          .then(function(instance) {
+            instance.contextMenuPopup.add({
+              type: 'actionButton',
+              img: 'path/to/image',
+              onClick: instance.downloadPdf,
+            });
+          });
+         */
+    add(items: object[], dataElement?: string): this;
+    /**
+         * Update all the items in the popup.
+         * To update an individual item, use {@link WebViewerInstance#updateElement updateElement}
+         * @method WebViewerInstance.Popup#update
+         * @param {Array.<object>} [items] the items that will be rendered in the popup
+         * @returns {this} The instance itself
+         * @example
+          WebViewer(...)
+          .then(function(instance) {
+            // replace existing items with a new array of items
+            instance.contextMenuPopup.update([
+              {
+                type: 'actionButton',
+                img: 'path/to/image',
+                onClick: instance.downloadPdf,
+              },
+              {
+                type: 'actionButton',
+                img: 'path/to/image',
+                onClick: instance.print,
+              },
+            ]);
+          });
+         */
+    update(items?: object[]): this;
+    /**
+         * Return the array of items in the popup.
+         * @method WebViewerInstance.Popup#getItems
+         * @returns {Array.<object>} Current items in the popup.
+         * @example
+          WebViewer(...)
+          .then(function(instance) {
+            instance.annotationPopup.getItems();
+          });
+         */
+    getItems(): object[];
   }
 }
 
@@ -41055,15 +45293,17 @@ declare class Header {
   /**
    * Insert a button before the selected button from {@link Header#get get}.
    * @method Header#insertBefore
+   * @param {object} obj A header object. See <a href='https://www.pdftron.com/documentation/web/guides/customizing-header#header-items' target='_blank'>Header items</a> for details.
    * @returns {Header} Header object for chaining. You can call {@link Header#get get}, {@link Header#getItems getItems}, {@link Header#shift shift}, {@link Header#unshift unshift}, {@link Header#push push}, {@link Header#pop pop} and {@link Header#update update}.
    */
-  insertBefore(): Header;
+  insertBefore(obj: any): Header;
   /**
    * Insert a button after the selected button from {@link Header#get get}.
    * @method Header#insertAfter
+   * @param {object} obj A header object. See <a href='https://www.pdftron.com/documentation/web/guides/customizing-header#header-items' target='_blank'>Header items</a> for details.
    * @returns {Header} Header object for chaining. You can call {@link Header#get get}, {@link Header#getItems getItems}, {@link Header#shift shift}, {@link Header#unshift unshift}, {@link Header#push push}, {@link Header#pop pop} and {@link Header#update update}.
    */
-  insertAfter(): Header;
+  insertAfter(obj: any): Header;
   /**
    * Delete a button.
    * @method Header#delete
@@ -41241,16 +45481,17 @@ declare class WebViewerInstance {
      */
   disableElements(dataElements: string[]): void;
   /**
-     * disable certain features in the WebViewer UI.
+     * Disable certain features in the WebViewer UI.
      * @method WebViewerInstance#disableFeatures
-     * @param {Array.<WebViewerInstance.Feature>} features Array of features to disable.
+     * @param {Array.<string>} features Array of features to disable.
+     * @see WebViewerInstance#Feature
      * @example
     WebViewer(...)
       .then(function(instance) {
         instance.disableFeatures(instance.Feature.Measurement);
       });
      */
-  disableFeatures(features: WebViewerInstance.Feature[]): void;
+  disableFeatures(features: string[]): void;
   /**
      * Disable reply for annotations determined by the function passed in as parameter
      * @method WebViewerInstance#disableReplyForAnnotations
@@ -41280,20 +45521,48 @@ declare class WebViewerInstance {
   /**
      * Downloads the pdf document with or without annotations added by WebViewer UI.
      * @method WebViewerInstance#downloadPdf
-     * @param {boolean} [includeAnnotations=true] Whether or not to include annotations added by WebViewer UI.
+     * @param {object} [options] An object that contains the following download options.
+     * @param {string} [options.filename] The filename of the downloaded document.
+     * @param {string} [options.downloadType='pdf'] The type to download the file as, by default this is "pdf". PDF and image files can only be downloaded as PDFs, but office files can be downloaded as "pdf" or as "office" if you want to get the original file without annotations.
+     * @param {string} [options.xfdfString] An xfdf string containing annotation data to be used when downloading. Use this option instead of `includeAnnotations` if not all annotations need to be contained in the downloaded file.
+     * @param {boolean} [options.includeAnnotations=true] Whether or not to include annotations added by WebViewer UI.
+     * @param {boolean} [options.flatten] Whether or not to flatten all the annotations in the downloaded document. Only useful fullAPI is enabled and either `xfdfString` or `includeAnnotations` is used.
+     * @param {number} [options.flags=CoreControls.SaveOptions.REMOVE_UNUSED] The flags with which to save the document. Possible values include `CoreControls.SaveOptions.REMOVE_UNUSED` (remove unused objects during save) and `CoreControls.SaveOptions.LINEARIZED` (optimize the document for fast web view and remove unused objects).
      * @example
     WebViewer(...)
       .then(function(instance) {
         var docViewer = instance.docViewer;
+        var annotManager = instance.annotManager;
     
         // you must have a document loaded when calling this api
-        docViewer.on('documentLoaded', function() {
+        docViewer.on('documentLoaded', async function() {
           // download pdf without annotations added by WebViewer UI
-          instance.downloadPdf(false);
+          instance.downloadPdf({
+            includeAnnotations: false,
+          });
+    
+          // download pdf with all annotations flattened
+          instance.downloadPdf({
+            includeAnnotations: true,
+            flatten: true,
+          });
+    
+          // download pdf without links
+          const xfdfString = await annotManager.exportAnnotations({ links: false });
+          instance.downloadPdf({
+            xfdfString: xfdfString,
+          });
         });
       });
      */
-  downloadPdf(includeAnnotations?: boolean): void;
+  downloadPdf(options?: {
+    filename?: string;
+    downloadType?: string;
+    xfdfString?: string;
+    includeAnnotations?: boolean;
+    flatten?: boolean;
+    flags?: number;
+  }): void;
   /**
      * Remount the hidden elements in the DOM.
      * @method WebViewerInstance#enableElements
@@ -41309,14 +45578,15 @@ declare class WebViewerInstance {
   /**
      * Enable certain features in the WebViewer UI.
      * @method WebViewerInstance#enableFeatures
-     * @param {Array.<WebViewerInstance.Feature>} features Array of features to enable.
+     * @param {Array.<string>} features Array of features to enable.
+     * @see WebViewerInstance#Feature
      * @example
     WebViewer(...)
       .then(function(instance) {
         instance.enableFeatures(instance.Feature.Measurement);
       });
      */
-  enableFeatures(features: WebViewerInstance.Feature[]): void;
+  enableFeatures(features: string[]): void;
   /**
      * Enable multiple tools.
      * @method WebViewerInstance#enableTools
@@ -41347,6 +45617,19 @@ declare class WebViewerInstance {
      */
   exportBookmarks(): any;
   /**
+     * Extract pages from the current document
+     * @method WebViewerInstance#extractPagesWithAnnotations
+     * @param {Array<number>} pageIndexToExtract An array of pages to extract from the document. Annotations on the pages are included
+     * @return {Promise<File>} A promise that resolve to a <a href='https://developer.mozilla.org/en-US/docs/Web/API/File' target='_blank'>File object</a>
+     * @example // 6.0 and after
+    WebViewer(...)
+      .then(function(instance) {
+        instance.extractPagesWithAnnotations ([1,2,3]).then(function(fileData){
+        });
+      });
+     */
+  extractPagesWithAnnotations(pageIndexToExtract: number[]): Promise<File>;
+  /**
      * Focuses a note input field for the annotation. If the notes panel is closed, it is automatically opened before focusing.
      * @method WebViewerInstance#focusNote
      * @param {string} annotationId Id of an annotation.
@@ -41376,7 +45659,7 @@ declare class WebViewerInstance {
   /**
      * Return the current fit mode of the WebViewerInstance.
      * @method WebViewerInstance#getFitMode
-     * @return {WebViewerInstance.FitMode} Current fit mode
+     * @return {string} Current fit mode
      * @example
     WebViewer(...)
       .then(function(instance) {
@@ -41388,11 +45671,11 @@ declare class WebViewerInstance {
         });
       });
      */
-  getFitMode(): WebViewerInstance.FitMode;
+  getFitMode(): string;
   /**
      * Return the current layout mode of the WebViewerInstance.
      * @method WebViewerInstance#getLayoutMode
-     * @return {WebViewerInstance.LayoutMode} Current layout mode
+     * @return {string} Current layout mode
      * @example
     WebViewer(...)
       .then(function(instance) {
@@ -41404,7 +45687,18 @@ declare class WebViewerInstance {
         });
       });
      */
-  getLayoutMode(): WebViewerInstance.LayoutMode;
+  getLayoutMode(): string;
+  /**
+     * Get the currently selected pages
+     * @method WebViewerInstance#getSelectedThumbnailPageNumbers
+     * @return {Array<number>} an arry of select page numbers
+     * @example // 6.0 and after
+    WebViewer(...)
+      .then(function(instance) {
+        instance.getSelectedThumbnailPageNumbers();
+      });
+     */
+  getSelectedThumbnailPageNumbers(): number[];
   /**
      * Return the current tool object.
      * @method WebViewerInstance#getToolMode
@@ -41432,6 +45726,13 @@ declare class WebViewerInstance {
       });
      */
   getZoomLevel(): number;
+  /**
+   * An instance of Hotkeys that can be used to enable, disable or register custom hotkeys in the viewer
+   * @name WebViewerInstance#hotkeys
+   * @see WebViewerInstance.Hotkeys
+   * @type {Class<WebViewerInstance.Hotkeys>}
+   */
+  hotkeys: typeof WebViewerInstance.Hotkeys;
   /**
      * Imports user bookmarks
      * @method WebViewerInstance#importBookmarks
@@ -41493,15 +45794,15 @@ declare class WebViewerInstance {
   /**
      * Load a document inside WebViewer UI.
      * @method WebViewerInstance#loadDocument
-     * @param {(string|File)} documentPath Path to the document OR <a href='https://developer.mozilla.org/en-US/docs/Web/API/File' target='_blank'>File object</a> if opening local file.
-     * @param {object} options Additional options
-     * @param {string} options.extension The extension of the file. If file is a blob/file object or a URL without an extension then this is necessary so that WebViewer knows what type of file to load.
-     * @param {string} options.filename Filename of the document, which is used when downloading the PDF.
-     * @param {object} options.customHeaders An object of custom HTTP headers to use when retrieving the document from the specified url.
-     * @param {string} options.documentId Unique id of the document.
-     * @param {boolean} options.withCredentials Whether or not cross-site requests should be made using credentials.
-     * @param {string} options.cacheKey A key that will be used for caching the document on WebViewer Server.
-     * @param {string} options.password A string that will be used to as the password to load a password protected document.
+     * @param {(string|File|Blob)} documentPath Path to the document OR <a href='https://developer.mozilla.org/en-US/docs/Web/API/File' target='_blank'>File object</a> if opening local file.
+     * @param {object} [options] Additional options
+     * @param {string} [options.extension] The extension of the file. If file is a blob/file object or a URL without an extension then this is necessary so that WebViewer knows what type of file to load.
+     * @param {string} [options.filename] Filename of the document, which is used when downloading the PDF.
+     * @param {object} [options.customHeaders] An object of custom HTTP headers to use when retrieving the document from the specified url.
+     * @param {string} [options.documentId] Unique id of the document.
+     * @param {boolean} [options.withCredentials] Whether or not cross-site requests should be made using credentials.
+     * @param {string} [options.cacheKey] A key that will be used for caching the document on WebViewer Server.
+     * @param {string} [options.password] A string that will be used to as the password to load a password protected document.
      * @example
     WebViewer(...)
       .then(function(instance) {
@@ -41512,15 +45813,15 @@ declare class WebViewerInstance {
       });
      */
   loadDocument(
-    documentPath: string | File,
-    options: {
-      extension: string;
-      filename: string;
-      customHeaders: any;
-      documentId: string;
-      withCredentials: boolean;
-      cacheKey: string;
-      password: string;
+    documentPath: string | File | Blob,
+    options?: {
+      extension?: string;
+      filename?: string;
+      customHeaders?: any;
+      documentId?: string;
+      withCredentials?: boolean;
+      cacheKey?: string;
+      password?: string;
     },
   ): void;
   /**
@@ -41672,6 +45973,20 @@ declare class WebViewerInstance {
     },
   ): void;
   /**
+     * Select thumbnails in the thumbnail panel. This requires the "ThumbnailMultiselect" feature to be enabled
+     * @method WebViewerInstance#selectThumbnailPages
+     * @param {Array<number>} pageNumbers array of page numbers to select
+     * @example // 6.1 and after
+    WebViewer(...)
+      .then(function(instance) {
+        instance.enableFeatures(['ThumbnailMultiselect']);
+    
+        const pageNumbersToSelect = [1, 2, 3];
+        instance.selectThumbnailPages(pageNumbersToSelect);
+      });
+     */
+  selectThumbnailPages(pageNumbers: number[]): void;
+  /**
      * Sets a header group to be rendered in the Header element. This API comes useful when replacing the entire header items in small screens.
      * @method WebViewerInstance#setActiveHeaderGroup
      * @param {string} headerGroup Name of the header group to be rendered. Default WebViewer UI has two header groups: default and tools.
@@ -41695,6 +46010,31 @@ declare class WebViewerInstance {
         instance.setActiveLeftPanel('outlinesPanel');
      */
   setActiveLeftPanel(dataElement: string): void;
+  /**
+     * Adds a custom overlay to annotations if that annotation currently support it. Currently only the Ellipsis annotation supports it.
+     * @method WebViewerInstance#setCustomMeasurementOverlay
+     * @param {array} customOverlayInfo an array of customOverlay configurations. The configuration object has five properties: title, label, validate, value, and onChange
+     * @example
+    WebViewer(...)
+      .then(function(instance) {
+          instance.setCustomMeasurementOverlayInfo([
+          {
+            title: "Radius Measurement", //Title for overlay
+            label: "Radius", // Label to be shown for the value
+            // Validate is a function to validate the annotation is valid for the current custom overlay
+            validate: annotation => annotation instanceof instance.Annotations.EllipseAnnotation,
+            // The value to be shown in the custom overlay
+            value: annotation => annotation.Width / 2,
+            // onChange will be called whenever the value in the overlay changes from user input
+            onChange: (e, annotation) => {
+              // Do something with the annot like resize/redraw
+              instance.annotManager.redrawAnnotation(annotation);
+            }
+          }
+        ])
+      });
+     */
+  setCustomMeasurementOverlay(customOverlayInfo: any[]): void;
   /**
      * Filter the annotations shown in the notes panel
      * @method WebViewerInstance#setCustomNoteFilter
@@ -41756,7 +46096,8 @@ declare class WebViewerInstance {
   /**
      * Sets the fit mode of the viewer.
      * @method WebViewerInstance#setFitMode
-     * @param {WebViewerInstance.FitMode} fitMode Fit mode of WebViewer.
+     * @param {string} fitMode Fit mode of WebViewer.
+     * @see WebViewerInstance#FitMode
      * @example
     WebViewer(...)
       .then(function(instance) {
@@ -41769,7 +46110,7 @@ declare class WebViewerInstance {
         });
       });
      */
-  setFitMode(fitMode: WebViewerInstance.FitMode): void;
+  setFitMode(fitMode: string): void;
   /**
      * Customize header. Refer to <a href='https://www.pdftron.com/documentation/web/guides/customizing-header' target='_blank'>Customizing header</a> for details.
      * @method WebViewerInstance#setHeaderItems
@@ -41853,7 +46194,8 @@ declare class WebViewerInstance {
   /**
      * Sets the layout mode of the viewer.
      * @method WebViewerInstance#setLayoutMode
-     * @param {WebViewerInstance.LayoutMode} layoutMode Layout mode of WebViewerInstance.
+     * @param {string} layoutMode Layout mode of WebViewerInstance.
+     * @see WebViewerInstance#LayoutMode
      * @example
     WebViewer(...)
       .then(function(instance) {
@@ -41866,7 +46208,7 @@ declare class WebViewerInstance {
         });
       });
      */
-  setLayoutMode(layoutMode: WebViewerInstance.LayoutMode): void;
+  setLayoutMode(layoutMode: string): void;
   /**
      * Set the number of signatures that can be stored in the WebViewer (default is 2)
      * @method WebViewerInstance#setMaxSignaturesCount
@@ -41927,6 +46269,64 @@ declare class WebViewerInstance {
      */
   setNoteDateFormat(format: string): void;
   /**
+     * Accepts a function that will be called every time a note in the left panel is rendered.
+     * This function can be used to add, edit or hide the contents of the note.
+     * <br><br>
+     * <span style='font-size: 18px'><b>Please carefully read the documentation and the notes below before using this API</b></span><br><br>
+     *
+     * <b>This API is experimental and should be used sparingly.</b> If you find you are heavily relying on this function,
+     *  it is recommended that you <a href='https://www.pdftron.com/documentation/web/guides/advanced-customization/'>fork the UI repo</a> and make the changes directly in the source code (Note.js).
+     * <br><br>
+     *
+     *
+     * The structure of the HTML that is passed into this function may change may change without notice in any release. <b>Please make sure
+     * to test this function thoroughly when upgrading WebViewer versions.</b>
+     * <br><br>
+     *
+     *
+     *  There may be unexpected behaviour when using this API. The HTML that is provided is controlled by React, and sometimes React will override any changes you make.
+     *  If you find any unexpected behaviour when using this API, then this API probably won't work for your use case and you will have to make the changes directly in the source code.
+     * <br><br>
+     *
+     *  <b>Do not use document.createElement to create DOM elements</b>. Instead, use the provided `createElement` utility function provided as the third parameter.
+     *
+     *  <b>Do not use HTMLElement.removeChild or any other APIs that remove elements from the DOM.</b> Doing so will cause React to lose reference to this node, and will crash.
+     *  If you need to hide an HTML element, set the style to `display: none` instead.
+     * <br><br>
+     * @method WebViewerInstance#dangerouslySetNoteTransformFunction
+     * @param {WebViewerInstance.NoteTransformFunction} noteTransformFunction The function that will be used to transform notes in the left panel
+     * @example
+    Webviewer(...)
+      .then(instance => {
+        instance.dangerouslySetNoteTransformFunction((wrapper, state, createElement) => {
+          // Change the title of every note
+          wrapper.querySelector('.title>span').innerHTML = 'My custom note title';
+    
+          // Add a button that alerts the user when clicked
+          const button = createElement('button');
+          button.onmousedown = (e) => {
+            if(state.isSelected) {
+              alert('Hello world!');
+            } else {
+              alert('Goodbye world!');
+            }
+          };
+          button.innerHTML = 'Alert me'
+          wrapper.appendChild(button);
+    
+          // Add a button that makes the annotation blue
+          const button = createElement('button');
+          button.onmousedown = (e) => {
+            state.annotation.StrokeColor = new instance.Annotations.Color(0, 0, 255);
+            instance.annotManager.redrawAnnotation(state.annotation)
+          };
+          button.innerHTML = 'Make me blue'
+          wrapper.appendChild(button);
+        })
+      });
+     */
+  dangerouslySetNoteTransformFunction(noteTransformFunction: WebViewerInstance.NoteTransformFunction): void;
+  /**
      * Sets page labels that will be displayed in UI. You may want to use this API if the document's page labels start with characters/numbers other than 1.
      * @method WebViewerInstance#setPageLabels
      * @param {Array.<string>} pageLabels Page labels that will be displayed in UI.
@@ -41945,7 +46345,7 @@ declare class WebViewerInstance {
   /**
      * Sets the print quality. Higher values are higher quality but takes longer to complete and use more memory. The viewer's default quality is 1.
      * @method WebViewerInstance#setPrintQuality
-     * @param {number} quality The quality of the document to print
+     * @param {number} quality The quality of the document to print. Must be a positive number.
      * @example
     WebViewer(...)
       .then(function(instance) {
@@ -42037,14 +46437,14 @@ declare class WebViewerInstance {
   /**
      * Sets tool mode.
      * @method WebViewerInstance#setToolMode
-     * @param {string} toolName Name of the tool, either from <a href='https://www.pdftron.com/documentation/web/guides/annotations-and-tools/#list-of-tool-names' target='_blank'>tool names list</a> or the name you registered your custom tool with.
+     * @param {string|Tools.ToolNames} toolName Name of the tool, either from <a href='https://www.pdftron.com/documentation/web/guides/annotations-and-tools/#list-of-tool-names' target='_blank'>tool names list</a> or the name you registered your custom tool with.
      * @example
     WebViewer(...)
       .then(function(instance) {
         instance.setToolMode('AnnotationEdit');
       });
      */
-  setToolMode(toolName: string): void;
+  setToolMode(toolName: string | Tools.ToolNames): void;
   /**
      * Sets zoom level.
      * @method WebViewerInstance#setZoomLevel
@@ -42117,10 +46517,22 @@ declare class WebViewerInstance {
      */
   unregisterTool(toolName: string): void;
   /**
-     * Update an element in the viewer. Currently this API can only update elements that have a Button class name.
+     * Unselect selected thumbnails
+     * @method WebViewerInstance#unselelctThumbnailPages
+     * @param {Array<number>} pageNumbers array of page numbers to unselect
+     * @example // 6.1 and after
+    WebViewer(...)
+      .then(function(instance) {
+        const pageNumbersToUnselect = [1, 2];
+        instance.unselelctThumbnailPages(pageNumbersToUnselect);
+      });
+     */
+  unselelctThumbnailPages(pageNumbers: number[]): void;
+  /**
+     * Update an element in the viewer.
      * @method WebViewerInstance#updateElement
-     * @param {string} dataElement the data element of the element that will be updated.
-     * @param {object} props An object that is used to override an existing item's properties.
+     * @param {string} dataElement the data element of the element that will be updated. Valid values are 'colorPalette', and HTML elements that have 'Button' in the class name.
+     * @param {*} props An object or an array that is used to override an existing item's properties.
      * @example
     WebViewer(...)
       .then(function(instance) {
@@ -42128,6 +46540,8 @@ declare class WebViewerInstance {
           img: 'path/to/image',
           title: 'new_tooltip',
         })
+    
+        instance.updateElement('colorPalette', ['#FFFFFF', 'transparency', '#000000'])
       });
      */
   updateElement(dataElement: string, props: any): void;
@@ -42170,6 +46584,89 @@ declare class WebViewerInstance {
       });
      */
   useEmbeddedPrint(use?: boolean): void;
+  /**
+     * Contains string enums for all features for WebViewer UI
+     * @name WebViewerInstance#Feature
+     * @property {string} Measurement Measurement tools that can create annotations to measure distance, perimeter and area.
+     * @property {string} Annotations Render annotations in the document and be able to edit them.
+     * @property {string} Download A download button to download the current document.
+     * @property {string} FilePicker Ctrl/Cmd + O hotkey and a open file button that can be clicked to load local files.
+     * @property {string} LocalStorage Store and retrieve tool styles from window.localStorage.
+     * @property {string} NotesPanel A panel that displays information of listable annotations.
+     * @property {string} Print Ctrl/Cmd + P hotkey and a print button that can be clicked to print the current document.
+     * @property {string} Redaction Redaction tools that can redact text or areas. Need fullAPI to be on to use this feature.
+     * @property {string} TextSelection Ability to select text in a document.
+     * @property {string} TouchScrollLock Lock document scrolling in one direction in mobile devices.
+     * @property {string} Copy Ability to copy text or annotations use Ctrl/Cmd + C hotkeys or the copy button.
+     * @property {string} ThumbnailMerging Ability to drag and drop a file into the thumbnail panel to merge
+     * @property {string} ThumbnailReordering Ability to reorder pages using the thumbnail panel
+     * @property {string} PageNavigation Ability to navigate through pages using mouse wheel, arrow up/down keys and the swipe gesture.
+     * @example
+    WebViewer(...)
+      .then(function(instance) {
+        var Feature = instance.Feature;
+        instance.enableFeatures([Feature.Measurement]);
+        instance.disableFeatures([Feature.Copy]);
+      });
+     */
+  Feature: {
+    Measurement: string;
+    Annotations: string;
+    Download: string;
+    FilePicker: string;
+    LocalStorage: string;
+    NotesPanel: string;
+    Print: string;
+    Redaction: string;
+    TextSelection: string;
+    TouchScrollLock: string;
+    Copy: string;
+    ThumbnailMerging: string;
+    ThumbnailReordering: string;
+    PageNavigation: string;
+  };
+  /**
+     * Contains all possible modes for fitting/zooming pages to the viewer. The behavior may vary depending on the LayoutMode.
+     * @name WebViewerInstance#FitMode
+     * @property {string} FitPage A fit mode where the zoom level is fixed to the width or height of the page, whichever is smaller.
+     * @property {string} FitWidth A fit mode where the zoom level is fixed to the width of the page.
+     * @property {string} Zoom A fit mode where the zoom level is not fixed.
+     * @example
+    WebViewer(...)
+      .then(function(instance) {
+        var FitMode = instance.FitMode;
+        instance.setFitMode(FitMode.FitWidth);
+      });
+     */
+  FitMode: {
+    FitPage: string;
+    FitWidth: string;
+    Zoom: string;
+  };
+  /**
+     * Contains string enums for all layouts for WebViewer. They are used to dictate how pages are placed within the viewer.
+     * @name WebViewerInstance#LayoutMode
+     * @property {string} Single Only the current page will be visible.
+     * @property {string} Continuous All pages are visible in one column.
+     * @property {string} Facing Up to two pages will be visible.
+     * @property {string} FacingContinuous All pages visible in two columns.
+     * @property {string} FacingCover All pages visible in two columns, with an even numbered page rendered first. (i.e. The first page of the document is rendered by itself on the right side of the viewer to simulate a book cover.)
+     * @property {string} FacingCoverContinuous All pages visible, with an even numbered page rendered first. (i.e. The first page of the document is rendered by itself on the right side of the viewer to simulate a book cover.)
+     * @example
+    WebViewer(...)
+      .then(function(instance) {
+        var LayoutMode = instance.LayoutMode;
+        instance.setLayoutMode(LayoutMode.Single);
+      });
+     */
+  LayoutMode: {
+    Single: string;
+    Continuous: string;
+    Facing: string;
+    FacingContinuous: string;
+    FacingCover: string;
+    FacingCoverContinuous: string;
+  };
   /**
    * Cleans up listeners and data from the WebViewer instance. Should be called when removing the WebViewer instance from the DOM.
    * @method WebViewerInstance#dispose
@@ -42253,37 +46750,76 @@ declare class WebViewerInstance {
 }
 
 /**
+ * @typedef {Object} WebViewerOptions
+ * @property {string} path  Path to the WebViewer lib folder
+ * @property {string} [annotationUser=Guest] Name of the user for annotations
+ * @property {string} [config] URL path to a custom JavaScript for customizations
+ * @property {string} [css] URL path to a custom CSS file for customizations
+ * @property {Array<string>} [disabledElements] List of data-elements to be disabled in UI
+ * @property {boolean} [accessibleMode=false] Enable accessibility features. E.g tab page selection and page text in the DOM
+ * @property {boolean} [enableAnnotations=true] Enable annotations feature
+ * @property {boolean} [enableAzureWorkaround=false] Enable workaround of the issue in Azure related to range requests
+ * @property {boolean} [enableFilePicker=false] Enable file picker feature
+ * @property {boolean} [enableMeasurement=false] Enable measurement tools
+ * @property {boolean} [enableRedaction=false] Enable redaction tool
+ * @property {string} [extension] Extension of the document to be loaded
+ * @property {string} [filename] The name of the file that will be used when downloading the document. The extension in the filename will be used as the document type to be loaded (e.g. myfile.docx will treat the file as docx) if no extension option is passed.
+ * @property {boolean} [forceClientSideInit=false] If set to true then when loading a document using WebViewer Server the document will always switch to client only rendering allowing page manipulation and the full API to be used.
+ * @property {boolean} [fullAPI=false] Enable PDFNet.js library functions
+ * @property {string} [initialDoc] URL path to a document to load on startup
+ * @property {boolean} [isAdminUser=false] Set user permission to admin
+ * @property {boolean} [isReadOnly=false] Set user permission to read-only
+ * @property {string} [licenseKey] License key for viewing documents. If not set then WebViewer will be in demo mode.
+ * @property {boolean} [mobileRedirect=true] Whether the mobile viewer should redirect to a new window or not
+ * @property {string} [preloadWorker] Type of workers to be preloaded. Accepts `pdf`|`office`|`all`.
+ * @property {string} [backendType] A string representing the "backend type" for rendering PDF documents. Pass "ems" to force the use of the ASM.js/WebAssembly worker and "pnacl" for the "PNaCl" worker.
+ * @property {boolean} [useDownloader] A boolean indicating whether Downloader should be used on urls (PDF only). https://www.pdftron.com/documentation/web/guides/usedownloader-option/.
+ * @property {string} [ui=default] Type of UI to be used
+ * @property {object} [workerTransportPromise]
+ * @property {function} [workerTransportPromise.pdf] Promise that resolves to a PDF worker
+ * @property {function} [workerTransportPromise.office]  Promise that resolves to an office worker
+ * @property {string} [pdftronServer] The URL path to the hosted WebViewer Server
+ * @property {boolean} [disableLogs=false] Disables console logs coming from WebViewer, including the version and build numbers
+ */
+declare type WebViewerOptions = {
+  path: string;
+  annotationUser?: string;
+  config?: string;
+  css?: string;
+  disabledElements?: string[];
+  accessibleMode?: boolean;
+  enableAnnotations?: boolean;
+  enableAzureWorkaround?: boolean;
+  enableFilePicker?: boolean;
+  enableMeasurement?: boolean;
+  enableRedaction?: boolean;
+  extension?: string;
+  filename?: string;
+  forceClientSideInit?: boolean;
+  fullAPI?: boolean;
+  initialDoc?: string;
+  isAdminUser?: boolean;
+  isReadOnly?: boolean;
+  licenseKey?: string;
+  mobileRedirect?: boolean;
+  preloadWorker?: string;
+  backendType?: string;
+  useDownloader?: boolean;
+  ui?: string;
+  workerTransportPromise?: {
+    pdf?: (...params: any[]) => any;
+    office?: (...params: any[]) => any;
+  };
+  pdftronServer?: string;
+  disableLogs?: boolean;
+};
+
+/**
  * A function that creates an instance of WebViewer, and embeds it on the HTML page
  * @function
  * @global
  * @name WebViewer
- * @param {object} options
- * @param {string} [options.annotationUser=Guest] Name of the user for annotations
- * @param {string} [options.config] URL path to a custom JavaScript for customizations
- * @param {string} [options.css] URL path to a custom CSS file for customizations
- * @param {Array<string>} [options.disabledElements] List of data-elements to be disabled in UI
- * @param {boolean} [options.accessibleMode=false] Enable accessibility features. E.g tab page selection and page text in the DOM
- * @param {boolean} [options.enableAnnotations=true] Enable annotations feature
- * @param {boolean} [options.enableAzureWorkaround=false] Enable workaround of the issue in Azure related to range requests
- * @param {boolean} [options.enableFilePicker=false] Enable file picker feature
- * @param {boolean} [options.enableMeasurement=false] Enable measurement tools
- * @param {boolean} [options.enableRedaction=false] Enable redaction tool
- * @param {string} [options.extension] Extension of the document to be loaded
- * @param {string} [options.filename] The name of the file that will be used when downloading the document. The extension in the filename will be used as the document type to be loaded (e.g. myfile.docx will treat the file as docx) if no extension option is passed.
- * @param {boolean} [options.forceClientSideInit=false] If set to true then when loading a document using WebViewer Server the document will always switch to client only rendering allowing page manipulation and the full API to be used.
- * @param {boolean} [options.fullAPI=false] Enable PDFNet.js library functions
- * @param {string} [options.initialDoc] URL path to a document to load on startup
- * @param {boolean} [options.isAdminUser=false] Set user permission to admin
- * @param {boolean} [options.isReadOnly=false] Set user permission to read-only
- * @param {string} [options.licenseKey] License key for viewing documents. If not set then WebViewer will be in demo mode.
- * @param {boolean} [options.mobileRedirect=true] Whether the mobile viewer should redirect to a new window or not
- * @param {string} options.path  Path to the WebViewer lib folder
- * @param {string} [options.preloadWorker] Type of workers to be preloaded. Accepts `pdf`|`office`|`all`.
- * @param {string} [options.ui=default] Type of UI to be used
- * @param {object} [options.workerTransportPromise]
- * @param {function} [options.workerTransportPromise.pdf] Promise that resolves to a PDF worker
- * @param {function} [options.workerTransportPromise.office]  Promise that resolves to an office worker
- * @param {string} [options.pdftronServer] The URL path to the hosted WebViewer Server
+ * @param {WebViewerOptions} options
  * @param {HTMLElement} viewerElement
  * @returns {Promise<WebViewerInstance>} A promise resolved with WebViewer instance.
  * @example
@@ -42300,38 +46836,26 @@ declare class WebViewerInstance {
         // var Annotations = instance.Annotations;
       });
  */
-declare function WebViewer(
-  options: {
-    annotationUser?: string;
-    config?: string;
-    css?: string;
-    disabledElements?: string[];
-    accessibleMode?: boolean;
-    enableAnnotations?: boolean;
-    enableAzureWorkaround?: boolean;
-    enableFilePicker?: boolean;
-    enableMeasurement?: boolean;
-    enableRedaction?: boolean;
-    extension?: string;
-    filename?: string;
-    forceClientSideInit?: boolean;
-    fullAPI?: boolean;
-    initialDoc?: string;
-    isAdminUser?: boolean;
-    isReadOnly?: boolean;
-    licenseKey?: string;
-    mobileRedirect?: boolean;
-    path: string;
-    preloadWorker?: string;
-    ui?: string;
-    workerTransportPromise?: {
-      pdf?: (...params: any[]) => any;
-      office?: (...params: any[]) => any;
-    };
-    pdftronServer?: string;
-  },
-  viewerElement: HTMLElement,
-): Promise<WebViewerInstance>;
+declare function WebViewer(options: WebViewerOptions, viewerElement: HTMLElement): Promise<WebViewerInstance>;
+
+/**
+ * Gets an already existing instance of WebViewer. If only one instance of WebViewer exists on the page,
+ * then 'element' is not required, and the function will return the instance of WebViewer.
+ * If more than one instance of WebViewer exists, you must pass in the DOM element containing the
+ * instance of WebViewer you want to retrieve. This function can be imported directly as a module as well.
+ * @function
+ * @name getInstance
+ * @global
+ * @param {HTMLElement} [element] The DOM element containing the instance of WebViewer you want to retrieve
+ * @returns {WebViewerInstance} Returns an instance of WebViewer. Returns null if no instances are available.
+ * @example
+ * import { getInstance } from '@pdftron/webviewer'
+ *
+ * // After WebViewer has already been constructed
+ * const instance = getInstance();
+ *
+ */
+declare function getInstance(element?: HTMLElement): WebViewerInstance;
 
 /**
  * Represents a Video. Constructor is private. Use {@link CoreControls.Document#getVideo} to retrieve the instance.
