@@ -17,6 +17,17 @@ await file.rotate();
 setThumbnail(file.thumbnail.get());
 ```
 
+## Providing a License Key
+
+Since file uses [WebViewer APIs](https://www.pdftron.com/documentation/web/)
+internally, you must provide a license key in order to remove watermarking and
+enable the full functionality. This can be done by providing a function `l`
+inside the `window.WebViewer` object:
+
+```js
+window.WebViewer.l = () => "your-license-key";
+```
+
 ## `FileDetails`
 
 <Props of={options} />

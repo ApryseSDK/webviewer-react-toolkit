@@ -18,9 +18,11 @@ export async function documentToBlob(documentObj: Futurable<CoreControls.Documen
  * @param extension The file extension of the provided Blob.
  */
 export async function blobToDocument(blob: Futurable<Blob>, extension: string): Promise<CoreControls.Document> {
+  // @ts-ignore no typing for `l` method.
+  const l = window.WebViewer?.l?.();
   const coreControls = window.CoreControls;
   const fetchedBlob = await blob;
-  return await coreControls.createDocument(fetchedBlob, { extension });
+  return await coreControls.createDocument(fetchedBlob, { extension, l });
 }
 
 /**
