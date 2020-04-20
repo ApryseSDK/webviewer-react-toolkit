@@ -25,7 +25,7 @@ export const Basic = () => (
   </div>
 );
 
-export const WithPromiseSrc = () => (
+export const WithSrcPromise = () => (
   <div style={style}>
     <Image
       src={
@@ -40,6 +40,26 @@ export const WithPromiseSrc = () => (
         )
       }
       onRenderLoading={() => <Spinner />}
+    />
+  </div>
+);
+
+export const SrcPromiseRejects = () => (
+  <div style={style}>
+    <Image
+      src={new Promise(rej => setTimeout(() => rej(), 500))}
+      onRenderLoading={() => <Spinner />}
+      onRenderFallback={() => 'Rejected source promise'}
+    />
+  </div>
+);
+
+export const SrcPromiseReturnsFalsy = () => (
+  <div style={style}>
+    <Image
+      src={new Promise(res => setTimeout(() => res(''), 500))}
+      onRenderLoading={() => <Spinner />}
+      onRenderFallback={() => 'Falsy source'}
     />
   </div>
 );

@@ -8,33 +8,48 @@ export interface ImageProps extends Remove<ImgHTMLAttributes<HTMLImageElement>, 
    * The image source can be a `Futurable` or `LazyFuturable`, or undefined. If
    * undefined or if a promise will display as loading.
    */
-  src?: FuturableOrLazy<string>;
+  src?: FuturableOrLazy<string | undefined>;
   /**
    * Render out an element to be shown while src is loading.
    */
   onRenderLoading?(): ReactNode;
+  /**
+   * Render out an element to be shown if the .
+   */
+  onRenderFallback?(): ReactNode;
 }
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, onRenderLoading, alt, className, ...imgProps }, ref) => {
-    const [source, setSource] = useState<string | undefined>(typeof src === 'string' ? src : undefined);
+  ({ src, onRenderLoading, onRenderFallback, alt, className, ...imgProps }, ref) => {
+    const sourceIsNotPromise = typeof src === 'string' || !src;
+    const [loading, setLoading] = useState(!sourceIsNotPromise);
+    const [source, setSource] = useState<string | undefined>(
+      sourceIsNotPromise ? (src as string | undefined) : undefined,
+    );
 
-    const getSource = useCallback(async (srcGetter: FuturableOrLazy<string>) => {
-      const fetchedSource = await futureableOrLazyToFuturable(srcGetter);
-      setSource(fetchedSource);
+    const getSource = useCallback(async (srcGetter: FuturableOrLazy<string | undefined>) => {
+      setLoading(true);
+      let fetchedSource = undefined;
+      try {
+        fetchedSource = await futureableOrLazyToFuturable(srcGetter);
+      } catch {}
+      setLoading(false);
+      setSource(fetchedSource || undefined);
     }, []);
 
     useEffect(() => {
-      if (typeof src === 'string' || src === undefined) return setSource(src);
+      if (sourceIsNotPromise) {
+        setLoading(false);
+        setSource((src as string | undefined) || undefined);
+        return;
+      }
       getSource(src);
-    }, [src, getSource]);
+    }, [getSource, sourceIsNotPromise, src]);
 
     const imageClass = classnames('ui__image', className);
 
-    return source ? (
-      <img {...imgProps} alt={alt} src={source} className={imageClass} ref={ref} />
-    ) : (
-      <>{onRenderLoading?.()}</>
-    );
+    if (loading) return <>{onRenderLoading?.()}</>;
+    if (!source) return <>{onRenderFallback?.()}</>;
+    return <img {...imgProps} alt={alt} src={source} className={imageClass} ref={ref} />;
   },
 );
