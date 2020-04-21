@@ -4,6 +4,7 @@ exports[`Modal component snapshot renders default modal 1`] = `
 <Component>
   <div
     className="ui__base ui__modal__wrapper ui__modal__wrapper--closed"
+    onClick={[Function]}
   />
 </Component>
 `;

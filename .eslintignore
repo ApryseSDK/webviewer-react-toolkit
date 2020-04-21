@@ -5,3 +5,5 @@ storybook-build
 
 # Ignore node modules folder
 node_modules
+
+src/types.d.ts

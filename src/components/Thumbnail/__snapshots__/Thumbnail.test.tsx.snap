@@ -12,7 +12,9 @@ exports[`Thumbnail component snapshot renders default thumbnail 1`] = `
   >
     <ForwardRef
       alt="file_1.pdf"
+      onRenderFallback={[Function]}
       onRenderLoading={[Function]}
+      pending={true}
     />
   </div>
   <div
