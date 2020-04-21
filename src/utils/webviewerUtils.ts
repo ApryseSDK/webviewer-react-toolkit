@@ -1,5 +1,4 @@
 import { Futurable } from '../data';
-import { THUMBNAIL_WIDTH } from './constantUtils';
 
 export const globalLicense = (() => {
   let l: string | undefined = undefined;
@@ -71,15 +70,19 @@ export async function getThumbnail(documentObj: Futurable<CoreControls.Document>
   if (extension) {
     // TODO(types): once types are supported, remove `as unknown`
     const supportedFiles = (window.CoreControls?.SupportedFileFormats?.CLIENT as unknown) as string[] | undefined;
-    if (supportedFiles && !supportedFiles.includes(extension)) return '';
+    if (supportedFiles && !supportedFiles.includes(extension)) throw new Error('Unsupported file type.');
   }
   const fetchedDocument = await documentObj;
-  const canvas: HTMLCanvasElement = await new Promise(resolve => {
-    const pageWidth = fetchedDocument.getPageInfo(0).width;
-    const zoom = THUMBNAIL_WIDTH / pageWidth;
-    fetchedDocument.loadCanvasAsync({ pageIndex: 0, drawComplete: resolve, zoom });
-    fetchedDocument.loadThumbnailAsync(0, resolve);
+  const canvas: HTMLCanvasElement = await new Promise((resolve, reject) => {
+    const callback = (result: HTMLCanvasElement | undefined) => {
+      if (!result) return reject();
+      resolve();
+    };
+    fetchedDocument.loadThumbnailAsync(0, callback);
   });
 
-  return canvas.toDataURL() || '';
+  const url = canvas.toDataURL();
+  if (!url) throw new Error('Unable to get data url.');
+
+  return url;
 }
