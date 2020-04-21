@@ -8,7 +8,7 @@ interface VirtualizedProps {
   padding: number;
   size: { width: number; height: number };
   onColumnCountChange: (newColumnCount: number) => void;
-  renderItem: (file: any, index: number, style: React.CSSProperties | undefined) => JSX.Element; // eslint-disable-line @typescript-eslint/no-explicit-any
+  renderItem: (file: any, index: number, style: React.CSSProperties | undefined) => JSX.Element;
 }
 
 const MemoGridItem = memo<GridChildComponentProps>(({ columnIndex, rowIndex, style, data }) => {

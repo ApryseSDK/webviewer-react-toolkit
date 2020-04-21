@@ -59,7 +59,7 @@ export interface FileLike {
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
-  subscribe: (...args: any) => Function; // eslint-disable-line @typescript-eslint/no-explicit-any
+  subscribe: (...args: any) => Function;
 }
 
 export type FileEventType =

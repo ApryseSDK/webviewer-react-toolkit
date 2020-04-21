@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Remove the specified Keys of T. Like Omit, but with autocompletion.
  *

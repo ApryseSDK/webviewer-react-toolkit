@@ -24,8 +24,6 @@ interface TemplateProps {
   editable?: boolean;
 }
 
-/* eslint-disable @typescript-eslint/no-empty-function */
-
 const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy, editable }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<FakeFile[]>([]);

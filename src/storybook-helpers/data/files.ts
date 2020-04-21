@@ -7,6 +7,7 @@ import testPdfThumbnail from '../images/pdf-preview.png';
 export interface CreateFileOptions {
   pending?: boolean;
   lazy?: boolean;
+  error?: boolean;
 }
 
 export function createFile(index: number, options: CreateFileOptions = {}) {
@@ -32,12 +33,14 @@ export class FakeFile implements FileLike {
     this.documentObj = new MemoizedPromise<CoreControls.Document>(('' as unknown) as CoreControls.Document);
   }
 
-  /* eslint-disable @typescript-eslint/no-empty-function */
-
   private _getParameter<T>(parameter: T, options: CreateFileOptions) {
     const internals = (() => {
       if (options.pending) return async () => new Promise(() => {});
-      if (options.lazy) return async () => parameter;
+      if (options.lazy) return async () => Promise.resolve(parameter);
+      if (options.error)
+        return async () => {
+          throw new Error();
+        };
       return parameter;
     })();
     return new MemoizedPromise(internals as FuturableOrLazy<T>);
