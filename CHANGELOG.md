@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.17](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.16...v0.5.0-beta.17) (2020-04-21)
+
+### Bug Fixes
+
+- **getThumbnail:** fixed empty resolve bug ([21da478](https://github.com/PDFTron/webviewer-react-toolkit/commit/21da478d5ff5560f9c670bc7e552b01d620b05a7))
+
 ## [0.5.0-beta.16](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.15...v0.5.0-beta.16) (2020-04-21)
 
 ### ⚠ BREAKING CHANGES
