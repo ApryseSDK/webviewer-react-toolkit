@@ -75,8 +75,8 @@ export async function getThumbnail(documentObj: Futurable<CoreControls.Document>
   const fetchedDocument = await documentObj;
   const canvas: HTMLCanvasElement = await new Promise((resolve, reject) => {
     const callback = (result: HTMLCanvasElement | undefined) => {
-      if (!result) return reject();
-      resolve();
+      if (!result) return reject(result);
+      resolve(result);
     };
     fetchedDocument.loadThumbnailAsync(0, callback);
   });
