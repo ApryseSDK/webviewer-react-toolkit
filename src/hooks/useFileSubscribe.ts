@@ -1,11 +1,6 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FileEventType, FileLike, MemoizedPromise } from '../data';
 import { DEFAULT_THROTTLE_TIMEOUT } from '../utils';
-
-export interface UseFileSubscribeOptions {
-  /** The timeout to throttle initial fetch of value. Default: 500ms. */
-  throttle?: number;
-}
 
 /**
  * Will subscribe to a value from a file and return the value, as well as any
@@ -13,16 +8,19 @@ export interface UseFileSubscribeOptions {
  * @param file The file to subscribe to.
  * @param getCurrentValue Function to extract the current value from the file.
  * @param eventType The event type to subscribe. Won't subscribe if not given.
+ * @param throttle The timeout to throttle initial fetch of value. Default: 500ms.
  */
 export function useFileSubscribe<F extends FileLike, T>(
   file: F,
   getCurrentValue: (file: F) => T | MemoizedPromise<T>,
   eventType?: FileEventType,
-  options: UseFileSubscribeOptions = {},
+  throttle?: number,
 ) {
+  const getValue = useRef(getCurrentValue);
+
   const [error, setError] = useState<any>();
   const [value, setValue] = useState<T | undefined>(() => {
-    const currentValue = getCurrentValue(file);
+    const currentValue = getValue.current(file);
     if (currentValue instanceof MemoizedPromise) return undefined;
     return currentValue;
   });
@@ -43,19 +41,20 @@ export function useFileSubscribe<F extends FileLike, T>(
     const subscribe = (delay?: boolean) => {
       setError(undefined);
 
-      const val = getCurrentValue(file);
+      const val = getValue.current(file);
       if (!(val instanceof MemoizedPromise)) {
         // Non-memoized-promise, can set directly.
         setValue(val);
         return;
       }
 
-      if (!delay || val.done || options.throttle === 0) {
+      setValue(undefined);
+      if (!delay || val.done || throttle === 0) {
         setMemoValue(val);
       } else {
         timeout = window.setTimeout(() => {
           setMemoValue(val);
-        }, options.throttle ?? DEFAULT_THROTTLE_TIMEOUT);
+        }, throttle ?? DEFAULT_THROTTLE_TIMEOUT);
       }
     };
 
@@ -70,7 +69,7 @@ export function useFileSubscribe<F extends FileLike, T>(
       cancelled = true;
       clearTimeout(timeout);
     };
-  }, [eventType, file, getCurrentValue, options.throttle]);
+  }, [eventType, file, throttle]);
 
   return useMemo(() => [value, error, setValue], [error, value]);
 }

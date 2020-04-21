@@ -37,10 +37,7 @@ export class FakeFile implements FileLike {
     const internals = (() => {
       if (options.pending) return async () => new Promise(() => {});
       if (options.lazy) return async () => Promise.resolve(parameter);
-      if (options.error)
-        return async () => {
-          throw new Error();
-        };
+      if (options.error) return () => Promise.reject('Some error.');
       return parameter;
     })();
     return new MemoizedPromise(internals as FuturableOrLazy<T>);
