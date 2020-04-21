@@ -30,6 +30,8 @@ export const Throttled = () => <Thumbnail {...defaultProps({ lazy: true })} />;
 
 export const Pending = () => <Thumbnail {...defaultProps({ pending: true })} />;
 
+export const Rejected = () => <Thumbnail {...defaultProps({ error: true })} />;
+
 export const WithToolButtons = () => <Thumbnail {...defaultProps(undefined, undefined, true)} />;
 
 export const WithLabel = () => <Thumbnail label={text('label', 'some_label')} {...defaultProps()} />;

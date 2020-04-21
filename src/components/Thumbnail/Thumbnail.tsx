@@ -4,6 +4,7 @@ import { FileLike } from '../../data';
 import { useAccessibleFocus, useFile, useFocus } from '../../hooks';
 import { ClickableDiv, ClickableDivProps } from '../ClickableDiv';
 import { EditableText } from '../EditableText';
+import { FilePlaceholder } from '../FilePlaceholder';
 import { FileSkeleton } from '../FileSkeleton';
 import { Image } from '../Image';
 import { ToolButton } from '../ToolButton';
@@ -140,7 +141,11 @@ export function Thumbnail<F extends FileLike>({
         <Image
           src={file.thumbnail}
           alt={file.name}
+          pending={!file.thumbnail && !file.errors.thumbnail}
           onRenderLoading={() => <FileSkeleton className="ui__thumbnail__image__skeleton" />}
+          onRenderFallback={() => (
+            <FilePlaceholder className="ui__thumbnail__image__placeholder" extension={file.extension} />
+          )}
           className={imageClassName}
         />
       </div>

@@ -97,7 +97,8 @@ $thumbnail-border-size: 2px;
     }
 
     img,
-    .ui__thumbnail__image__skeleton {
+    .ui__thumbnail__image__skeleton,
+    .ui__thumbnail__image__placeholder {
       border: 1px solid $color-blue-gray-1;
       transition: $focus-transition;
     }
