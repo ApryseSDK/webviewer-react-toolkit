@@ -20,6 +20,12 @@ interface FileHook<F> {
   fileObj?: Blob;
   /** The resolved file documentObj or undefined until it is resolved. */
   documentObj?: CoreControls.Document;
+  errors: {
+    name?: any;
+    thumbnail?: any;
+    fileObj?: any;
+    documentObj?: any;
+  };
 }
 
 /**
@@ -29,10 +35,10 @@ interface FileHook<F> {
  * @param throttle The timeout if unfetched memo promise.
  */
 export function useFile<F extends FileLike>(file: F, throttle?: number): FileHook<F> {
-  const [name] = useFileSubscribe(file, f => f.name, 'onnamechange', { throttle });
-  const [thumbnail] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', { throttle });
-  const [fileObj] = useFileSubscribe(file, f => f.fileObj, 'onfileobjchange', { throttle });
-  const [documentObj] = useFileSubscribe(file, f => f.documentObj, 'ondocumentobjchange', { throttle });
+  const [name, nameErr] = useFileSubscribe(file, f => f.name, 'onnamechange', { throttle });
+  const [thumbnail, thumbnailErr] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', { throttle });
+  const [fileObj, fileObjErr] = useFileSubscribe(file, f => f.fileObj, 'onfileobjchange', { throttle });
+  const [documentObj, documentObjErr] = useFileSubscribe(file, f => f.documentObj, 'ondocumentobjchange', { throttle });
 
   const fileValue = useMemo<FileHook<F>>(
     () => ({
@@ -44,8 +50,14 @@ export function useFile<F extends FileLike>(file: F, throttle?: number): FileHoo
       thumbnail,
       fileObj,
       documentObj,
+      errors: {
+        name: nameErr,
+        thumbnail: thumbnailErr,
+        fileObj: fileObjErr,
+        documentObj: documentObjErr,
+      },
     }),
-    [file, name, documentObj, fileObj, thumbnail],
+    [documentObj, documentObjErr, file, fileObj, fileObjErr, name, nameErr, thumbnail, thumbnailErr],
   );
 
   return fileValue;

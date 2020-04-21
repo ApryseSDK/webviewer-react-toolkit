@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { FileEventType, FileLike, MemoizedPromise } from '../data';
 import { DEFAULT_THROTTLE_TIMEOUT } from '../utils';
 
 export interface UseFileSubscribeOptions {
   /** The timeout to throttle initial fetch of value. Default: 500ms. */
   throttle?: number;
-  /** Fired when async promise fails. */
-  onFailed?: (error: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 /**
@@ -22,13 +20,12 @@ export function useFileSubscribe<F extends FileLike, T>(
   eventType?: FileEventType,
   options: UseFileSubscribeOptions = {},
 ) {
-  const valueStateArray = useState<T | undefined>(() => {
+  const [error, setError] = useState<any>();
+  const [value, setValue] = useState<T | undefined>(() => {
     const currentValue = getCurrentValue(file);
     if (currentValue instanceof MemoizedPromise) return undefined;
     return currentValue;
   });
-
-  const [, setValue] = valueStateArray;
 
   useEffect(() => {
     let cancelled = false;
@@ -39,16 +36,21 @@ export function useFileSubscribe<F extends FileLike, T>(
         const val = await newValue.get();
         if (!cancelled) setValue(val);
       } catch (error) {
-        options.onFailed?.(error);
+        if (!cancelled) setError(error);
       }
     };
 
     const subscribe = (delay?: boolean) => {
+      setError(undefined);
+
       const val = getCurrentValue(file);
       if (!(val instanceof MemoizedPromise)) {
         // Non-memoized-promise, can set directly.
         setValue(val);
-      } else if (!delay || val.done || options.throttle === 0) {
+        return;
+      }
+
+      if (!delay || val.done || options.throttle === 0) {
         setMemoValue(val);
       } else {
         timeout = window.setTimeout(() => {
@@ -68,7 +70,7 @@ export function useFileSubscribe<F extends FileLike, T>(
       cancelled = true;
       clearTimeout(timeout);
     };
-  }, [eventType, file, getCurrentValue, setValue, options.onFailed, options.throttle]);
+  }, [eventType, file, getCurrentValue, options.throttle]);
 
-  return valueStateArray;
+  return useMemo(() => [value, error, setValue], [error, value]);
 }
