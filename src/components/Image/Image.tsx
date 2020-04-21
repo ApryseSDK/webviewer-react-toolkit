@@ -10,17 +10,22 @@ export interface ImageProps extends Remove<ImgHTMLAttributes<HTMLImageElement>, 
    */
   src?: FuturableOrLazy<string | undefined>;
   /**
+   * Manually set whether image should show loading state.
+   */
+  pending?: boolean;
+  /**
    * Render out an element to be shown while src is loading.
    */
   onRenderLoading?(): ReactNode;
   /**
-   * Render out an element to be shown if the .
+   * Render out an element to be shown if the image fails to load src, or src
+   * is falsy.
    */
   onRenderFallback?(): ReactNode;
 }
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, onRenderLoading, onRenderFallback, alt, className, ...imgProps }, ref) => {
+  ({ src, pending, onRenderLoading, onRenderFallback, alt, className, ...imgProps }, ref) => {
     const sourceIsNotPromise = typeof src === 'string' || !src;
     const [loading, setLoading] = useState(!sourceIsNotPromise);
     const [source, setSource] = useState<string | undefined>(
@@ -48,7 +53,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(
 
     const imageClass = classnames('ui__image', className);
 
-    if (loading) return <>{onRenderLoading?.()}</>;
+    if (loading || pending) return <>{onRenderLoading?.()}</>;
     if (!source) return <>{onRenderFallback?.()}</>;
     return <img {...imgProps} alt={alt} src={source} className={imageClass} ref={ref} />;
   },
