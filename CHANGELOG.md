@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.15](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.14...v0.5.0-beta.15) (2020-04-21)
+
+### Features
+
+- **file:** generate thumbnail exits early if file type is not supported ([6963e18](https://github.com/PDFTron/webviewer-react-toolkit/commit/6963e188d1c39db62a77fc7c119657c4de146852))
+- **FilePlaceholder:** added file placeholder component ([fe5e028](https://github.com/PDFTron/webviewer-react-toolkit/commit/fe5e028d4ea4e32fedd9f567234a2290e03d5b26))
+- **Image:** added pending prop to manually set loading state to true ([83a1261](https://github.com/PDFTron/webviewer-react-toolkit/commit/83a126167035ccaa515396617d8fc752b70fc17a))
+- **Image:** can handle rejected or falsy src with onRenderFallback ([0e3cec5](https://github.com/PDFTron/webviewer-react-toolkit/commit/0e3cec5ddfebe58f1cf17db261f570fda7ee79ea))
+- **Thumbnail:** consume errors from useFile for image loading ([f093aea](https://github.com/PDFTron/webviewer-react-toolkit/commit/f093aea31df9952071f7dc172bff812d030ee620))
+- **useFile:** added errors to useFile output ([67a77af](https://github.com/PDFTron/webviewer-react-toolkit/commit/67a77afa25e02b3daf85b032f1ec63d4366d2233))
+
+### Bug Fixes
+
+- **getThumbnail:** removed unnecessary operations ([bf4c9df](https://github.com/PDFTron/webviewer-react-toolkit/commit/bf4c9dfb4eb8628dace35c92626ca8776324e140))
+- **Modal:** click on modal no longer closes if background click enabled ([340b871](https://github.com/PDFTron/webviewer-react-toolkit/commit/340b871d216e395f3f0a7c57ce9aafa5e59bbfad))
+
 ## [0.5.0-beta.14](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.13...v0.5.0-beta.14) (2020-04-20)
 
 ### Features
