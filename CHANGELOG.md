@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0-beta.16](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.15...v0.5.0-beta.16) (2020-04-21)
+
+### ⚠ BREAKING CHANGES
+
+- **useFileSubscribe:** removed options and replaced with optional throttle
+
+### Bug Fixes
+
+- **useFileSubscribe:** value getter ref to prevent infinite looping ([276a9bf](https://github.com/PDFTron/webviewer-react-toolkit/commit/276a9bfc55e8dff24597072bc6684272e965f6f2))
+
 ## [0.5.0-beta.15](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.14...v0.5.0-beta.15) (2020-04-21)
 
 ### Features
