@@ -2,131 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.5.0-beta.17](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.16...v0.5.0-beta.17) (2020-04-21)
-
-### Bug Fixes
-
-- **getThumbnail:** fixed empty resolve bug ([21da478](https://github.com/PDFTron/webviewer-react-toolkit/commit/21da478d5ff5560f9c670bc7e552b01d620b05a7))
-
-## [0.5.0-beta.16](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.15...v0.5.0-beta.16) (2020-04-21)
+## [0.5.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.1...v0.5.0) (2020-04-29)
 
 ### ⚠ BREAKING CHANGES
 
 - **useFileSubscribe:** removed options and replaced with optional throttle
-
-### Bug Fixes
-
-- **useFileSubscribe:** value getter ref to prevent infinite looping ([276a9bf](https://github.com/PDFTron/webviewer-react-toolkit/commit/276a9bfc55e8dff24597072bc6684272e965f6f2))
-
-## [0.5.0-beta.15](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.14...v0.5.0-beta.15) (2020-04-21)
-
-### Features
-
-- **file:** generate thumbnail exits early if file type is not supported ([6963e18](https://github.com/PDFTron/webviewer-react-toolkit/commit/6963e188d1c39db62a77fc7c119657c4de146852))
-- **FilePlaceholder:** added file placeholder component ([fe5e028](https://github.com/PDFTron/webviewer-react-toolkit/commit/fe5e028d4ea4e32fedd9f567234a2290e03d5b26))
-- **Image:** added pending prop to manually set loading state to true ([83a1261](https://github.com/PDFTron/webviewer-react-toolkit/commit/83a126167035ccaa515396617d8fc752b70fc17a))
-- **Image:** can handle rejected or falsy src with onRenderFallback ([0e3cec5](https://github.com/PDFTron/webviewer-react-toolkit/commit/0e3cec5ddfebe58f1cf17db261f570fda7ee79ea))
-- **Thumbnail:** consume errors from useFile for image loading ([f093aea](https://github.com/PDFTron/webviewer-react-toolkit/commit/f093aea31df9952071f7dc172bff812d030ee620))
-- **useFile:** added errors to useFile output ([67a77af](https://github.com/PDFTron/webviewer-react-toolkit/commit/67a77afa25e02b3daf85b032f1ec63d4366d2233))
-
-### Bug Fixes
-
-- **getThumbnail:** removed unnecessary operations ([bf4c9df](https://github.com/PDFTron/webviewer-react-toolkit/commit/bf4c9dfb4eb8628dace35c92626ca8776324e140))
-- **Modal:** click on modal no longer closes if background click enabled ([340b871](https://github.com/PDFTron/webviewer-react-toolkit/commit/340b871d216e395f3f0a7c57ce9aafa5e59bbfad))
-
-## [0.5.0-beta.14](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.13...v0.5.0-beta.14) (2020-04-20)
-
-### Features
-
-- **Thumbnail:** white background color on thumbnail image ([fbb8366](https://github.com/PDFTron/webviewer-react-toolkit/commit/fbb83669c254f30ba0e080a54949d35629965af9))
-
-## [0.5.0-beta.13](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.12...v0.5.0-beta.13) (2020-04-20)
-
-### Features
-
-- **file:** improved methods for setting global or local license ([94d827a](https://github.com/PDFTron/webviewer-react-toolkit/commit/94d827af4ce10a6cadb5ffb0d515a0aa10bc15fb))
-
-## [0.5.0-beta.12](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.11...v0.5.0-beta.12) (2020-04-20)
-
-### Features
-
-- **file:** can add license key to enable full file functionality ([517f605](https://github.com/PDFTron/webviewer-react-toolkit/commit/517f605ff6b7a74a143c3d546814c26b7dd3996e))
-
-## [0.5.0-beta.11](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.10...v0.5.0-beta.11) (2020-04-17)
-
-### Bug Fixes
-
-- **Modal:** if noUnmount is true use visibility instead of display none ([bf4b04c](https://github.com/PDFTron/webviewer-react-toolkit/commit/bf4b04c808763b4d9d015c801f4078610f62306e))
-
-## [0.5.0-beta.10](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.9...v0.5.0-beta.10) (2020-04-17)
-
-### Bug Fixes
-
-- **Modal:** fixed focus lock logic ([43bfc3a](https://github.com/PDFTron/webviewer-react-toolkit/commit/43bfc3a987924a274fc35d71dc19a5d446ba2f9d))
-
-## [0.5.0-beta.9](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.8...v0.5.0-beta.9) (2020-04-17)
-
-### Bug Fixes
-
-- **useFocusTrap:** fix infinite loop while server-side rendering ([77681c3](https://github.com/PDFTron/webviewer-react-toolkit/commit/77681c3c4c53c5c24be75a962b0f8d6e8e7efbe1))
-
-## [0.5.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.7...v0.5.0-beta.8) (2020-04-17)
-
-### Features
-
-- **Modal:** added noUnmount prop to disable modal unmount when closed ([313341d](https://github.com/PDFTron/webviewer-react-toolkit/commit/313341d8b5f4195fe15e59ced2e33b378ebcb2c2))
-
-## [0.5.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.6...v0.5.0-beta.7) (2020-04-17)
-
-### Features
-
-- **Modal:** added wrapperClassName prop ([9f1348d](https://github.com/PDFTron/webviewer-react-toolkit/commit/9f1348dc1cf7281e6587d9945792fdd47cb5e6e4))
-
-## [0.5.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.5...v0.5.0-beta.6) (2020-04-16)
-
-### Features
-
-- **Modal:** fullWidth prop removes max width ([82c3ab3](https://github.com/PDFTron/webviewer-react-toolkit/commit/82c3ab3c6d8ec815a1448a9e7c175c5bbeecf158))
-- **Modal:** header is now optional ([c48b234](https://github.com/PDFTron/webviewer-react-toolkit/commit/c48b234c69dc7afd57ce47b1a6d67022458ec039))
-
-## [0.5.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.4...v0.5.0-beta.5) (2020-04-16)
-
-### Bug Fixes
-
-- **Modal:** removed width auto above mobile ([a673f2c](https://github.com/PDFTron/webviewer-react-toolkit/commit/a673f2c9c7ce869b8959a57953fb2a34c3b8690c))
-
-## [0.5.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.3...v0.5.0-beta.4) (2020-04-16)
-
-### Features
-
-- **useManagedFiles:** easyMultiSelect option ([f272fbe](https://github.com/PDFTron/webviewer-react-toolkit/commit/f272fbe2bbf43bf24afcbe7da5b49a1d4f23a58b))
-
-## [0.5.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.2...v0.5.0-beta.3) (2020-04-15)
-
-### Features
-
-- **file:** can provide optional id during instantiation ([50094df](https://github.com/PDFTron/webviewer-react-toolkit/commit/50094dfcb79746c2492bed59f087cb7dc534645e))
-
-## [0.5.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0-beta.1...v0.5.0-beta.2) (2020-04-15)
-
-### ⚠ BREAKING CHANGES
-
 - **useManagedFiles:** removed selectWithoutShift option, added preventMultiSelect option, shift no longer multi selects, instead it range selects multiple files, while pressing command or control will allow adding multiple single files to the selection
 
 ### Features
 
+- **Choice:** added props to make choice a switch and move label to left ([1b51df0](https://github.com/PDFTron/webviewer-react-toolkit/commit/1b51df05e4c94bc0291581bf27b0119a2e9bc090))
+- **file:** can add license key to enable full file functionality ([517f605](https://github.com/PDFTron/webviewer-react-toolkit/commit/517f605ff6b7a74a143c3d546814c26b7dd3996e))
+- **file:** can provide optional id during instantiation ([50094df](https://github.com/PDFTron/webviewer-react-toolkit/commit/50094dfcb79746c2492bed59f087cb7dc534645e))
+- **file:** generate thumbnail exits early if file type is not supported ([6963e18](https://github.com/PDFTron/webviewer-react-toolkit/commit/6963e188d1c39db62a77fc7c119657c4de146852))
+- **file:** improved methods for setting global or local license ([94d827a](https://github.com/PDFTron/webviewer-react-toolkit/commit/94d827af4ce10a6cadb5ffb0d515a0aa10bc15fb))
+- **FilePlaceholder:** added file placeholder component ([fe5e028](https://github.com/PDFTron/webviewer-react-toolkit/commit/fe5e028d4ea4e32fedd9f567234a2290e03d5b26))
+- **Image:** added pending prop to manually set loading state to true ([83a1261](https://github.com/PDFTron/webviewer-react-toolkit/commit/83a126167035ccaa515396617d8fc752b70fc17a))
+- **Image:** can handle rejected or falsy src with onRenderFallback ([0e3cec5](https://github.com/PDFTron/webviewer-react-toolkit/commit/0e3cec5ddfebe58f1cf17db261f570fda7ee79ea))
+- **Modal:** added noUnmount prop to disable modal unmount when closed ([313341d](https://github.com/PDFTron/webviewer-react-toolkit/commit/313341d8b5f4195fe15e59ced2e33b378ebcb2c2))
+- **Modal:** added wrapperClassName prop ([9f1348d](https://github.com/PDFTron/webviewer-react-toolkit/commit/9f1348dc1cf7281e6587d9945792fdd47cb5e6e4))
+- **Modal:** fullWidth prop removes max width ([82c3ab3](https://github.com/PDFTron/webviewer-react-toolkit/commit/82c3ab3c6d8ec815a1448a9e7c175c5bbeecf158))
+- **Modal:** header is now optional ([c48b234](https://github.com/PDFTron/webviewer-react-toolkit/commit/c48b234c69dc7afd57ce47b1a6d67022458ec039))
+- **Thumbnail:** consume errors from useFile for image loading ([f093aea](https://github.com/PDFTron/webviewer-react-toolkit/commit/f093aea31df9952071f7dc172bff812d030ee620))
+- **Thumbnail:** white background color on thumbnail image ([fbb8366](https://github.com/PDFTron/webviewer-react-toolkit/commit/fbb83669c254f30ba0e080a54949d35629965af9))
+- **useFile:** added errors to useFile output ([67a77af](https://github.com/PDFTron/webviewer-react-toolkit/commit/67a77afa25e02b3daf85b032f1ec63d4366d2233))
+- **useManagedFiles:** easyMultiSelect option ([f272fbe](https://github.com/PDFTron/webviewer-react-toolkit/commit/f272fbe2bbf43bf24afcbe7da5b49a1d4f23a58b))
 - **useManagedFiles:** shift for range select, meta or ctrl for multi ([b8e7775](https://github.com/PDFTron/webviewer-react-toolkit/commit/b8e7775dd670ba6005076881bc746569ae3a6c1f))
 
 ### Bug Fixes
 
+- **getThumbnail:** fixed empty resolve bug ([21da478](https://github.com/PDFTron/webviewer-react-toolkit/commit/21da478d5ff5560f9c670bc7e552b01d620b05a7))
+- **getThumbnail:** removed unnecessary operations ([bf4c9df](https://github.com/PDFTron/webviewer-react-toolkit/commit/bf4c9dfb4eb8628dace35c92626ca8776324e140))
+- **Modal:** click on modal no longer closes if background click enabled ([340b871](https://github.com/PDFTron/webviewer-react-toolkit/commit/340b871d216e395f3f0a7c57ce9aafa5e59bbfad))
+- **Modal:** fixed focus lock logic ([43bfc3a](https://github.com/PDFTron/webviewer-react-toolkit/commit/43bfc3a987924a274fc35d71dc19a5d446ba2f9d))
+- **Modal:** if noUnmount is true use visibility instead of display none ([bf4b04c](https://github.com/PDFTron/webviewer-react-toolkit/commit/bf4b04c808763b4d9d015c801f4078610f62306e))
+- **Modal:** removed width auto above mobile ([a673f2c](https://github.com/PDFTron/webviewer-react-toolkit/commit/a673f2c9c7ce869b8959a57953fb2a34c3b8690c))
 - **Thumbnail:** focus now appears on arrow nav as well as tabbing ([70efd90](https://github.com/PDFTron/webviewer-react-toolkit/commit/70efd9044a2a7fb751182f8dc9dd89f13a35ac06))
 - **Thumbnail:** prevent image drag from interfering with file dragging ([53dfa12](https://github.com/PDFTron/webviewer-react-toolkit/commit/53dfa129682279a2d4b213d08ee6b915d369f055))
-
-## [0.5.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.1...v0.5.0-beta.1) (2020-04-14)
-
-### Features
-
-- **Choice:** added props to make choice a switch and move label to left ([1b51df0](https://github.com/PDFTron/webviewer-react-toolkit/commit/1b51df05e4c94bc0291581bf27b0119a2e9bc090))
+- **useFileSubscribe:** value getter ref to prevent infinite looping ([276a9bf](https://github.com/PDFTron/webviewer-react-toolkit/commit/276a9bfc55e8dff24597072bc6684272e965f6f2))
+- **useFocusTrap:** fix infinite loop while server-side rendering ([77681c3](https://github.com/PDFTron/webviewer-react-toolkit/commit/77681c3c4c53c5c24be75a962b0f8d6e8e7efbe1))
 
 ## [0.4.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.3.2...v0.4.1) (2020-04-09)
 
