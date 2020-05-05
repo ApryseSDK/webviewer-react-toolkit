@@ -57,6 +57,9 @@ export const ToastProvider: FC<ToastProviderProps> = ({
 
   const _pop = useCallback(() => setClosing(true), []);
 
+  const toastsRef = useCurrentRef(toasts);
+  const closingRef = useCurrentRef(closing);
+
   useEffect(() => {
     if (closing) {
       const timeoutId = window.setTimeout(() => {
@@ -105,13 +108,13 @@ export const ToastProvider: FC<ToastProviderProps> = ({
 
   const remove = useCallback<ToastContextValue['remove']>(
     toastId => {
-      if (!toasts.length) return;
-      const index = toastId === undefined ? 0 : toasts.findIndex(toast => toast.toastId === toastId);
+      if (!toastsRef.current.length) return;
+      const index = toastId === undefined ? 0 : toastsRef.current.findIndex(toast => toast.toastId === toastId);
       if (index === -1) return;
       if (index === 0) return _pop();
       setToasts(prev => [...prev.slice(0, index), ...prev.slice(index + 1)]);
     },
-    [_pop, toasts],
+    [_pop, toastsRef],
   );
 
   const modify = useCallback<ToastContextValue['modify']>((id, update) => {
@@ -124,12 +127,12 @@ export const ToastProvider: FC<ToastProviderProps> = ({
 
   const exists = useCallback<ToastContextValue['exists']>(
     id => {
-      const index = toasts.findIndex(t => t.toastId === id);
+      const index = toastsRef.current.findIndex(t => t.toastId === id);
       if (index === -1) return false;
-      if (closing && index === 0) return false;
+      if (closingRef.current && index === 0) return false;
       return true;
     },
-    [closing, toasts],
+    [closingRef, toastsRef],
   );
 
   const value = useMemo<ToastContextValue>(() => ({ add, remove, modify, exists }), [add, remove, modify, exists]);
