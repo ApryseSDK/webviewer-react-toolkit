@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.1...v0.6.0-beta.2) (2020-05-05)
+
+### Features
+
+- **Toast:** added loading toast ([95364f5](https://github.com/PDFTron/webviewer-react-toolkit/commit/95364f5be0f3a244637f70e1b31d05d647cf5fdd))
+- **ToastProvider:** added modify toast and exists methods ([f04731f](https://github.com/PDFTron/webviewer-react-toolkit/commit/f04731f1845cc506c1b5deb72dc20d89a541f6c0))
+
 ## [0.6.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0...v0.6.0-beta.1) (2020-05-05)
 
 ### Features
