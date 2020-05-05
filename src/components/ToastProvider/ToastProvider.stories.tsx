@@ -52,6 +52,13 @@ export const Basic = () => (
         'ToastProvider',
       ) as CommonToastProps['message']) || undefined
     }
+    position={select(
+      'position',
+      ['top-left', 'top', 'top-right', 'bottom-left', 'bottom', 'bottom-right'],
+      'top-right',
+      'ToastProvider',
+    )}
+    customPadding={boolean('has customPadding', false, 'ToastProvider') ? 100 : undefined}
   >
     <DemoButtons />
   </ToastProvider>

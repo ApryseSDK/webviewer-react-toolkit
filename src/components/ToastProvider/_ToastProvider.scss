@@ -1,6 +1,15 @@
+%toastProvider-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+}
+
 .ui__toastProvider {
   opacity: 1;
   @include opacity-transition;
+  position: relative;
 
   &--closing {
     opacity: 0;
@@ -8,7 +17,6 @@
 
   &__toast {
     display: flex;
-    justify-content: flex-end;
     padding: $padding;
     pointer-events: none !important;
 
@@ -16,7 +24,38 @@
       pointer-events: all;
     }
 
-    transform: translateY(-100%);
     @include slide-in;
+
+    &--position {
+      &-top-left {
+        transform: translateY(-100%);
+        justify-content: flex-start;
+      }
+
+      &-top {
+        transform: translateY(-100%);
+        justify-content: center;
+      }
+
+      &-top-right {
+        transform: translateY(-100%);
+        justify-content: flex-end;
+      }
+
+      &-bottom-left {
+        @extend %toastProvider-bottom;
+        justify-content: flex-start;
+      }
+
+      &-bottom {
+        @extend %toastProvider-bottom;
+        justify-content: center;
+      }
+
+      &-bottom-right {
+        @extend %toastProvider-bottom;
+        justify-content: flex-end;
+      }
+    }
   }
 }

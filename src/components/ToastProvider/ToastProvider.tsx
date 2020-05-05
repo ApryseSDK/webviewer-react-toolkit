@@ -16,6 +16,22 @@ export interface ToastProviderProps {
    * they are cleared manually.
    */
   noTimeout?: CommonToastProps['message'] | CommonToastProps['message'][];
+  /**
+   * Specify the location where the toasts will appear from.
+   * @default "top-right"
+   */
+  position?: 'top-left' | 'top' | 'top-right' | 'bottom-left' | 'bottom' | 'bottom-right';
+  /**
+   * If provided, will position the toast this number of pixels away from the
+   * edge of the screen. This only applies on the y axis, you will have to use
+   * `className` to add any other styles.
+   */
+  customPadding?: number;
+  /**
+   * Custom classname for the div that wraps the toast. This can be used to add
+   * custom padding or override the animations.
+   */
+  className?: string;
 }
 
 interface ToastQueueItem extends AddToast {
@@ -24,7 +40,14 @@ interface ToastQueueItem extends AddToast {
 
 let toastIdSequence = 1;
 
-export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, noTimeout, children }) => {
+export const ToastProvider: FC<ToastProviderProps> = ({
+  defaultTimeout,
+  noTimeout,
+  position = 'top-right',
+  customPadding,
+  className,
+  children,
+}) => {
   const [toasts, setToasts] = useState<ToastQueueItem[]>([]);
   const [closing, setClosing] = useState(false);
 
@@ -103,13 +126,29 @@ export const ToastProvider: FC<ToastProviderProps> = ({ defaultTimeout, noTimeou
     [add, remove, toasts],
   );
 
+  const padding = useMemo(() => {
+    if (customPadding === undefined) return undefined;
+    const isTop = ['top-left', 'top', 'top-right'].includes(position);
+    return customPadding !== undefined
+      ? {
+          paddingTop: isTop ? customPadding : undefined,
+          paddingBottom: isTop ? undefined : customPadding,
+        }
+      : undefined;
+  }, [customPadding, position]);
+
   const toastProviderClass = classnames('ui__toastProvider', { 'ui__toastProvider--closing': closing });
+  const toastClass = classnames(
+    'ui__toastProvider__toast',
+    `ui__toastProvider__toast--position-${position}`,
+    className,
+  );
 
   return (
     <ToastContext.Provider value={value}>
       {toastId && (
         <Overlay>
-          <div className="ui__toastProvider__toast" key={toastId}>
+          <div className={toastClass} key={toastId} style={padding}>
             <Toast
               {...toastProps}
               role={toastProps.message === 'error' ? 'alert' : 'status'}
