@@ -24,6 +24,19 @@ body {
   user-select: none;
 }
 
+.toastprovider__buttons {
+  display: flex;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 16px;
+  }
+  button {
+    margin-bottom: 16px;
+  }
+}
+
 .colors__theme {
   z-index: $z-index-dragging;
   position: sticky;

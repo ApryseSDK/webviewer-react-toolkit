@@ -16,7 +16,7 @@ export interface CommonToastProps {
    * icon of the toast.
    * @default "info"
    */
-  message?: 'info' | 'success' | 'warning' | 'error';
+  message?: 'info' | 'success' | 'warning' | 'error' | 'loading';
   /**
    * Adds an action button to the toast. Will position to the left of the close
    * button if `onClose` was provided.
@@ -54,6 +54,18 @@ export interface ToastContextValue {
    * @param toastId The ID of the toast to remove.
    */
   remove(toastId?: number): void;
+  /**
+   * Modify a toast by providing the ID, then a partial toast object with fields
+   * you wish to update.
+   * @param toastId The ID of the toast to update.
+   * @param toUpdate The toast fields to update.
+   */
+  modify(toastId: number, toUpdate: Partial<AddToast>): void;
+  /**
+   * Returns true if toast exists in the queue.
+   * @param toastId The ID of the toast to check.
+   */
+  exists(toastId: number): boolean;
 }
 
 export const ToastContext = createContext<ToastContextValue>({} as ToastContextValue);

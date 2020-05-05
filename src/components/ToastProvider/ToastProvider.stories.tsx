@@ -17,23 +17,39 @@ const DemoButtons = () => {
   const hasTimeout = boolean('has timeout', false, 'ToastContext.add');
   const timeout = hasTimeout ? integer('timeout', 0, 'ToastContext.add') : undefined;
 
-  const pushToast = (message: ToastProps['message']) => {
-    toast.add({
+  const pushToast = (message: ToastProps['message'], loading?: boolean) => {
+    const id = toast.add({
       heading: `A new ${message} toast`,
       children,
-      message,
+      message: loading ? 'loading' : message,
       action: hasAction ? { text: 'Fire Alert', onClick: () => alert('Fired action.') } : undefined,
       closable,
       timeout,
     });
+
+    setTimeout(() => {
+      toast.modify(id, { message });
+    }, 2000);
   };
 
   return (
     <div style={{ display: 'grid', justifyContent: 'center', gap: 8 }}>
-      <Button onClick={() => pushToast('info')}>Add info Toast</Button>
-      <Button onClick={() => pushToast('success')}>Add success Toast</Button>
-      <Button onClick={() => pushToast('warning')}>Add warning Toast</Button>
-      <Button onClick={() => pushToast('error')}>Add error Toast</Button>
+      <div className="toastprovider__buttons">
+        <div>
+          <Button onClick={() => pushToast('info')}>Add info Toast</Button>
+          <Button onClick={() => pushToast('success')}>Add success Toast</Button>
+          <Button onClick={() => pushToast('warning')}>Add warning Toast</Button>
+          <Button onClick={() => pushToast('error')}>Add error Toast</Button>
+          <Button onClick={() => pushToast('loading')}>Add loading Toast</Button>
+        </div>
+        <div>
+          <Button onClick={() => pushToast('info', true)}>Add delayed info Toast</Button>
+          <Button onClick={() => pushToast('success', true)}>Add delayed success Toast</Button>
+          <Button onClick={() => pushToast('warning', true)}>Add delayed warning Toast</Button>
+          <Button onClick={() => pushToast('error', true)}>Add delayed error Toast</Button>
+        </div>
+      </div>
+
       <Button buttonStyle="outline" onClick={() => toast.remove()}>
         Pop current Toast
       </Button>
@@ -47,7 +63,7 @@ export const Basic = () => (
     noTimeout={
       (select(
         'noTimeout',
-        ['', 'info', 'success', 'warning', 'error'],
+        ['', 'info', 'success', 'warning', 'error', 'loading'],
         '',
         'ToastProvider',
       ) as CommonToastProps['message']) || undefined

@@ -55,9 +55,8 @@ export const ToastProvider: FC<ToastProviderProps> = ({
   const onHover = useCallback(() => setHovered(true), []);
   const onBlur = useCallback(() => setHovered(false), []);
 
-  const _pop = useCallback(() => {
-    setClosing(true);
-  }, []);
+  const _pop = useCallback(() => setClosing(true), []);
+
   useEffect(() => {
     if (closing) {
       const timeoutId = window.setTimeout(() => {
@@ -89,16 +88,14 @@ export const ToastProvider: FC<ToastProviderProps> = ({
   }, [defaultTimeout, noTimeoutTypes, timeout, toastProps.message]);
 
   useEffect(() => {
-    if (!hovered && toastId && timeoutValue) {
-      const timeoutId = window.setTimeout(() => {
-        _pop();
-      }, timeoutValue);
-      return () => {
-        window.clearTimeout(timeoutId);
-      };
+    // toastId and toastProps.message are included to reset timer when message
+    // changes.
+    if (!hovered && toastId && timeoutValue && toastProps.message) {
+      const timeoutId = window.setTimeout(_pop, timeoutValue);
+      return () => window.clearTimeout(timeoutId);
     }
     return;
-  }, [_pop, hovered, timeoutValue, toastId]);
+  }, [_pop, hovered, timeoutValue, toastId, toastProps.message]);
 
   const add = useCallback<ToastContextValue['add']>(toast => {
     const toastId = toastIdSequence++;
@@ -117,14 +114,25 @@ export const ToastProvider: FC<ToastProviderProps> = ({
     [_pop, toasts],
   );
 
-  const value = useMemo<ToastContextValue>(
-    () => ({
-      add,
-      remove,
-      toasts,
-    }),
-    [add, remove, toasts],
+  const modify = useCallback<ToastContextValue['modify']>((id, update) => {
+    setToasts(prev => {
+      const index = prev.findIndex(t => t.toastId === id);
+      if (index === -1) return prev;
+      return [...prev.slice(0, index), { ...prev[index], ...update }, ...prev.slice(index + 1)];
+    });
+  }, []);
+
+  const exists = useCallback<ToastContextValue['exists']>(
+    id => {
+      const index = toasts.findIndex(t => t.toastId === id);
+      if (index === -1) return false;
+      if (closing && index === 0) return false;
+      return true;
+    },
+    [closing, toasts],
   );
+
+  const value = useMemo<ToastContextValue>(() => ({ add, remove, modify, exists }), [add, remove, modify, exists]);
 
   const padding = useMemo(() => {
     if (customPadding === undefined) return undefined;
