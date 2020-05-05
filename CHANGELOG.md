@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.2...v0.6.0-beta.3) (2020-05-05)
+
+### Bug Fixes
+
+- **ToastProvider:** using refs to keep exists query up to date ([b10d04e](https://github.com/PDFTron/webviewer-react-toolkit/commit/b10d04e82cecf017d1ef1e1b1bc3ad116e8018c6))
+
 ## [0.6.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.1...v0.6.0-beta.2) (2020-05-05)
 
 ### Features
