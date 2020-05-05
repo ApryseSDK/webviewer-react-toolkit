@@ -5,6 +5,7 @@ import { getStringId } from '../../utils';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { IconButton } from '../IconButton';
+import { Spinner } from '../Spinner';
 
 export interface ToastProps extends CommonToastProps, HTMLAttributes<HTMLDivElement> {
   /**
@@ -50,6 +51,8 @@ export const Toast: FC<ToastProps> = ({
         return 'Warning';
       case 'error':
         return 'Error';
+      case 'loading':
+        return undefined;
     }
   }, [message]);
 
@@ -66,7 +69,7 @@ export const Toast: FC<ToastProps> = ({
       aria-atomic={ariaAtomic}
     >
       <div className="ui__toast__border" />
-      <Icon icon={icon} className="ui__toast__icon" />
+      {icon ? <Icon icon={icon} className="ui__toast__icon" /> : <Spinner className="ui__toast__spinner" />}
       <div className="ui__toast__copy">
         {heading ? (
           <div className="ui__toast__copy__heading" id={headingId}>
