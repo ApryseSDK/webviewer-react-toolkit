@@ -96,7 +96,7 @@
     &-small {
       border-radius: $border-radius;
       font-size: $font-size-small;
-      padding: ($padding-tiny / 2) $padding-tiny;
+      padding: 2px $padding-tiny;
       min-height: 24px;
     }
 
