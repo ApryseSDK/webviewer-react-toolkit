@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.3...v0.6.0-beta.4) (2020-05-14)
+
+### Bug Fixes
+
+- **Button:** restored broken padding on small button ([f03b079](https://github.com/PDFTron/webviewer-react-toolkit/commit/f03b0792e6394e260837e78088586e6eddb0792d))
+
 ## [0.6.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.2...v0.6.0-beta.3) (2020-05-05)
 
 ### Bug Fixes
