@@ -32,7 +32,7 @@
     "library",
     "front-end"
   ],
-  "main": "test",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "unpkg": "./dist/umd/webviewer-react-toolkit.min.js",
   "style": "./dist/css/style.css",
