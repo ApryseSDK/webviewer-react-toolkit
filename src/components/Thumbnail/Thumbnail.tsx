@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React, { MouseEvent, ReactNode, ReactText, useRef } from 'react';
 import { FileLike } from '../../data';
-import { useAccessibleFocus, useFile, useFocus } from '../../hooks';
+import { useAccessibleFocus, useFileSubscribe, useFocus } from '../../hooks';
 import { ClickableDiv, ClickableDivProps } from '../ClickableDiv';
 import { EditableText } from '../EditableText';
 import { FilePlaceholder } from '../FilePlaceholder';
@@ -75,7 +75,7 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
 }
 
 export function Thumbnail<F extends FileLike>({
-  file: _file,
+  file,
   label,
   selected,
   dragging,
@@ -99,19 +99,21 @@ export function Thumbnail<F extends FileLike>({
 
   const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
-  const file = useFile(_file, isShownOnLoad ? 0 : throttle);
+  const toThrottle = isShownOnLoad ? 0 : throttle;
+  const [thumbnail, thumbnailErr] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', toThrottle);
+  const [name] = useFileSubscribe(file, f => f.name, 'onnamechange');
 
   const handleOnSave = (newName: string) => {
-    onRename?.(newName, file.file);
-    onEditingChange?.(false, file.file);
+    onRename?.(newName, file);
+    onEditingChange?.(false, file);
   };
 
   const handleOnCancel = () => {
-    onEditingChange?.(false, file.file);
+    onEditingChange?.(false, file);
   };
 
   const handleOnEdit = () => {
-    onEditingChange?.(true, file.file);
+    onEditingChange?.(true, file);
   };
 
   const thumbnailClass = classnames(
@@ -139,9 +141,9 @@ export function Thumbnail<F extends FileLike>({
     >
       <div className="ui__thumbnail__image">
         <Image
-          src={file.thumbnail}
-          alt={file.name}
-          pending={!file.thumbnail && !file.errors.thumbnail}
+          src={thumbnail}
+          alt={name}
+          pending={!thumbnail && !thumbnailErr}
           onRenderLoading={() => <FileSkeleton className="ui__thumbnail__image__skeleton" />}
           onRenderFallback={() => (
             <FilePlaceholder className="ui__thumbnail__image__placeholder" extension={file.extension} />
@@ -151,7 +153,7 @@ export function Thumbnail<F extends FileLike>({
       </div>
       <div className="ui__thumbnail__controls">
         {buttonProps?.map(({ key, ...buttonPropObject }) => (
-          <ToolButton key={key} disabled={disabled} onClick={e => buttonPropObject.onClick(e, file.file)}>
+          <ToolButton key={key} disabled={disabled} onClick={e => buttonPropObject.onClick(e, file)}>
             {buttonPropObject.children}
           </ToolButton>
         ))}
@@ -159,7 +161,7 @@ export function Thumbnail<F extends FileLike>({
       {selectedIcon ? <div className="ui__thumbnail__selectedIcon">{selectedIcon}</div> : undefined}
       <EditableText
         className="ui__thumbnail__label"
-        value={label ?? file.name}
+        value={label ?? name}
         centerText
         disabled={disabled}
         locked={!onRename || otherDragging}
