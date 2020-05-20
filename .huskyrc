@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "pre-commit": "pretty-quick --staged",
+    "pre-commit": "pretty-quick --staged && node scripts/verify-package-json.js",
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
   }
 }
