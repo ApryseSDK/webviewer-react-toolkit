@@ -14,7 +14,7 @@
     "make": "ts-node scripts/make",
     "parse-scss": "node scripts/parse_scss",
     "clean": "rm -rf dist & rm -rf lib",
-    "build": "yarn clean && webpack --config webpack.config.ts && scripts/build_package.sh",
+    "build": "yarn clean && node scripts/verify-package-json.js && webpack --config webpack.config.ts && scripts/build_package.sh",
     "lint": "eslint './src' --ext .js,.jsx,.ts,.tsx --cache",
     "test": "jest ./src --config ./jest.config.js",
     "ci": "yarn lint && yarn test",
@@ -32,7 +32,7 @@
     "library",
     "front-end"
   ],
-  "main": "test",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "unpkg": "./dist/umd/webviewer-react-toolkit.min.js",
   "style": "./dist/css/style.css",

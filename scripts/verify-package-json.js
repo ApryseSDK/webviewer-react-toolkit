@@ -6,8 +6,8 @@ const fs = require('fs');
  * any local repos are destroyed before commiting
  */
 (async () => {
-  const jsonPath = path.resolve(__dirname, './package.json');
+  const jsonPath = path.resolve(__dirname, '../package.json');
   const json = JSON.parse(fs.readFileSync(jsonPath) + '');
   json.main = "./dist/cjs/index.js";
-  fs.writeFileSync(json, JSON.stringify(json, null, 2));
+  fs.writeFileSync(jsonPath, JSON.stringify(json, null, 2));
 })()
