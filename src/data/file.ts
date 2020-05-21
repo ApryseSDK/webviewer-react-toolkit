@@ -281,7 +281,7 @@ export class File implements FileLike {
    * @param type The file event type to dispatch.
    */
   dispatchEvent(type: FileEventType) {
-    this._subscribers[type]?.forEach(subscriber => subscriber());
+    this._subscribers[type]?.forEach((subscriber) => subscriber());
     if (type !== 'onchange') this.dispatchEvent('onchange');
   }
 
@@ -292,7 +292,7 @@ export class File implements FileLike {
    * @param subscriber The listener to remove.
    */
   private _unsubscribe(type: FileEventType, subscriber: FileEventListener) {
-    return () => (this._subscribers[type] = this._subscribers[type]?.filter(l => l !== subscriber));
+    return () => (this._subscribers[type] = this._subscribers[type]?.filter((l) => l !== subscriber));
   }
 
   /* --- Private helpers. --- */

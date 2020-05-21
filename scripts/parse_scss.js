@@ -18,7 +18,7 @@ function getAST(path) {
  */
 function getTitle(group) {
   let words = group.split(/(?=[A-Z])/);
-  words = words.map(w => w.charAt(0).toUpperCase() + w.slice(1));
+  words = words.map((w) => w.charAt(0).toUpperCase() + w.slice(1));
   return words.join(' ');
 }
 
@@ -31,17 +31,17 @@ function propMap() {
   const themeNodes = themeAst.nodes;
 
   const darkCssVariables = themeNodes
-    .find(n => n.selector === "html[data-theme='dark']")
-    .nodes.filter(n => n.prop && n.value)
+    .find((n) => n.selector === "html[data-theme='dark']")
+    .nodes.filter((n) => n.prop && n.value)
     .map(({ prop, value }) => ({ prop, value }));
 
-  return declaration => {
+  return (declaration) => {
     const { p, v } = { p: declaration.prop, v: declaration.value };
     const scss = `$${p.slice(2)}`;
     const css = `var(${p})`;
     const value = v;
     const dark =
-      (darkCssVariables.find(c => c.prop === p) || {}).value || value;
+      (darkCssVariables.find((c) => c.prop === p) || {}).value || value;
     return { scss, css, value, dark };
   };
 }
@@ -56,7 +56,7 @@ function printFile(path, ast) {
 }
 
 function getSassVariablesGroup(value) {
-  return value.map(v => `${v.scss}: ${v.css};`).join('\n');
+  return value.map((v) => `${v.scss}: ${v.css};`).join('\n');
 }
 
 function mapSassVariableObject(ast, sub = false) {
@@ -89,27 +89,36 @@ async function createSassVariablesFile(ast) {
 
 /* --- Mixins. --- */
 
-async function generateMixinsFile(input, output, transform, replace = v => v) {
+async function generateMixinsFile(
+  input,
+  output,
+  transform,
+  replace = (v) => v,
+) {
   const mixinsAst = getAST(input);
   const docsFile = fs.readFileSync(transform);
 
   const mixinLines = docsFile.toString().split('\n');
-  const indexOfEntry = mixinLines.findIndex(l => l.includes('GENERATE_ENTRY'));
+  const indexOfEntry = mixinLines.findIndex((l) =>
+    l.includes('GENERATE_ENTRY'),
+  );
   const pre = mixinLines.slice(0, indexOfEntry + 1).join('\n');
 
   const mixinNodes = mixinsAst.nodes;
 
-  const mixins = mixinNodes.filter(n => n.name === 'mixin');
+  const mixins = mixinNodes.filter((n) => n.name === 'mixin');
   const css = mixins[0].source.input.css.split('\n');
 
-  const data = mixins.map(m => {
+  const data = mixins.map((m) => {
     const nodes = m.nodes;
-    const animationNodes = nodes.filter(n => n.prop === 'animation');
-    const isMedia = nodes.some(n => n.name === 'media');
+    const animationNodes = nodes.filter((n) => n.prop === 'animation');
+    const isMedia = nodes.some((n) => n.name === 'media');
     const animation = animationNodes
-      .map(n => {
+      .map((n) => {
         const animationName = n.value.split(' ')[0];
-        const animationNode = mixinNodes.find(n => n.params === animationName);
+        const animationNode = mixinNodes.find(
+          (n) => n.params === animationName,
+        );
         if (!animationNode) return undefined;
         return css
           .slice(
@@ -143,8 +152,8 @@ async function generateMixinsFile(input, output, transform, replace = v => v) {
       code: replace(
         css
           .slice(m.source.start.line - 1, m.source.end.line - 1)
-          .filter(line => !line.includes('@mixin'))
-          .map(line =>
+          .filter((line) => !line.includes('@mixin'))
+          .map((line) =>
             line.replace('  ', '').replace('@content;', '/* Content */'),
           )
           .join('\n')
@@ -156,7 +165,7 @@ async function generateMixinsFile(input, output, transform, replace = v => v) {
 
   printFile(
     output,
-    data.map(d => d.include),
+    data.map((d) => d.include),
   );
 
   fs.writeFileSync(
@@ -209,7 +218,7 @@ async function breakpoints() {
   const declarations = (() => {
     const decl = [];
 
-    breakpointsNodes.forEach(n => {
+    breakpointsNodes.forEach((n) => {
       if (n.type !== 'decl') return;
       decl.push(n);
     });
@@ -217,16 +226,16 @@ async function breakpoints() {
     return decl;
   })().map(({ prop, value }) => ({ prop, value }));
 
-  const mixins = breakpointsNodes.filter(n => n.name === 'mixin');
+  const mixins = breakpointsNodes.filter((n) => n.name === 'mixin');
   const css = mixins[0].source.input.css.split('\n');
 
-  const data = mixins.map(m => {
+  const data = mixins.map((m) => {
     const code = css
       .slice(m.source.start.line - 2, m.source.end.line)
       .join('\n')
       .trim();
     const isOnly = m.params.includes('only');
-    const declaration = declarations.find(decl => code.includes(decl.prop));
+    const declaration = declarations.find((decl) => code.includes(decl.prop));
     const numValue = Number(declaration.value.replace('px', ''));
     return {
       params: m.params,
@@ -238,9 +247,9 @@ async function breakpoints() {
 
   printFile('src/__stories__/2_style/generated/breakpointRange.ts', data);
 
-  generateMixinsFile(url, breakpointsUrl, docsUrl, val => {
+  generateMixinsFile(url, breakpointsUrl, docsUrl, (val) => {
     let newVal = val;
-    data.forEach(data => {
+    data.forEach((data) => {
       const isMax = newVal.includes('max-width');
       if (isMax && data.max) {
         newVal = newVal.replace(data.prop, `${data.max}px`);
@@ -261,7 +270,7 @@ function main() {
   breakpoints();
 
   const ast = getAST('src/styles/_theme.scss');
-  const nodes = ast.nodes.find(n => n.selector === ':root').nodes;
+  const nodes = ast.nodes.find((n) => n.selector === ':root').nodes;
 
   const mapper = propMap();
 
@@ -285,7 +294,7 @@ function main() {
     entries.forEach(([key]) => (obj[key] = []));
     obj.other = [];
 
-    nodes.forEach(n => {
+    nodes.forEach((n) => {
       if (n.type !== 'decl') return;
       const found = entries.find(([, startsWith]) =>
         n.prop.startsWith(startsWith),
@@ -314,7 +323,7 @@ function main() {
     const message = [];
     const other = [];
 
-    declarations[0].forEach(c => {
+    declarations[0].forEach((c) => {
       if (c.scss.startsWith('$color-theme')) return theme.push(c);
       if (c.scss.startsWith('$color-font')) return font.push(c);
       if (c.scss.startsWith('$color-gray')) return gray.push(c);

@@ -1,35 +1,34 @@
 # Global, lowest priority (will be overridden by any below).
-*                         @liamross
+*                      @liamross
 
 # GITHUB: Actions, templates, etc.
-/.github                  @liamross
+/.github               @liamross
 
-# BUILD: Build and bundling scripts and configs.
-/scripts/build_package.sh @liamross
-/configs/                 @liamross
-/.postcssrc.js            @liamross
-/webpack.config.ts        @liamross
+# BUILD: Build and bundling scripts and configs (override non-build scripts below).
+/scripts/              @liamross
+/configs/              @liamross
+/.postcssrc.js         @liamross
+/webpack.config.ts     @liamross
 
 # RELEASES: Commit, Changelog, and GitHub release preferences.
-/commitlint.config.js     @liamross
-/.versionrc.js            @liamross
-/CHANGELOG.md             @liamross
+/commitlint.config.js  @liamross
+/.versionrc.js         @liamross
+/CHANGELOG.md          @liamross
 
 # DOCUMENTATION: Storybook configuration directories.
-/.storybook/              @liamross
-/public/                  @liamross
+/.storybook/           @liamross
+/public/               @liamross
 
 # TESTING: Testing configuration.
-/jest.config.js           @liamross
-/.enzyme.js               @liamross
+/jest.config.js        @liamross
+/.enzyme.js            @liamross
 
 # LINTING: Linters and formatters.
-/.huskyrc                 @liamross
-/.prettier*               @liamross
-/.eslint*                 @liamross
+/.prettier*            @liamross
+/.eslint*              @liamross
 
 # SCRIPT(Make): Make script and utilities.
-/scripts/make/            @liamross
+/scripts/make/         @liamross
 
 # SCRIPT(Sass): Sass AST parser and docs generator.
-/scripts/parse_scss.js    @liamross
+/scripts/parse_scss.js @liamross

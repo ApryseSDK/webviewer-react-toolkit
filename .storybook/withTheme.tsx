@@ -33,7 +33,7 @@ export function ThemeChangeButton({ className, onClick, id }: ThemeChangeButtonP
   }, [darkTheme]);
 
   const handleOnClick = () => {
-    setDarkTheme(t => {
+    setDarkTheme((t) => {
       onClick?.(!t);
       return !t;
     });

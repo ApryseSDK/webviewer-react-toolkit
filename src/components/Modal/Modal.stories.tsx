@@ -92,7 +92,7 @@ export const Scrolling = () => (
 const Timer = () => {
   const [seconds, setSeconds] = useState(0);
   useEffect(() => {
-    const increment = () => setSeconds(prev => prev + 1);
+    const increment = () => setSeconds((prev) => prev + 1);
     const timer = window.setInterval(increment, 1000);
     return () => {
       window.clearInterval(timer);

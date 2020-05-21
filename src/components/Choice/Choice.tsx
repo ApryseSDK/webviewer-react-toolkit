@@ -154,14 +154,14 @@ class RadioObservable {
   }
 
   private _trigger(name: string) {
-    this._subscribers.forEach(s => {
+    this._subscribers.forEach((s) => {
       if (name === s.name) s.subscriber();
     });
   }
 
   private _unsubscribe(subscriber: Function) {
     return () => {
-      this._subscribers = this._subscribers.filter(s => s.subscriber !== subscriber);
+      this._subscribers = this._subscribers.filter((s) => s.subscriber !== subscriber);
     };
   }
 }

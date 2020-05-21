@@ -71,7 +71,7 @@ export const PasswordExample = () => {
       rightElement={
         <IconButton
           aria-label={showPassword ? 'Hide password' : 'Show password'}
-          onClick={() => setShowPassword(s => !s)}
+          onClick={() => setShowPassword((s) => !s)}
         >
           <Icon icon={showPassword ? 'Hide' : 'Show'} />
         </IconButton>

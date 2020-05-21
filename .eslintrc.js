@@ -1,7 +1,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: { project: './tsconfig.lint.json' },
-  plugins: ['react-hooks'],
+  plugins: ['react-hooks', 'prettier'],
   extends: [
     'plugin:jsx-a11y/recommended',
     'plugin:jest/recommended',
@@ -44,6 +44,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
 
     // On.
+    'prettier/prettier': 'error',
     'no-empty': ['error', { allowEmptyCatch: true }],
     'prefer-const': 'error',
     'react-hooks/rules-of-hooks': 'error',

@@ -6,9 +6,7 @@ const config: webpack.Configuration = {
   mode: 'production',
   watch: true,
   entry: [`./${BASE_URL}/index.scss`],
-  plugins: [
-    new MiniCssExtractPlugin({ filename: `css/style.css` }),
-  ],
+  plugins: [new MiniCssExtractPlugin({ filename: `css/style.css` })],
   resolve: {
     extensions: ['.scss'],
   },
@@ -25,6 +23,6 @@ const config: webpack.Configuration = {
       },
     ],
   },
-}
+};
 
 export default config;

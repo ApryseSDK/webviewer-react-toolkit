@@ -18,7 +18,7 @@ export interface DragLayerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const DragLayer: FC<DragLayerProps> = ({ children, customTranslate, className, ...divProps }) => {
-  const { currentOffset, isDragging, mousePosition } = useDragLayer(monitor => ({
+  const { currentOffset, isDragging, mousePosition } = useDragLayer((monitor) => ({
     currentOffset: monitor.getSourceClientOffset(),
     isDragging: monitor.isDragging(),
     mousePosition: monitor.getClientOffset(),

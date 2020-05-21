@@ -114,7 +114,7 @@ export const Modal: FC<ModalProps> = ({
   const backgroundIsButton = !!(open && closeOnBackgroundClick && onClose);
 
   const handleBackgroundClick = useCallback<MouseEventHandler<HTMLDivElement>>(
-    event => {
+    (event) => {
       if (!backgroundIsButton) return;
       if (event.currentTarget !== event.target) return;
       onClose?.(event);
@@ -163,9 +163,7 @@ export const Modal: FC<ModalProps> = ({
                     <IconButton className="ui__modal__top__close" onClick={onClose} aria-label={closeLabel}>
                       <Icon icon="Close" />
                     </IconButton>
-                  ) : (
-                    undefined
-                  )}
+                  ) : undefined}
                 </div>
                 <div className={bodyClass} id={bodyId}>
                   {children}
@@ -174,9 +172,7 @@ export const Modal: FC<ModalProps> = ({
               </div>
             </FocusTrap>
           </div>
-        ) : (
-          undefined
-        )}
+        ) : undefined}
       </div>
     </Overlay>
   );

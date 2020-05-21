@@ -22,7 +22,7 @@ export function useOnClick<T>(onClick?: MouseEventHandler<T>, options: UseOnClic
   const disabled = !!options.disabled;
 
   const handler = useCallback<UseOnClickOutput<T>>(
-    event => {
+    (event) => {
       if (preventDefault) event.preventDefault();
       if (stopPropagation) event.stopPropagation();
       if (disabled) return;

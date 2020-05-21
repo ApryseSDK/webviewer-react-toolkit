@@ -100,8 +100,8 @@ export function Thumbnail<F extends FileLike>({
   const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
   const toThrottle = isShownOnLoad ? 0 : throttle;
-  const [thumbnail, thumbnailErr] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', toThrottle);
-  const [name] = useFileSubscribe(file, f => f.name, 'onnamechange');
+  const [thumbnail, thumbnailErr] = useFileSubscribe(file, (f) => f.thumbnail, 'onthumbnailchange', toThrottle);
+  const [name] = useFileSubscribe(file, (f) => f.name, 'onnamechange');
 
   const handleOnSave = (newName: string) => {
     onRename?.(newName, file);
@@ -153,7 +153,7 @@ export function Thumbnail<F extends FileLike>({
       </div>
       <div className="ui__thumbnail__controls">
         {buttonProps?.map(({ key, ...buttonPropObject }) => (
-          <ToolButton key={key} disabled={disabled} onClick={e => buttonPropObject.onClick(e, file)}>
+          <ToolButton key={key} disabled={disabled} onClick={(e) => buttonPropObject.onClick(e, file)}>
             {buttonPropObject.children}
           </ToolButton>
         ))}

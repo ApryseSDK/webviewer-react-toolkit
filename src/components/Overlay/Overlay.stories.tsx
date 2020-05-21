@@ -37,16 +37,12 @@ export const Multiple = () => {
         <Overlay>
           <div style={style}>Overlay #1</div>
         </Overlay>
-      ) : (
-        undefined
-      )}
+      ) : undefined}
       {mounted2 ? (
         <Overlay>
           <div style={style}>Overlay #2</div>
         </Overlay>
-      ) : (
-        undefined
-      )}
+      ) : undefined}
     </>
   );
 };

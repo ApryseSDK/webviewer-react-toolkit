@@ -2,6 +2,7 @@
 dist
 lib
 storybook-build
+storybook-static
 
 # Ignore node modules folder
 node_modules

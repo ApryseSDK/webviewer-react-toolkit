@@ -6,6 +6,7 @@ dist
 lib
 docs
 storybook-build
+storybook-static
 
 # Ignore node modules folder
 node_modules

@@ -35,10 +35,10 @@ interface FileHook<F> {
  * @param throttle The timeout if unfetched memo promise.
  */
 export function useFile<F extends FileLike>(file: F, throttle?: number): FileHook<F> {
-  const [name, nameErr] = useFileSubscribe(file, f => f.name, 'onnamechange', throttle);
-  const [thumbnail, thumbnailErr] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', throttle);
-  const [fileObj, fileObjErr] = useFileSubscribe(file, f => f.fileObj, 'onfileobjchange', throttle);
-  const [documentObj, documentObjErr] = useFileSubscribe(file, f => f.documentObj, 'ondocumentobjchange', throttle);
+  const [name, nameErr] = useFileSubscribe(file, (f) => f.name, 'onnamechange', throttle);
+  const [thumbnail, thumbnailErr] = useFileSubscribe(file, (f) => f.thumbnail, 'onthumbnailchange', throttle);
+  const [fileObj, fileObjErr] = useFileSubscribe(file, (f) => f.fileObj, 'onfileobjchange', throttle);
+  const [documentObj, documentObjErr] = useFileSubscribe(file, (f) => f.documentObj, 'ondocumentobjchange', throttle);
 
   const fileValue = useMemo<FileHook<F>>(
     () => ({
