@@ -7,10 +7,10 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
-const BASE_URL = 'src';
+export const BASE_URL = 'src';
 const MINIFIED_PATH = 'dist/umd';
 const SASS_PATH = 'dist/sass';
-const CSS_PATH = 'dist/css';
+export const CSS_PATH = 'dist/css';
 const LIBRARY_NAME = 'webviewer-react-toolkit';
 
 const config: webpack.Configuration = {
