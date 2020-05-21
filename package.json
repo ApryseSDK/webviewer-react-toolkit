@@ -22,7 +22,8 @@
     "deploy-storybook": "storybook-to-ghpages --out=.out",
     "commit": "commit",
     "release": "yarn ci && yarn build && standard-version && git push --follow-tags && yarn publish --non-interactive && yarn deploy-storybook",
-    "release-next": "yarn ci && yarn build && standard-version --prerelease beta && git push --follow-tags && yarn publish --non-interactive --tag next && yarn deploy-storybook"
+    "release-next": "yarn ci && yarn build && standard-version --prerelease beta && git push --follow-tags && yarn publish --non-interactive --tag next && yarn deploy-storybook",
+    "start-css": "webpack --config webpack.style.config.ts"
   },
   "keywords": [
     "pdftron",
