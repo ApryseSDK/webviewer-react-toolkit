@@ -1,4 +1,5 @@
 import { Futurable } from '../data';
+import GlobalQueue from '../work/GlobalQueue';
 
 export const globalLicense = (() => {
   let l: string | undefined = undefined;
@@ -72,17 +73,21 @@ export async function getThumbnail(documentObj: Futurable<CoreControls.Document>
     const supportedFiles = (window.CoreControls?.SupportedFileFormats?.CLIENT as unknown) as string[] | undefined;
     if (supportedFiles && !supportedFiles.includes(extension)) throw new Error('Unsupported file type.');
   }
-  const fetchedDocument = await documentObj;
-  const canvas: HTMLCanvasElement = await new Promise((resolve, reject) => {
-    const callback = (result: HTMLCanvasElement | undefined) => {
-      if (!result) return reject(result);
-      resolve(result);
-    };
-    fetchedDocument.loadThumbnailAsync(0, callback);
-  });
 
-  const url = canvas.toDataURL();
-  if (!url) throw new Error('Unable to get data url.');
+  const url = await GlobalQueue.process<string>(async () => {
+    const fetchedDocument = await documentObj;
+    const canvas: HTMLCanvasElement = await new Promise((resolve, reject) => {
+      const callback = (result: HTMLCanvasElement | undefined) => {
+        if (!result) return reject(result);
+        resolve(result);
+      };
+      fetchedDocument.loadThumbnailAsync(0, callback);
+    });
+  
+    const url = canvas.toDataURL();
+    if (!url) throw new Error('Unable to get data url.');
+    return url;
+  });
 
   return url;
 }
