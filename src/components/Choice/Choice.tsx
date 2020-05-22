@@ -140,13 +140,13 @@ export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
  * Observable helper to notify radio buttons that they have become unchecked.
  */
 class RadioObservable {
-  private _subscribers: { name: string; subscriber: Function }[];
+  private _subscribers: { name: string; subscriber: () => void }[];
 
   constructor() {
     this._subscribers = [];
   }
 
-  subscribe(name: string, subscriber: Function) {
+  subscribe(name: string, subscriber: () => void) {
     this._trigger(name);
 
     this._subscribers.push({ name, subscriber });
@@ -159,7 +159,7 @@ class RadioObservable {
     });
   }
 
-  private _unsubscribe(subscriber: Function) {
+  private _unsubscribe(subscriber: () => void) {
     return () => {
       this._subscribers = this._subscribers.filter((s) => s.subscriber !== subscriber);
     };

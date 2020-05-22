@@ -265,7 +265,7 @@ export function FileOrganizer<F extends ObjectWithId>({
         (draggingIds && draggingIds.length && !draggingIds.includes(file.id))
       );
       const draggableRef = createRef<HTMLDivElement>();
-      const isInDragGroup = draggingIds?.includes(file.id) ?? false;
+      const isInDragGroup = draggingIds ? draggingIds.includes(file.id) : false;
       return (
         <Draggable
           data-file-id={file.id}
@@ -305,10 +305,10 @@ export function FileOrganizer<F extends ObjectWithId>({
       editingId,
       draggingId,
       draggingIds,
+      pad,
       onRenderDragLayer,
       disableMove,
       onMove,
-      pad,
       handleOnDragChange,
       handleItemKeyDown,
       onRenderThumbnail,

@@ -60,7 +60,7 @@ export function useFileSubscribe<F extends FileLike, T>(
 
     subscribe(true);
 
-    let unsubscribe: Function | undefined;
+    let unsubscribe: (() => void) | undefined;
 
     if (eventType) unsubscribe = file.subscribe(eventType, subscribe);
 

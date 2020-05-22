@@ -59,7 +59,7 @@ export interface FileLike {
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
-  subscribe: (...args: any) => Function;
+  subscribe: (...args: any) => () => void;
 }
 
 export type FileEventType =

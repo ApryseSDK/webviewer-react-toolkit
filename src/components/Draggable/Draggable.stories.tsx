@@ -20,7 +20,6 @@ export const Basic = () => (
   <DndMultiProvider>
     <Draggable
       index={0}
-      onMove={action('onMove')}
       onDragChange={action('onDragChange')}
       disableDrag={boolean('disableDrag', false)}
       hideDragPreview={boolean('hideDragPreview', false)}
@@ -39,7 +38,6 @@ export const WithOnRenderChildren = () => (
           {isDragging ? 'This div is being dragged!' : 'This div is draggable!'}
         </div>
       )}
-      onMove={action('onMove')}
       onDragChange={action('onDragChange')}
       disableDrag={boolean('disableDrag', false)}
       hideDragPreview={boolean('hideDragPreview', false)}
