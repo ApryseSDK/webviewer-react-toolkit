@@ -64,9 +64,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "@commitlint/prompt-cli": "^8.3.5",
+    "@commitlint/cli": "^9.0.0",
+    "@commitlint/config-conventional": "^9.0.0",
+    "@commitlint/prompt-cli": "^9.0.0",
     "@storybook/addon-actions": "^6.0.0-alpha.26",
     "@storybook/addon-docs": "^6.0.0-alpha.26",
     "@storybook/addon-google-analytics": "^6.0.0-alpha.26",
