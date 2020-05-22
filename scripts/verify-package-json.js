@@ -9,5 +9,5 @@ const fs = require('fs');
   const jsonPath = path.resolve(__dirname, '../package.json');
   const json = JSON.parse(fs.readFileSync(jsonPath) + '');
   json.main = './dist/cjs/index.js';
-  fs.writeFileSync(jsonPath, JSON.stringify(json, null, 2));
+  fs.writeFileSync(jsonPath, JSON.stringify(json, null, 2) + '\n');
 })();
