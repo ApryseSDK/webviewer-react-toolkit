@@ -1,13 +1,15 @@
+import { getId, UniqueIdentifier } from '../utils';
+
 export type Unit = () => Promise<any>;
 
 const MAX_ACTIVE_UNITS = 1;
 
 class QueueItem {
-  public cancelled: boolean;
-  public id: symbol;
-  public unit: Unit;
+  cancelled: boolean;
+  id: UniqueIdentifier;
+  unit: Unit;
 
-  constructor(id: symbol, unit: Unit) {
+  constructor(id: UniqueIdentifier, unit: Unit) {
     this.cancelled = false;
     this.id = id;
     this.unit = unit;
@@ -24,13 +26,13 @@ class QueueItem {
 
 class GlobalQueue {
   private queue: Array<QueueItem> = [];
-  private queueRefs: Map<symbol, QueueItem> = new Map();
-  private _listeners: Map<symbol, (result: any) => void> = new Map();
+  private queueRefs: Map<UniqueIdentifier, QueueItem> = new Map();
+  private _listeners: Map<UniqueIdentifier, (result: any) => void> = new Map();
   private _queueLength = 0;
   private _activeUnits = 0;
 
   process<T>(unit: Unit): [Promise<T>, () => void] {
-    const id = Symbol();
+    const id = getId();
     const item = new QueueItem(id, unit);
     this.queue.push(item);
     this.queueRefs.set(id, item);
@@ -47,10 +49,10 @@ class GlobalQueue {
     return [p, () => this.cancel(id)];
   }
 
-  // marks a unit of work as cancelled.
+  // Marks a unit of work as cancelled.
   // The unit will not be processed and will be removed
   // from the queue when no other work is going on
-  private cancel(id: symbol) {
+  private cancel(id: UniqueIdentifier) {
     const ref = this.queueRefs.get(id);
     ref?.cancel();
     this.flush();
