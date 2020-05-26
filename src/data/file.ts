@@ -49,18 +49,16 @@ export interface FileDetails {
    * license will take priority over the global license.
    */
   license?: string;
-
   /**
    * A reference to the document that was used to create this File class. Used as an optimization
    * where applicable. If passed, 'pageIndex' must also be passed
    */
-  fullDocumentObj?: CoreControls.Document
-
+  fullDocumentObj?: CoreControls.Document;
   /**
    * Used in conjunction with 'fullDocumentObj'. Represents the pageIndex of 'fullDocumentObj' that this
    * file belongs too
    */
-  pageIndex?: number
+  pageIndex?: number;
 }
 
 export interface FileLike {
