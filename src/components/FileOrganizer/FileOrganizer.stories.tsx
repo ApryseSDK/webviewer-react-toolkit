@@ -20,11 +20,10 @@ export default {
 interface TemplateProps {
   onRenderDragLayer?: boolean;
   numFiles?: number;
-  lazy?: boolean;
   editable?: boolean;
 }
 
-const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy, editable }) => {
+const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, editable }) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<FakeFile[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
@@ -47,13 +46,13 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy, ed
       if (prev.length < numFiles) {
         const newFiles = [];
         for (let index = prev.length; index < numFiles; index++) {
-          newFiles.push(createFile(index, { lazy }));
+          newFiles.push(createFile(index));
         }
         return [...prev, ...newFiles];
       }
       return prev;
     });
-  }, [numFiles, lazy]);
+  }, [numFiles]);
 
   return (
     <FileOrganizer
@@ -100,11 +99,10 @@ export const WithCustomDragLayer = () => {
   const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
   return <Template numFiles={numFiles} onRenderDragLayer />;
 };
-export const StressTestWithLazyThumbnails = () => <Template lazy numFiles={1000} />;
 
 export const UseManagedFilesHook = () => {
   const { fileOrganizerProps, getThumbnailSelectionProps, draggingIds } = useManagedFiles({
-    initialFiles: Array.from({ length: 100 }, (_, index) => createFile(index)),
+    initialFiles: Array.from({ length: 1000 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('preventMultiDrag', false, 'useManagedFiles options'),
     preventMultiSelect: boolean('preventMultiSelect', false, 'useManagedFiles options'),
     preventDeselectOnDragOther: boolean('preventDeselectOnDragOther', false, 'useManagedFiles options'),

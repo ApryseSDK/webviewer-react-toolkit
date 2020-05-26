@@ -5,8 +5,7 @@ import testPdfThumbnailRotated from '../images/pdf-preview-2.png';
 import testPdfThumbnail from '../images/pdf-preview.png';
 
 export interface CreateFileOptions {
-  pending?: boolean;
-  lazy?: boolean;
+  lazy?: boolean; // Expensive operation
   error?: boolean;
 }
 
@@ -37,9 +36,8 @@ export class FakeFile implements FileLike {
 
   private _getParameter<T>(parameter: T, options: CreateFileOptions) {
     const internals = (() => {
-      if (options.pending) return async () => new Promise(() => {});
-      if (options.lazy) return async () => Promise.resolve(parameter);
-      if (options.error) return () => Promise.reject('Some error.');
+      if (options.lazy) return () => new Promise((res) => setTimeout(() => res(parameter), 500));
+      if (options.error) return () => new Promise((_res, rej) => setTimeout(() => rej('Some error.'), 500));
       return parameter;
     })();
     return new MemoizedPromise(internals as FuturableOrLazy<T>);
