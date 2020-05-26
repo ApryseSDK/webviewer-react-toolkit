@@ -1,17 +1,14 @@
-export type Unit = () => Promise<any>
+export type Unit = () => Promise<any>;
 
 const MAX_ACTIVE_UNITS = 1;
 
 class QueueItem {
   public cancelled: boolean;
 
-  constructor(
-    public id: symbol,
-    public unit: Unit
-  ) {
+  constructor(public id: symbol, public unit: Unit) {
     this.cancelled = false;
   }
-  
+
   process() {
     return this.unit();
   }
@@ -19,13 +16,12 @@ class QueueItem {
   cancel() {
     this.cancelled = true;
   }
-
 }
 
 class GlobalQueue {
   private queue: Array<QueueItem> = [];
   private queueRefs: Map<symbol, QueueItem> = new Map();
-  private _listeners: Map<symbol, (result: any) => void> = new Map()
+  private _listeners: Map<symbol, (result: any) => void> = new Map();
   private _queueLength = 0;
   private _activeUnits = 0;
 
@@ -36,9 +32,9 @@ class GlobalQueue {
     this.queueRefs.set(id, item);
     const p: Promise<T> = new Promise((resolve) => {
       this._listeners.set(id, (result: T) => {
-        resolve(result)
-      })
-    })
+        resolve(result);
+      });
+    });
     this._queueLength++;
     this.flush();
     return [p, () => this.cancel(id)];
@@ -54,41 +50,40 @@ class GlobalQueue {
   }
 
   private cleanup() {
-    this.queue = this.queue.filter(item => {
+    this.queue = this.queue.filter((item) => {
       const { cancelled, id } = item;
       if (cancelled) {
         this.queueRefs.delete(id);
-        return false
+        return false;
       }
       return true;
-    })
+    });
     this._queueLength = this.queue.length;
   }
 
   private async flush() {
-
     if (this._activeUnits === MAX_ACTIVE_UNITS) return;
 
     if (this._queueLength === 0) {
-      this.cleanup()
+      this.cleanup();
       return;
     }
-    
+
     const item = this.queue.shift();
     if (item?.cancelled) {
       this._queueLength--;
       this.flush();
       return;
     }
-    
+
     // If no items left, return
     if (!item) {
-      this.cleanup()
+      this.cleanup();
       return;
     }
 
     this._activeUnits++;
-    
+
     const result = await item?.process();
     const id = item?.id;
 
