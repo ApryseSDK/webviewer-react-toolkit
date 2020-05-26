@@ -156,7 +156,7 @@ export function FileOrganizer<F extends ObjectWithId>({
     const firstItem = fileOrganizerRef.current.querySelector('div[draggable="true"]');
     if (!firstItem) return;
     const { width, height } = firstItem.getBoundingClientRect();
-    setSize(prev => {
+    setSize((prev) => {
       if (prev.width === width && prev.height === height) return prev;
       return { width, height };
     });
@@ -245,7 +245,7 @@ export function FileOrganizer<F extends ObjectWithId>({
         (draggingIds && draggingIds.length && !draggingIds.includes(file.id))
       );
       const draggableRef = createRef<HTMLDivElement>();
-      const isInDragGroup = draggingIds?.includes(file.id) ?? false;
+      const isInDragGroup = draggingIds ? draggingIds.includes(file.id) : false;
       return (
         <Draggable
           data-file-id={file.id}
@@ -261,17 +261,17 @@ export function FileOrganizer<F extends ObjectWithId>({
           ref={draggableRef}
           hideDragPreview={!!onRenderDragLayer}
           preventAnimation={isInDragGroup}
-          onDragChange={isDragging => handleOnDragChange(isDragging ? file.id : undefined)}
+          onDragChange={(isDragging) => handleOnDragChange(isDragging ? file.id : undefined)}
           disableDrag={isEditing || disableMove}
           onMove={onMove}
-          onKeyDown={e => handleItemKeyDown(e, index, file, draggableRef)}
-          onRenderChildren={isDragging => {
+          onKeyDown={(e) => handleItemKeyDown(e, index, file, draggableRef)}
+          onRenderChildren={(isDragging) => {
             return onRenderThumbnail({
               onRenderThumbnailProps: {
                 file,
                 dragging: isDragging || isInDragGroup,
                 otherDragging,
-                onEditingChange: editing => setEditingId(editing ? file.id : undefined),
+                onEditingChange: (editing) => setEditingId(editing ? file.id : undefined),
               },
               id: file.id,
               index,
@@ -284,18 +284,18 @@ export function FileOrganizer<F extends ObjectWithId>({
       editingId,
       draggingId,
       draggingIds,
+      pad,
       onRenderDragLayer,
       disableMove,
       onMove,
-      pad,
       handleOnDragChange,
       handleItemKeyDown,
-      onRenderThumbnail
+      onRenderThumbnail,
     ],
   );
 
   const handleOnClick = useCallback<MouseEventHandler<HTMLDivElement>>(
-    event => {
+    (event) => {
       onClick?.(event);
       if (!preventClickAwayDeselect) onDeselectAll?.();
     },
@@ -303,7 +303,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   );
 
   const handleOnKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(
-    event => {
+    (event) => {
       onKeyDown?.(event);
       if (event.key === 'Escape') return onDeselectAll?.();
       if (event.key === 'a' && (event.metaKey || event.ctrlKey)) {
@@ -348,9 +348,7 @@ export function FileOrganizer<F extends ObjectWithId>({
               {onRenderDragLayer()}
             </div>
           </DragLayer>
-        ) : (
-          undefined
-        )}
+        ) : undefined}
       </div>
     </DndMultiProvider>
   );

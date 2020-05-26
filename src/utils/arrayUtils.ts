@@ -9,7 +9,7 @@ export function separateItemsById<I extends ObjectWithId>(allItems: I[], separat
   const separated: I[] = [];
   const remaining: I[] = [];
 
-  allItems.forEach(item => {
+  allItems.forEach((item) => {
     if (!separateIds.includes(item.id)) {
       // Keep all unselected files in the files array.
       remaining.push(item);
@@ -37,7 +37,7 @@ export function separateItemsWithTarget<I extends ObjectWithId>(
 ): [I[], I[], I | undefined] {
   const [separated, remaining] = separateItemsById(allItems, separateIds);
 
-  const target = separated.find(item => item.id === targetId);
+  const target = separated.find((item) => item.id === targetId);
 
   // If target is found, re-insert it into remaining at original index.
   if (target) {
@@ -60,7 +60,7 @@ export function moveMultiFromIndexToIndex<I extends ObjectWithId>(
 
   const [separated, remaining] = separateItemsById(prev, moveIds);
 
-  const targetIndex = separated.findIndex(item => item.id === targetId);
+  const targetIndex = separated.findIndex((item) => item.id === targetId);
 
   // We place the separated so that target lines up with index.
   const insertionIndex = toIndex - targetIndex;

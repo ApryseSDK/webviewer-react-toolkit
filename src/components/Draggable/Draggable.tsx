@@ -107,7 +107,7 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
 
     const [{ isDragging }, drag, preview] = useDrag({
       item: { type: ItemTypes.Draggable, index },
-      collect: monitor => ({ isDragging: monitor.isDragging() }),
+      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
       canDrag: !disableDrag,
     });
 

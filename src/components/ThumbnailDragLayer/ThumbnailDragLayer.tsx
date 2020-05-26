@@ -32,9 +32,7 @@ export const ThumbnailDragLayer = ({ numFiles = 1, className, ...divProps }: Thu
           <div className="ui__thumbnailDragLayer__numFiles">
             <span className="ui__thumbnailDragLayer__numFiles__wrapper">{numFiles}</span>
           </div>
-        ) : (
-          undefined
-        )}
+        ) : undefined}
       </div>
     </div>
   );

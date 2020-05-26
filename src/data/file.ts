@@ -69,7 +69,7 @@ export interface FileLike {
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
-  subscribe: (...args: any) => Function;
+  subscribe: (...args: any) => () => void;
   fullDocumentObj?: CoreControls.Document;
   pageIndex?: number;
 }
@@ -108,8 +108,8 @@ export class File implements FileLike {
   private _freezeThumbnail: boolean;
   private _subscribers: FileEventListenersObj;
   private _license?: string;
-  private _fullDocumentObj?: CoreControls.Document|undefined
-  private _pageIndex?: number|undefined;
+  private _fullDocumentObj?: CoreControls.Document | undefined;
+  private _pageIndex?: number | undefined;
 
   /**
    * Initialize the `File`.
@@ -117,7 +117,18 @@ export class File implements FileLike {
    * this `File` with.
    */
   constructor(fileDetails: FileDetails) {
-    const { name, id, originalName, extension, fileObj, documentObj, thumbnail, license, fullDocumentObj, pageIndex } = fileDetails;
+    const {
+      name,
+      id,
+      originalName,
+      extension,
+      fileObj,
+      documentObj,
+      thumbnail,
+      license,
+      fullDocumentObj,
+      pageIndex,
+    } = fileDetails;
 
     if (!fileObj && !documentObj) {
       throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');
@@ -125,7 +136,7 @@ export class File implements FileLike {
 
     if (fullDocumentObj) {
       if (typeof pageIndex !== 'number') {
-        throw new Error('"pageIndex" must be passed if using "fullDocumentObj"')
+        throw new Error('"pageIndex" must be passed if using "fullDocumentObj"');
       }
       this._fullDocumentObj = fullDocumentObj;
       this._pageIndex = pageIndex;
@@ -193,7 +204,6 @@ export class File implements FileLike {
   get pageIndex() {
     return this._pageIndex;
   }
-
 
   /** The name of the file. */
   get name() {
@@ -312,7 +322,7 @@ export class File implements FileLike {
    * @param type The file event type to dispatch.
    */
   dispatchEvent(type: FileEventType) {
-    this._subscribers[type]?.forEach(subscriber => subscriber());
+    this._subscribers[type]?.forEach((subscriber) => subscriber());
     if (type !== 'onchange') this.dispatchEvent('onchange');
   }
 
@@ -323,7 +333,7 @@ export class File implements FileLike {
    * @param subscriber The listener to remove.
    */
   private _unsubscribe(type: FileEventType, subscriber: FileEventListener) {
-    return () => (this._subscribers[type] = this._subscribers[type]?.filter(l => l !== subscriber));
+    return () => (this._subscribers[type] = this._subscribers[type]?.filter((l) => l !== subscriber));
   }
 
   /* --- Private helpers. --- */
@@ -332,7 +342,7 @@ export class File implements FileLike {
   private _generateThumbnail = () => {
     return getThumbnail(this.fullDocumentObj || this.documentObj.get(), {
       extension: this.extension,
-      pageIndex: this.pageIndex
+      pageIndex: this.pageIndex,
     });
   };
 

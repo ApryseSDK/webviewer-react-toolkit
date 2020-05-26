@@ -177,12 +177,12 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
           <input
             className={fieldClass}
             value={editValue}
-            onChange={e => setEditValue(e.target.value)}
+            onChange={(e) => setEditValue(e.target.value)}
             onKeyPress={handleOnKeyPress}
             onKeyDown={handleOnKeyDown}
             ref={inputRef}
             onBlur={handleOnSave}
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           />
         ) : (
           <ClickableDiv

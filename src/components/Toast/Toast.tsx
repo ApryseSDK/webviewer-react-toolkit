@@ -75,16 +75,12 @@ export const Toast: FC<ToastProps> = ({
           <div className="ui__toast__copy__heading" id={headingId}>
             {heading}
           </div>
-        ) : (
-          undefined
-        )}
+        ) : undefined}
         {children ? (
           <div className="ui__toast__copy__body" id={bodyId}>
             {children}
           </div>
-        ) : (
-          undefined
-        )}
+        ) : undefined}
       </div>
       {action ? (
         <div className="ui__toast__action">
@@ -92,18 +88,14 @@ export const Toast: FC<ToastProps> = ({
             {action.text}
           </Button>
         </div>
-      ) : (
-        undefined
-      )}
+      ) : undefined}
       {onClose ? (
         <div className="ui__toast__action">
           <IconButton onClick={onClose} aria-label={closeLabel}>
             <Icon icon="Close" />
           </IconButton>
         </div>
-      ) : (
-        undefined
-      )}
+      ) : undefined}
     </div>
   );
 };

@@ -12,12 +12,12 @@ import { getTitle, useCopy } from './utils';
 
 /* --- Variables. --- */
 
-const colorFocusShadow = styleVariables.colors.other.find(c => c.scss === '$color-focus-shadow')?.dark;
+const colorFocusShadow = styleVariables.colors.other.find((c) => c.scss === '$color-focus-shadow')?.dark;
 
 function _Groups() {
   const copy = useCopy();
 
-  const keys = Object.keys(styleVariables).filter(k => k !== 'colors');
+  const keys = Object.keys(styleVariables).filter((k) => k !== 'colors');
 
   const [tick, setTick] = useState(false);
   useEffect(() => {
@@ -26,7 +26,7 @@ function _Groups() {
 
   let groups: ReactElement[] = [];
 
-  keys.forEach(k => {
+  keys.forEach((k) => {
     const group: { scss: string; css: string; value: string; dark: string }[] =
       styleVariables[k as keyof Remove<typeof styleVariables, 'colors'>];
     if (!group.length) return;
@@ -125,8 +125,8 @@ function _Theme() {
   const [darkTheme, setDarkTheme] = useState(isDarkThemeStored);
 
   const [lightCanvas, darkCanvas, lightFont, darkFont] = useMemo(() => {
-    const canvas = styleVariables.colors.other.find(c => c.scss === '$color-background-canvas');
-    const font = styleVariables.colors.font.find(c => c.scss === '$color-font-primary');
+    const canvas = styleVariables.colors.other.find((c) => c.scss === '$color-background-canvas');
+    const font = styleVariables.colors.font.find((c) => c.scss === '$color-font-primary');
     const light = canvas?.value;
     const dark = canvas?.dark;
     const lightFont = font?.value;
@@ -134,7 +134,7 @@ function _Theme() {
     return [light, dark, lightFont, darkFont];
   }, []);
 
-  keys.forEach(k => {
+  keys.forEach((k) => {
     const colors: { scss: string; css: string; value: string; dark: string }[] =
       styleVariables.colors[k as keyof typeof styleVariables['colors']];
     if (!colors.length) return;

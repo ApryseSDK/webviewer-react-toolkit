@@ -32,6 +32,7 @@ export type ItemOf<T extends any[]> = T[number];
  * const x = (a: string, b: number) => a + b;
  * const x: ArgumentTypes<typeof x> = ['Hello, World!', 100];
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type ArgumentTypes<T extends Function> = T extends (...args: infer A) => any ? A : never;
 
 /**

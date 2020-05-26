@@ -41,7 +41,7 @@
     });
   }
 
-  const nodeAddedObserver = new MutationObserver(mutations => {
+  const nodeAddedObserver = new MutationObserver((mutations) => {
     const iframe = document.querySelector(STORYBOOK_IFRAME_SELECTOR);
     if (!iframe || !withIframe) return;
     nodeAddedObserver.disconnect();

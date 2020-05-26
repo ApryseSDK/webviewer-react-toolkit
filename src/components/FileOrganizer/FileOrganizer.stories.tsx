@@ -28,7 +28,7 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy, ed
   // This is the index organizing function.
   const [files, setFiles] = useState<FakeFile[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
-    setFiles(prev => {
+    setFiles((prev) => {
       if (toIndex < 0 || toIndex >= prev.length) return prev;
       const clone = prev.slice();
       const item = clone.splice(fromIndex, 1)[0];
@@ -40,7 +40,7 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, lazy, ed
 
   // This is just a helper for adding or removing files.
   useEffect(() => {
-    setFiles(prev => {
+    setFiles((prev) => {
       if (prev.length > numFiles) {
         return prev.slice(0, numFiles);
       }

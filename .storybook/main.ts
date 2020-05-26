@@ -19,13 +19,4 @@ module.exports = {
     });
     return config;
   },
-  presets: [
-    {
-      name: '@storybook/preset-typescript',
-      options: {
-        tsLoaderOptions: { ignoreDiagnostics: [7005] },
-        include: [path.resolve(__dirname, '../')],
-      },
-    },
-  ],
 };
