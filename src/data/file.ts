@@ -49,6 +49,18 @@ export interface FileDetails {
    * license will take priority over the global license.
    */
   license?: string;
+
+  /**
+   * A reference to the document that was used to create this File class. Used as an optimization
+   * where applicable. If passed, 'pageIndex' must also be passed
+   */
+  fullDocumentObj?: CoreControls.Document
+
+  /**
+   * Used in conjunction with 'fullDocumentObj'. Represents the pageIndex of 'fullDocumentObj' that this
+   * file belongs too
+   */
+  pageIndex?: number
 }
 
 export interface FileLike {
@@ -60,6 +72,8 @@ export interface FileLike {
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
   subscribe: (...args: any) => Function;
+  fullDocumentObj: CoreControls.Document|undefined;
+  pageIndex: number|undefined
 }
 
 export type FileEventType =
@@ -96,6 +110,8 @@ export class File implements FileLike {
   private _freezeThumbnail: boolean;
   private _subscribers: FileEventListenersObj;
   private _license?: string;
+  private _fullDocumentObj?: CoreControls.Document|undefined
+  private _pageIndex?: number|undefined;
 
   /**
    * Initialize the `File`.
@@ -103,10 +119,18 @@ export class File implements FileLike {
    * this `File` with.
    */
   constructor(fileDetails: FileDetails) {
-    const { name, id, originalName, extension, fileObj, documentObj, thumbnail, license } = fileDetails;
+    const { name, id, originalName, extension, fileObj, documentObj, thumbnail, license, fullDocumentObj, pageIndex } = fileDetails;
 
     if (!fileObj && !documentObj) {
       throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');
+    }
+
+    if (fullDocumentObj) {
+      if (typeof pageIndex !== 'number') {
+        throw new Error('"pageIndex" must be passed if using "fullDocumentObj"')
+      }
+      this._fullDocumentObj = fullDocumentObj;
+      this._pageIndex = pageIndex;
     }
 
     this._id = id || getStringId('file');
@@ -163,6 +187,15 @@ export class File implements FileLike {
   get documentObj() {
     return this._documentObj;
   }
+
+  get fullDocumentObj() {
+    return this._fullDocumentObj;
+  }
+
+  get pageIndex() {
+    return this._pageIndex;
+  }
+
 
   /** The name of the file. */
   get name() {
@@ -299,7 +332,10 @@ export class File implements FileLike {
 
   /** Generate a thumbnail from document object. */
   private _generateThumbnail = () => {
-    return getThumbnail(this.documentObj.get(), this.extension);
+    return getThumbnail(this.fullDocumentObj || this.documentObj.get(), {
+      extension: this.extension,
+      pageIndex: this.pageIndex
+    });
   };
 
   /** Generate a file object from document object. */

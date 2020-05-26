@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FileEventType, FileLike, MemoizedPromise } from '../data';
-import { DEFAULT_THROTTLE_TIMEOUT } from '../utils';
+import GlobalQueue from '../work/GlobalQueue';
 
 /**
  * Will subscribe to a value from a file and return the value, as well as any
@@ -14,7 +14,6 @@ export function useFileSubscribe<F extends FileLike, T>(
   file: F,
   getCurrentValue: (file: F) => T | MemoizedPromise<T>,
   eventType?: FileEventType,
-  throttle?: number,
 ) {
   const getValue = useRef(getCurrentValue);
 
@@ -27,18 +26,17 @@ export function useFileSubscribe<F extends FileLike, T>(
 
   useEffect(() => {
     let cancelled = false;
-    let timeout: number;
+    let cancel: () => void;
 
-    const setMemoValue = async (newValue: MemoizedPromise<T>) => {
+    const setMemoValue = (val: T) => {
       try {
-        const val = await newValue.get();
         if (!cancelled) setValue(val);
       } catch (error) {
         if (!cancelled) setError(error);
       }
     };
 
-    const subscribe = (delay?: boolean) => {
+    const subscribe = () => {
       setError(undefined);
 
       const val = getValue.current(file);
@@ -49,27 +47,30 @@ export function useFileSubscribe<F extends FileLike, T>(
       }
 
       setValue(undefined);
-      if (!delay || val.done || throttle === 0) {
-        setMemoValue(val);
+
+      if (val.done) {
+        val.get().then(setMemoValue)
       } else {
-        timeout = window.setTimeout(() => {
-          setMemoValue(val);
-        }, throttle ?? DEFAULT_THROTTLE_TIMEOUT);
+        const r = GlobalQueue.process<T>(() => val.get());
+        cancel = r[1];
+        r[0].then((result: T) => {
+          setMemoValue(result);
+        });
       }
     };
 
-    subscribe(true);
+    subscribe();
 
     let unsubscribe: Function | undefined;
 
     if (eventType) unsubscribe = file.subscribe(eventType, subscribe);
 
     return () => {
+      cancel?.();
       unsubscribe?.();
       cancelled = true;
-      clearTimeout(timeout);
     };
-  }, [eventType, file, throttle]);
+  }, [eventType, file]);
 
   return useMemo(() => [value, error, setValue], [error, value]);
 }

@@ -48,15 +48,6 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
    */
   selectedIcon?: ReactNode;
   /**
-   * Default 500ms. Set to 0 to prevent all throttling. Set the delay for
-   * fetching any lazy async items from file.
-   */
-  throttle?: number;
-  /**
-   * If true, will prevent throttling.
-   */
-  isShownOnLoad?: boolean;
-  /**
    * Class for the thumbnail image.
    */
   imageClassName?: string;
@@ -84,8 +75,6 @@ export function Thumbnail<F extends FileLike>({
   selectedIcon,
   onRename,
   onEditingChange,
-  throttle,
-  isShownOnLoad,
   imageClassName,
   className,
   disabled,
@@ -99,8 +88,7 @@ export function Thumbnail<F extends FileLike>({
 
   const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
-  const toThrottle = isShownOnLoad ? 0 : throttle;
-  const [thumbnail, thumbnailErr] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange', toThrottle);
+  const [thumbnail, thumbnailErr] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange');
   const [name] = useFileSubscribe(file, f => f.name, 'onnamechange');
 
   const handleOnSave = (newName: string) => {
