@@ -72,8 +72,8 @@ export interface FileLike {
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
   subscribe: (...args: any) => Function;
-  fullDocumentObj: CoreControls.Document|undefined;
-  pageIndex: number|undefined
+  fullDocumentObj?: CoreControls.Document;
+  pageIndex?: number;
 }
 
 export type FileEventType =
