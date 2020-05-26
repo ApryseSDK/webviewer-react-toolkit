@@ -108,8 +108,8 @@ export class File implements FileLike {
   private _freezeThumbnail: boolean;
   private _subscribers: FileEventListenersObj;
   private _license?: string;
-  private _fullDocumentObj?: CoreControls.Document | undefined;
-  private _pageIndex?: number | undefined;
+  private _fullDocumentObj?: CoreControls.Document;
+  private _pageIndex?: number;
 
   /**
    * Initialize the `File`.
@@ -197,10 +197,12 @@ export class File implements FileLike {
     return this._documentObj;
   }
 
+  /** Gets the full document object if provided during initialization. */
   get fullDocumentObj() {
     return this._fullDocumentObj;
   }
 
+  /** Gets the page index if provided during initialization. */
   get pageIndex() {
     return this._pageIndex;
   }
