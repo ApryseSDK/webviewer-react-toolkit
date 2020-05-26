@@ -4,9 +4,13 @@ const MAX_ACTIVE_UNITS = 1;
 
 class QueueItem {
   public cancelled: boolean;
+  public id: symbol;
+  public unit: Unit;
 
-  constructor(public id: symbol, public unit: Unit) {
+  constructor(id: symbol, unit: Unit) {
     this.cancelled = false;
+    this.id = id;
+    this.unit = unit;
   }
 
   process() {
@@ -30,8 +34,11 @@ class GlobalQueue {
     const item = new QueueItem(id, unit);
     this.queue.push(item);
     this.queueRefs.set(id, item);
-    const p: Promise<T> = new Promise((resolve) => {
-      this._listeners.set(id, (result: T) => {
+    const p: Promise<T> = new Promise((resolve, reject) => {
+      this._listeners.set(id, (result: T | Error) => {
+        if (result instanceof Error) {
+          return reject(result);
+        }
         resolve(result);
       });
     });
@@ -83,10 +90,14 @@ class GlobalQueue {
     }
 
     this._activeUnits++;
+    let result;
+    try {
+      result = await item?.process();
+    } catch (e) {
+      result = new Error(e);
+    }
 
-    const result = await item?.process();
     const id = item?.id;
-
     const callback = this._listeners.get(id as symbol);
     callback?.(result);
     this.queueRefs.delete(id as symbol);

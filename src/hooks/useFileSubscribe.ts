@@ -53,9 +53,13 @@ export function useFileSubscribe<F extends FileLike, T>(
       } else {
         const r = GlobalQueue.process<T>(() => val.get());
         cancel = r[1];
-        r[0].then((result: T) => {
-          setMemoValue(result);
-        });
+        r[0]
+          .then((result: T) => {
+            setMemoValue(result);
+          })
+          .catch((e) => {
+            setError(e);
+          });
       }
     };
 
