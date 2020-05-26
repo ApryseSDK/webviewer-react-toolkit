@@ -113,8 +113,6 @@ export interface OnRenderThumbnailProps<F> {
     otherDragging: boolean;
     /** Callback for setting whether the thumbnail is in editing mode. */
     onEditingChange: (isEditing: boolean) => void;
-    /** Is this thumbnail shown on initial load. Use to turn off throttling. */
-    isShownOnLoad: boolean;
   };
   /** ID of the file. */
   id: string;
@@ -171,24 +169,6 @@ export function FileOrganizer<F extends ObjectWithId>({
     },
     [onDragChange],
   );
-
-  // Whenever files changes, detect which items are in view and prevent
-  // throttling. Set as array of IDs to notify onRenderThumbnail.
-  const [initialShownIds, setInitialShownIds] = useState<string[]>([]);
-  useEffect(() => {
-    if (files) {
-      requestAnimationFrame(() => {
-        if (!fileOrganizerRef.current) return;
-        const itemsInView = fileOrganizerRef.current.querySelectorAll('div[draggable="true"]');
-        const ids: string[] = [];
-        itemsInView.forEach(draggableItem => {
-          const dataFileId = draggableItem.getAttribute('data-file-id');
-          if (dataFileId) ids.push(dataFileId);
-        });
-        setInitialShownIds(ids);
-      });
-    }
-  }, [files]);
 
   const handleItemKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>, index: number, _file: F, draggableRef: RefObject<HTMLDivElement>) => {
@@ -292,7 +272,6 @@ export function FileOrganizer<F extends ObjectWithId>({
                 dragging: isDragging || isInDragGroup,
                 otherDragging,
                 onEditingChange: editing => setEditingId(editing ? file.id : undefined),
-                isShownOnLoad: !initialShownIds || initialShownIds.includes(file.id),
               },
               id: file.id,
               index,
@@ -311,8 +290,7 @@ export function FileOrganizer<F extends ObjectWithId>({
       pad,
       handleOnDragChange,
       handleItemKeyDown,
-      onRenderThumbnail,
-      initialShownIds,
+      onRenderThumbnail
     ],
   );
 
