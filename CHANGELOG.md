@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.5...v0.6.0-beta.6) (2020-05-26)
+
+### ⚠ BREAKING CHANGES
+
+- **Thumbnail:** removed throttle and isShownOnLoad props as they are no longer required due to ability to cancel position in global queue
+
+### Build and Dependencies
+
+- **dependencies:** updated project dependencies ([d30a518](https://github.com/PDFTron/webviewer-react-toolkit/commit/d30a5187aba5460caa9001a23d1cb173acf55d94))
+- **Draggable:** updated react-dnd-multi-backend ([5921815](https://github.com/PDFTron/webviewer-react-toolkit/commit/59218158141460ae9394b276475c1e826fb73b80))
+
+### Refactors
+
+- **Thumbnail:** queue for expensive file operations ([3eb2e55](https://github.com/PDFTron/webviewer-react-toolkit/commit/3eb2e55d8c72c2cf9a0d936f0ded3569719b7546))
+
 ## [0.6.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.4...v0.6.0-beta.5) (2020-05-20)
 
 ### Refactors
