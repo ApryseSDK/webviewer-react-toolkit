@@ -22,6 +22,8 @@ export class FakeFile implements FileLike {
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
+  fullDocumentObj: CoreControls.Document | undefined;
+  pageIndex: number | undefined;
 
   constructor(index: number, options: CreateFileOptions = {}) {
     this.id = `file_${index + 1}`;
