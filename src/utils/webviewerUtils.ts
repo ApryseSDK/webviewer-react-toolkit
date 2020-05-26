@@ -61,28 +61,41 @@ export async function getRotatedDocument(
   return fetchedDocument;
 }
 
+type GetThumbnailOptions = {
+  extension?: string;
+  pageIndex?: number;
+};
 /**
  * Gets the thumbnail for a document.
  * @param documentObj A CoreControls Document, or promise to get it.
  * @param extension If provided, will exit early if extension is not supported.
  */
-export async function getThumbnail(documentObj: Futurable<CoreControls.Document>, extension?: string): Promise<string> {
+export async function getThumbnail(
+  documentObj: Futurable<CoreControls.Document>,
+  options: GetThumbnailOptions = {},
+): Promise<string> {
+  const { extension, pageIndex = 0 } = options;
+
   if (extension) {
     // TODO(types): once types are supported, remove `as unknown`
     const supportedFiles = (window.CoreControls?.SupportedFileFormats?.CLIENT as unknown) as string[] | undefined;
     if (supportedFiles && !supportedFiles.includes(extension)) throw new Error('Unsupported file type.');
   }
-  const fetchedDocument = await documentObj;
-  const canvas: HTMLCanvasElement = await new Promise((resolve, reject) => {
-    const callback = (result: HTMLCanvasElement | undefined) => {
-      if (!result) return reject(result);
-      resolve(result);
-    };
-    fetchedDocument.loadThumbnailAsync(0, callback);
-  });
 
-  const url = canvas.toDataURL();
-  if (!url) throw new Error('Unable to get data url.');
+  const url = async () => {
+    const fetchedDocument = await documentObj;
+    const canvas: HTMLCanvasElement = await new Promise((resolve, reject) => {
+      const callback = (result: HTMLCanvasElement | undefined) => {
+        if (!result) return reject(result);
+        resolve(result);
+      };
+      fetchedDocument.loadThumbnailAsync(pageIndex, callback);
+    });
 
-  return url;
+    const url = canvas.toDataURL();
+    if (!url) throw new Error('Unable to get data url.');
+    return url;
+  };
+
+  return url();
 }

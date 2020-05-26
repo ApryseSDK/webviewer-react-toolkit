@@ -26,9 +26,7 @@ const defaultProps = (options?: CreateFileOptions, index = 0, withToolButtons?: 
 
 export const Basic = () => <Thumbnail {...defaultProps()} />;
 
-export const Throttled = () => <Thumbnail {...defaultProps({ lazy: true })} />;
-
-export const Pending = () => <Thumbnail {...defaultProps({ pending: true })} />;
+export const Expensive = () => <Thumbnail {...defaultProps({ lazy: true })} />;
 
 export const Rejected = () => <Thumbnail {...defaultProps({ error: true })} />;
 
@@ -36,10 +34,10 @@ export const WithToolButtons = () => <Thumbnail {...defaultProps(undefined, unde
 
 export const WithLabel = () => <Thumbnail label={text('label', 'some_label')} {...defaultProps()} />;
 
-export const WithSelectedIcon = () => (
+export const SelectedIcon = () => (
   <Thumbnail
     {...defaultProps()}
-    selectedIcon={<div style={{ color: 'red', fontSize: 20 }}>{text('selectedIcon', 'Selected Icon')}</div>}
+    selectedIcon={<div style={{ color: 'red', fontSize: 20 }}>{text('selectedIcon', 'CUSTOM!')}</div>}
   />
 );
 
