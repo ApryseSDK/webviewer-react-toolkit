@@ -49,18 +49,16 @@ export interface FileDetails {
    * license will take priority over the global license.
    */
   license?: string;
-
   /**
    * A reference to the document that was used to create this File class. Used as an optimization
    * where applicable. If passed, 'pageIndex' must also be passed
    */
-  fullDocumentObj?: CoreControls.Document
-
+  fullDocumentObj?: CoreControls.Document;
   /**
    * Used in conjunction with 'fullDocumentObj'. Represents the pageIndex of 'fullDocumentObj' that this
    * file belongs too
    */
-  pageIndex?: number
+  pageIndex?: number;
 }
 
 export interface FileLike {
@@ -72,8 +70,8 @@ export interface FileLike {
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
   subscribe: (...args: any) => Function;
-  fullDocumentObj: CoreControls.Document|undefined;
-  pageIndex: number|undefined
+  fullDocumentObj?: CoreControls.Document;
+  pageIndex?: number;
 }
 
 export type FileEventType =
