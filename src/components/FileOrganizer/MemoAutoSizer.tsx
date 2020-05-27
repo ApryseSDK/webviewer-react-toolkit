@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo } from 'react';
 import AutoSizer, { Size } from 'react-virtualized-auto-sizer';
-import { FixedSizeGrid as Grid, GridChildComponentProps } from 'react-window';
+import { FixedSizeGrid, GridChildComponentProps } from 'react-window';
 import { getItemIndex, ObjectWithId } from '../../utils';
 
 interface VirtualizedProps {
@@ -19,7 +19,7 @@ const MemoGridItem = memo<GridChildComponentProps>(({ columnIndex, rowIndex, sty
 });
 
 const MemoGrid = memo(
-  forwardRef<Grid, Size & VirtualizedProps>(
+  forwardRef<FixedSizeGrid, Size & VirtualizedProps>(
     ({ width, height, files, padding, renderItem, onColumnCountChange, size }, ref) => {
       const modifiedHeight = height - 2 * padding;
       const modifiedWidth = width - 2 * padding;
@@ -35,7 +35,7 @@ const MemoGrid = memo(
       }, [onColumnCountChange, data.columnCount]);
 
       return (
-        <Grid
+        <FixedSizeGrid
           ref={ref}
           columnWidth={size.width}
           rowHeight={size.height}
@@ -51,14 +51,14 @@ const MemoGrid = memo(
           }}
         >
           {MemoGridItem}
-        </Grid>
+        </FixedSizeGrid>
       );
     },
   ),
 );
 
 export const MemoAutoSizer = memo(
-  forwardRef<Grid, VirtualizedProps>(({ files, padding, size, renderItem, onColumnCountChange }, ref) => {
+  forwardRef<FixedSizeGrid, VirtualizedProps>(({ files, padding, size, renderItem, onColumnCountChange }, ref) => {
     const onRenderGrid = useCallback(
       ({ width, height }: Size) => (
         <MemoGrid

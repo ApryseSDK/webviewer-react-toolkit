@@ -22,7 +22,7 @@ export interface ClickableDivProps extends Remove<HTMLAttributes<HTMLDivElement>
 export const ClickableDiv = forwardRef<HTMLDivElement, ClickableDivProps>(
   ({ onClick, onKeyPress, disabled, noFocusStyle, usePointer, className, children, tabIndex, ...divProps }, ref) => {
     const clickableDivRef = useRef<HTMLDivElement>(null);
-    useImperativeHandle(ref, () => clickableDivRef.current!);
+    useImperativeHandle(ref, () => clickableDivRef.current as HTMLDivElement);
 
     const handleOnClick = useOnClick(onClick, { disabled, stopPropagation: true });
 

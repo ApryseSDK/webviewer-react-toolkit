@@ -13,8 +13,10 @@ import React, {
   useEffect,
   useRef,
   useState,
+  Ref,
+  useImperativeHandle,
 } from 'react';
-import { FixedSizeGrid as Grid } from 'react-window';
+import { FixedSizeGrid } from 'react-window';
 import {
   getRowAndColumnIndex,
   getSibling,
@@ -64,6 +66,10 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    * ensure that the elements are positioned properly.
    */
   padding?: number;
+  /**
+   * If provided, the ref is attached to the `react-window` FixedSizeGrid.
+   */
+  gridRef?: Ref<FixedSizeGrid>;
   /**
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
@@ -133,6 +139,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   preventClickAwayDeselect,
   draggingIds,
   padding,
+  gridRef: _gridRef,
   className,
   onClick,
   onKeyDown,
@@ -140,7 +147,8 @@ export function FileOrganizer<F extends ObjectWithId>({
   ...divProps
 }: FileOrganizerProps<F>) {
   const fileOrganizerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<Grid>(null);
+  const gridRef = useRef<FixedSizeGrid>(null);
+  useImperativeHandle(_gridRef, () => gridRef.current as FixedSizeGrid);
 
   const [columnCount, setColumnCount] = useState(0);
 

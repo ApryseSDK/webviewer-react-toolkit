@@ -81,7 +81,7 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
     const inputRef = useRef<HTMLInputElement>(null);
 
     const buttonRef = useRef<HTMLDivElement>(null);
-    useImperativeHandle(ref, () => buttonRef.current!);
+    useImperativeHandle(ref, () => buttonRef.current as HTMLDivElement);
 
     // Use state if controlled edit mode not provided.
     const [stateEditMode, setStateEditMode] = useState(false);

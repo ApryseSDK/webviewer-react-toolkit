@@ -81,7 +81,7 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
     ref,
   ) => {
     const draggableRef = useRef<HTMLDivElement>(null);
-    useImperativeHandle(ref, () => draggableRef.current!);
+    useImperativeHandle(ref, () => draggableRef.current as HTMLDivElement);
 
     /* --- Drag and drop settings. --- */
 
