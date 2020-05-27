@@ -22,7 +22,8 @@ export interface ThumbnailProps<F> extends ClickableDivProps {
    */
   file: F;
   /**
-   * Optional label. Will use file name if not provided.
+   * Optional label. Will fallback to file name if not provided. To remove label
+   * you can set `label` to an empty string.
    */
   label?: string;
   /**
@@ -147,16 +148,18 @@ export function Thumbnail<F extends FileLike>({
         ))}
       </div>
       {selectedIcon ? <div className="ui__thumbnail__selectedIcon">{selectedIcon}</div> : undefined}
-      <EditableText
-        className="ui__thumbnail__label"
-        value={label ?? name}
-        centerText
-        disabled={disabled}
-        locked={!onRename || otherDragging}
-        onSave={handleOnSave}
-        onCancel={handleOnCancel}
-        onEdit={handleOnEdit}
-      />
+      {(label ?? name) || onRename ? (
+        <EditableText
+          className="ui__thumbnail__label"
+          value={label ?? name}
+          centerText
+          disabled={disabled}
+          locked={!onRename || otherDragging}
+          onSave={handleOnSave}
+          onCancel={handleOnCancel}
+          onEdit={handleOnEdit}
+        />
+      ) : undefined}
     </ClickableDiv>
   );
 }
