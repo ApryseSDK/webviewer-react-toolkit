@@ -103,7 +103,7 @@ export const Basic = () => {
   const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
   return <Template numFiles={numFiles} />;
 };
-export const WithThumbnailButtonsAndEditableText = () => {
+export const EditableWithButtons = () => {
   const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
   return <Template numFiles={numFiles} editable />;
 };

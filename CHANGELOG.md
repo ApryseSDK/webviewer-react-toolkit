@@ -4,11 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [0.6.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.6...v0.6.0-beta.7) (2020-05-27)
 
-
 ### Features
 
-* **FileOrganizer:** added gridRef prop to allow access to react-window grid ([77c0c0e](https://github.com/PDFTron/webviewer-react-toolkit/commit/77c0c0efcf9eae723547a5995b5c998c37e21011))
-* **Thumbnail:** if label is empty string and no onRename given, hide thumbnail label ([04b791e](https://github.com/PDFTron/webviewer-react-toolkit/commit/04b791ea935afb82c0a6a9c6f793fb5fd182de07))
+- **FileOrganizer:** added gridRef prop to allow access to react-window grid ([77c0c0e](https://github.com/PDFTron/webviewer-react-toolkit/commit/77c0c0efcf9eae723547a5995b5c998c37e21011))
+- **Thumbnail:** if label is empty string and no onRename given, hide thumbnail label ([04b791e](https://github.com/PDFTron/webviewer-react-toolkit/commit/04b791ea935afb82c0a6a9c6f793fb5fd182de07))
 
 ## [0.6.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.5...v0.6.0-beta.6) (2020-05-26)
 
