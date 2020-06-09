@@ -3,11 +3,12 @@ import React, {
   ChangeEvent,
   forwardRef,
   InputHTMLAttributes,
+  ReactNode,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
-  useMemo,
 } from 'react';
 import { useAccessibleFocus, useFocus } from '../../hooks';
 import { useID } from '../../hooks/useID';
@@ -17,9 +18,9 @@ import { Icon } from '../Icon';
 export interface ChoiceProps extends Remove<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /**
    * Label is optional, but it is encouraged to add the `aria-label` prop if you
-   * are not labeling the choice.
+   * are not labeling the choice, or if label is not a string.
    */
-  label?: string;
+  label?: ReactNode;
   /**
    * If true, label will appear to the left of the choice.
    */
@@ -34,10 +35,17 @@ export interface ChoiceProps extends Remove<InputHTMLAttributes<HTMLInputElement
    * behave as either a checkbox, or radio if `radio` is true.
    */
   isSwitch?: boolean;
+  /**
+   * If true, choice will be centered vertically in the content.
+   */
+  center?: boolean;
 }
 
 export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
-  ({ label, leftLabel, className, children, id, radio, isSwitch, onChange, onFocus, onBlur, ...props }, ref) => {
+  (
+    { label, leftLabel, className, children, id, radio, isSwitch, center, onChange, onFocus, onBlur, ...props },
+    ref,
+  ) => {
     const inputRef = useRef<HTMLInputElement>(null);
     useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
@@ -80,6 +88,7 @@ export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
         'ui__choice--leftLabel': leftLabel,
         'ui__choice--checked': checked,
         'ui__choice--disabled': props.disabled,
+        'ui__choice--center': center,
       },
       className,
     );

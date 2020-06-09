@@ -14,6 +14,25 @@ export const Basic = () => (
     isSwitch={boolean('isSwitch', false)}
     disabled={boolean('disabled', false)}
     leftLabel={boolean('leftLabel', false)}
+    center={boolean('center', false)}
+  />
+);
+
+export const TallContent = () => (
+  <Choice
+    onChange={action('onChange')}
+    label={
+      <div>
+        <div>Some</div>
+        <div>Tall</div>
+        <div>Content</div>
+      </div>
+    }
+    radio={boolean('radio', false)}
+    isSwitch={boolean('isSwitch', false)}
+    disabled={boolean('disabled', false)}
+    leftLabel={boolean('leftLabel', false)}
+    center={boolean('center', false)}
   />
 );
 
@@ -26,6 +45,7 @@ export const Controlled = () => (
     disabled={boolean('disabled', false)}
     checked={boolean('checked', false)}
     leftLabel={boolean('leftLabel', false)}
+    center={boolean('center', false)}
   />
 );
 
@@ -35,6 +55,7 @@ export const NativeFormControlled = () => {
     isSwitch: boolean('isSwitch', false),
     disabled: boolean('disabled', false),
     leftLabel: boolean('leftLabel', false),
+    center: boolean('center', false),
   };
 
   return (
@@ -61,6 +82,7 @@ export const CustomControlled = () => {
     isSwitch: boolean('isSwitch', false),
     disabled: boolean('disabled', false),
     leftLabel: boolean('leftLabel', false),
+    center: boolean('center', false),
   };
 
   return (

@@ -8,6 +8,10 @@ $choice-switch-width: 24px;
   display: flex;
   margin: $padding-tiny $padding-tiny $padding-tiny 0;
 
+  &--center {
+    align-items: center;
+  }
+
   &--disabled {
     opacity: 0.7;
 
