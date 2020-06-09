@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.7...v0.6.0-beta.8) (2020-06-09)
+
+### Features
+
+- **Choice:** added center prop to vertically center the choice ([2c6af08](https://github.com/PDFTron/webviewer-react-toolkit/commit/2c6af085bae0e63aeb46aad8165f3910bbbdb4a4))
+
 ## [0.6.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.6...v0.6.0-beta.7) (2020-05-27)
 
 ### Features
