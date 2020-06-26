@@ -9,16 +9,6 @@ export interface UseFocusTrapOptions {
   focusLastOnUnlock?: boolean;
 }
 
-function findFocusableIndex(elements: NodeListOf<HTMLElement>, toFind: Element | EventTarget | null) {
-  let index = -1;
-  if (!toFind) return index;
-  elements.forEach((element, i) => {
-    if (index !== -1) return;
-    if (element === toFind) index = i;
-  });
-  return index;
-}
-
 /**
  * A hook for trapping focus within an element. Returns a ref which can be given
  * to any element to trap focus within that element when `locked` is true.
@@ -123,4 +113,16 @@ export function useFocusTrap<T extends HTMLElement>(locked = false, options: Use
   }, [focusLastOnUnlockRef, lockFocus, locked]);
 
   return focusRef;
+}
+
+export function findFocusableIndex(elements: NodeListOf<HTMLElement>, toFind: Element | EventTarget | null) {
+  let index = -1;
+  if (!toFind) return index;
+  for (let i = 0; i < elements.length; i++) {
+    if (elements[i] === toFind) {
+      index = i;
+      break;
+    }
+  }
+  return index;
 }
