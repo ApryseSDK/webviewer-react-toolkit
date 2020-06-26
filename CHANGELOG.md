@@ -2,64 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.6.0-beta.8](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.7...v0.6.0-beta.8) (2020-06-09)
-
-### Features
-
-- **Choice:** added center prop to vertically center the choice ([2c6af08](https://github.com/PDFTron/webviewer-react-toolkit/commit/2c6af085bae0e63aeb46aad8165f3910bbbdb4a4))
-
-## [0.6.0-beta.7](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.6...v0.6.0-beta.7) (2020-05-27)
-
-### Features
-
-- **FileOrganizer:** added gridRef prop to allow access to react-window grid ([77c0c0e](https://github.com/PDFTron/webviewer-react-toolkit/commit/77c0c0efcf9eae723547a5995b5c998c37e21011))
-- **Thumbnail:** if label is empty string and no onRename given, hide thumbnail label ([04b791e](https://github.com/PDFTron/webviewer-react-toolkit/commit/04b791ea935afb82c0a6a9c6f793fb5fd182de07))
-
-## [0.6.0-beta.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.5...v0.6.0-beta.6) (2020-05-26)
+## [0.6.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0...v0.6.0) (2020-06-26)
 
 ### ⚠ BREAKING CHANGES
 
 - **Thumbnail:** removed throttle and isShownOnLoad props as they are no longer required due to ability to cancel position in global queue
 
-### Build and Dependencies
+### Features
 
-- **dependencies:** updated project dependencies ([d30a518](https://github.com/PDFTron/webviewer-react-toolkit/commit/d30a5187aba5460caa9001a23d1cb173acf55d94))
-- **Draggable:** updated react-dnd-multi-backend ([5921815](https://github.com/PDFTron/webviewer-react-toolkit/commit/59218158141460ae9394b276475c1e826fb73b80))
-
-### Refactors
-
-- **Thumbnail:** queue for expensive file operations ([3eb2e55](https://github.com/PDFTron/webviewer-react-toolkit/commit/3eb2e55d8c72c2cf9a0d936f0ded3569719b7546))
-
-## [0.6.0-beta.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.4...v0.6.0-beta.5) (2020-05-20)
-
-### Refactors
-
-- **Thumbnail:** fewer file value subscriptions ([a148935](https://github.com/PDFTron/webviewer-react-toolkit/commit/a148935c593ced4652e5b20284a5ea47b8cfff4d))
-
-## [0.6.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.3...v0.6.0-beta.4) (2020-05-14)
+- **Choice:** added center prop to vertically center the choice ([2c6af08](https://github.com/PDFTron/webviewer-react-toolkit/commit/2c6af085bae0e63aeb46aad8165f3910bbbdb4a4))
+- **FileOrganizer:** added gridRef prop to allow access to react-window grid ([77c0c0e](https://github.com/PDFTron/webviewer-react-toolkit/commit/77c0c0efcf9eae723547a5995b5c998c37e21011))
+- **Thumbnail:** if label is empty string and no onRename given, hide thumbnail label ([04b791e](https://github.com/PDFTron/webviewer-react-toolkit/commit/04b791ea935afb82c0a6a9c6f793fb5fd182de07))
+- **Toast:** added loading toast ([95364f5](https://github.com/PDFTron/webviewer-react-toolkit/commit/95364f5be0f3a244637f70e1b31d05d647cf5fdd))
+- **ToastProvider:** added modify toast and exists methods ([f04731f](https://github.com/PDFTron/webviewer-react-toolkit/commit/f04731f1845cc506c1b5deb72dc20d89a541f6c0))
+- **ToastProvider:** new props to control position of toast ([190c642](https://github.com/PDFTron/webviewer-react-toolkit/commit/190c642a228721e3d8404b1682f2f072cec155b9))
 
 ### Bug Fixes
 
 - **Button:** restored broken padding on small button ([f03b079](https://github.com/PDFTron/webviewer-react-toolkit/commit/f03b0792e6394e260837e78088586e6eddb0792d))
-
-## [0.6.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.2...v0.6.0-beta.3) (2020-05-05)
-
-### Bug Fixes
-
 - **ToastProvider:** using refs to keep exists query up to date ([b10d04e](https://github.com/PDFTron/webviewer-react-toolkit/commit/b10d04e82cecf017d1ef1e1b1bc3ad116e8018c6))
 
-## [0.6.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0-beta.1...v0.6.0-beta.2) (2020-05-05)
+### Refactors
 
-### Features
+- **useFocusTrap:** reduced loop iterations when finding focus index ([1fd5232](https://github.com/PDFTron/webviewer-react-toolkit/commit/1fd5232ca34061e73d4b9cad0aa865a2196be5b6))
+- **Thumbnail:** queue for expensive file operations ([3eb2e55](https://github.com/PDFTron/webviewer-react-toolkit/commit/3eb2e55d8c72c2cf9a0d936f0ded3569719b7546))
+- **Thumbnail:** fewer file value subscriptions ([a148935](https://github.com/PDFTron/webviewer-react-toolkit/commit/a148935c593ced4652e5b20284a5ea47b8cfff4d))
 
-- **Toast:** added loading toast ([95364f5](https://github.com/PDFTron/webviewer-react-toolkit/commit/95364f5be0f3a244637f70e1b31d05d647cf5fdd))
-- **ToastProvider:** added modify toast and exists methods ([f04731f](https://github.com/PDFTron/webviewer-react-toolkit/commit/f04731f1845cc506c1b5deb72dc20d89a541f6c0))
+### Build and Dependencies
 
-## [0.6.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0...v0.6.0-beta.1) (2020-05-05)
-
-### Features
-
-- **ToastProvider:** new props to control position of toast ([190c642](https://github.com/PDFTron/webviewer-react-toolkit/commit/190c642a228721e3d8404b1682f2f072cec155b9))
+- **dependencies:** updated project dependencies ([d30a518](https://github.com/PDFTron/webviewer-react-toolkit/commit/d30a5187aba5460caa9001a23d1cb173acf55d94))
+- **Draggable:** updated react-dnd-multi-backend ([5921815](https://github.com/PDFTron/webviewer-react-toolkit/commit/59218158141460ae9394b276475c1e826fb73b80))
 
 ## [0.5.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.4.1...v0.5.0) (2020-04-29)
 
