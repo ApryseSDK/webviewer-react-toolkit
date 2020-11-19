@@ -8,27 +8,30 @@ import React, {
   KeyboardEventHandler,
   MouseEventHandler,
   ReactNode,
+  Ref,
   RefObject,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useRef,
   useState,
-  Ref,
-  useImperativeHandle,
 } from 'react';
 import { FixedSizeGrid } from 'react-window';
 import {
+  focusableElementDomString,
   getRowAndColumnIndex,
   getSibling,
   isScrolledIntoView,
   ObjectWithId,
   THUMBNAIL_WIDTH,
-  focusableElementDomString,
 } from '../../utils';
 import { DndMultiProvider } from '../DndMultiProvider';
 import { Draggable } from '../Draggable';
 import { DragLayer, DragLayerProps } from '../DragLayer';
 import { MemoAutoSizer } from './MemoAutoSizer';
+
+type Size = { width: number; height: number };
+const defaultSize: Size = { width: THUMBNAIL_WIDTH, height: THUMBNAIL_WIDTH };
 
 export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -70,6 +73,12 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    * If provided, the ref is attached to the `react-window` FixedSizeGrid.
    */
   gridRef?: Ref<FixedSizeGrid>;
+  /**
+   * If you know exactly what size your thumbnail is going to be, you can input
+   * the value here. Use this if the thumbnail is going to change sizes, since
+   * `FileOrganizer` will only detect changes when files change.
+   */
+  thumbnailSize?: { width: number; height: number };
   /**
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
@@ -140,6 +149,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   draggingIds,
   padding,
   gridRef: _gridRef,
+  thumbnailSize,
   className,
   onClick,
   onKeyDown,
@@ -156,19 +166,32 @@ export function FileOrganizer<F extends ObjectWithId>({
 
   const [draggingId, setDraggingId] = useState<string>();
 
-  // Detect size of first item and use as size throughout.
-  const [size, setSize] = useState({ width: THUMBNAIL_WIDTH, height: THUMBNAIL_WIDTH });
+  // Get the width of the first item, or default if no first item found.
   const hasFiles = files.length > 0;
+  const getSize = useCallback<() => Size>(() => {
+    if (!hasFiles) return defaultSize;
+    if (!fileOrganizerRef.current) return defaultSize;
+    const draggableWrapper = fileOrganizerRef.current.querySelector('div[draggable="true"]');
+    const draggableElement = draggableWrapper?.firstChild as Element | undefined;
+    const firstItem = draggableElement?.firstChild as Element | undefined;
+    if (!firstItem) return defaultSize;
+    return firstItem.getBoundingClientRect();
+  }, [hasFiles]);
+
+  // Detect size of first item and use as size throughout.
+  const [size, setSize] = useState<Size>(() => thumbnailSize || getSize());
+
+  // Update size when getWidth ref changes (when hasFiles changes).
   useEffect(() => {
-    if (!fileOrganizerRef.current) return;
-    const firstItem = fileOrganizerRef.current.querySelector('div[draggable="true"]');
-    if (!firstItem) return;
-    const { width, height } = firstItem.getBoundingClientRect();
+    if (thumbnailSize) setSize(thumbnailSize);
+    if (files.length === 0) setSize(defaultSize);
     setSize((prev) => {
+      const { width, height } = getSize();
       if (prev.width === width && prev.height === height) return prev;
       return { width, height };
     });
-  }, [hasFiles]);
+    // Watches all files to continuously check width and height.
+  }, [files, getSize, thumbnailSize]);
 
   const handleOnDragChange = useCallback(
     (id?: string) => {

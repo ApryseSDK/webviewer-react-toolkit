@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { MouseEvent, ReactNode, ReactText, useRef } from 'react';
+import React, { MouseEvent, ReactNode, ReactText } from 'react';
 import { FileLike } from '../../data';
 import { useAccessibleFocus, useFileSubscribe, useFocus } from '../../hooks';
 import { ClickableDiv, ClickableDivProps } from '../ClickableDiv';
@@ -85,8 +85,6 @@ export function Thumbnail<F extends FileLike>({
 }: ThumbnailProps<F>) {
   const isUserTabbing = useAccessibleFocus(thumbnailFocusObservable);
 
-  const thumbnailRef = useRef<HTMLDivElement>(null);
-
   const { focused, handleOnFocus, handleOnBlur } = useFocus(onFocus, onBlur);
 
   const [thumbnail, thumbnailErr] = useFileSubscribe(file, (f) => f.thumbnail, 'onthumbnailchange');
@@ -122,7 +120,6 @@ export function Thumbnail<F extends FileLike>({
     <ClickableDiv
       {...divProps}
       className={thumbnailClass}
-      ref={thumbnailRef}
       noFocusStyle
       disabled={disabled}
       onFocus={handleOnFocus}

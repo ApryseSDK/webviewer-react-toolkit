@@ -1,17 +1,17 @@
 import { boolean, number } from '@storybook/addon-knobs';
-import React, { FC, useCallback, useEffect, useState, useRef } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FixedSizeGrid } from 'react-window';
 import { useManagedFiles } from '../../hooks';
 import { action } from '../../storybook-helpers/action/action';
 import { createFile, FakeFile } from '../../storybook-helpers/data/files';
 import { forwardAction } from '../../storybook-helpers/knobs/forwardAction';
 import { integer } from '../../storybook-helpers/knobs/integer';
+import { Button } from '../Button';
 import { FileOrganizer, FileOrganizerProps } from '../FileOrganizer';
 import { Icon } from '../Icon';
 import { Thumbnail } from '../Thumbnail';
 import { ThumbnailDragLayer } from '../ThumbnailDragLayer';
 import readme from './README.md';
-import { FixedSizeGrid } from 'react-window';
-import { Button } from '../Button';
 
 export default {
   title: 'Components/FileOrganizer',
@@ -24,9 +24,16 @@ interface TemplateProps {
   numFiles?: number;
   editable?: boolean;
   scrollToTop?: boolean;
+  customSizedThumbnail?: boolean;
 }
 
-const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, editable, scrollToTop }) => {
+const Template: FC<TemplateProps> = ({
+  onRenderDragLayer,
+  numFiles = 2,
+  editable,
+  scrollToTop,
+  customSizedThumbnail,
+}) => {
   // This is the index organizing function.
   const [files, setFiles] = useState<FakeFile[]>([]);
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
@@ -44,6 +51,10 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, editable
   const onScrollToTop = () => {
     gridRef.current?.scrollTo({ scrollTop: 0, scrollLeft: 0 });
   };
+
+  const [largerSize, setLargerSize] = useState(false);
+  const changeSize = () => setLargerSize((prev) => !prev);
+  const size = largerSize ? { width: 200, height: 250 } : { width: 150, height: 200 };
 
   // This is just a helper for adding or removing files.
   useEffect(() => {
@@ -75,26 +86,43 @@ const Template: FC<TemplateProps> = ({ onRenderDragLayer, numFiles = 2, editable
         onDragChange={action('onDragChange')}
         onDeselectAll={action('onDeselectAll')}
         onSelectAll={action('onSelectAll')}
+        thumbnailSize={customSizedThumbnail ? size : undefined}
         onRenderDragLayer={onRenderDragLayer ? () => <ThumbnailDragLayer /> : undefined}
-        onRenderThumbnail={({ onRenderThumbnailProps }) => (
-          <Thumbnail
-            {...onRenderThumbnailProps}
-            onRename={editable ? () => {} : undefined}
-            buttonProps={
-              editable
-                ? [
-                    {
-                      children: <Icon icon="Close" />,
-                      onClick: () => {},
-                      key: 0,
-                    },
-                  ]
-                : undefined
-            }
-          />
-        )}
+        onRenderThumbnail={({ onRenderThumbnailProps, index }) =>
+          customSizedThumbnail ? (
+            <div
+              style={{
+                ...size,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                background: 'lightblue',
+                border: '1px solid orange',
+              }}
+            >
+              Thumbnail {index + 1}
+            </div>
+          ) : (
+            <Thumbnail
+              {...onRenderThumbnailProps}
+              onRename={editable ? () => {} : undefined}
+              buttonProps={
+                editable
+                  ? [
+                      {
+                        children: <Icon icon="Close" />,
+                        onClick: () => {},
+                        key: 0,
+                      },
+                    ]
+                  : undefined
+              }
+            />
+          )
+        }
       />
       {scrollToTop && <Button onClick={onScrollToTop}>Scroll to top</Button>}
+      {customSizedThumbnail && <Button onClick={changeSize}>Change thumbnail size</Button>}
     </>
   );
 };
@@ -110,6 +138,10 @@ export const EditableWithButtons = () => {
 export const WithCustomDragLayer = () => {
   const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
   return <Template numFiles={numFiles} onRenderDragLayer />;
+};
+export const DifferentThumbnailSize = () => {
+  const numFiles = number('number of files', 2, { min: 0, max: 16, step: 1, range: true });
+  return <Template numFiles={numFiles} customSizedThumbnail />;
 };
 export const WithGridRef = () => {
   return <Template numFiles={100} scrollToTop />;
