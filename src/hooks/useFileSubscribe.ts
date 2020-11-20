@@ -76,5 +76,5 @@ export function useFileSubscribe<F extends FileLike, T>(
     };
   }, [eventType, file]);
 
-  return useMemo(() => [value, error, setValue], [error, value]);
+  return useMemo(() => [value, error, setValue] as const, [error, value]);
 }
