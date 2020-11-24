@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.2...v0.7.0-beta.3) (2020-11-24)
+
+### Bug Fixes
+
+- **FileOrganizer:** fixed bug that skipped setting thumbnail size ([c25d758](https://github.com/PDFTron/webviewer-react-toolkit/commit/c25d758a74f918ccf274089ad8608bb6050c1030))
+
 ## [0.7.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.1...v0.7.0-beta.2) (2020-11-20)
 
 ### Bug Fixes
