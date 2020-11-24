@@ -183,8 +183,8 @@ export function FileOrganizer<F extends ObjectWithId>({
 
   // Update size when getWidth ref changes (when hasFiles changes).
   useEffect(() => {
-    if (thumbnailSize) setSize(thumbnailSize);
-    if (files.length === 0) setSize(defaultSize);
+    if (thumbnailSize) return setSize(thumbnailSize);
+    if (files.length === 0) return setSize(defaultSize);
     setSize((prev) => {
       const { width, height } = getSize();
       if (prev.width === width && prev.height === height) return prev;
