@@ -35,7 +35,13 @@ const Template: FC<TemplateProps> = ({
   customSizedThumbnail,
 }) => {
   // This is the index organizing function.
-  const [files, setFiles] = useState<FakeFile[]>([]);
+  const [files, setFiles] = useState<FakeFile[]>(() => {
+    const newFiles = [];
+    for (let index = 0; index < numFiles; index++) {
+      newFiles.push(createFile(index));
+    }
+    return newFiles;
+  });
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
     setFiles((prev) => {
       if (toIndex < 0 || toIndex >= prev.length) return prev;
