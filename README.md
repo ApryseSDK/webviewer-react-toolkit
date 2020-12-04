@@ -11,6 +11,18 @@ For a demo showcasing some of the functionality, along with step-by-step
 instructions on how to build it, check out the
 [demo repository](https://github.com/PDFTron/webviewer-react-toolkit-demo).
 
+> Note: file functionality within toolkit v7 and above requires WebViewer v7 or
+> higher. If you are on a previous version of WebViewer, you can use v0.6.0 of
+> the toolkit:
+>
+> ```sh
+> # Yarn
+> yarn add @pdftron/webviewer-react-toolkit@0.6.0
+>
+> # npm
+> npm install @pdftron/webviewer-react-toolkit@0.6.0
+> ```
+
 ## Installation
 
 You can install the toolkit from npm using your preferred package manager:
