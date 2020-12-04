@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.3...v0.7.0-beta.4) (2020-12-04)
+
+### ⚠ BREAKING CHANGES
+
+- **file:** file now takes pageNumber instead of pageIndex, since WebViewer API has changed in version 7 to take 1-indexed page number values
+- **WebViewer:** due to breaking changes in WebViewer v7, the toolkit will no longer work with previous version of WebViewer
+
+### Features
+
+- **file:** pageNumber prop replaces pageIndex to match WebViewer API ([216b588](https://github.com/PDFTron/webviewer-react-toolkit/commit/216b58811656e0b98a1d0d00463f721f09c8c8d7))
+
+### Build and Dependencies
+
+- **WebViewer:** peer dependency on version >=7 of WebViewer ([28450e6](https://github.com/PDFTron/webviewer-react-toolkit/commit/28450e6c670896e8e26310ba0c51ca699293c282))
+
 ## [0.7.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.2...v0.7.0-beta.3) (2020-11-24)
 
 ### Bug Fixes
