@@ -59,6 +59,7 @@
     "tslib": "^1.11.0"
   },
   "peerDependencies": {
+    "@pdftron/webviewer": ">=7.0.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
@@ -67,6 +68,7 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@commitlint/prompt-cli": "^8.3.5",
+    "@pdftron/webviewer": "^7.2.0",
     "@storybook/addon-actions": "6.0.0-alpha.26",
     "@storybook/addon-docs": "6.0.0-alpha.26",
     "@storybook/addon-google-analytics": "6.0.0-alpha.26",
