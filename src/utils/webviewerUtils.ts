@@ -1,3 +1,4 @@
+import { CoreControls } from '@pdftron/webviewer';
 import { Futurable } from '../data';
 
 export const globalLicense = (() => {
@@ -55,7 +56,7 @@ export async function getRotatedDocument(
 
   const pageNumbers = Array.from({ length: fetchedDocument.getPageCount() }, (_, k) => k + 1);
 
-  const rotation = counterclockwise ? coreControls.PageRotation.e_270 : coreControls.PageRotation.e_90;
+  const rotation = counterclockwise ? coreControls.PageRotation.E_270 : coreControls.PageRotation.E_90;
 
   await fetchedDocument.rotatePages(pageNumbers, rotation);
   return fetchedDocument;
@@ -63,22 +64,21 @@ export async function getRotatedDocument(
 
 type GetThumbnailOptions = {
   extension?: string;
-  pageIndex?: number;
+  pageNumber?: number;
 };
 /**
  * Gets the thumbnail for a document.
  * @param documentObj A CoreControls Document, or promise to get it.
- * @param extension If provided, will exit early if extension is not supported.
+ * @param options Additional options for the function.
  */
 export async function getThumbnail(
   documentObj: Futurable<CoreControls.Document>,
   options: GetThumbnailOptions = {},
 ): Promise<string> {
-  const { extension, pageIndex = 0 } = options;
+  const { extension, pageNumber = 1 } = options;
 
   if (extension) {
-    // TODO(types): once types are supported, remove `as unknown`
-    const supportedFiles = (window.CoreControls?.SupportedFileFormats?.CLIENT as unknown) as string[] | undefined;
+    const supportedFiles = window.CoreControls?.SupportedFileFormats.CLIENT;
     if (supportedFiles && !supportedFiles.includes(extension)) throw new Error('Unsupported file type.');
   }
 
@@ -89,7 +89,7 @@ export async function getThumbnail(
         if (!result) return reject(result);
         resolve(result);
       };
-      fetchedDocument.loadThumbnailAsync(pageIndex, callback);
+      fetchedDocument.loadThumbnailAsync(pageNumber, callback);
     });
 
     const url = canvas.toDataURL();

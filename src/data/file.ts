@@ -1,3 +1,4 @@
+import { CoreControls } from '@pdftron/webviewer';
 import {
   blobToDocument,
   documentToBlob,
@@ -50,15 +51,16 @@ export interface FileDetails {
    */
   license?: string;
   /**
-   * A reference to the document that was used to create this File class. Used as an optimization
-   * where applicable. If passed, 'pageIndex' must also be passed
+   * A reference to the document that was used to create this File class. Used
+   * as an optimization where applicable. If passed, `pageNumber` must also be
+   * passed.
    */
   fullDocumentObj?: CoreControls.Document;
   /**
-   * Used in conjunction with 'fullDocumentObj'. Represents the pageIndex of 'fullDocumentObj' that this
-   * file belongs too
+   * Used in conjunction with `fullDocumentObj`. Represents the page number of
+   * `fullDocumentObj` that this file belongs too.
    */
-  pageIndex?: number;
+  pageNumber?: number;
 }
 
 export interface FileLike {
@@ -71,7 +73,7 @@ export interface FileLike {
   documentObj: MemoizedPromise<CoreControls.Document>;
   subscribe: (...args: any) => () => void;
   fullDocumentObj?: CoreControls.Document;
-  pageIndex?: number;
+  pageNumber?: number;
 }
 
 export type FileEventType =
@@ -109,7 +111,7 @@ export class File implements FileLike {
   private _subscribers: FileEventListenersObj;
   private _license?: string;
   private _fullDocumentObj?: CoreControls.Document;
-  private _pageIndex?: number;
+  private _pageNumber?: number;
 
   /**
    * Initialize the `File`.
@@ -127,7 +129,7 @@ export class File implements FileLike {
       thumbnail,
       license,
       fullDocumentObj,
-      pageIndex,
+      pageNumber,
     } = fileDetails;
 
     if (!fileObj && !documentObj) {
@@ -135,11 +137,11 @@ export class File implements FileLike {
     }
 
     if (fullDocumentObj) {
-      if (typeof pageIndex !== 'number') {
-        throw new Error('"pageIndex" must be passed if using "fullDocumentObj"');
+      if (typeof pageNumber !== 'number') {
+        throw new Error('"pageNumber" must be passed if using "fullDocumentObj"');
       }
       this._fullDocumentObj = fullDocumentObj;
-      this._pageIndex = pageIndex;
+      this._pageNumber = pageNumber;
     }
 
     this._id = id || getStringId('file');
@@ -203,8 +205,8 @@ export class File implements FileLike {
   }
 
   /** Gets the page index if provided during initialization. */
-  get pageIndex() {
-    return this._pageIndex;
+  get pageNumber() {
+    return this._pageNumber;
   }
 
   /** The name of the file. */
@@ -344,7 +346,7 @@ export class File implements FileLike {
   private _generateThumbnail = () => {
     return getThumbnail(this.fullDocumentObj || this.documentObj.get(), {
       extension: this.extension,
-      pageIndex: this.pageIndex,
+      pageNumber: this.pageNumber,
     });
   };
 

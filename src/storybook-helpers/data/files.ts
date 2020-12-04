@@ -1,3 +1,4 @@
+import { CoreControls } from '@pdftron/webviewer';
 import { FileLike } from '../../data/file';
 import { FuturableOrLazy } from '../../data/futurable';
 import { MemoizedPromise } from '../../data/memoizedPromise';
@@ -22,7 +23,7 @@ export class FakeFile implements FileLike {
   fileObj: MemoizedPromise<Blob>;
   documentObj: MemoizedPromise<CoreControls.Document>;
   fullDocumentObj: CoreControls.Document | undefined;
-  pageIndex: number | undefined;
+  pageNumber: number | undefined;
 
   constructor(index: number, options: CreateFileOptions = {}) {
     this.id = `file_${index + 1}`;

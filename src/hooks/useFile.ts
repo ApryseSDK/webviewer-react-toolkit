@@ -1,3 +1,4 @@
+import { CoreControls } from '@pdftron/webviewer';
 import { useMemo } from 'react';
 import { FileLike } from '../data';
 import { useFileSubscribe } from './useFileSubscribe';
