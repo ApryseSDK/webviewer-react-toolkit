@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.7.0-beta.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.3...v0.7.0-beta.4) (2020-12-04)
+## [0.7.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.4...v0.7.0) (2020-12-04)
+
+> Note: file functionality within toolkit v7 and above requires WebViewer v7 or higher. If you are on a previous version of WebViewer, you can use v0.6.0 of the toolkit:
+>
+> ```sh
+> # Yarn
+> yarn add @pdftron/webviewer-react-toolkit@0.6.0
+>
+> # npm
+> npm install @pdftron/webviewer-react-toolkit@0.6.0
+> ```
 
 ### ⚠ BREAKING CHANGES
 
@@ -12,28 +22,16 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 - **file:** pageNumber prop replaces pageIndex to match WebViewer API ([216b588](https://github.com/PDFTron/webviewer-react-toolkit/commit/216b58811656e0b98a1d0d00463f721f09c8c8d7))
-
-### Build and Dependencies
-
-- **WebViewer:** peer dependency on version >=7 of WebViewer ([28450e6](https://github.com/PDFTron/webviewer-react-toolkit/commit/28450e6c670896e8e26310ba0c51ca699293c282))
-
-## [0.7.0-beta.3](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.2...v0.7.0-beta.3) (2020-11-24)
+- **FileOrganizer:** thumbnailSize prop, fixed thumbnail auto size check ([9c3d65b](https://github.com/PDFTron/webviewer-react-toolkit/commit/9c3d65bcf303d50f8ec0b936b4a6108fe2bda1f8))
 
 ### Bug Fixes
 
 - **FileOrganizer:** fixed bug that skipped setting thumbnail size ([c25d758](https://github.com/PDFTron/webviewer-react-toolkit/commit/c25d758a74f918ccf274089ad8608bb6050c1030))
-
-## [0.7.0-beta.2](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0-beta.1...v0.7.0-beta.2) (2020-11-20)
-
-### Bug Fixes
-
 - **useFileSubscribe:** correct typing of hook output ([953a352](https://github.com/PDFTron/webviewer-react-toolkit/commit/953a352550d561763b69ac891e88b373269f541c))
 
-## [0.7.0-beta.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0...v0.7.0-beta.1) (2020-11-19)
+### Build and Dependencies
 
-### Features
-
-- **FileOrganizer:** thumbnailSize prop, fixed thumbnail auto size check ([9c3d65b](https://github.com/PDFTron/webviewer-react-toolkit/commit/9c3d65bcf303d50f8ec0b936b4a6108fe2bda1f8))
+- **WebViewer:** peer dependency on version >=7 of WebViewer ([28450e6](https://github.com/PDFTron/webviewer-react-toolkit/commit/28450e6c670896e8e26310ba0c51ca699293c282))
 
 ## [0.6.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.5.0...v0.6.0) (2020-06-26)
 
