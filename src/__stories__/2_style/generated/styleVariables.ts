@@ -19,12 +19,12 @@ export default {
         scss: '$color-font-primary',
         css: 'var(--color-font-primary)',
         value: '#232229',
-        dark: '#ebebeb',
+        dark: '#d7daeb',
       },
       {
         scss: '$color-font-secondary',
         css: 'var(--color-font-secondary)',
-        value: '#636363',
+        value: '#5b5c68',
         dark: '#989ba3',
       },
     ],
@@ -44,8 +44,20 @@ export default {
       {
         scss: '$color-gray-3',
         css: 'var(--color-gray-3)',
+        value: '#e7ebee',
+        dark: '#424242',
+      },
+      {
+        scss: '$color-gray-4',
+        css: 'var(--color-gray-4)',
         value: '#ddd',
         dark: '#3f3f3f',
+      },
+      {
+        scss: '$color-gray-5',
+        css: 'var(--color-gray-5)',
+        value: '#cfd4da',
+        dark: '#3a3a3a',
       },
     ],
     blueGray: [

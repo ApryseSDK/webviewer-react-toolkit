@@ -15,6 +15,7 @@ export const Basic = () => (
     disabled={boolean('disabled', false)}
     leftLabel={boolean('leftLabel', false)}
     center={boolean('center', false)}
+    disabledLabelChange={boolean('disabledLabelChange', false)}
   />
 );
 
@@ -33,6 +34,7 @@ export const TallContent = () => (
     disabled={boolean('disabled', false)}
     leftLabel={boolean('leftLabel', false)}
     center={boolean('center', false)}
+    disabledLabelChange={boolean('disabledLabelChange', false)}
   />
 );
 
@@ -46,6 +48,7 @@ export const Controlled = () => (
     checked={boolean('checked', false)}
     leftLabel={boolean('leftLabel', false)}
     center={boolean('center', false)}
+    disabledLabelChange={boolean('disabledLabelChange', false)}
   />
 );
 
@@ -56,6 +59,7 @@ export const NativeFormControlled = () => {
     disabled: boolean('disabled', false),
     leftLabel: boolean('leftLabel', false),
     center: boolean('center', false),
+    disabledLabelChange: boolean('disabledLabelChange', false),
   };
 
   return (
@@ -83,6 +87,7 @@ export const CustomControlled = () => {
     disabled: boolean('disabled', false),
     leftLabel: boolean('leftLabel', false),
     center: boolean('center', false),
+    disabledLabelChange: boolean('disabledLabelChange', false),
   };
 
   return (

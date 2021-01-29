@@ -39,11 +39,29 @@ export interface ChoiceProps extends Remove<InputHTMLAttributes<HTMLInputElement
    * If true, choice will be centered vertically in the content.
    */
   center?: boolean;
+  /**
+   * If true, text will change color when Choice is disabled.
+   */
+  disabledLabelChange?: boolean;
 }
 
 export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
   (
-    { label, leftLabel, className, children, id, radio, isSwitch, center, onChange, onFocus, onBlur, ...props },
+    {
+      label,
+      leftLabel,
+      className,
+      children,
+      id,
+      radio,
+      isSwitch,
+      center,
+      disabledLabelChange,
+      onChange,
+      onFocus,
+      onBlur,
+      ...props
+    },
     ref,
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -87,32 +105,40 @@ export const Choice = forwardRef<HTMLInputElement, ChoiceProps>(
         'ui__choice--radio': radio,
         'ui__choice--leftLabel': leftLabel,
         'ui__choice--checked': checked,
-        'ui__choice--disabled': props.disabled,
         'ui__choice--center': center,
+        'ui__choice--disabled': props.disabled,
       },
       className,
     );
 
-    const inputClass = classnames('ui__choice__input', { 'ui__choice__input--switch': isSwitch });
+    const inputClass = classnames('ui__choice__input', {
+      'ui__choice__input--switch': isSwitch,
+    });
 
     const checkClass = isSwitch
       ? classnames('ui__choice__input__switch', {
           'ui__choice__input__switch--checked': checked,
+          'ui__choice__input__switch--disabled': props.disabled,
           'ui__choice__input__switch--focus': isUserTabbing && focused,
         })
       : classnames('ui__choice__input__check', {
           'ui__choice__input__check--checked': checked,
+          'ui__choice__input__check--disabled': props.disabled,
           'ui__choice__input__check--focus': isUserTabbing && focused,
         });
+
+    const labelClass = classnames('ui__choice__label', {
+      'ui__choice__label--disabled': props.disabled && disabledLabelChange,
+    });
 
     const labelElement = useMemo(() => {
       if (!label) return undefined;
       return (
-        <label className="ui__choice__label" htmlFor={choiceID}>
+        <label className={labelClass} htmlFor={choiceID}>
           {label}
         </label>
       );
-    }, [choiceID, label]);
+    }, [choiceID, label, labelClass]);
 
     return (
       <span className={choiceClass}>

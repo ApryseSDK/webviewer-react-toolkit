@@ -54,7 +54,7 @@ $thumbnail-border-size: 2px;
   &--focused.ui__thumbnail--tabbing:not(.ui__thumbnail--disabled) {
     // Do not style for hover or focus if anything is dragging
     &:not(.ui__thumbnail--dragging):not(.ui__thumbnail--otherDragging):not(.ui__thumbnail--selected) {
-      background-color: $color-gray-3;
+      background-color: $color-gray-4;
     }
   }
 
