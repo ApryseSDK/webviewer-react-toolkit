@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.0...v0.7.1) (2021-01-29)
+
+### Features
+
+- **Choice:** redesign of choice including disabled state and spacing ([2cd10e9](https://github.com/PDFTron/webviewer-react-toolkit/commit/2cd10e9a5994af5c60e820ed295e801103c1621f))
+
 ## [0.7.0](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.6.0...v0.7.0) (2020-12-04)
 
 > Note: file functionality within toolkit v7 and above requires WebViewer v7 or higher. If you are on a previous version of WebViewer, you can use v0.6.0 of the toolkit:
