@@ -80,6 +80,13 @@ export interface FileOrganizerProps<F> extends HTMLAttributes<HTMLDivElement> {
    */
   thumbnailSize?: { width: number; height: number };
   /**
+   * If true, the file organizer will not wrap itself in a provider. This
+   * requires you to wrap it yourself with the `DndMultiProvider` component.
+   * Only enable this if you are getting a warning about "two MultiBackends", or
+   * if you want to have multiple file organizers on the same page.
+   */
+  noProvider?: boolean;
+  /**
    * On render function for generating the thumbnails for the page organizer.
    * If you do not want to build your own, try using the `Thumbnail` component.
    * @param onRenderProps An object to use in rendering the thumbnail.
@@ -150,6 +157,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   padding,
   gridRef: _gridRef,
   thumbnailSize,
+  noProvider,
   className,
   onClick,
   onKeyDown,
@@ -353,8 +361,10 @@ export function FileOrganizer<F extends ObjectWithId>({
 
   const fileOrganizerClass = classnames('ui__base ui__fileOrganizer', className);
 
+  const Wrapper = noProvider ? React.Fragment : DndMultiProvider;
+
   return (
-    <DndMultiProvider>
+    <Wrapper>
       <div
         {...divProps}
         className={fileOrganizerClass}
@@ -381,6 +391,6 @@ export function FileOrganizer<F extends ObjectWithId>({
           </DragLayer>
         ) : undefined}
       </div>
-    </DndMultiProvider>
+    </Wrapper>
   );
 }
