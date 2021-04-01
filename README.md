@@ -42,6 +42,10 @@ information on using the toolkit.
 
 ## Contributing
 
+> Warning: There are issues building with versions of Node >=11. For now, use
+> [nvm](https://github.com/nvm-sh/nvm) to get latest node 10 version (works fine
+> with `v10.23.3`).
+
 ### To start up Storybook
 
 ```bash
