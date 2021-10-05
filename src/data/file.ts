@@ -1,4 +1,4 @@
-import { CoreControls } from '@pdftron/webviewer';
+import { Core } from '@pdftron/webviewer';
 import {
   blobToDocument,
   documentToBlob,
@@ -39,7 +39,7 @@ export interface FileDetails {
    * Document object, or function to get it. One of `fileObj` or `documentObj`
    * must be given.
    */
-  documentObj?: MemoizedPromise<CoreControls.Document> | FuturableOrLazy<CoreControls.Document>;
+  documentObj?: MemoizedPromise<Core.Document> | FuturableOrLazy<Core.Document>;
   /**
    * Thumbnail data URL string, or function to get it.
    */
@@ -55,7 +55,7 @@ export interface FileDetails {
    * as an optimization where applicable. If passed, `pageNumber` must also be
    * passed.
    */
-  fullDocumentObj?: CoreControls.Document;
+  fullDocumentObj?: Core.Document;
   /**
    * Used in conjunction with `fullDocumentObj`. Represents the page number of
    * `fullDocumentObj` that this file belongs too.
@@ -70,9 +70,9 @@ export interface FileLike {
   extension: string;
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
-  documentObj: MemoizedPromise<CoreControls.Document>;
+  documentObj: MemoizedPromise<Core.Document>;
   subscribe: (...args: any) => () => void;
-  fullDocumentObj?: CoreControls.Document;
+  fullDocumentObj?: Core.Document;
   pageNumber?: number;
 }
 
@@ -105,12 +105,12 @@ export class File implements FileLike {
   private _originalName: string;
   private _extension: string;
   private _fileObj: MemoizedPromise<Blob>;
-  private _documentObj: MemoizedPromise<CoreControls.Document>;
+  private _documentObj: MemoizedPromise<Core.Document>;
   private _thumbnail: MemoizedPromise<string>;
   private _freezeThumbnail: boolean;
   private _subscribers: FileEventListenersObj;
   private _license?: string;
-  private _fullDocumentObj?: CoreControls.Document;
+  private _fullDocumentObj?: Core.Document;
   private _pageNumber?: number;
 
   /**
@@ -256,7 +256,7 @@ export class File implements FileLike {
    * Set the documentObj or give a futurable or getter.
    * @param documentObj The documentObj, promise, or getter for the documentObj.
    */
-  setDocumentObj(documentObj?: FuturableOrLazy<CoreControls.Document>) {
+  setDocumentObj(documentObj?: FuturableOrLazy<Core.Document>) {
     this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
     // Only update fileObj if documentObj was given, not generated.
     if (documentObj) this.setFileObj();
@@ -269,7 +269,7 @@ export class File implements FileLike {
    * `fileObj` and `thumbnail`. Since mutations directly to `documentObj` will
    * not be detected, using this function tells `File` to trigger an update.
    */
-  async updateDocumentObj(updater: (documentObj: CoreControls.Document) => Promise<void>) {
+  async updateDocumentObj(updater: (documentObj: Core.Document) => Promise<void>) {
     const documentObj = await this.documentObj.get();
     await updater(documentObj);
     this.setDocumentObj(documentObj);
