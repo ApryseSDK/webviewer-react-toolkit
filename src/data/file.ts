@@ -119,18 +119,8 @@ export class File implements FileLike {
    * this `File` with.
    */
   constructor(fileDetails: FileDetails) {
-    const {
-      name,
-      id,
-      originalName,
-      extension,
-      fileObj,
-      documentObj,
-      thumbnail,
-      license,
-      fullDocumentObj,
-      pageNumber,
-    } = fileDetails;
+    const { name, id, originalName, extension, fileObj, documentObj, thumbnail, license, fullDocumentObj, pageNumber } =
+      fileDetails;
 
     if (!fileObj && !documentObj) {
       throw new Error('One of `fileObj` or `documentObj` is required to initialize File.');

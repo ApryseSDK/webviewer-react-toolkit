@@ -154,6 +154,7 @@ export const WithGridRef = () => {
 };
 
 export const UseManagedFilesHook = () => {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { fileOrganizerProps, getThumbnailSelectionProps, draggingIds } = useManagedFiles({
     initialFiles: Array.from({ length: 1000 }, (_, index) => createFile(index)),
     preventMultiDrag: boolean('preventMultiDrag', false, 'useManagedFiles options'),
