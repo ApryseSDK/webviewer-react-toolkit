@@ -4,7 +4,7 @@ import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
-import webpack from 'webpack';
+import webpack, { Plugin } from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
 export const BASE_URL = 'src';
@@ -12,6 +12,8 @@ const MINIFIED_PATH = 'dist/umd';
 const SASS_PATH = 'dist/sass';
 export const CSS_PATH = 'dist/css';
 const LIBRARY_NAME = 'webviewer-react-toolkit';
+
+const miniCssExtractPlugin = new MiniCssExtractPlugin({ filename: `${CSS_PATH}/style.css` });
 
 const config: webpack.Configuration = {
   mode: 'production',
@@ -22,7 +24,7 @@ const config: webpack.Configuration = {
   },
   externals: [nodeExternals()],
   plugins: [
-    new MiniCssExtractPlugin({ filename: `${CSS_PATH}/style.css` }),
+    miniCssExtractPlugin as unknown as Plugin,
     new CopyPlugin([
       {
         from: `${BASE_URL}/styles/_variables.scss`,
