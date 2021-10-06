@@ -1,4 +1,4 @@
-import { CoreControls } from '@pdftron/webviewer';
+import { Core } from '@pdftron/webviewer';
 import { FileLike } from '../../data/file';
 import { FuturableOrLazy } from '../../data/futurable';
 import { MemoizedPromise } from '../../data/memoizedPromise';
@@ -21,8 +21,8 @@ export class FakeFile implements FileLike {
   extension: string;
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
-  documentObj: MemoizedPromise<CoreControls.Document>;
-  fullDocumentObj: CoreControls.Document | undefined;
+  documentObj: MemoizedPromise<Core.Document>;
+  fullDocumentObj: Core.Document | undefined;
   pageNumber: number | undefined;
 
   constructor(index: number, options: CreateFileOptions = {}) {
@@ -32,7 +32,7 @@ export class FakeFile implements FileLike {
     this.extension = 'pdf';
     this.thumbnail = this._getParameter(index % 2 ? testPdfThumbnailRotated : testPdfThumbnail, options);
     this.fileObj = new MemoizedPromise(new Blob());
-    this.documentObj = new MemoizedPromise<CoreControls.Document>(('' as unknown) as CoreControls.Document);
+    this.documentObj = new MemoizedPromise<Core.Document>('' as unknown as Core.Document);
   }
 
   private _getParameter<T>(parameter: T, options: CreateFileOptions) {

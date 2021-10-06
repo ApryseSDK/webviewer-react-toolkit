@@ -1,9 +1,9 @@
-import { CoreControls } from '@pdftron/webviewer';
+import { Core } from '@pdftron/webviewer';
 
 export {}; // Required to indicate that the file is a module.
 
 declare global {
   interface Window {
-    CoreControls: typeof CoreControls;
+    Core: typeof Core;
   }
 }

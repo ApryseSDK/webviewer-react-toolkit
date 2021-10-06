@@ -293,8 +293,8 @@ export function FileOrganizer<F extends ObjectWithId>({
           style={
             style && {
               ...style,
-              top: typeof style.top === 'number' ? style.top + pad : style.top,
-              left: typeof style.left === 'number' ? style.left + pad : style.left,
+              top: typeof style.top === 'number' ? (style.top as number) + pad : style.top,
+              left: typeof style.left === 'number' ? (style.left as number) + pad : style.left,
             }
           }
           ref={draggableRef}

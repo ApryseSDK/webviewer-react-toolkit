@@ -1,4 +1,4 @@
-import { CoreControls } from '@pdftron/webviewer';
+import { Core } from '@pdftron/webviewer';
 import { useMemo } from 'react';
 import { FileLike } from '../data';
 import { useFileSubscribe } from './useFileSubscribe';
@@ -20,7 +20,7 @@ interface FileHook<F> {
   /** The resolved file fileObj or undefined until it is resolved. */
   fileObj?: Blob;
   /** The resolved file documentObj or undefined until it is resolved. */
-  documentObj?: CoreControls.Document;
+  documentObj?: Core.Document;
   errors: {
     name?: any;
     thumbnail?: any;
