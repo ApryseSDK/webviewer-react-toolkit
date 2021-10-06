@@ -59,7 +59,7 @@
     "tslib": "^1.11.0"
   },
   "peerDependencies": {
-    "@pdftron/webviewer": ">=7.0.0",
+    "@pdftron/webviewer": ">=8.1.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },

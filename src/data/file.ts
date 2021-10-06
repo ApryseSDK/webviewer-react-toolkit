@@ -39,7 +39,7 @@ export interface FileDetails {
    * Document object, or function to get it. One of `fileObj` or `documentObj`
    * must be given.
    */
-  documentObj?: MemoizedPromise<Core.Document> | FuturableOrLazy<Core.Document>;
+  documentObj?: MemoizedPromise<Core.Document | undefined> | FuturableOrLazy<Core.Document | undefined>;
   /**
    * Thumbnail data URL string, or function to get it.
    */
@@ -70,7 +70,7 @@ export interface FileLike {
   extension: string;
   thumbnail: MemoizedPromise<string>;
   fileObj: MemoizedPromise<Blob>;
-  documentObj: MemoizedPromise<Core.Document>;
+  documentObj: MemoizedPromise<Core.Document | undefined>;
   subscribe: (...args: any) => () => void;
   fullDocumentObj?: Core.Document;
   pageNumber?: number;
@@ -105,7 +105,7 @@ export class File implements FileLike {
   private _originalName: string;
   private _extension: string;
   private _fileObj: MemoizedPromise<Blob>;
-  private _documentObj: MemoizedPromise<Core.Document>;
+  private _documentObj: MemoizedPromise<Core.Document | undefined>;
   private _thumbnail: MemoizedPromise<string>;
   private _freezeThumbnail: boolean;
   private _subscribers: FileEventListenersObj;
@@ -256,7 +256,7 @@ export class File implements FileLike {
    * Set the documentObj or give a futurable or getter.
    * @param documentObj The documentObj, promise, or getter for the documentObj.
    */
-  setDocumentObj(documentObj?: FuturableOrLazy<Core.Document>) {
+  setDocumentObj(documentObj?: FuturableOrLazy<Core.Document | undefined>) {
     this._documentObj = new MemoizedPromise(documentObj ?? this._generateDocumentObj);
     // Only update fileObj if documentObj was given, not generated.
     if (documentObj) this.setFileObj();
@@ -269,7 +269,7 @@ export class File implements FileLike {
    * `fileObj` and `thumbnail`. Since mutations directly to `documentObj` will
    * not be detected, using this function tells `File` to trigger an update.
    */
-  async updateDocumentObj(updater: (documentObj: Core.Document) => Promise<void>) {
+  async updateDocumentObj(updater: (documentObj: Core.Document | undefined) => Promise<void>) {
     const documentObj = await this.documentObj.get();
     await updater(documentObj);
     this.setDocumentObj(documentObj);
