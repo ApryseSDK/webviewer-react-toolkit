@@ -1,6 +1,6 @@
 {
   "name": "@pdftron/webviewer-react-toolkit",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "A React component library for integrating with PDFTron WebViewer API.",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
