@@ -4,7 +4,7 @@ import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
-import webpack, { Plugin } from 'webpack';
+import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 
 export const BASE_URL = 'src';
@@ -24,7 +24,7 @@ const config: webpack.Configuration = {
   },
   externals: [nodeExternals()],
   plugins: [
-    miniCssExtractPlugin as unknown as Plugin,
+    miniCssExtractPlugin as any,
     new CopyPlugin([
       {
         from: `${BASE_URL}/styles/_variables.scss`,
@@ -51,7 +51,6 @@ const config: webpack.Configuration = {
           toplevel: true,
         },
         parallel: true,
-        cache: true,
       }),
       new OptimizeCSSAssetsPlugin({}),
     ],

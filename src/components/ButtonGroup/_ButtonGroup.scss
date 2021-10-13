@@ -1,5 +1,6 @@
 .ui__buttonGroup {
-  margin: calc(-1 * #{$padding-tiny});
+  // do not mulply by -1 as it seems to cause issues for other libraries that uses this library
+  margin: calc(1px - #{$padding-tiny} - 1px);
   display: flex;
   flex-wrap: wrap;
 

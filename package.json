@@ -51,7 +51,7 @@
     "classnames": "^2.2.6",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
-    "react-dnd-multi-backend": "^5.0.1",
+    "react-dnd-multi-backend": "^5.0.0",
     "react-dnd-touch-backend": "^10.0.2",
     "react-motion": "^0.5.2",
     "react-virtualized-auto-sizer": "^1.0.2",
@@ -59,13 +59,12 @@
     "tslib": "^1.11.0"
   },
   "peerDependencies": {
-    "@pdftron/webviewer": ">=8.1.0",
+    "@pdftron/webviewer": ">=7.0.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
-    "@babel/preset-env": "7.9.0",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@commitlint/prompt-cli": "^8.3.5",
@@ -81,20 +80,17 @@
     "@storybook/preset-typescript": "^1.0.0",
     "@storybook/react": "6.0.0-alpha.26",
     "@storybook/storybook-deployer": "^2.8.1",
-    "@types/anymatch": "^3.0.0",
-    "@types/cheerio": "^0.22.30",
     "@types/classnames": "^2.2.9",
     "@types/copy-webpack-plugin": "^5.0.0",
-    "@types/enzyme": "^3.10.7",
+    "@types/enzyme": "^3.10.3",
     "@types/jest": "^25.1.2",
-    "@types/mini-css-extract-plugin": "^1.2.1",
+    "@types/mini-css-extract-plugin": "^0.9.0",
     "@types/node": "13.11.1",
     "@types/optimize-css-assets-webpack-plugin": "^5.0.1",
     "@types/react": "^16.9.23",
     "@types/react-dnd-multi-backend": "^6.0.0",
     "@types/react-dom": "^16.9.4",
     "@types/react-motion": "^0.0.29",
-    "@types/react-redux": "^4.4.47",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.1",
     "@types/sinon": "^9.0.4",
@@ -146,7 +142,7 @@
     "typescript": "^3.7.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^3.0.0"
   },
   "husky": {
     "hooks": {
