@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><title>Storybook</title><meta name="viewport" content="width=device-width,initial-scale=1"/><style>html, body {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }</style><script>/* globals window */
+  /* eslint-disable no-underscore-dangle */
+  try {
+    if (window.top !== window) {
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.top.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn('unable to connect to top frame for connecting dev tools');
+  }</script><link rel="shortcut icon" href="./favicon.ico"/><link rel="icon" type="image/png" href="./favicon.png" sizes="291x291"/><script>const STORYBOOK_IFRAME_SELECTOR = '#storybook-preview-iframe';
+  const CODE_PREVIEW_SELECTOR =
+    '#root > div:not(#story-root):not(#playground-theme-button):not([class])';
+  const THEME_BUTTON_SELECTOR = '#playground-theme-button';
+  const DOCS_ROOT_SELECTOR = '#docs-root';
+
+  function withIframe(iframe) {
+    const iframeWindow = iframe.contentWindow;
+
+    const zoomObserver = new MutationObserver(() => {
+      const iframeBody = iframeWindow.document.body;
+      const zoom = Number(iframeBody.style.zoom || 1);
+      const adjustedZoom = 1 / zoom;
+      const codePreviewWindow = iframeBody.querySelector(CODE_PREVIEW_SELECTOR);
+      const themeButton = iframeBody.querySelector(THEME_BUTTON_SELECTOR);
+      const docsRoot = iframeBody.querySelector(DOCS_ROOT_SELECTOR);
+      if (codePreviewWindow) codePreviewWindow.style.zoom = adjustedZoom;
+      if (themeButton) themeButton.style.zoom = adjustedZoom;
+      if (docsRoot) docsRoot.style.zoom = adjustedZoom;
+    });
+
+    iframeWindow.addEventListener('DOMContentLoaded', () => {
+      // Set the theme immediately on load.
+      const storedTheme = localStorage.getItem('data-theme') || '';
+      const darkTheme = storedTheme === 'dark';
+      const newTheme = darkTheme ? 'dark' : '';
+      iframeWindow.document.documentElement.setAttribute(
+        'data-theme',
+        newTheme,
+      );
+
+      zoomObserver.observe(iframeWindow.document.body, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ['style'],
+      });
+    });
+  }
+
+  const nodeAddedObserver = new MutationObserver((mutations) => {
+    const iframe = document.querySelector(STORYBOOK_IFRAME_SELECTOR);
+    if (!iframe || !withIframe) return;
+    nodeAddedObserver.disconnect();
+    withIframe(iframe);
+    withIframe = null;
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    nodeAddedObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: false,
+    });
+  });</script><style>#root[hidden],
+      #docs-root[hidden] {
+        display: none !important;
+      }</style></head><body><div id="root"></div><div id="docs-root"></div><script>window['DOCS_MODE'] = false;</script><script src="runtime~main.65b581b9619ed6273c1f.bundle.js"></script><script src="vendors~main.ced5c7f0ba5fd19bdf9b.bundle.js"></script><script src="main.2da5368dac432d085096.bundle.js"></script></body></html>
