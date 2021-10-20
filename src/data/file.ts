@@ -333,11 +333,17 @@ export class File implements FileLike {
   /* --- Private helpers. --- */
 
   /** Generate a thumbnail from document object. */
-  private _generateThumbnail = () => {
-    return getThumbnail(this.fullDocumentObj || this.documentObj.get(), {
-      extension: this.extension,
-      pageNumber: this.pageNumber,
-    });
+  private _generateThumbnail = async () => {
+    try {
+      const result = await getThumbnail(this.fullDocumentObj || this.documentObj.get(), {
+        extension: this.extension,
+        pageNumber: this.pageNumber,
+      });
+      return result;
+    } catch (e) {
+      console.warn(`Unable to get thumbnail for extension ${this.extension}`);
+      return '';
+    }
   };
 
   /** Generate a file object from document object. */
