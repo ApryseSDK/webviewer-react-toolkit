@@ -13,8 +13,9 @@ $choice-switch-width: 24px;
   }
 
   &--disabled {
+
     .ui__choice__label,
-    .ui__choice__input > input {
+    .ui__choice__input>input {
       cursor: default;
     }
   }
@@ -120,10 +121,12 @@ $choice-switch-width: 24px;
       left: -2px;
     }
 
-    > input {
+    >input {
       cursor: pointer;
       opacity: 0;
       position: absolute;
+      top: 0;
+      left: 0;
       height: $choice-check-size;
       width: $choice-check-size;
     }
@@ -132,7 +135,7 @@ $choice-switch-width: 24px;
       height: $choice-check-size; // Keep as full-height to center switch.
       width: $choice-switch-width;
 
-      > input {
+      >input {
         height: $choice-switch-size;
         width: $choice-switch-width;
       }
