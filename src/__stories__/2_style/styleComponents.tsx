@@ -27,8 +27,8 @@ function _Groups() {
   let groups: ReactElement[] = [];
 
   keys.forEach((k) => {
-    const group: { scss: string; css: string; value: string; dark: string }[] =
-      styleVariables[k as keyof Remove<typeof styleVariables, 'colors'>];
+    const group: { scss: string; css: string; value: string; dark: string; }[] =
+      styleVariables[k as keyof Remove<(typeof styleVariables), 'colors'>];
     if (!group.length) return;
 
     groups.push(
@@ -47,10 +47,10 @@ function _Groups() {
             k === 'padding'
               ? `inset 0px 0px 0px ${value} rgba(0,50,0,0.1)`
               : scss === '$focus-transition' && tick
-              ? colorFocusShadow && `0 0 0 2px ${colorFocusShadow}`
-              : k === 'boxShadow'
-              ? value
-              : undefined,
+                ? colorFocusShadow && `0 0 0 2px ${colorFocusShadow}`
+                : k === 'boxShadow'
+                  ? value
+                  : undefined,
           transition,
         };
         const truncate: CSSProperties = {
@@ -135,7 +135,7 @@ function _Theme() {
   }, []);
 
   keys.forEach((k) => {
-    const colors: { scss: string; css: string; value: string; dark: string }[] =
+    const colors: { scss: string; css: string; value: string; dark: string; }[] =
       styleVariables.colors[k as keyof typeof styleVariables['colors']];
     if (!colors.length) return;
 
@@ -222,7 +222,7 @@ export const Theme = () => (
 
 /* --- Mixins. --- */
 
-export function Mixins({ index }: { index: number }) {
+export function Mixins({ index }: { index: number; }) {
   const copy = useCopy();
 
   const mixin = mixins[index];
