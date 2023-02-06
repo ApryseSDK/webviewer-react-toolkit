@@ -136,7 +136,7 @@ function _Theme() {
 
   keys.forEach((k) => {
     const colors: { scss: string; css: string; value: string; dark: string }[] =
-      styleVariables.colors[k as keyof typeof styleVariables['colors']];
+      styleVariables.colors[k as keyof (typeof styleVariables)['colors']];
     if (!colors.length) return;
 
     groups.push(
