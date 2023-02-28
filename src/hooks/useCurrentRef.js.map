@@ -1,0 +1,1 @@
+{"version":3,"file":"useCurrentRef.js","sourceRoot":"","sources":["useCurrentRef.ts"],"names":[],"mappings":";;;AAAA,+BAA0C;AAE1C,SAAgB,aAAa,CAAI,KAAQ;IACvC,IAAM,QAAQ,GAAG,IAAA,cAAM,EAAI,KAAK,CAAC,CAAC;IAClC,IAAA,iBAAS,EAAC;QACR,QAAQ,CAAC,OAAO,GAAG,KAAK,CAAC;IAC3B,CAAC,CAAC,CAAC;IACH,OAAO,QAAQ,CAAC;AAClB,CAAC;AAND,sCAMC"}
