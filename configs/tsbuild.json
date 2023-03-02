@@ -1,0 +1,29 @@
+{
+  "include": ["../src"],
+  "exclude": [
+    "../node_modules",
+    "../src/**/*.test.*",
+    "../src/**/*.stories.*",
+    "../src/storybook-helpers",
+    "../src/**/__stories__"
+  ],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "incremental": true,
+    "jsx": "react",
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "strict": true
+  }
+}
