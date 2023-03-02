@@ -14,7 +14,7 @@
     "make": "ts-node scripts/make",
     "parse-scss": "node scripts/parse_scss",
     "clean": "rm -rf dist & rm -rf lib",
-    "build": "scripts/build_package.sh",
+    "build": "yarn clean && node scripts/verify-package-json.js && webpack --config webpack.config.ts && scripts/build_package.sh",
     "lint": "eslint . --cache",
     "format": "prettier --write .",
     "test": "jest ./src --config ./jest.config.js",
