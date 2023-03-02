@@ -32,12 +32,12 @@ export class FakeFile implements FileLike {
     this.extension = 'pdf';
     this.thumbnail = this._getParameter(index % 2 ? testPdfThumbnailRotated : testPdfThumbnail, options);
     this.fileObj = new MemoizedPromise(new Blob());
-    this.documentObj = new MemoizedPromise<Core.Document>('' as unknown as Core.Document);
+    this.documentObj = new MemoizedPromise<Core.Document>(('' as unknown) as Core.Document);
   }
 
   private _getParameter<T>(parameter: T, options: CreateFileOptions) {
     const internals = (() => {
-      if (options.lazy) return () => new Promise((res) => setTimeout(() => res(parameter), 500));
+      if (options.lazy) return () => new Promise(res => setTimeout(() => res(parameter), 500));
       if (options.error) return () => new Promise((_res, rej) => setTimeout(() => rej('Some error.'), 500));
       return parameter;
     })();

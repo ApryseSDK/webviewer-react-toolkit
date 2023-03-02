@@ -35,7 +35,7 @@ export function useCopy() {
             timeout: 2000,
           });
         },
-        (err) => {
+        err => {
           toast.add({
             heading: 'Error Copying Text',
             children: <code style={{ whiteSpace: 'pre-wrap' }}>{err}</code>,
@@ -50,6 +50,6 @@ export function useCopy() {
 
 export function getTitle(group: string) {
   let words = group.split(/(?=[A-Z])/);
-  words = words.map((w) => w.charAt(0).toUpperCase() + w.slice(1));
+  words = words.map(w => w.charAt(0).toUpperCase() + w.slice(1));
   return words.join(' ');
 }

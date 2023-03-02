@@ -21,7 +21,7 @@ export const Basic = () => (
 
 export const WithOnRenderText = () => (
   <EditableText
-    onRenderText={(value) => (value ? `[[ ${value.toUpperCase()} ]]` : '')}
+    onRenderText={value => (value ? `[[ ${value.toUpperCase()} ]]` : '')}
     centerText={boolean('centerText', false)}
     bordered={boolean('bordered', true)}
     disabled={boolean('disabled', false)}

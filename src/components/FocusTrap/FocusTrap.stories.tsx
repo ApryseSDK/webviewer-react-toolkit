@@ -16,7 +16,7 @@ export const Basic = () => {
         <div className={showLock ? 'App__lockzone App__lockzone--locked' : 'App__lockzone'}>
           <p>Zone is {showLock ? 'locked' : 'unlocked'}</p>
           <input />
-          <button onClick={() => setShowLock((prev) => !prev)}>{showLock ? 'Unlock' : 'Lock from inside'}</button>
+          <button onClick={() => setShowLock(prev => !prev)}>{showLock ? 'Unlock' : 'Lock from inside'}</button>
         </div>
       </FocusTrap>
     </div>
@@ -33,7 +33,7 @@ export const JustUseFocusTrapHook = () => {
       <div ref={focusRef} className={showLock ? 'App__lockzone App__lockzone--locked' : 'App__lockzone'}>
         <p>Zone is {showLock ? 'locked' : 'unlocked'}</p>
         <input />
-        <button onClick={() => setShowLock((prev) => !prev)}>{showLock ? 'Unlock' : 'Lock from inside'}</button>
+        <button onClick={() => setShowLock(prev => !prev)}>{showLock ? 'Unlock' : 'Lock from inside'}</button>
       </div>
     </div>
   );

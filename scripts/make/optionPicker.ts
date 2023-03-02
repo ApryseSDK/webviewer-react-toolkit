@@ -12,7 +12,7 @@ export const optionPicker = async (): Promise<MakeOptions> => {
       type: 'input',
       name: 'componentName',
       message: 'What will your component be called?',
-      validate: (value) => {
+      validate: value => {
         if (!/^[A-Z]/.test(value)) {
           return 'Must begin with a capital';
         }

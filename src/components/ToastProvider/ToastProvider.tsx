@@ -63,7 +63,7 @@ export const ToastProvider: FC<ToastProviderProps> = ({
   useEffect(() => {
     if (closing) {
       const timeoutId = window.setTimeout(() => {
-        setToasts((prev) => prev.slice(1));
+        setToasts(prev => prev.slice(1));
         setClosing(false);
       }, 250);
 
@@ -100,34 +100,34 @@ export const ToastProvider: FC<ToastProviderProps> = ({
     return;
   }, [_pop, hovered, timeoutValue, toastId, toastProps.message]);
 
-  const add = useCallback<ToastContextValue['add']>((toast) => {
+  const add = useCallback<ToastContextValue['add']>(toast => {
     const toastId = toastIdSequence++;
-    setToasts((prev) => [...prev, { ...toast, toastId }]);
+    setToasts(prev => [...prev, { ...toast, toastId }]);
     return toastId;
   }, []);
 
   const remove = useCallback<ToastContextValue['remove']>(
-    (toastId) => {
+    toastId => {
       if (!toastsRef.current.length) return;
-      const index = toastId === undefined ? 0 : toastsRef.current.findIndex((toast) => toast.toastId === toastId);
+      const index = toastId === undefined ? 0 : toastsRef.current.findIndex(toast => toast.toastId === toastId);
       if (index === -1) return;
       if (index === 0) return _pop();
-      setToasts((prev) => [...prev.slice(0, index), ...prev.slice(index + 1)]);
+      setToasts(prev => [...prev.slice(0, index), ...prev.slice(index + 1)]);
     },
     [_pop, toastsRef],
   );
 
   const modify = useCallback<ToastContextValue['modify']>((id, update) => {
-    setToasts((prev) => {
-      const index = prev.findIndex((t) => t.toastId === id);
+    setToasts(prev => {
+      const index = prev.findIndex(t => t.toastId === id);
       if (index === -1) return prev;
       return [...prev.slice(0, index), { ...prev[index], ...update }, ...prev.slice(index + 1)];
     });
   }, []);
 
   const exists = useCallback<ToastContextValue['exists']>(
-    (id) => {
-      const index = toastsRef.current.findIndex((t) => t.toastId === id);
+    id => {
+      const index = toastsRef.current.findIndex(t => t.toastId === id);
       if (index === -1) return false;
       if (closingRef.current && index === 0) return false;
       return true;
