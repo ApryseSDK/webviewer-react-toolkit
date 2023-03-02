@@ -5,5 +5,13 @@
     "outDir": "../lib",
     "target": "es2020",
     "module": "esnext"
-  }
+  },
+  "include": ["../src"],
+  "exclude": [
+    "../node_modules",
+    "../src/**/*.test.*",
+    "../src/**/*.stories.*",
+    "../src/storybook-helpers",
+    "../src/**/__stories__"
+  ]
 }
