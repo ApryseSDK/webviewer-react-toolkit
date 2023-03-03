@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "sourceMap": true,
+    "jsx": "react",
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
     "emitDecoratorMetadata": true,
@@ -8,15 +11,12 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "incremental": true,
-    "jsx": "react",
     "lib": ["esnext", "dom"],
-    "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
-    "strict": true,
-    "target": "ES5"
+    "strict": true
   }
 }

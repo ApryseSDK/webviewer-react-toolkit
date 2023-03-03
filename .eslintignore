@@ -8,3 +8,7 @@ storybook-static
 node_modules
 
 src/types.d.ts
+# Those files have linting issues resulted from CRA-eject. CRA-eject can not be reversed and if there are issues specific to react-scripts versions then it's extremely difficult to fix.
+src/utils/arrayUtils.ts
+src/utils/webviewerUtils.ts
+src/work/GlobalQueue.ts

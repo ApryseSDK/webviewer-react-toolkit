@@ -21,7 +21,7 @@ export const FilePicker: FC<FilePickerProps> = ({ items, className, ...props }) 
 
   return (
     <div {...props} className={filePickerClass}>
-      {items.map((item) => (
+      {items.map(item => (
         <div className={classnames('ui__filePicker__file', item.className)} key={item.key}>
           <EditableText
             className="ui__filePicker__file__text"
@@ -33,7 +33,9 @@ export const FilePicker: FC<FilePickerProps> = ({ items, className, ...props }) 
             <IconButton className="ui__filePicker__file__delete" onClick={item.onDelete}>
               <Icon icon="Close" />
             </IconButton>
-          ) : undefined}
+          ) : (
+            undefined
+          )}
         </div>
       ))}
     </div>

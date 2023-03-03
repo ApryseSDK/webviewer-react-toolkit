@@ -16,8 +16,8 @@ const IMPORT_END_MARKER = '<import-end>';
  */
 function splitFileAtMarkers(data: string) {
   const lines = data.split('\n');
-  const startIndex = lines.findIndex((line) => line.includes(IMPORT_START_MARKER));
-  const endIndex = lines.findIndex((line) => line.includes(IMPORT_END_MARKER));
+  const startIndex = lines.findIndex(line => line.includes(IMPORT_START_MARKER));
+  const endIndex = lines.findIndex(line => line.includes(IMPORT_END_MARKER));
 
   const preArray = lines.slice(0, startIndex + 1);
   const importsArray = lines.slice(startIndex + 1, endIndex);
@@ -61,7 +61,7 @@ export function updateImportFile(
     }
     try {
       const newFileContent = addSortedImport(data, importToAdd);
-      fs.writeFile(filePath, newFileContent, (writeError) => {
+      fs.writeFile(filePath, newFileContent, writeError => {
         if (writeError) {
           callback(writeError);
           return;

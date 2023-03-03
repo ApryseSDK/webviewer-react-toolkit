@@ -35,10 +35,10 @@ interface FileHook<F> {
  * @param file The file to convert to react observable values.
  */
 export function useFile<F extends FileLike>(file: F): FileHook<F> {
-  const [name, nameErr] = useFileSubscribe(file, (f) => f.name, 'onnamechange');
-  const [thumbnail, thumbnailErr] = useFileSubscribe(file, (f) => f.thumbnail, 'onthumbnailchange');
-  const [fileObj, fileObjErr] = useFileSubscribe(file, (f) => f.fileObj, 'onfileobjchange');
-  const [documentObj, documentObjErr] = useFileSubscribe(file, (f) => f.documentObj, 'ondocumentobjchange');
+  const [name, nameErr] = useFileSubscribe(file, f => f.name, 'onnamechange');
+  const [thumbnail, thumbnailErr] = useFileSubscribe(file, f => f.thumbnail, 'onthumbnailchange');
+  const [fileObj, fileObjErr] = useFileSubscribe(file, f => f.fileObj, 'onfileobjchange');
+  const [documentObj, documentObjErr] = useFileSubscribe(file, f => f.documentObj, 'ondocumentobjchange');
 
   const fileValue = useMemo<FileHook<F>>(
     () => ({

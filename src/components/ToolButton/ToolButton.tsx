@@ -55,7 +55,9 @@ export const ToolButton = forwardRef<HTMLButtonElement, ToolButtonProps>(
           <IconButton disabled={buttonProps.disabled} {...expandProps} className={classes.expand}>
             <Icon icon="ChevronDown" />
           </IconButton>
-        ) : undefined}
+        ) : (
+          undefined
+        )}
       </div>
     );
   },

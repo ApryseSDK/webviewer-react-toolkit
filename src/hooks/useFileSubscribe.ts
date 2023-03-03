@@ -57,7 +57,7 @@ export function useFileSubscribe<F extends FileLike, T>(
           .then((result: T) => {
             setMemoValue(result);
           })
-          .catch((e) => {
+          .catch(e => {
             setError(e);
           });
       }

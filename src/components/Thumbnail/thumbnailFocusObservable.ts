@@ -38,7 +38,7 @@ class ThumbnailFocusObservable implements FocusObservable {
 
   private _unsubscribe(subscriber: () => void) {
     return () => {
-      this._subscribers = this._subscribers.filter((s) => s !== subscriber);
+      this._subscribers = this._subscribers.filter(s => s !== subscriber);
       // If no subscribers, stop listening to document.
       if (this._subscribers.length === 0) this._removeAllListeners();
     };
@@ -46,7 +46,7 @@ class ThumbnailFocusObservable implements FocusObservable {
 
   private _setIsUserTabbing(isUserTabbing: boolean) {
     this._isUserTabbing = isUserTabbing;
-    this._subscribers.forEach((subscriber) => subscriber());
+    this._subscribers.forEach(subscriber => subscriber());
   }
 
   private _handleFirstTab = (event: KeyboardEvent) => {

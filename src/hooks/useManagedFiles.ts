@@ -102,14 +102,14 @@ export function useManagedFiles<F extends ObjectWithId>({
   const [files, setFiles] = useState(initialFiles ?? []);
 
   const addFile = useCallback((file: F, index?: number) => {
-    setFiles((prev) => {
+    setFiles(prev => {
       if (prev.includes(file)) return prev;
       if (index === undefined) return [...prev, file];
       return [...prev.slice(0, index), file, ...prev.slice(index)];
     });
   }, []);
 
-  const removeFile = useCallback((file: F) => setFiles((prev) => prev.filter((f) => f !== file)), []);
+  const removeFile = useCallback((file: F) => setFiles(prev => prev.filter(f => f !== file)), []);
 
   /* --- Selection. --- */
 
@@ -122,12 +122,12 @@ export function useManagedFiles<F extends ObjectWithId>({
       const multiKey = !preventMultiSelect && (event?.ctrlKey || event?.metaKey || false);
       const rangeKey = !preventMultiSelect && (event?.shiftKey || false);
 
-      setSelectedIds((prev) => {
+      setSelectedIds(prev => {
         const toggleIndex = prev.indexOf(id);
 
         if (!multiKey && rangeKey && prev.length) {
-          const lastSelectedIndex = files.findIndex((f) => f.id === prev[prev.length - 1]);
-          const toggleFileIndex = files.findIndex((f) => f.id === id);
+          const lastSelectedIndex = files.findIndex(f => f.id === prev[prev.length - 1]);
+          const toggleFileIndex = files.findIndex(f => f.id === id);
 
           let selectedFiles: F[] = [];
 
@@ -137,7 +137,7 @@ export function useManagedFiles<F extends ObjectWithId>({
             selectedFiles = files.slice(lastSelectedIndex, toggleFileIndex + 1).reverse();
           }
 
-          return selectedFiles.map((f) => f.id);
+          return selectedFiles.map(f => f.id);
         }
 
         if (toggleIndex === -1) {
@@ -157,11 +157,11 @@ export function useManagedFiles<F extends ObjectWithId>({
 
   const onDeselectAll = useCallback(() => setSelectedIds([]), []);
 
-  const onSelectAll = useCallback(() => setSelectedIds(files.map((file) => file.id)), [files]);
+  const onSelectAll = useCallback(() => setSelectedIds(files.map(file => file.id)), [files]);
 
   const _setMovingSelectedId = useCallback(
     (id: string) => {
-      setSelectedIds((prev) => {
+      setSelectedIds(prev => {
         if (prev.includes(id)) return prev;
         if (preventDeselectOnDragOther) return preventSelectOnDrag ? prev : [...prev, id];
         return preventSelectOnDrag ? [] : [id];
@@ -226,12 +226,12 @@ export function useManagedFiles<F extends ObjectWithId>({
 
   // Remove selected items if the file is removed.
   useEffect(() => {
-    setSelectedIds((prev) => {
+    setSelectedIds(prev => {
       const toRemove = new Set(prev);
-      files.forEach((file) => {
+      files.forEach(file => {
         if (toRemove.has(file.id)) toRemove.delete(file.id);
       });
-      return prev.filter((id) => !toRemove.has(id));
+      return prev.filter(id => !toRemove.has(id));
     });
   }, [files]);
 

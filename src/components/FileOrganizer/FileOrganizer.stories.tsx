@@ -43,7 +43,7 @@ const Template: FC<TemplateProps> = ({
     return newFiles;
   });
   const handleOnMove = useCallback<NonNullable<FileOrganizerProps<FakeFile>['onMove']>>((fromIndex, toIndex) => {
-    setFiles((prev) => {
+    setFiles(prev => {
       if (toIndex < 0 || toIndex >= prev.length) return prev;
       const clone = prev.slice();
       const item = clone.splice(fromIndex, 1)[0];
@@ -59,12 +59,12 @@ const Template: FC<TemplateProps> = ({
   };
 
   const [largerSize, setLargerSize] = useState(false);
-  const changeSize = () => setLargerSize((prev) => !prev);
+  const changeSize = () => setLargerSize(prev => !prev);
   const size = largerSize ? { width: 200, height: 250 } : { width: 150, height: 200 };
 
   // This is just a helper for adding or removing files.
   useEffect(() => {
-    setFiles((prev) => {
+    setFiles(prev => {
       if (prev.length > numFiles) {
         return prev.slice(0, numFiles);
       }

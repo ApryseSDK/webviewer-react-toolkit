@@ -193,7 +193,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   useEffect(() => {
     if (thumbnailSize) return setSize(thumbnailSize);
     if (files.length === 0) return setSize(defaultSize);
-    setSize((prev) => {
+    setSize(prev => {
       const { width, height } = getSize();
       if (prev.width === width && prev.height === height) return prev;
       return { width, height };
@@ -300,17 +300,17 @@ export function FileOrganizer<F extends ObjectWithId>({
           ref={draggableRef}
           hideDragPreview={!!onRenderDragLayer}
           preventAnimation={isInDragGroup}
-          onDragChange={(isDragging) => handleOnDragChange(isDragging ? file.id : undefined)}
+          onDragChange={isDragging => handleOnDragChange(isDragging ? file.id : undefined)}
           disableDrag={isEditing || disableMove}
           onMove={onMove}
-          onKeyDown={(e) => handleItemKeyDown(e, index, file, draggableRef)}
-          onRenderChildren={(isDragging) => {
+          onKeyDown={e => handleItemKeyDown(e, index, file, draggableRef)}
+          onRenderChildren={isDragging => {
             return onRenderThumbnail({
               onRenderThumbnailProps: {
                 file,
                 dragging: isDragging || isInDragGroup,
                 otherDragging,
-                onEditingChange: (editing) => setEditingId(editing ? file.id : undefined),
+                onEditingChange: editing => setEditingId(editing ? file.id : undefined),
               },
               id: file.id,
               index,
@@ -334,7 +334,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   );
 
   const handleOnClick = useCallback<MouseEventHandler<HTMLDivElement>>(
-    (event) => {
+    event => {
       onClick?.(event);
       if (!preventClickAwayDeselect) onDeselectAll?.();
     },
@@ -342,7 +342,7 @@ export function FileOrganizer<F extends ObjectWithId>({
   );
 
   const handleOnKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(
-    (event) => {
+    event => {
       onKeyDown?.(event);
       if (event.key === 'Escape') return onDeselectAll?.();
       if (event.key === 'a' && (event.metaKey || event.ctrlKey)) {
@@ -389,7 +389,9 @@ export function FileOrganizer<F extends ObjectWithId>({
               {onRenderDragLayer()}
             </div>
           </DragLayer>
-        ) : undefined}
+        ) : (
+          undefined
+        )}
       </div>
     </Wrapper>
   );

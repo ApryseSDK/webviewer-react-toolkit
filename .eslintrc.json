@@ -1,6 +1,8 @@
 {
   "parser": "@typescript-eslint/parser",
-  "parserOptions": { "project": "./tsconfig.lint.json" },
+  "parserOptions": {
+    "project": "./tsconfig.lint.json"
+  },
   "plugins": ["react-hooks", "prettier"],
   "extends": [
     "plugin:jsx-a11y/recommended",
@@ -10,7 +12,6 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-
     // Prettier overrides
     "prettier",
     "prettier/react",
@@ -42,18 +43,25 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/ban-ts-ignore": "off",
     // Consider turning on eventually... lots of warnings though.
     "@typescript-eslint/explicit-module-boundary-types": "off",
-
     // On.
     "prettier/prettier": "error",
-    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
     "prefer-const": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
-      { "argsIgnorePattern": "^_" }
+      {
+        "argsIgnorePattern": "^_"
+      }
     ],
     "@typescript-eslint/unbound-method": "error"
   }

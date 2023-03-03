@@ -59,7 +59,7 @@ class GlobalQueue {
   }
 
   private cleanup() {
-    this.queue = this.queue.filter((item) => {
+    this.queue = this.queue.filter(item => {
       const { cancelled, id } = item;
       if (cancelled) {
         this.queueRefs.delete(id);
@@ -96,7 +96,7 @@ class GlobalQueue {
     try {
       result = await item?.process();
     } catch (e) {
-      result = new Error(e);
+      result = new Error(JSON.stringify(e));
     }
 
     const id = item?.id;

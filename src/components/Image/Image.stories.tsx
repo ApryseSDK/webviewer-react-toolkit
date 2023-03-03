@@ -26,14 +26,14 @@ export const Basic = () => (
 
 export const WithSrcPromise = () => (
   <div style={style}>
-    <Image src={new Promise((res) => setTimeout(() => res(IMAGE), 500))} onRenderLoading={() => <Spinner />} />
+    <Image src={new Promise(res => setTimeout(() => res(IMAGE), 500))} onRenderLoading={() => <Spinner />} />
   </div>
 );
 
 export const SrcPromiseRejects = () => (
   <div style={style}>
     <Image
-      src={new Promise((rej) => setTimeout(() => rej(), 500))}
+      src={new Promise(rej => setTimeout(() => rej(), 500))}
       onRenderLoading={() => <Spinner />}
       onRenderFallback={() => 'Rejected source promise'}
       pending={boolean('pending', false)}
@@ -44,7 +44,7 @@ export const SrcPromiseRejects = () => (
 export const SrcPromiseReturnsFalsy = () => (
   <div style={style}>
     <Image
-      src={new Promise((res) => setTimeout(() => res(''), 500))}
+      src={new Promise(res => setTimeout(() => res(''), 500))}
       onRenderLoading={() => <Spinner />}
       onRenderFallback={() => 'Falsy source'}
       pending={boolean('pending', false)}
