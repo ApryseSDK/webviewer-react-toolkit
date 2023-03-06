@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.6](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.5...v0.7.6) (2023-03-06)
+
 ### [0.7.5](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.4...v0.7.5) (2021-10-20)
 
 ### [0.7.4](https://github.com/PDFTron/webviewer-react-toolkit/compare/v0.7.3...v0.7.4) (2021-10-13)
