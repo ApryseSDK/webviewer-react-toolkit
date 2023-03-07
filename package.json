@@ -1,6 +1,6 @@
 {
   "name": "@pdftron/webviewer-react-toolkit",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "description": "A React component library for integrating with PDFTron WebViewer API.",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -22,7 +22,7 @@
     "build-storybook": "build-storybook -s public",
     "deploy-storybook": "storybook-to-ghpages --out=.out",
     "commit": "commit",
-    "release": "yarn ci && yarn build && standard-version && git push --follow-tags && yarn publish --non-interactive && yarn deploy-storybook",
+    "release": "standard-version && git push --follow-tags && yarn publish --non-interactive && yarn deploy-storybook",
     "release-next": "yarn ci && yarn build && standard-version --prerelease beta && git push --follow-tags && yarn publish --non-interactive --tag next && yarn deploy-storybook",
     "start-css": "webpack --config webpack.style.config.ts"
   },
