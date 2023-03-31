@@ -100,7 +100,7 @@ export async function getThumbnail(
         if (!result) return reject(result);
         resolve(result);
       };
-      fetchedDocument.loadThumbnailAsync(pageNumber, callback);
+      fetchedDocument.loadThumbnail(pageNumber, callback);
     });
 
     const url = canvas.toDataURL();
